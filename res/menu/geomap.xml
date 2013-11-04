@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/btnExit"
+        android:orderInCategory="100"
+        android:title="@string/lbl_exit"/>
+    
+    <item
+        android:id="@+id/btnNewForm"
+        android:orderInCategory="100"
+        android:title="@string/lbl_new_form"/>
+    
+    <item
+        android:id="@+id/btnGetJobs"
+        android:orderInCategory="100"
+        android:title="@string/lbl_get_job"/>
+
+</menu>

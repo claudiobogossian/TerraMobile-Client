@@ -11,6 +11,9 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
+        /**  Form Screen 
+ Colors 
+         */
         public static final int background_cor1=0x7f040005;
         public static final int background_cor2=0x7f040006;
         public static final int background_cor3=0x7f040007;
@@ -53,7 +56,10 @@ public final class R {
     public static final class id {
         public static final int TableRow01=0x7f090029;
         public static final int TextView01=0x7f09002a;
-        public static final int action_settings=0x7f090054;
+        public static final int action_settings=0x7f090057;
+        public static final int btnExit=0x7f090054;
+        public static final int btnGetJobs=0x7f090056;
+        public static final int btnNewForm=0x7f090055;
         public static final int cp_button_cancel=0x7f090034;
         public static final int cp_button_clear=0x7f090018;
         public static final int cp_button_ok=0x7f090035;
@@ -147,14 +153,23 @@ public final class R {
         public static final int photo_control=0x7f030006;
     }
     public static final class menu {
-        public static final int main=0x7f080000;
+        public static final int geomap=0x7f080000;
+        public static final int main=0x7f080001;
     }
     public static final class string {
         public static final int action_settings=0x7f060004;
+        /**  Main Screen 
+         */
         public static final int app_name=0x7f060000;
+        public static final int lbl_exit=0x7f060006;
+        public static final int lbl_get_job=0x7f060009;
+        /**   GeoMap Screen 
+         */
+        public static final int lbl_new_form=0x7f060008;
+        public static final int lbl_start=0x7f060005;
         public static final int password_hint=0x7f060003;
         public static final int str_lbl_login=0x7f060001;
-        public static final int title_activity_main=0x7f060005;
+        public static final int title_activity_main=0x7f060007;
         public static final int user_name_hint=0x7f060002;
     }
     public static final class style {

@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Main Screen -->
     <string name="app_name">Funcate Mobile</string>
     <string name="str_lbl_login">Login</string>
     <string name="user_name_hint">Usuário</string>
     <string name="password_hint">Senha</string>
     <string name="action_settings">Opções</string>
+    <string name="lbl_start">Iniciar</string>
+    <string name="lbl_exit">Sair</string>
     <string name="title_activity_main">Funcate Mobile</string>
     
+    <!--  GeoMap Screen -->
+    <string name="lbl_new_form">Novo formulárío</string>
+    <string name="lbl_get_job">Atualizar trechos</string>
+    
+    
+    <!-- Form Screen -->
+    
+    
+    <!-- Colors -->
     <color name="background_cor1">#FFFFFF</color>
     <color name="background_cor2">#000000</color>
     <color name="background_cor3">#555555</color>
