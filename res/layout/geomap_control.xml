@@ -32,6 +32,14 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_form" >
             </ImageButton>
+            
+            <ImageButton
+                android:id="@+id/geomap_control_bt_update_jobs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ico_update" >
+            </ImageButton>
+            
         </LinearLayout>
     </FrameLayout>
 

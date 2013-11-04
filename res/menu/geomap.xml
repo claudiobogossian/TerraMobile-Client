@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/btnExit"
+        android:id="@+id/btnContextExit"
         android:orderInCategory="100"
         android:title="@string/lbl_exit"/>
     
     <item
-        android:id="@+id/btnNewForm"
+        android:id="@+id/btnContextNewForm"
         android:orderInCategory="100"
         android:title="@string/lbl_new_form"/>
     
     <item
-        android:id="@+id/btnGetJobs"
+        android:id="@+id/btnContextGetJobs"
         android:orderInCategory="100"
         android:title="@string/lbl_get_job"/>
 

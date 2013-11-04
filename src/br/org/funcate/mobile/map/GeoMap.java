@@ -23,6 +23,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -190,6 +192,35 @@ public class GeoMap extends Activity {
 		protected boolean onSingleTapUpHelper(int index, OverlayItem item,
 				MapView mapView) {
 			return super.onSingleTapUpHelper(index, item, mapView);
+		}
+	}
+
+	/*
+	 * 
+	 * Menu de contexto, ao clicar no botão de opções, automaticamente o menu
+	 * "geomap.xml" é exibido ao usuário.
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.geomap, menu);
+		return true;
+	}
+
+	/*
+	 * Esta função é executada ao ser clicado em qualquer um dos itens do menu
+	 * de contexto desta tela.
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.btnContextExit:
+			return true;
+		case R.id.btnContextGetJobs:
+			return true;
+		case R.id.btnContextNewForm:
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
