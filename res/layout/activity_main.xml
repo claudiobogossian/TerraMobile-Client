@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:id="@+id/main_lay0" android:background="@color/background_cor1"
+	android:orientation="vertical">
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent" android:weightSum="10"
+		android:layout_height="fill_parent" android:id="@+id/main_lay1">
+		<LinearLayout android:layout_height="fill_parent"
+			android:layout_marginRight="5dp" android:orientation="vertical"
+			android:layout_width="fill_parent" android:layout_marginLeft="5dp"
+			android:background="@color/background_cor1" android:layout_marginTop="5dp" android:layout_weight="10" android:id="@+id/main_lay2" android:gravity="center_vertical|center_horizontal" android:layout_marginBottom="25dp">
+			<ImageView android:layout_height="wrap_content" android:id="@+id/main_img1"
+				android:layout_gravity="center" android:padding="11dp"
+				android:layout_width="wrap_content" android:src="@drawable/logo_figure"></ImageView>
+		</LinearLayout>
+	<LinearLayout android:layout_height="wrap_content"
+		android:layout_marginRight="5dp" android:orientation="vertical"
+		android:layout_marginBottom="5dp" android:layout_width="fill_parent"
+		android:layout_marginLeft="5dp" android:id="@+id/main_lay3"
+		android:layout_weight="0">
+
+	<LinearLayout
+	    android:id="@+id/main_lay4"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:background="@color/background_cor3"
+	    android:orientation="vertical"
+	    android:paddingBottom="5dp"
+	    android:paddingLeft="5dp"
+	    android:paddingRight="5dp"
+	    android:paddingTop="9dp">
+
+		<Button android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/main_bt_begin" android:text="Iniciar" android:gravity="left|center_vertical" android:drawableLeft="@drawable/ic_begin" android:layout_marginBottom="3dp" android:drawablePadding="3dp"></Button>
+		<Button android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/main_bt_exit" android:text="Sair"     android:drawableLeft="@drawable/ic_exit" android:gravity="left|center_vertical"  android:drawablePadding="3dp"></Button>		
+	</LinearLayout>
+	</LinearLayout>
+	</LinearLayout>
+
+</LinearLayout>

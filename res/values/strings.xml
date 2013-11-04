@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Funcate Mobile</string>
+    <string name="action_settings">Opções</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_main">Funcate Mobile</string>
+    
+    <color name="background_cor1">#FFFFFF</color>
+    <color name="background_cor2">#000000</color>
+    <color name="background_cor3">#555555</color>
+    <color name="background_cor4">#FF4500</color>
+    <color name="background_cor5">#AAAAAA</color>
+    <color name="background_cor6">#CCCCCC</color>
+    <color name="background_cor7">#104E8B</color>
+    <color name="background_cor8">#C11B17</color>
+
+</resources>
