@@ -11,8 +11,7 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
-        /**  Form Screen 
- Colors 
+        /**  Colors 
          */
         public static final int background_cor1=0x7f040005;
         public static final int background_cor2=0x7f040006;
@@ -58,10 +57,13 @@ public final class R {
     public static final class id {
         public static final int TableRow01=0x7f090029;
         public static final int TextView01=0x7f09002a;
-        public static final int action_settings=0x7f090058;
-        public static final int btnContextExit=0x7f090055;
-        public static final int btnContextGetJobs=0x7f090057;
-        public static final int btnContextNewForm=0x7f090056;
+        public static final int action_settings=0x7f09005b;
+        public static final int btnContextExit=0x7f090058;
+        public static final int btnContextGetJobs=0x7f09005a;
+        public static final int btnContextNewForm=0x7f090059;
+        public static final int btn_clear_jobs=0x7f090039;
+        public static final int btn_get_jobs=0x7f090037;
+        public static final int btn_send_jobs=0x7f090038;
         public static final int cp_button_cancel=0x7f090034;
         public static final int cp_button_clear=0x7f090018;
         public static final int cp_button_ok=0x7f090035;
@@ -84,16 +86,16 @@ public final class R {
         public static final int cp_lont=0x7f09000f;
         public static final int cp_num=0x7f090020;
         public static final int cp_numt=0x7f09001e;
-        public static final int foto_control_bt_cancel=0x7f090053;
-        public static final int foto_control_bt_fotografar=0x7f090051;
-        public static final int foto_control_bt_ok=0x7f090054;
-        public static final int foto_control_bt_voltar=0x7f090050;
-        public static final int foto_control_lay0=0x7f09004d;
-        public static final int foto_control_lay2=0x7f09004e;
-        public static final int foto_control_lay3=0x7f09004f;
-        public static final int foto_control_lay4=0x7f090052;
-        public static final int foto_lay0=0x7f090043;
-        public static final int foto_surface1=0x7f090044;
+        public static final int foto_control_bt_cancel=0x7f090056;
+        public static final int foto_control_bt_fotografar=0x7f090054;
+        public static final int foto_control_bt_ok=0x7f090057;
+        public static final int foto_control_bt_voltar=0x7f090053;
+        public static final int foto_control_lay0=0x7f090050;
+        public static final int foto_control_lay2=0x7f090051;
+        public static final int foto_control_lay3=0x7f090052;
+        public static final int foto_control_lay4=0x7f090055;
+        public static final int foto_lay0=0x7f090046;
+        public static final int foto_surface1=0x7f090047;
         public static final int geoform_lay=0x7f090000;
         public static final int geoform_lay1=0x7f090001;
         public static final int geoform_lay11=0x7f090002;
@@ -121,26 +123,26 @@ public final class R {
         public static final int geoform_tr_stub1_lay1=0x7f090023;
         public static final int geoform_tr_stub2=0x7f090025;
         public static final int geoform_tr_stub2_lay1=0x7f090027;
-        public static final int geomap_control_bt_back=0x7f090048;
-        public static final int geomap_control_bt_form=0x7f090049;
-        public static final int geomap_control_bt_update_jobs=0x7f09004a;
-        public static final int geomap_control_lay0=0x7f090045;
-        public static final int geomap_control_lay2=0x7f090046;
-        public static final int geomap_control_lay3=0x7f090047;
-        public static final int itemcep=0x7f09004c;
-        public static final int itemlog=0x7f09004b;
-        public static final int lblLogin=0x7f09003c;
-        public static final int loginPassword=0x7f09003e;
-        public static final int loginUserName=0x7f09003d;
-        public static final int login_form=0x7f09003b;
-        public static final int main_bt_begin=0x7f090041;
-        public static final int main_bt_exit=0x7f090042;
-        public static final int main_img1=0x7f09003a;
-        public static final int main_lay0=0x7f090037;
-        public static final int main_lay1=0x7f090038;
-        public static final int main_lay2=0x7f090039;
-        public static final int main_lay3=0x7f09003f;
-        public static final int main_lay4=0x7f090040;
+        public static final int geomap_control_bt_back=0x7f09004b;
+        public static final int geomap_control_bt_form=0x7f09004c;
+        public static final int geomap_control_bt_update_jobs=0x7f09004d;
+        public static final int geomap_control_lay0=0x7f090048;
+        public static final int geomap_control_lay2=0x7f090049;
+        public static final int geomap_control_lay3=0x7f09004a;
+        public static final int itemcep=0x7f09004f;
+        public static final int itemlog=0x7f09004e;
+        public static final int lblLogin=0x7f09003f;
+        public static final int loginPassword=0x7f090041;
+        public static final int loginUserName=0x7f090040;
+        public static final int login_form=0x7f09003e;
+        public static final int main_bt_begin=0x7f090044;
+        public static final int main_bt_exit=0x7f090045;
+        public static final int main_img1=0x7f09003d;
+        public static final int main_lay0=0x7f09003a;
+        public static final int main_lay1=0x7f09003b;
+        public static final int main_lay2=0x7f09003c;
+        public static final int main_lay3=0x7f090042;
+        public static final int main_lay4=0x7f090043;
         public static final int mapview=0x7f090036;
         public static final int tableRow1=0x7f090012;
         public static final int textView1=0x7f090013;
@@ -149,11 +151,12 @@ public final class R {
     public static final class layout {
         public static final int activity_geoform=0x7f030000;
         public static final int activity_geomap=0x7f030001;
-        public static final int activity_main=0x7f030002;
-        public static final int activity_photo=0x7f030003;
-        public static final int geomap_control=0x7f030004;
-        public static final int item_list=0x7f030005;
-        public static final int photo_control=0x7f030006;
+        public static final int activity_job=0x7f030002;
+        public static final int activity_main=0x7f030003;
+        public static final int activity_photo=0x7f030004;
+        public static final int geomap_control=0x7f030005;
+        public static final int item_list=0x7f030006;
+        public static final int photo_control=0x7f030007;
     }
     public static final class menu {
         public static final int geomap=0x7f080000;
@@ -164,6 +167,12 @@ public final class R {
         /**  Main Screen 
          */
         public static final int app_name=0x7f060000;
+        public static final int btn_clear_jobs=0x7f06000c;
+        /**  Form Screen 
+ Job Screen 
+         */
+        public static final int btn_get_jobs=0x7f06000a;
+        public static final int btn_send_jobs=0x7f06000b;
         public static final int lbl_exit=0x7f060006;
         public static final int lbl_get_job=0x7f060009;
         /**   GeoMap Screen 

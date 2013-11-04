@@ -34,6 +34,7 @@ import android.widget.Toast;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.form.GeoForm;
+import br.org.funcate.mobile.job.JobActivity;
 
 public class GeoMap extends Activity {
 
@@ -87,6 +88,7 @@ public class GeoMap extends Activity {
 		// buttons
 		ImageButton bt_form = (ImageButton) findViewById(R.id.geomap_control_bt_form);
 		ImageButton bt_back = (ImageButton) findViewById(R.id.geomap_control_bt_back);
+		ImageButton bt_jobs = (ImageButton) findViewById(R.id.geomap_control_bt_update_jobs);
 
 		bt_form.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -103,6 +105,14 @@ public class GeoMap extends Activity {
 			public void onClick(View v) {
 				setResult(RESULT_CANCELED, new Intent());
 				finish();
+			}
+		});
+		
+		bt_jobs.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent occupantNewIntent = new Intent(GeoMap.this, JobActivity.class);
+				startActivity(occupantNewIntent);
 			}
 		});
 	}

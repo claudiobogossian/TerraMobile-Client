@@ -19,6 +19,11 @@
     <!-- Form Screen -->
     
     
+    <!-- Job Screen -->
+    <string name="btn_get_jobs">Receber serviços do servidor</string>
+    <string name="btn_send_jobs">Enviar serviços para o servidor</string>
+    <string name="btn_clear_jobs">Apagar trechos</string>
+    
     <!-- Colors -->
     <color name="background_cor1">#FFFFFF</color>
     <color name="background_cor2">#000000</color>
