@@ -2,8 +2,10 @@
 <resources>
 
     <string name="app_name">Funcate Mobile</string>
+    <string name="str_lbl_login">Login</string>
+    <string name="user_name_hint">Usuário</string>
+    <string name="password_hint">Senha</string>
     <string name="action_settings">Opções</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_main">Funcate Mobile</string>
     
     <color name="background_cor1">#FFFFFF</color>

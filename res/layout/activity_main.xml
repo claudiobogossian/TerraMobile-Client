@@ -1,41 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:id="@+id/main_lay0" android:background="@color/background_cor1"
-	android:orientation="vertical">
-	<LinearLayout android:orientation="vertical"
-		android:layout_width="fill_parent" android:weightSum="10"
-		android:layout_height="fill_parent" android:id="@+id/main_lay1">
-		<LinearLayout android:layout_height="fill_parent"
-			android:layout_marginRight="5dp" android:orientation="vertical"
-			android:layout_width="fill_parent" android:layout_marginLeft="5dp"
-			android:background="@color/background_cor1" android:layout_marginTop="5dp" android:layout_weight="10" android:id="@+id/main_lay2" android:gravity="center_vertical|center_horizontal" android:layout_marginBottom="25dp">
-			<ImageView android:layout_height="wrap_content" android:id="@+id/main_img1"
-				android:layout_gravity="center" android:padding="11dp"
-				android:layout_width="wrap_content" android:src="@drawable/logo_figure"></ImageView>
-		</LinearLayout>
-	<LinearLayout android:layout_height="wrap_content"
-		android:layout_marginRight="5dp" android:orientation="vertical"
-		android:layout_marginBottom="5dp" android:layout_width="fill_parent"
-		android:layout_marginLeft="5dp" android:id="@+id/main_lay3"
-		android:layout_weight="0">
+    android:id="@+id/main_lay0"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_cor1"
+    android:orientation="vertical" >
 
-	<LinearLayout
-	    android:id="@+id/main_lay4"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_gravity="center"
-	    android:background="@color/background_cor3"
-	    android:orientation="vertical"
-	    android:paddingBottom="5dp"
-	    android:paddingLeft="5dp"
-	    android:paddingRight="5dp"
-	    android:paddingTop="9dp">
+    <LinearLayout
+        android:id="@+id/main_lay1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:weightSum="10" >
 
-		<Button android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/main_bt_begin" android:text="Iniciar" android:gravity="left|center_vertical" android:drawableLeft="@drawable/ic_begin" android:layout_marginBottom="3dp" android:drawablePadding="3dp"></Button>
-		<Button android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/main_bt_exit" android:text="Sair"     android:drawableLeft="@drawable/ic_exit" android:gravity="left|center_vertical"  android:drawablePadding="3dp"></Button>		
-	</LinearLayout>
-	</LinearLayout>
-	</LinearLayout>
+        <LinearLayout
+            android:id="@+id/main_lay2"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="25dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="10"
+            android:background="@color/background_cor1"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/main_img1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:src="@drawable/logo_figure" />
+
+            <LinearLayout
+                android:id="@+id/login_form"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="25dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="10"
+                android:background="@color/background_cor1"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/lblLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_lbl_login"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <EditText
+                    android:id="@+id/loginUserName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/user_name_hint"
+                    android:inputType="textPersonName" >
+
+                    <requestFocus />
+                </EditText>
+
+                <EditText
+                    android:id="@+id/loginPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/password_hint"
+                    android:inputType="textPassword" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/main_lay3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="0"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/main_lay4"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/background_cor3"
+                android:orientation="vertical"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="9dp" >
+
+                <Button
+                    android:id="@+id/main_bt_begin"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:drawableLeft="@drawable/ic_begin"
+                    android:drawablePadding="3dp"
+                    android:gravity="left|center_vertical"
+                    android:text="Iniciar" >
+                </Button>
+
+                <Button
+                    android:id="@+id/main_bt_exit"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_exit"
+                    android:drawablePadding="3dp"
+                    android:gravity="left|center_vertical"
+                    android:text="Sair" >
+                </Button>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>
