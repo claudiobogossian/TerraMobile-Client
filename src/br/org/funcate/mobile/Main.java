@@ -43,9 +43,9 @@ public class Main extends Activity {
 		bt_begin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				self.login();
-				//Intent i = new Intent(Main.this, GeoMap.class);
-				//startActivityForResult(i, GEOMAP);
+				//self.login();
+				Intent i = new Intent(Main.this, GeoMap.class);
+				startActivityForResult(i, GEOMAP);
 			}
 		});
 

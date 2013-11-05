@@ -47,6 +47,9 @@ public class GeoMap extends Activity {
 	protected LocationManager locationManager;
 	protected ArrayList<OverlayItem> overlayItems;
 	private LayoutInflater controlInflater = null;
+	
+	private Location lastLocation;
+	private GeoMap self = this;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -79,8 +82,8 @@ public class GeoMap extends Activity {
 
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-		Location lastLocation = locationManager
-				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		
 		if (lastLocation != null) {
 			updateLoc(lastLocation);
 		}
@@ -94,8 +97,8 @@ public class GeoMap extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(GeoMap.this, GeoForm.class);
-				i.putExtra("CURRENT_LOCATION", locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
-				startActivityForResult(i, GEOFORM);
+				i.putExtra("CURRENT_LOCATION", self.lastLocation);
+				startActivityForResult(i, GEOFORM);				
 			}
 		});
 
@@ -132,8 +135,7 @@ public class GeoMap extends Activity {
 	}
 
 	private void updateLoc(Location loc) {
-		GeoPoint locGeoPoint = new GeoPoint(loc.getLatitude(),
-				loc.getLongitude());
+		GeoPoint locGeoPoint = new GeoPoint(loc.getLatitude(), loc.getLongitude());
 		controller.setCenter(locGeoPoint);
 		setOverlayLoc(loc);
 		mapView.invalidate();

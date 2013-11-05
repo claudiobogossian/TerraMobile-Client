@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
@@ -43,14 +44,22 @@ public class GeoForm extends Activity {
 	private String fot;
 	private Date dat = null;
 
+	private GeoForm self = this;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_geoform);
 
-		Location currentLocation = getIntent().getExtras().getParcelable(
-				"CURRENT_LOCATION");
+		Location currentLocation = null;
+
+		try {
+			currentLocation = getIntent().getExtras().getParcelable(
+					"CURRENT_LOCATION");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		// iniciate providers
 		Cursor c_ini2 = getContentResolver().query(
@@ -75,8 +84,10 @@ public class GeoForm extends Activity {
 		bt_ok = (Button) findViewById(R.id.cp_button_ok);
 		bt_photo = (Button) findViewById(R.id.cp_button_photo);
 
-		lat.setText("" + currentLocation.getLatitude());
-		lon.setText("" + currentLocation.getLongitude());
+		if (currentLocation != null) {
+			lat.setText("" + currentLocation.getLatitude());
+			lon.setText("" + currentLocation.getLongitude());
+		}
 
 		log.setAdapter(new AddressAdapter(this, R.layout.item_list, null,
 				new String[] { ProviderAddress.Lograd.LOG,
@@ -140,13 +151,23 @@ public class GeoForm extends Activity {
 			}
 		});
 
-		bt_photo.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(GeoForm.this, Photo.class);
-				startActivityForResult(i, PHOTO);
-			}
-		});
+		PackageManager packageManager = self.getPackageManager();
+
+		// if device support camera?
+		if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+			// yes Camera
+			bt_photo.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent i = new Intent(GeoForm.this, Photo.class);
+					startActivityForResult(i, PHOTO);
+				}
+			});
+		} else {
+			// no Camera
+			bt_photo.setEnabled(false);
+			Log.i("camera", "This device has no camera!");
+		}
 
 		bt_ok.setOnClickListener(new View.OnClickListener() {
 
@@ -180,7 +201,7 @@ public class GeoForm extends Activity {
 				getContentResolver().insert(Provider.Dados.CONTENT_URI, row);
 
 				Intent data = new Intent();
-				data.putExtra("RESULT", "Registro concluído!");
+				data.putExtra("RESULT", "Registro concluÃ­do!");
 				setResult(RESULT_OK, data);
 
 				finish();
