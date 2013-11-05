@@ -14,11 +14,14 @@ import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 import br.org.funcate.mobile.map.GeoMap;
 
 public class Main extends Activity {
 
 	public static final String TAG = "#MAIN";
+	private Main self = this;
 
 	// other activities
 	private static final int GEOMAP = 100;
@@ -40,8 +43,9 @@ public class Main extends Activity {
 		bt_begin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(Main.this, GeoMap.class);
-				startActivityForResult(i, GEOMAP);
+				self.login();
+				//Intent i = new Intent(Main.this, GeoMap.class);
+				//startActivityForResult(i, GEOMAP);
 			}
 		});
 
@@ -54,6 +58,32 @@ public class Main extends Activity {
 		});
 
 		config();
+	}
+
+	/**
+	 * Login button click event. A Toast is set to alert when the Email and
+	 * Password field is empty
+	 **/
+	public void login() {
+		EditText txt_login_username = (EditText) findViewById(R.id.txt_login_username);
+		EditText txt_login_password = (EditText) findViewById(R.id.txt_login_password);
+
+		String login = txt_login_username.getText().toString();
+		String password = txt_login_password.getText().toString();
+
+		if ((!login.equals("")) && (!password.equals(""))) {
+			// pede para alguém fazer uma chamada Ajax pra verificar se o cara
+			// está logado, se for válido...
+			// Intent i = new Intent(Main.this, GeoMap.class);
+			// startActivityForResult(i, GEOMAP);
+			// fazer Try Catch pra verificar usuário ou senha inválidos...
+		} else if ((!login.equals(""))) {
+			Toast.makeText(getApplicationContext(), "Preencha a senha!", Toast.LENGTH_SHORT).show();
+		} else if ((!password.equals(""))) {
+			Toast.makeText(getApplicationContext(), "Preencha o nome de usuário!", Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(getApplicationContext(), "Preencha Nome de usuário e Senhas!", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	@SuppressLint("SdCardPath")
@@ -73,7 +103,7 @@ public class Main extends Activity {
 				fos.write(buffer, 0, len1);
 			}
 		} catch (IOException ex) {
-			Log.e(TAG, "Erro de configura��o de endere�o: " + ex);
+			Log.e(TAG, "Erro de configura��o de endere�o: " + ex);
 		}
 
 	}

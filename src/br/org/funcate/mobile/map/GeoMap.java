@@ -94,8 +94,7 @@ public class GeoMap extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(GeoMap.this, GeoForm.class);
-				i.putExtra("CURRENT_LOCATION", locationManager
-						.getLastKnownLocation(LocationManager.GPS_PROVIDER));
+				i.putExtra("CURRENT_LOCATION", locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
 				startActivityForResult(i, GEOFORM);
 			}
 		});

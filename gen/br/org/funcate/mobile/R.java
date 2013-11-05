@@ -132,8 +132,6 @@ public final class R {
         public static final int itemcep=0x7f09004f;
         public static final int itemlog=0x7f09004e;
         public static final int lblLogin=0x7f09003f;
-        public static final int loginPassword=0x7f090041;
-        public static final int loginUserName=0x7f090040;
         public static final int login_form=0x7f09003e;
         public static final int main_bt_begin=0x7f090044;
         public static final int main_bt_exit=0x7f090045;
@@ -147,6 +145,8 @@ public final class R {
         public static final int tableRow1=0x7f090012;
         public static final int textView1=0x7f090013;
         public static final int trechoconfig_lay112=0x7f090006;
+        public static final int txt_login_password=0x7f090041;
+        public static final int txt_login_username=0x7f090040;
     }
     public static final class layout {
         public static final int activity_geoform=0x7f030000;

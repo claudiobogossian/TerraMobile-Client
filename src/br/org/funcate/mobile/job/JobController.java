@@ -2,16 +2,17 @@ package br.org.funcate.mobile.job;
 
 /**
  * 
- * Control the transactions, control the transactions between Service and DAO.
+ * Control the transactions between Service and DAO.
  * 
  * */
 public class JobController {
 
-	private JobService service = new JobService();
-	private JobDao dao = new JobDao();
+	private JobService service;
+	private JobDao dao;
 
 	public JobController() {
-		// TODO Auto-generated constructor stub
+		service = new JobService();
+		dao = new JobDao();
 	}
 
 	public Boolean getAllJobs() {
