@@ -26,15 +26,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.Window;
-import android.widget.ImageButton;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.form.GeoForm;
-import br.org.funcate.mobile.job.JobActivity;
+import br.org.funcate.mobile.task.TaskActivity;
 
 public class GeoMap extends Activity {
 
@@ -47,7 +44,7 @@ public class GeoMap extends Activity {
 	protected LocationManager locationManager;
 	protected ArrayList<OverlayItem> overlayItems;
 	private LayoutInflater controlInflater = null;
-	
+
 	private Location lastLocation;
 	private GeoMap self = this;
 
@@ -61,62 +58,71 @@ public class GeoMap extends Activity {
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
 		mapView.setMultiTouchControls(true);
+		
 		controller = mapView.getController();
 		controller.setZoom(16);
 		controller.setCenter(new GeoPoint(-23.1791, -45.8872));
 
-		controlInflater = LayoutInflater.from(getBaseContext());
-		View viewControl = controlInflater.inflate(R.layout.geomap_control,
-				null);
-		LayoutParams layoutParamsControl = new LayoutParams(
-				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-		this.addContentView(viewControl, layoutParamsControl);
+		//controlInflater = LayoutInflater.from(getBaseContext());
+		//View viewControl = controlInflater.inflate(R.layout.geomap_control, null);
+		//LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		//this.addContentView(viewControl, layoutParamsControl);
 
 		// overlay location
 		overlayItems = new ArrayList<OverlayItem>();
-		DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(
-				this);
-		MyItemizedIconOverlay myItemizedIconOverlay = new MyItemizedIconOverlay(
-				overlayItems, null, defaultResourceProxyImpl);
+		DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(this);
+		MyItemizedIconOverlay myItemizedIconOverlay = new MyItemizedIconOverlay(overlayItems, null, defaultResourceProxyImpl);
 		mapView.getOverlays().add(myItemizedIconOverlay);
 
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
 		lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		
+
 		if (lastLocation != null) {
 			updateLoc(lastLocation);
 		}
 
+		/*
 		// buttons
 		ImageButton bt_form = (ImageButton) findViewById(R.id.geomap_control_bt_form);
 		ImageButton bt_back = (ImageButton) findViewById(R.id.geomap_control_bt_back);
-		ImageButton bt_jobs = (ImageButton) findViewById(R.id.geomap_control_bt_update_jobs);
+		ImageButton bt_tasks = (ImageButton) findViewById(R.id.geomap_control_bt_update_tasks);
 
 		bt_form.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(GeoMap.this, GeoForm.class);
-				i.putExtra("CURRENT_LOCATION", self.lastLocation);
-				startActivityForResult(i, GEOFORM);				
+				self.openGeoform();		
 			}
 		});
 
 		bt_back.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				setResult(RESULT_CANCELED, new Intent());
-				finish();
+				self.finishThisScreen();
 			}
 		});
-		
-		bt_jobs.setOnClickListener(new View.OnClickListener() {
+
+		bt_tasks.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent occupantNewIntent = new Intent(GeoMap.this, JobActivity.class);
-				startActivity(occupantNewIntent);
+				self.openTaskScreen();
 			}
-		});
+		});*/
+	}
+
+	public void openGeoform() {
+		Intent i = new Intent(GeoMap.this, GeoForm.class);
+		i.putExtra("CURRENT_LOCATION", self.lastLocation);
+		startActivityForResult(i, GEOFORM);				
+	}
+
+	public void openTaskScreen() {
+		Intent occupantNewIntent = new Intent(GeoMap.this, TaskActivity.class);
+		startActivity(occupantNewIntent);
+	}
+
+	public void finishThisScreen() {
+		setResult(RESULT_CANCELED, new Intent());
+		finish();
 	}
 
 	@Override
@@ -141,11 +147,10 @@ public class GeoMap extends Activity {
 		mapView.invalidate();
 	}
 
-	private void setOverlayLoc(Location overlayloc) {
+	private synchronized void setOverlayLoc(Location overlayloc) {
 		GeoPoint overlocGeoPoint = new GeoPoint(overlayloc);
 		overlayItems.clear();
-		OverlayItem newMyLocationItem = new OverlayItem("My Location",
-				"My Location", overlocGeoPoint);
+		OverlayItem newMyLocationItem = new OverlayItem("My Location", "My Location", overlocGeoPoint);
 		overlayItems.add(newMyLocationItem);
 	}
 
@@ -171,7 +176,7 @@ public class GeoMap extends Activity {
 	};
 
 	private class MyItemizedIconOverlay extends
-			ItemizedIconOverlay<OverlayItem> {
+	ItemizedIconOverlay<OverlayItem> {
 
 		public MyItemizedIconOverlay(
 				List<OverlayItem> pList,
@@ -225,10 +230,13 @@ public class GeoMap extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.btnContextExit:
+			self.finishThisScreen();
 			return true;
-		case R.id.btnContextGetJobs:
+		case R.id.btnContextGetTasks:
+			self.openTaskScreen();
 			return true;
 		case R.id.btnContextNewForm:
+			self.openGeoform();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

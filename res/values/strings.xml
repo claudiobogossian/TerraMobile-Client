@@ -13,16 +13,16 @@
     
     <!--  GeoMap Screen -->
     <string name="lbl_new_form">Novo formulárío</string>
-    <string name="lbl_get_job">Atualizar trechos</string>
+    <string name="lbl_get_task">Atualizar trechos</string>
     
     
     <!-- Form Screen -->
     
     
-    <!-- Job Screen -->
-    <string name="btn_get_jobs">Receber serviços do servidor</string>
-    <string name="btn_send_jobs">Enviar serviços para o servidor</string>
-    <string name="btn_clear_jobs">Apagar trechos</string>
+    <!-- Task Screen -->
+    <string name="btn_get_tasks">Receber serviços do servidor</string>
+    <string name="btn_send_tasks">Enviar serviços para o servidor</string>
+    <string name="btn_clear_tasks">Apagar trechos</string>
     
     <!-- Colors -->
     <color name="background_cor1">#FFFFFF</color>

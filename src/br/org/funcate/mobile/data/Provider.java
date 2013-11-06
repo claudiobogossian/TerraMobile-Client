@@ -142,8 +142,7 @@ public class Provider extends ContentProvider {
 	}
 
 	public static final class Dados implements BaseColumns {
-		public static final Uri CONTENT_URI = Uri.parse("content://"
-				+ Provider.AUTHORITY + "/dados");
+		public static final Uri CONTENT_URI = Uri.parse("content://" + Provider.AUTHORITY + "/dados");
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.funcate.dadostype";
 		public static final String ID = "_id";
 		public static final String FOT = "fot";

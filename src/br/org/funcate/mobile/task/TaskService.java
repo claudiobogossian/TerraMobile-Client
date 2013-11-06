@@ -1,4 +1,4 @@
-package br.org.funcate.mobile.job;
+package br.org.funcate.mobile.task;
 
 import java.util.ArrayList;
 
@@ -10,26 +10,26 @@ import org.springframework.web.client.RestTemplate;
  * Service REST. Ajax calls to get, post and put objects to server.
  * 
  * */
-public class JobService {
+public class TaskService {
 	
 	private RestTemplate restTemplate;
 
-	public JobService() {
+	public TaskService() {
 		this.restTemplate = new RestTemplate();
         this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 	}
 	
-	public Job getJobs(){
-        Job job = restTemplate.getForObject("http://url", Job.class);
-        return job;
+	public Task getTasks(){
+        Task task = restTemplate.getForObject("http://url", Task.class);
+        return task;
 	}
 	
-	public Boolean saveJobs(ArrayList<Job> jobs){
+	public Boolean saveTasks(ArrayList<Task> tasks){
 		return true;
 	}
 	
-	public Boolean updateJob(Job job){
-		this.restTemplate.put("http://url", job);
+	public Boolean updateTask(Task task){
+		this.restTemplate.put("http://url", task);
 		return true;
 	}
 

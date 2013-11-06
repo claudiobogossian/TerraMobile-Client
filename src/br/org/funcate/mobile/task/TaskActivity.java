@@ -1,4 +1,4 @@
-package br.org.funcate.mobile.job;
+package br.org.funcate.mobile.task;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -10,35 +10,35 @@ import br.org.funcate.mobile.R;
 /** 
  * Activity for loading layout resources 
  * 
- * This activity is used to display the Job screen, that. 
+ * This activity is used to display the Task screen, that. 
  * 
  * @author Paulo Luan 
  * @version 1.0 
  * @since 1.0
  */  
-public class JobActivity extends Activity {
+public class TaskActivity extends Activity {
 	
-	private JobController controller = new JobController();
+	private TaskController controller = new TaskController();
 	private ProgressDialog dialog;
-	private JobActivity self = this;
+	private TaskActivity self = this;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_job);	
+		setContentView(R.layout.activity_task);	
 	
-		Button btn_get_jobs = (Button) findViewById(R.id.btn_get_jobs);
-		Button btn_send_jobs = (Button) findViewById(R.id.btn_send_jobs);
-		Button btn_clear_jobs = (Button) findViewById(R.id.btn_clear_jobs);
+		Button btn_get_tasks = (Button) findViewById(R.id.btn_get_tasks);
+		Button btn_send_tasks = (Button) findViewById(R.id.btn_send_tasks);
+		Button btn_clear_tasks = (Button) findViewById(R.id.btn_clear_tasks);
 		
-		btn_get_jobs.setOnClickListener(new View.OnClickListener() {
+		btn_get_tasks.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				self.showLoadingMask();
 				
 				try {
-					controller.getAllJobs();
+					controller.getAllTasks();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -47,13 +47,13 @@ public class JobActivity extends Activity {
 			}
 		});
 		
-		btn_send_jobs.setOnClickListener(new View.OnClickListener() {
+		btn_send_tasks.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				self.showLoadingMask();
 				
 				try {
-					controller.sendJobs();	
+					controller.sendTasks();	
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -62,13 +62,13 @@ public class JobActivity extends Activity {
 			}
 		});
 		
-		btn_clear_jobs.setOnClickListener(new View.OnClickListener() {
+		btn_clear_tasks.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				self.showLoadingMask();
 
 				try {
-					controller.clearAlljobs();	
+					controller.clearAlltasks();	
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -79,7 +79,7 @@ public class JobActivity extends Activity {
 	}
 	
 	public void showLoadingMask(){
-		dialog = ProgressDialog.show(JobActivity.this, "", "Carregando, aguarde...", true);
+		dialog = ProgressDialog.show(TaskActivity.this, "", "Carregando, aguarde...", true);
 	}
 	
 	public void hideLoadMask(){
