@@ -1,6 +1,7 @@
 package br.org.funcate.mobile.task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -19,17 +20,22 @@ public class TaskService {
         this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 	}
 	
-	public Task getTasks(){
-        Task task = restTemplate.getForObject("http://url", Task.class);
-        return task;
+	public List<Task> getTasks(){
+		String url = "";
+		List<Task> tasks = (List<Task>) restTemplate.getForObject(url, Task.class);
+        return tasks;
 	}
 	
 	public Boolean saveTasks(ArrayList<Task> tasks){
+		// ajax call
+		String url = "";
+		Task returnedTask = restTemplate.postForObject(url, tasks, Task.class);
 		return true;
 	}
 	
 	public Boolean updateTask(Task task){
-		this.restTemplate.put("http://url", task);
+		String url = "";
+		this.restTemplate.put(url, task);
 		return true;
 	}
 

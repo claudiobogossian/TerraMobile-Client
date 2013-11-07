@@ -7,6 +7,8 @@
 	<classpathentry kind="lib" path="libs/osmdroid-android-3.0.9.jar"/>
 	<classpathentry kind="lib" path="libs/osmdroid-packager-3.0.9.jar"/>
 	<classpathentry kind="lib" path="libs/osmdroid-third-party-3.0.9.jar"/>
+	<classpathentry kind="lib" path="libs/ormlite-core-4.48-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="libs/ormlite-android-4.48-SNAPSHOT.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="lib" path="/Users/funcatemobile/Desktop/BauruDigital/repositorio/bauru-digital/libs/spring-android-auth-1.0.1.RELEASE.jar"/>
@@ -15,7 +17,5 @@
 	<classpathentry kind="lib" path="/Users/funcatemobile/Desktop/BauruDigital/repositorio/bauru-digital/libs/jackson-core-2.2.1.jar"/>
 	<classpathentry kind="lib" path="/Users/funcatemobile/Desktop/BauruDigital/repositorio/bauru-digital/libs/jackson-databind-2.2.1.jar"/>
 	<classpathentry kind="lib" path="/Users/funcatemobile/Desktop/BauruDigital/repositorio/bauru-digital/libs/spring-android-rest-template-1.0.1.RELEASE.jar"/>
-	<classpathentry kind="lib" path="/Users/funcatemobile/Desktop/BauruDigital/repositorio/bauru-digital/libs/ormlite-android-4.48-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/Users/funcatemobile/Desktop/BauruDigital/repositorio/bauru-digital/libs/ormlite-core-4.48-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
