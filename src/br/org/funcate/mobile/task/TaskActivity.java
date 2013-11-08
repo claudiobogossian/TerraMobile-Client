@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import br.org.funcate.mobile.R;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
 /**
@@ -24,11 +23,9 @@ import com.j256.ormlite.dao.Dao;
  * @since 1.0
  */
 public class TaskActivity extends Activity {
-	/**
-	 * You'll need this in your class to cache the helper in the class.
-	 */
-	private TaskDatabaseHelper databaseHelper = null;
+
 	private TaskService service = new TaskService();
+	private TaskDatabase db = TaskDatabaseHelper.getDatabase();
 
 	private final String LOG_TAG = "#" + getClass().getSimpleName();
 
@@ -41,7 +38,8 @@ public class TaskActivity extends Activity {
 		// this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_task);
 		
-		getHelper().createMockFeatures();
+		db.createMockFeatures();
+		
 		this.getLocalTasks();
 
 		Button btn_get_tasks = (Button) findViewById(R.id.btn_get_tasks);
@@ -93,30 +91,6 @@ public class TaskActivity extends Activity {
 			}
 		});
 	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-
-		/*
-		 * You'll need this in your class to release the helper when done.
-		 */
-		if (databaseHelper != null) {
-			OpenHelperManager.releaseHelper();
-			databaseHelper = null;
-		}
-	}
-
-	/**
-	 * You'll need this in your class to get the helper from the manager once
-	 * per class.
-	 */
-	private TaskDatabaseHelper getHelper() {
-		if (databaseHelper == null) {
-			databaseHelper = new TaskDatabaseHelper(getApplicationContext());
-		}
-		return databaseHelper;
-	}
 		
 	/**
 	 * 
@@ -129,7 +103,7 @@ public class TaskActivity extends Activity {
 		List<Task> list = null;
 		try {
 			// get our dao
-			Dao<Task, Integer> taskDao = getHelper().getTaskDao();
+			Dao<Task, Integer> taskDao = db.getTaskDao();
 			// query for all of the data objects in the database
 			list = taskDao.queryForAll();
 			Log.i(LOG_TAG, "GetAll!");

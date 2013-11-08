@@ -29,9 +29,9 @@ public class Task implements Serializable {
 	@DatabaseField
 	private Integer buildingNumber; // numeração predial
 	@DatabaseField
-	private Integer latitude; // coordenadas do centroide da feição, no caso de Bauru o Lote.
+	private Double latitude; // coordenadas do centroide da feição, no caso de Bauru o Lote.
 	@DatabaseField
-	private Integer longitude;
+	private Double longitude;
 	@DatabaseField
 	private Boolean isSyncronized; // sincronizado com o servidor?
 	@DatabaseField(canBeNull = false, foreign = true)
@@ -42,8 +42,8 @@ public class Task implements Serializable {
 	}
 
 	public Task(Integer id, Integer featureCode, Integer idAddress,
-			String addressName, Integer buildingNumber, Integer latitude,
-			Integer longitude, Boolean isSyncronized, Form form) {
+			String addressName, Integer buildingNumber, Double latitude,
+			Double longitude, Boolean isSyncronized, Form form) {
 		super();
 		this.id = id;
 		this.featureCode = featureCode;
@@ -96,19 +96,19 @@ public class Task implements Serializable {
 		this.buildingNumber = buildingNumber;
 	}
 
-	public Integer getLatitude() {
+	public Double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(Integer latitude) {
+	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
 
-	public Integer getLongitude() {
+	public Double getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(Integer longitude) {
+	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
 
