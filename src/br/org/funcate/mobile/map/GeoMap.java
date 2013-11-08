@@ -22,7 +22,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -31,6 +30,7 @@ import android.widget.Toast;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.form.GeoForm;
+import br.org.funcate.mobile.task.Task;
 import br.org.funcate.mobile.task.TaskActivity;
 
 public class GeoMap extends Activity {
@@ -43,7 +43,7 @@ public class GeoMap extends Activity {
 
 	protected LocationManager locationManager;
 	protected ArrayList<OverlayItem> overlayItems;
-	private LayoutInflater controlInflater = null;
+	//private LayoutInflater controlInflater = null;
 
 	private Location lastLocation;
 	private GeoMap self = this;
@@ -58,15 +58,10 @@ public class GeoMap extends Activity {
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
 		mapView.setMultiTouchControls(true);
-		
+
 		controller = mapView.getController();
 		controller.setZoom(16);
 		controller.setCenter(new GeoPoint(-23.1791, -45.8872));
-
-		//controlInflater = LayoutInflater.from(getBaseContext());
-		//View viewControl = controlInflater.inflate(R.layout.geomap_control, null);
-		//LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-		//this.addContentView(viewControl, layoutParamsControl);
 
 		// overlay location
 		overlayItems = new ArrayList<OverlayItem>();
@@ -82,6 +77,12 @@ public class GeoMap extends Activity {
 		}
 
 		/*
+
+		controlInflater = LayoutInflater.from(getBaseContext());
+		View viewControl = controlInflater.inflate(R.layout.geomap_control, null);
+		LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		this.addContentView(viewControl, layoutParamsControl);
+
 		// buttons
 		ImageButton bt_form = (ImageButton) findViewById(R.id.geomap_control_bt_form);
 		ImageButton bt_back = (ImageButton) findViewById(R.id.geomap_control_bt_back);
@@ -112,7 +113,7 @@ public class GeoMap extends Activity {
 	public void openGeoform() {
 		Intent i = new Intent(GeoMap.this, GeoForm.class);
 		i.putExtra("CURRENT_LOCATION", self.lastLocation);
-		startActivityForResult(i, GEOFORM);				
+		startActivityForResult(i, GEOFORM);	
 	}
 
 	public void openTaskScreen() {
@@ -175,8 +176,7 @@ public class GeoMap extends Activity {
 
 	};
 
-	private class MyItemizedIconOverlay extends
-	ItemizedIconOverlay<OverlayItem> {
+	private class MyItemizedIconOverlay extends ItemizedIconOverlay<OverlayItem> {
 
 		public MyItemizedIconOverlay(
 				List<OverlayItem> pList,
@@ -210,6 +210,19 @@ public class GeoMap extends Activity {
 			return super.onSingleTapUpHelper(index, item, mapView);
 		}
 	}
+
+	/**
+	 * 	Update all landmarks from the map.
+	 * 
+	 * @author Paulo Luan
+	 * @param tasks
+	 */
+	public void updateLandmarks(List<Task> tasks){
+	}
+
+	
+	//TODO: listar todos os tasks e fazer landmarks disto, abrindo a tela de formulário baseado no objeto clicado.
+	
 
 	/*
 	 * 

@@ -69,7 +69,7 @@ public class TaskActivity extends Activity {
 				self.showLoadingMask();
 
 				try {
-					self.sendTasks();
+					self.saveTasksRemotely();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -117,7 +117,14 @@ public class TaskActivity extends Activity {
 		}
 		return databaseHelper;
 	}
-
+		
+	/**
+	 * 
+	 * This function return the local data, persisted in SQLite Database.
+	 * 
+	 * @author Paulo Luan
+	 * @return List<Task>
+	 */
 	public List<Task> getLocalTasks() {
 		List<Task> list = null;
 		try {
@@ -132,17 +139,25 @@ public class TaskActivity extends Activity {
 		return list;
 	}
 
+	/**
+	 * 
+	 * Instantiate a service object, that realize AJAX call to persist the local
+	 * data with the remote database via Rest.
+	 * 
+	 * @author Paulo Luan
+	 * @return List<Task>
+	 */
 	public List<Task> getRemoteTasks() {
 		// faz chamada ajax.
 		List<Task> remoteTasks = service.getTasks();
 		return remoteTasks;
 	}
 
-	public void saveTasks(List<Task> tasks) {
+	public void saveTasksLocally(List<Task> tasks) {
 
 	}
 
-	public void sendTasks() {
+	public void saveTasksRemotely() {
 		service.getTasks();
 	}
 
@@ -151,8 +166,7 @@ public class TaskActivity extends Activity {
 	}
 
 	public void showLoadingMask() {
-		dialog = ProgressDialog.show(TaskActivity.this, "",
-				"Carregando, aguarde...", true);
+		dialog = ProgressDialog.show(TaskActivity.this, "", "Carregando, aguarde...", true);
 	}
 
 	public void showLoadingMask(String message) {
