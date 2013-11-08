@@ -42,7 +42,7 @@ public class GeoMap extends Activity {
 	protected ArrayList<OverlayItem> overlayItems;
 	// private LayoutInflater controlInflater = null;
 
-	private TaskDatabase db = TaskDatabaseHelper.getDatabase();
+	private TaskDatabase db;
 
 	private Location lastLocation;
 	private GeoMap self = this;
@@ -53,6 +53,8 @@ public class GeoMap extends Activity {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_geomap);
+		
+		db = TaskDatabaseHelper.getDatabase(this);
 
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);

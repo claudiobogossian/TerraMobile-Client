@@ -25,7 +25,7 @@ import com.j256.ormlite.dao.Dao;
 public class TaskActivity extends Activity {
 
 	private TaskService service = new TaskService();
-	private TaskDatabase db = TaskDatabaseHelper.getDatabase();
+	private TaskDatabase db;
 
 	private final String LOG_TAG = "#" + getClass().getSimpleName();
 
@@ -38,6 +38,7 @@ public class TaskActivity extends Activity {
 		// this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_task);
 		
+		db = TaskDatabaseHelper.getDatabase(this);
 		db.createMockFeatures();
 		
 		this.getLocalTasks();

@@ -149,8 +149,8 @@ public class TaskDatabase extends SQLiteOpenHelper {
 				task.setFeatureCode(i);
 				task.setIdAddress(i);
 				task.setIsSyncronized(false);
-				task.setLatitude((double) i);
-				task.setLongitude((double) i);
+				task.setLatitude((double) -23.1791);
+				task.setLongitude((double) -45.8872 + ((i + 10) * 3));
 				
 				form.setAddress("address" + i);
 				form.setCity("city" + i);

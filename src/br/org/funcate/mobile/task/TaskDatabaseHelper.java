@@ -1,6 +1,7 @@
 package br.org.funcate.mobile.task;
 
 import android.app.Application;
+import android.content.Context;
 
 public class TaskDatabaseHelper extends Application {
 	
@@ -30,7 +31,10 @@ public class TaskDatabaseHelper extends Application {
 		mDbHelper = null;
 	}
 
-	public static TaskDatabase getDatabase() {
+	public static TaskDatabase getDatabase(Context context) {
+		if(mDbHelper == null){
+			mDbHelper = TaskDatabase.getInstance(context);
+		}
 		return mDbHelper;
 	}
 }
