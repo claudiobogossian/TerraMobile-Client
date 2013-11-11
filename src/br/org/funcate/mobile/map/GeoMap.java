@@ -53,8 +53,9 @@ public class GeoMap extends Activity {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_geomap);
-		
+
 		db = TaskDatabaseHelper.getDatabase(this);
+		db.createMockFeatures();
 
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
@@ -104,6 +105,8 @@ public class GeoMap extends Activity {
 		 * 
 		 * @Override public void onClick(View v) { self.openTaskScreen(); } });
 		 */
+		
+		this.showLandmarks();
 	}
 
 	public void openGeoform() {
@@ -136,7 +139,9 @@ public class GeoMap extends Activity {
 	}
 
 	private void updateLoc(Location loc) {
-		GeoPoint locGeoPoint = new GeoPoint(loc.getLatitude(), loc.getLongitude());
+		Double latitude = loc.getLatitude(); // -23.157618544172863
+		Double longitude = loc.getLongitude(); // -45.79068200523216
+		GeoPoint locGeoPoint = new GeoPoint(latitude, longitude);
 		controller.setCenter(locGeoPoint);
 		//setOverlayLoc(loc);
 		mapView.invalidate();
@@ -145,8 +150,7 @@ public class GeoMap extends Activity {
 	private synchronized void addLandmarkToMap(Location overlayloc) {
 		GeoPoint overlocGeoPoint = new GeoPoint(overlayloc);
 		// overlayItems.clear();
-		OverlayItem newMyLocationItem = new OverlayItem("ID", "My Location",
-				"My Location", overlocGeoPoint);
+		OverlayItem newMyLocationItem = new OverlayItem("ID", "My Location", "My Location", overlocGeoPoint);
 		overlayItems.add(newMyLocationItem);
 	}
 
@@ -165,12 +169,7 @@ public class GeoMap extends Activity {
 			List<Task> features = dao.queryForAll();
 
 			for (Task feature : features) {
-				Double latitude = feature.getLatitude();
-				Double longitude = feature.getLongitude();
-
-				GeoPoint geoPoint = new GeoPoint(latitude, longitude);
-				MyItemizedOverlay overlayItem = createItemOverlay(geoPoint, "red");
-				
+				MyItemizedOverlay overlayItem = createItemOverlay(feature);
 				this.addLandmarksToMap(overlayItem);
 			}
 		} catch (SQLException e) {
@@ -182,29 +181,35 @@ public class GeoMap extends Activity {
 	 * Creates an overlay item.
 	 * @return
 	 */
-	public MyItemizedOverlay createItemOverlay(GeoPoint p, String color) {		
+	public MyItemizedOverlay createItemOverlay(Task feature) {		
 		ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();         
 		MyItemizedOverlay overlay = new MyItemizedOverlay(this, overlayItemArray);
+
+		Double latitude = feature.getLatitude();
+		Double longitude = feature.getLongitude();
 		
-		OverlayItem overlayItem = new OverlayItem("Test Overlay", "Teste 123", p);
+		GeoPoint geoPoint = new GeoPoint(latitude, longitude);
+
+		OverlayItem overlayItem = new OverlayItem("Dados do Terreno", feature.toString(), geoPoint);
 		overlayItem.setMarkerHotspot(OverlayItem.HotspotPlace.BOTTOM_CENTER);
-		
+
 		Drawable marker;
-		
-		if(color == "green"){
+
+		if(feature.isSyncronized()){
 			marker = getResources().getDrawable(R.drawable.ic_landmark_green);
 		} else {
 			marker = getResources().getDrawable(R.drawable.ic_landmark_red);
 		}
-		
+
 		overlayItem.setMarker(marker);
-		
 		overlay.addItem(overlayItem);
 		
+		controller.setCenter(geoPoint);
+
 		return overlay;
 	}
-	
-	public void addLandmarksToMap(MyItemizedOverlay overlay){		
+
+	public void addLandmarksToMap(MyItemizedOverlay overlay){
 		mapView.getOverlays().add(overlay);
 		mapView.invalidate();
 	}

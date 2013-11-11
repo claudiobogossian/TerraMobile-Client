@@ -11,9 +11,9 @@ public class Form {
 	@DatabaseField
 	public String date;
 	@DatabaseField
-	public String latitude;
+	public Double latitude;
 	@DatabaseField
-	public String longitude;
+	public Double longitude;
 	@DatabaseField
 	public String number;
 	@DatabaseField(canBeNull = true)
@@ -33,8 +33,8 @@ public class Form {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Form(Integer id, String photo, String date, String latitude,
-			String longitude, String number, String if1, String if2,
+	public Form(Integer id, String photo, String date, Double latitude,
+			Double longitude, String number, String if1, String if2,
 			String address, String postalCode, String city, String state) {
 		super();
 		this.id = id;
@@ -75,19 +75,19 @@ public class Form {
 		this.date = date;
 	}
 
-	public String getLatitude() {
+	public Double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(String latitude) {
+	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
 
-	public String getLongitude() {
+	public Double getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(String longitude) {
+	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
 

@@ -33,7 +33,7 @@ public class Task implements Serializable {
 	@DatabaseField
 	private Double longitude;
 	@DatabaseField
-	private Boolean isSyncronized; // sincronizado com o servidor?
+	private boolean syncronized; // sincronizado com o servidor?
 	@DatabaseField(canBeNull = false, foreign = true)
 	private Form form;
 
@@ -43,7 +43,7 @@ public class Task implements Serializable {
 
 	public Task(Integer id, Integer featureCode, Integer idAddress,
 			String addressName, Integer buildingNumber, Double latitude,
-			Double longitude, Boolean isSyncronized, Form form) {
+			Double longitude, Boolean syncronized, Form form) {
 		super();
 		this.id = id;
 		this.featureCode = featureCode;
@@ -52,7 +52,7 @@ public class Task implements Serializable {
 		this.buildingNumber = buildingNumber;
 		this.latitude = latitude;
 		this.longitude = longitude;
-		this.isSyncronized = isSyncronized;
+		this.syncronized = syncronized;
 		this.form = form;
 	}
 
@@ -112,12 +112,12 @@ public class Task implements Serializable {
 		this.longitude = longitude;
 	}
 
-	public Boolean getIsSyncronized() {
-		return isSyncronized;
+	public boolean isSyncronized() {
+		return syncronized;
 	}
 
-	public void setIsSyncronized(Boolean isSyncronized) {
-		this.isSyncronized = isSyncronized;
+	public void setSyncronized(boolean syncronized) {
+		this.syncronized = syncronized;
 	}
 
 	public Form getForm() {
@@ -127,4 +127,12 @@ public class Task implements Serializable {
 	public void setForm(Form form) {
 		this.form = form;
 	}
+
+	@Override
+	public String toString() {
+		return "\n Rua : " + addressName
+				+ "\n Número : " + buildingNumber;
+	}
+	
+	
 }

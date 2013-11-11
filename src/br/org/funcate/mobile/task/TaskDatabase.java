@@ -139,8 +139,11 @@ public class TaskDatabase extends SQLiteOpenHelper {
 			// here we try inserting data in the on-create as a test
 			taskDao = getTaskDao();
 			formDao = getFormDao();
-
-			for (int i = 0; i < 20; i++) {
+			
+			int i = 1;
+			
+			//for (int i = 0; i < 20; i++) {
+				
 				Task task = new Task();
 				Form form = new Form();
 				
@@ -148,17 +151,18 @@ public class TaskDatabase extends SQLiteOpenHelper {
 				task.setBuildingNumber(i);
 				task.setFeatureCode(i);
 				task.setIdAddress(i);
-				task.setIsSyncronized(false);
-				task.setLatitude((double) -23.1791);
-				task.setLongitude((double) -45.8872 + ((i + 10) * 3));
+				//task.setSyncronized(false);
+				task.setSyncronized(true);
+				task.setLatitude(-23.157618544172863);
+				task.setLongitude(-45.79068200523216);
 				
 				form.setAddress("address" + i);
 				form.setCity("city" + i);
 				form.setDate("date" + i);
 				form.setIf1("if1" + i);
 				form.setIf2("if2" + i);
-				form.setLatitude("latitude");
-				form.setLongitude("longitude");
+				form.setLatitude(-23.157618544172863);
+				form.setLongitude(-45.79068200523216);
 				form.setNumber("number");
 				form.setPhoto("photo" + i);
 				form.setPostalCode("Code(postalCode" + i);
@@ -170,7 +174,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
 				taskDao.create(task);
 				
 				Log.i(LOG_TAG, "ID_TASK: " + task.getId() + "  ID_FORM: " + form.getId());
-			}
+			//}
 
 			Log.i(LOG_TAG, "created new entries in onCreate: ");
 		} catch (SQLException e) {

@@ -47,8 +47,7 @@ class MyItemizedOverlay extends ItemizedIconOverlay<OverlayItem> {
 	@Override
 	protected boolean onSingleTapUpHelper(final int index,
 			final OverlayItem item, final MapView mapView) {
-		// Toast.makeText(mContext, "Item " + index + " has been tapped!",
-		// Toast.LENGTH_SHORT).show();
+		// Toast.makeText(mContext, "Item " + index + " has been tapped!", Toast.LENGTH_SHORT).show();
 		AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
 		dialog.setTitle(item.getTitle());
 		dialog.setMessage(item.getSnippet());
