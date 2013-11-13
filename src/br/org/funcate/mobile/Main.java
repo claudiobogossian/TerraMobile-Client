@@ -21,7 +21,6 @@ import br.org.funcate.mobile.map.GeoMap;
 public class Main extends Activity {
 
 	public static final String TAG = "#MAIN";
-	private Main self = this;
 
 	// other activities
 	private static final int GEOMAP = 100;
