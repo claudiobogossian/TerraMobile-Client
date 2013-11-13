@@ -1,0 +1,5 @@
+package br.org.funcate.baurudigital.server.model.exception;
+
+public class ConfigException extends Exception {
+
+}

@@ -1,0 +1,29 @@
+package br.org.funcate.baurudigital.server.controller.rest;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+
+import br.org.funcate.baurudigital.server.util.PropertiesReader;
+
+@Path("/tiles")
+public class TilesRestService
+{
+
+	@GET
+	@Path("/zip")
+	@Produces("application/zip")
+	public Response getTiles() {
+	
+		PropertiesReader.getProperty("");
+		
+        ResponseBuilder response = Response.ok((Object) );
+        response.header("Content-Disposition", "attachment; filename=\"howtodoinjava.pdf\"");
+		return ;
+
+	}
+
+}

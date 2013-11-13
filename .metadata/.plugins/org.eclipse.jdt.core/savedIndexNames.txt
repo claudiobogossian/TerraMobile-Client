@@ -1,0 +1,24 @@
+INDEX VERSION 1.126+/home/bogo/workspace-bauru/bauru-digital/.metadata/.plugins/org.eclipse.jdt.core
+3806379418.index
+1291487252.index
+3033192775.index
+3368800820.index
+3254919786.index
+3847825125.index
+2701751647.index
+243871893.index
+2702403663.index
+3019268738.index
+1150366783.index
+1449775907.index
+3241332491.index
+3240125408.index
+3116102517.index
+3900808531.index
+2283992557.index
+3486699469.index
+3104191383.index
+3849014423.index
+3121080096.index
+4254528355.index
+3877108753.index
