@@ -32,10 +32,13 @@ public class POIInfoWindow extends DefaultInfoWindow {
 			//bonuspack_bubble layouts already contain a "more info" button. 
 		btn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
+				/*
+				// TODO: Fazer com que Intent abra com o objeto agregado
 				if (mSelectedPOI.mUrl != null){
 					Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mSelectedPOI.mUrl));
 					view.getContext().startActivity(myIntent);
 				}
+				*/
 			}
 		});
 	}
