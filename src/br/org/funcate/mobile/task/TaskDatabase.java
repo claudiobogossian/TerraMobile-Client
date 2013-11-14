@@ -157,7 +157,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
 				form.setLatitude(-23.157618544172863);
 				form.setLongitude(-45.79068200523216);
 				form.setNumber("number");
-				form.setPhoto("photo" + i);
+				form.setPhotoActivity("photo" + i);
 				form.setPostalCode("Code(postalCode" + i);
 				form.setState("state" + i);
 				

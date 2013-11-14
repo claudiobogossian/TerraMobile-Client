@@ -1,54 +1,38 @@
 package br.org.funcate.mobile.form;
 
+import java.io.Serializable;
+import java.util.Date;
+
 import com.j256.ormlite.field.DatabaseField;
 
-public class Form {
+public class Form implements Serializable {
 
 	@DatabaseField(generatedId = true, columnName = "id")
-	public Integer id;
+	private Integer id;
 	@DatabaseField
-	public String photo;
+	private Date date;
 	@DatabaseField
-	public String date;
+	private Double coordx;
 	@DatabaseField
-	public Double latitude;
+	private Double coordy;
 	@DatabaseField
-	public Double longitude;
+	private String info1;
 	@DatabaseField
-	public String number;
-	@DatabaseField(canBeNull = true)
-	public String if1;
-	@DatabaseField(canBeNull = true)
-	public String if2;
-	@DatabaseField
-	public String address; // logradouro
-	@DatabaseField
-	public String postalCode;
-	@DatabaseField
-	public String city;
-	@DatabaseField
-	public String state;
+	private String info2;
 
 	public Form() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Form(Integer id, String photo, String date, Double latitude,
-			Double longitude, String number, String if1, String if2,
-			String address, String postalCode, String city, String state) {
+	public Form(Integer id, Date date, Double coordx, Double coordy,
+			String info1, String info2) {
 		super();
 		this.id = id;
-		this.photo = photo;
 		this.date = date;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.number = number;
-		this.if1 = if1;
-		this.if2 = if2;
-		this.address = address;
-		this.postalCode = postalCode;
-		this.city = city;
-		this.state = state;
+		this.coordx = coordx;
+		this.coordy = coordy;
+		this.info1 = info1;
+		this.info2 = info2;
 	}
 
 	public Integer getId() {
@@ -59,92 +43,44 @@ public class Form {
 		this.id = id;
 	}
 
-	public String getPhoto() {
-		return photo;
-	}
-
-	public void setPhoto(String photo) {
-		this.photo = photo;
-	}
-
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 
-	public Double getLatitude() {
-		return latitude;
+	public Double getCoordx() {
+		return coordx;
 	}
 
-	public void setLatitude(Double latitude) {
-		this.latitude = latitude;
+	public void setCoordx(Double coordx) {
+		this.coordx = coordx;
 	}
 
-	public Double getLongitude() {
-		return longitude;
+	public Double getCoordy() {
+		return coordy;
 	}
 
-	public void setLongitude(Double longitude) {
-		this.longitude = longitude;
+	public void setCoordy(Double coordy) {
+		this.coordy = coordy;
 	}
 
-	public String getNumber() {
-		return number;
+	public String getInfo1() {
+		return info1;
 	}
 
-	public void setNumber(String number) {
-		this.number = number;
+	public void setInfo1(String info1) {
+		this.info1 = info1;
 	}
 
-	public String getIf1() {
-		return if1;
+	public String getInfo2() {
+		return info2;
 	}
 
-	public void setIf1(String if1) {
-		this.if1 = if1;
-	}
-
-	public String getIf2() {
-		return if2;
-	}
-
-	public void setIf2(String if2) {
-		this.if2 = if2;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getPostalCode() {
-		return postalCode;
-	}
-
-	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getState() {
-		return state;
-	}
-
-	public void setState(String state) {
-		this.state = state;
+	public void setInfo2(String info2) {
+		this.info2 = info2;
 	}
 
 }

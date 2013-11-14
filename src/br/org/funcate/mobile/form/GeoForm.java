@@ -26,7 +26,7 @@ import br.org.funcate.mobile.AddressAdapter;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.data.Provider;
 import br.org.funcate.mobile.data.ProviderAddress;
-import br.org.funcate.mobile.photo.Photo;
+import br.org.funcate.mobile.photo.PhotoActivity;
 
 public class GeoForm extends Activity {
 
@@ -159,7 +159,7 @@ public class GeoForm extends Activity {
 			bt_photo.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Intent i = new Intent(GeoForm.this, Photo.class);
+					Intent i = new Intent(GeoForm.this, PhotoActivity.class);
 					startActivityForResult(i, PHOTO);
 				}
 			});
