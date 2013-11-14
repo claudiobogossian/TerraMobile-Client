@@ -4,10 +4,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.overlays.ExtendedOverlayItem;
 import org.osmdroid.bonuspack.overlays.ItemizedOverlayWithBubble;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 
 import android.app.Activity;
@@ -34,7 +34,7 @@ import com.j256.ormlite.dao.Dao;
 public class GeoMap extends Activity {
 
 	private MapView mapView;
-	private IMapController controller;
+	private MapController controller;
 
 	// other activities
 	private static final int GEOFORM = 101;
@@ -54,31 +54,35 @@ public class GeoMap extends Activity {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_geomap);
 
-		db = TaskDatabaseHelper.getDatabase(this);
-		db.createMockFeatures();
-
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
 		mapView.setMultiTouchControls(true);
-
-		controller = mapView.getController();
+		//mapView.setUseDataConnection(false); // keeps the mapView from loading online tiles using network connection.
+		//mapView.setUseDataConnection(true);
+		
+		controller = (MapController) mapView.getController();
 		controller.setZoom(16);
-		controller.setCenter(new GeoPoint(-23.1791, -45.8872));
-
+		controller.setCenter(new GeoPoint(-22.317773, -49.059534));
+		
+		// new GeoPoint(-22.317773, -49.059534) // Bauru 
+		// new GeoPoint(-23.157221, -45.792443) // SJC
+		
 		//POI markers:
 		final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
 		poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, poiItems, mapView, new POIInfoWindow(mapView));
 		//poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, poiItems, mapView);
 		mapView.getOverlays().add(poiMarkers);
 		
-		this.showLandmarks();
-		
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
 		if (lastLocation != null) {
-			updateLoc(lastLocation);
+			//updateLoc(lastLocation);
 		}
+
+		//db = TaskDatabaseHelper.getDatabase(this);
+		//db.createMockFeatures();
+		//this.showLandmarks();
 	}
 
 	public void openGeoform() {

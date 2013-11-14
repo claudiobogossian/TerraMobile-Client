@@ -5,8 +5,6 @@ import org.osmdroid.bonuspack.overlays.DefaultInfoWindow;
 import org.osmdroid.bonuspack.overlays.ExtendedOverlayItem;
 import org.osmdroid.views.MapView;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.view.View;
 import android.widget.Button;
 import br.org.funcate.mobile.R;

@@ -10,9 +10,7 @@ import br.org.funcate.mobile.form.Form;
 
 import com.j256.ormlite.android.AndroidConnectionSource;
 import com.j256.ormlite.android.AndroidDatabaseConnection;
-import com.j256.ormlite.android.DatabaseTableConfigUtil;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.DatabaseTableConfig;
 import com.j256.ormlite.table.TableUtils;
@@ -60,8 +58,8 @@ public class TaskDatabase extends SQLiteOpenHelper {
 			try {
 				connectionSource.saveSpecialConnection(conn);
 				clearSpecial = true;
-				TableUtils.createTableIfNotExists(connectionSource, Form.class);
-        		TableUtils.createTableIfNotExists(connectionSource, Task.class);
+				TableUtils.createTable(connectionSource, Form.class);
+        		TableUtils.createTable(connectionSource, Task.class);
 			} catch (SQLException e) {
 				throw new IllegalStateException("Could not save special connection", e);
 			}
@@ -81,12 +79,8 @@ public class TaskDatabase extends SQLiteOpenHelper {
 		boolean clearSpecial = false;
 		if (conn == null) {
 			conn = new AndroidDatabaseConnection(db, true);
-			try {
-				connectionSource.saveSpecialConnection(conn);
-				clearSpecial = true;
-			} catch (SQLException e) {
-				throw new IllegalStateException("Could not save special connection", e);
-			}
+			connectionSource.saveSpecialConnection(conn);
+			clearSpecial = true;
 		}
 		try {
 			this.upgradeDatabase(oldVersion, newVersion);
@@ -112,7 +106,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
 	 */
 	public Dao<Task, Integer> getTaskDao() throws SQLException {
 		if (taskDao == null) {
-			taskDao = getDao(Task.class);
+			//taskDao = getDao(Task.class);
 		}
 		return taskDao;
 	}
@@ -123,7 +117,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
 	 */
 	public Dao<Form, Integer> getFormDao() throws SQLException {
 		if (formDao == null) {
-			formDao = getDao(Form.class);
+			//formDao = getDao(Form.class);
 		}
 		return formDao;
 	}
@@ -133,8 +127,8 @@ public class TaskDatabase extends SQLiteOpenHelper {
 			TableUtils.dropTable(connectionSource, Form.class, true);
 			TableUtils.dropTable(connectionSource, Task.class, true);
 			
-			TableUtils.createTableIfNotExists(connectionSource, Form.class);
-    		TableUtils.createTableIfNotExists(connectionSource, Task.class);
+			TableUtils.createTable(connectionSource, Form.class);
+    		TableUtils.createTable(connectionSource, Task.class);
 			
 			// here we try inserting data in the on-create as a test
 			taskDao = getTaskDao();
@@ -153,9 +147,8 @@ public class TaskDatabase extends SQLiteOpenHelper {
 				task.setIdAddress(i);
 				//task.setSyncronized(false);
 				task.setSyncronized(true);
-				task.setLatitude(-23.157618544172863);
-				task.setLongitude(-45.79068200523216);
-				
+				task.setLatitude(-22.317773);
+				task.setLongitude(-49.059534);				
 				form.setAddress("address" + i);
 				form.setCity("city" + i);
 				form.setDate("date" + i);
@@ -164,7 +157,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
 				form.setLatitude(-23.157618544172863);
 				form.setLongitude(-45.79068200523216);
 				form.setNumber("number");
-				form.setPhoto("photo" + i);
+				form.setPhotoActivity("photo" + i);
 				form.setPostalCode("Code(postalCode" + i);
 				form.setState("state" + i);
 				
@@ -199,17 +192,14 @@ public class TaskDatabase extends SQLiteOpenHelper {
 		}
 	}
 
+	/*
 	private <D extends Dao<T, ?>, T> D getDao(Class<T> clazz) throws SQLException {
 		// lookup the dao, possibly invoking the cached database config
-		Dao<T, ?> dao = DaoManager.lookupDao(connectionSource, clazz);
+		Dao<T, ?> dao = Dao<T, ID>.lookupDao(connectionSource, clazz);
 		if (dao == null) {
 			// try to use our new reflection magic
 			DatabaseTableConfig<T> tableConfig = DatabaseTableConfigUtil.fromClass(connectionSource, clazz);
 			if (tableConfig == null) {
-				/**
-				 * TODO: we have to do this to get to see if they are using the deprecated annotations like
-				 * {@link DatabaseFieldSimple}.
-				 */
 				dao = (Dao<T, ?>) DaoManager.createDao(connectionSource, clazz);
 			} else {
 				dao = (Dao<T, ?>) DaoManager.createDao(connectionSource, tableConfig);
@@ -219,5 +209,5 @@ public class TaskDatabase extends SQLiteOpenHelper {
 		@SuppressWarnings("unchecked")
 		D castDao = (D) dao;
 		return castDao;
-	}
+	}*/
 }
