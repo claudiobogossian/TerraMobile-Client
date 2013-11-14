@@ -195,12 +195,11 @@ public final class R {
         public static final int activity_main=0x7f030002;
         public static final int activity_photo=0x7f030003;
         public static final int activity_task=0x7f030004;
-        public static final int bonuspack_bubble=0x7f030005;
-        public static final int bubble_black=0x7f030006;
-        public static final int bubble_white=0x7f030007;
-        public static final int geomap_control=0x7f030008;
-        public static final int item_list=0x7f030009;
-        public static final int photo_control=0x7f03000a;
+        public static final int bubble_black=0x7f030005;
+        public static final int bubble_white=0x7f030006;
+        public static final int geomap_control=0x7f030007;
+        public static final int item_list=0x7f030008;
+        public static final int photo_control=0x7f030009;
     }
     public static final class menu {
         public static final int geomap=0x7f080000;
