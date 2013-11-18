@@ -16,11 +16,11 @@ public class Task implements Serializable {
 
 	@DatabaseField(generatedId = true, columnName = "id")
 	private Integer id;
-	@DatabaseField(canBeNull = false, foreign = true)
+	@DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3)
 	private Address address;
-	@DatabaseField(canBeNull = false, foreign = true)
+	@DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3)
 	private User user;
-	@DatabaseField(canBeNull = false, foreign = true)
+	@DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3)
 	private Form form;
 	@DatabaseField
 	private boolean syncronized; // sincronizado com o servidor?

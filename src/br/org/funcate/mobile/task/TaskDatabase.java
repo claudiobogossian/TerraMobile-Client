@@ -16,6 +16,7 @@ import com.j256.ormlite.android.AndroidConnectionSource;
 import com.j256.ormlite.android.AndroidDatabaseConnection;
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
 
@@ -100,8 +101,13 @@ public class TaskDatabase extends SQLiteOpenHelper {
 		boolean clearSpecial = false;
 		if (conn == null) {
 			conn = new AndroidDatabaseConnection(db, true);
-			connectionSource.saveSpecialConnection(conn);
-			clearSpecial = true;
+			try {
+				connectionSource.saveSpecialConnection(conn);
+				clearSpecial = true;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		try {
 			this.upgradeDatabase(oldVersion, newVersion);
@@ -191,22 +197,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
 	}
 	
 	private <D extends Dao<T, ?>, T> D getDao(Class<T> clazz) throws SQLException {
-		Dao<T, ?> dao = (Dao<T, ?>) BaseDaoImpl.createDao(connectionSource, clazz);
-		
-		/*
-		// lookup the dao, possibly invoking the cached database config
-		Dao<T, ?> dao = Dao<T, ID>.lookupDao(connectionSource, clazz);
-		if (dao == null) {
-			// try to use our new reflection magic
-			DatabaseTableConfig<T> tableConfig = DatabaseTableConfigUtil.fromClass(connectionSource, clazz);
-			
-			if (tableConfig == null) {
-				dao = (Dao<T, ?>) BaseDaoImpl.createDao(connectionSource, clazz);
-			} else {
-				//dao = (Dao<T, ?>) BaseDaoImpl.createDao(connectionSource, tableConfig);
-			}
-		}*/
-
+		Dao<T, ?> dao = (Dao<T, ?>) DaoManager.createDao(connectionSource, clazz);
 		@SuppressWarnings("unchecked")
 		D castDao = (D) dao;
 		return castDao;
