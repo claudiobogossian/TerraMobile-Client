@@ -39,7 +39,6 @@ public class TaskActivity extends Activity {
 		setContentView(R.layout.activity_task);
 		
 		db = TaskDatabaseHelper.getDatabase(this);
-		db.createMockFeatures();
 		
 		this.getLocalTasks();
 
@@ -104,7 +103,7 @@ public class TaskActivity extends Activity {
 		List<Task> list = null;
 		try {
 			// get our dao
-			Dao<Task, Integer> taskDao = db.getTaskDao();
+			Dao<Task, Integer> taskDao = db.taskDao;
 			// query for all of the data objects in the database
 			list = taskDao.queryForAll();
 			Log.i(LOG_TAG, "GetAll!");

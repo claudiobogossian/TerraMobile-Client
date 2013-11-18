@@ -23,6 +23,7 @@ import android.view.Window;
 import android.widget.Toast;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
+import br.org.funcate.mobile.address.Address;
 import br.org.funcate.mobile.form.GeoForm;
 import br.org.funcate.mobile.task.Task;
 import br.org.funcate.mobile.task.TaskActivity;
@@ -80,9 +81,9 @@ public class GeoMap extends Activity {
 			//updateLoc(lastLocation);
 		}
 
-		//db = TaskDatabaseHelper.getDatabase(this);
-		//db.createMockFeatures();
-		//this.showLandmarks();
+		db = TaskDatabaseHelper.getDatabase(this);
+		db.createMockFeatures();
+		this.showLandmarks();
 	}
 
 	public void openGeoform() {
@@ -131,7 +132,7 @@ public class GeoMap extends Activity {
 
 	public void showLandmarks() {
 		try {
-			Dao<Task, Integer> dao = db.getTaskDao();
+			Dao<Task, Integer> dao = db.taskDao;
 			List<Task> features = dao.queryForAll();
 
 			for (Task feature : features) {
@@ -147,9 +148,10 @@ public class GeoMap extends Activity {
 	 * Creates an overlay item.
 	 * @return
 	 */
-	public ExtendedOverlayItem createOverlayItem(Task feature) {	
-		Double latitude = feature.getLatitude();
-		Double longitude = feature.getLongitude();
+	public ExtendedOverlayItem createOverlayItem(Task feature) {
+		Address address = feature.getAddress();
+		Double latitude = address.getCoordx();
+		Double longitude = address.getCoordy();
 		GeoPoint geoPoint = new GeoPoint(latitude, longitude);
 
 		ExtendedOverlayItem poiMarker = new ExtendedOverlayItem("Dados do Terreno", feature.toString(), geoPoint, this);		
