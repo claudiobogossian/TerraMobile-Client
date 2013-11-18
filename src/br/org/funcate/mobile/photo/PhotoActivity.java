@@ -17,6 +17,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -40,6 +43,8 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
 	private ImageButton bt_fotografar;
 	private File pathfullapp;
 	private String photo_name;
+	protected LocationManager locationManager;
+	private Location lastLocation;
 
 	boolean previewing = false;
 	LayoutInflater controlInflater = null;
@@ -160,6 +165,23 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
 			if (_data != null) {
 				if (StoreByteImage(PhotoActivity.this, _data, 90)) {
 					confirmPicture();
+					locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+					LocationListener locationListener = new LocationListener() {
+						public void onLocationChanged(Location location) {
+							Intent intent = new Intent();
+							intent.putExtra("latitude", location.getLatitude());
+							intent.putExtra("longitude", location.getLongitude());
+							setResult(RESULT_OK, intent);
+						}
+						public void onStatusChanged(String provider, int status, Bundle extras) {}
+						public void onProviderEnabled(String provider) {}
+						public void onProviderDisabled(String provider) {}
+					};
+					locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 50, locationListener);
+					lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+					//					Log.d("lat", String.valueOf(lastLocation.getLatitude()));
+					//					Log.d("lon", String.valueOf(lastLocation.getLongitude()));
+					
 				} else {
 					setResult(RESULT_CANCELED, new Intent().putExtra("RESULT",
 							"Erro ao salvar foto!"));

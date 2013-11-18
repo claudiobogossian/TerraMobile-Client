@@ -149,10 +149,13 @@ public class GeoMap extends Activity {
 	 * @return
 	 */
 	public ExtendedOverlayItem createOverlayItem(Task feature) {
-		Address address = feature.getAddress();
+		
+		/*Address address = feature.getAddress();
 		Double latitude = address.getCoordx();
 		Double longitude = address.getCoordy();
-		GeoPoint geoPoint = new GeoPoint(latitude, longitude);
+		GeoPoint geoPoint = new GeoPoint(latitude, longitude);*/
+		
+		GeoPoint geoPoint = new GeoPoint(-22.318567, -49.060907);
 
 		ExtendedOverlayItem poiMarker = new ExtendedOverlayItem("Dados do Terreno", feature.toString(), geoPoint, this);		
 

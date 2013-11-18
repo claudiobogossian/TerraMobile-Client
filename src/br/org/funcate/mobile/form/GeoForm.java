@@ -1,5 +1,6 @@
 package br.org.funcate.mobile.form;
 
+import java.sql.SQLException;
 import java.util.Date;
 
 import android.app.Activity;
@@ -27,6 +28,11 @@ import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.data.Provider;
 import br.org.funcate.mobile.data.ProviderAddress;
 import br.org.funcate.mobile.photo.PhotoActivity;
+import br.org.funcate.mobile.task.Task;
+import br.org.funcate.mobile.task.TaskDatabase;
+import br.org.funcate.mobile.task.TaskDatabaseHelper;
+
+import com.j256.ormlite.dao.Dao;
 
 public class GeoForm extends Activity {
 
@@ -51,6 +57,8 @@ public class GeoForm extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_geoform);
+		
+		Task task = (Task)getIntent().getSerializableExtra("task");
 
 		Location currentLocation = null;
 
@@ -72,17 +80,31 @@ public class GeoForm extends Activity {
 		// linking widgets
 		log = (AutoCompleteTextView) findViewById(R.id.cp_log);
 		cep = (EditText) findViewById(R.id.cp_cep);
+		cep.setText(task.getAddress().getPostalCode());
 		num = (EditText) findViewById(R.id.cp_num);
+		num.setText(task.getAddress().getNumber());
 		lat = (TextView) findViewById(R.id.cp_lat);
 		lon = (TextView) findViewById(R.id.cp_lon);
 		cit = (EditText) findViewById(R.id.cp_cit);
+		cit.setText(task.getAddress().getCity());
 		est = (EditText) findViewById(R.id.cp_est);
+		est.setText(task.getAddress().getState());
 		if1 = (EditText) findViewById(R.id.cp_if1);
+		if1.setText(task.getForm().getInfo1());
 		if2 = (EditText) findViewById(R.id.cp_if2);
+		if2.setText(task.getForm().getInfo2());
 		bt_clear = (ImageButton) findViewById(R.id.cp_button_clear);
 		bt_cancel = (Button) findViewById(R.id.cp_button_cancel);
 		bt_ok = (Button) findViewById(R.id.cp_button_ok);
 		bt_photo = (Button) findViewById(R.id.cp_button_photo);
+
+		TaskDatabase db = TaskDatabaseHelper.getDatabase(this);
+		try {
+			Dao<Task, Integer> dao = db.taskDao;
+			dao.create(task);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		if (currentLocation != null) {
 			lat.setText("" + currentLocation.getLatitude());
@@ -216,6 +238,11 @@ public class GeoForm extends Activity {
 			if (resultCode == RESULT_OK) {
 				fot = getIntent().getExtras().getString("RESULT");
 				dat = new Date();
+				double latitude = data.getDoubleExtra("latitude", 0);
+				double longitude = data.getDoubleExtra("longitude", 0);
+				lat.setText(String.valueOf(latitude));
+				lon.setText(String.valueOf(longitude));
+				
 			} else if (resultCode == RESULT_CANCELED) {
 			}
 		}

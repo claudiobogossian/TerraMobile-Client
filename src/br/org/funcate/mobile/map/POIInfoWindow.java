@@ -5,9 +5,11 @@ import org.osmdroid.bonuspack.overlays.DefaultInfoWindow;
 import org.osmdroid.bonuspack.overlays.ExtendedOverlayItem;
 import org.osmdroid.views.MapView;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import br.org.funcate.mobile.R;
+import br.org.funcate.mobile.form.GeoForm;
 import br.org.funcate.mobile.task.Task;
 
 /**
@@ -30,13 +32,10 @@ public class POIInfoWindow extends DefaultInfoWindow {
 			//bonuspack_bubble layouts already contain a "more info" button. 
 		btn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				/*
-				// TODO: Fazer com que Intent abra com o objeto agregado
-				if (mSelectedPOI.mUrl != null){
-					Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mSelectedPOI.mUrl));
-					view.getContext().startActivity(myIntent);
-				}
-				*/
+				Intent intent = new Intent(view.getContext(), GeoForm.class);
+				intent.putExtra("task", task);
+				
+				view.getContext().startActivity(intent);
 			}
 		});
 	}
