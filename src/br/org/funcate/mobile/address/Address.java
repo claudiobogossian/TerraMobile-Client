@@ -10,7 +10,7 @@ public class Address implements Serializable {
 	@DatabaseField
 	private String name;
 	@DatabaseField
-	private String number;
+	private String number; // Base de dados pode ter String no número
 	@DatabaseField
 	private String extra; // complemento
 	@DatabaseField

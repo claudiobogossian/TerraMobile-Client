@@ -1,18 +1,23 @@
 package br.org.funcate.mobile.task;
 
 import java.sql.SQLException;
+import java.util.Date;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import br.org.funcate.mobile.address.Address;
 import br.org.funcate.mobile.form.Form;
+import br.org.funcate.mobile.photo.Photo;
+import br.org.funcate.mobile.user.User;
 
 import com.j256.ormlite.android.AndroidConnectionSource;
 import com.j256.ormlite.android.AndroidDatabaseConnection;
+import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.DatabaseConnection;
-import com.j256.ormlite.table.DatabaseTableConfig;
 import com.j256.ormlite.table.TableUtils;
 
 /**
@@ -30,13 +35,26 @@ public class TaskDatabase extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
 
 	// the DAO object we use to access the Task table
-	private Dao<Task, Integer> taskDao = null;
-	private Dao<Form, Integer> formDao = null;
+	public static Dao<Task, Integer> taskDao = null;
+	public static Dao<Form, Integer> formDao = null;
+	public static Dao<Photo, Integer> photoDao = null;
+	public static Dao<User, Integer> userDao = null;
+	public static Dao<Address, Integer> addressDao = null;
 
 	private static TaskDatabase instance;
 	
 	private TaskDatabase(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		
+		try {
+			taskDao = getDao(Task.class);
+			formDao = getDao(Form.class);
+			photoDao = getDao(Photo.class);
+			userDao = getDao(User.class);
+			addressDao = getDao(Address.class);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static TaskDatabase getInstance(Context context) {
@@ -58,8 +76,12 @@ public class TaskDatabase extends SQLiteOpenHelper {
 			try {
 				connectionSource.saveSpecialConnection(conn);
 				clearSpecial = true;
+				
+				TableUtils.createTable(connectionSource, Address.class);
+				TableUtils.createTable(connectionSource, User.class);
+				TableUtils.createTable(connectionSource, Photo.class);
 				TableUtils.createTable(connectionSource, Form.class);
-        		TableUtils.createTable(connectionSource, Task.class);
+				TableUtils.createTable(connectionSource, Task.class);
 			} catch (SQLException e) {
 				throw new IllegalStateException("Could not save special connection", e);
 			}
@@ -79,8 +101,13 @@ public class TaskDatabase extends SQLiteOpenHelper {
 		boolean clearSpecial = false;
 		if (conn == null) {
 			conn = new AndroidDatabaseConnection(db, true);
-			connectionSource.saveSpecialConnection(conn);
-			clearSpecial = true;
+			try {
+				connectionSource.saveSpecialConnection(conn);
+				clearSpecial = true;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		try {
 			this.upgradeDatabase(oldVersion, newVersion);
@@ -91,79 +118,56 @@ public class TaskDatabase extends SQLiteOpenHelper {
 		}
 	}
 
-	/**
-	 * Close the database connections and clear any cached DAOs.
-	 */
-	@Override
-	public void close() {
-		super.close();
-		taskDao = null;
-	}
-
-	/**
-	 * Returns the Database Access Object (DAO) for our Task class. It will create it or just give the cached
-	 * value.
-	 */
-	public Dao<Task, Integer> getTaskDao() throws SQLException {
-		if (taskDao == null) {
-			//taskDao = getDao(Task.class);
-		}
-		return taskDao;
-	}
-
-	/**
-	 * Returns the Database Access Object (DAO) for our Form class. It will create it or just give the cached
-	 * value.
-	 */
-	public Dao<Form, Integer> getFormDao() throws SQLException {
-		if (formDao == null) {
-			//formDao = getDao(Form.class);
-		}
-		return formDao;
-	}
-
 	public void createMockFeatures() {
 		try {
+			TableUtils.dropTable(connectionSource, Address.class, true);
+			TableUtils.dropTable(connectionSource, User.class, true);
+			TableUtils.dropTable(connectionSource, Photo.class, true);
 			TableUtils.dropTable(connectionSource, Form.class, true);
 			TableUtils.dropTable(connectionSource, Task.class, true);
 			
+			TableUtils.createTable(connectionSource, Address.class);
+			TableUtils.createTable(connectionSource, User.class);
+			TableUtils.createTable(connectionSource, Photo.class);
 			TableUtils.createTable(connectionSource, Form.class);
-    		TableUtils.createTable(connectionSource, Task.class);
-			
-			// here we try inserting data in the on-create as a test
-			taskDao = getTaskDao();
-			formDao = getFormDao();
+			TableUtils.createTable(connectionSource, Task.class);
 			
 			int i = 1;
 			
 			//for (int i = 0; i < 20; i++) {
+							
+				Address address = new Address();		
+				address.setCoordx(-22.318567);
+				address.setCoordy(-49.060907);
+				address.setCity("Bauru");
+				address.setNumber("1234");
+				address.setExtra("Logradouro");
+				address.setName("Rua Bauru");
+				address.setPostalCode("123456");
+				
+				Form form = new Form();
+				form.setDate(new Date());
+				form.setInfo1("Informação1");
+				form.setInfo2("Informação2");
+				
+				User user = new User();
+				user.setLogin("UserLogin");
+				user.setName("UserName");
+				user.setPassword("password123");
 				
 				Task task = new Task();
-				Form form = new Form();
-				
-				task.setAddressName("Address " + i);
-				task.setBuildingNumber(i);
-				task.setFeatureCode(i);
-				task.setIdAddress(i);
-				//task.setSyncronized(false);
-				task.setSyncronized(true);
-				task.setLatitude(-22.317773);
-				task.setLongitude(-49.059534);				
-				form.setAddress("address" + i);
-				form.setCity("city" + i);
-				form.setDate("date" + i);
-				form.setIf1("if1" + i);
-				form.setIf2("if2" + i);
-				form.setLatitude(-23.157618544172863);
-				form.setLongitude(-45.79068200523216);
-				form.setNumber("number");
-				form.setPhotoActivity("photo" + i);
-				form.setPostalCode("Code(postalCode" + i);
-				form.setState("state" + i);
-				
 				task.setForm(form);
+				task.setAddress(address);
+				task.setSyncronized(false);
+				task.setUser(user);
 
+				Photo photo = new Photo();
+				photo.setForm(form);
+
+				userDao.create(user);
+				addressDao.create(address);
 				formDao.create(form);
+				photoDao.create(photo);
 				taskDao.create(task);
 				
 				Log.i(LOG_TAG, "ID_TASK: " + task.getId() + "  ID_FORM: " + form.getId());
@@ -191,23 +195,24 @@ public class TaskDatabase extends SQLiteOpenHelper {
 			throw new RuntimeException(e);
 		}
 	}
-
-	/*
+	
 	private <D extends Dao<T, ?>, T> D getDao(Class<T> clazz) throws SQLException {
-		// lookup the dao, possibly invoking the cached database config
-		Dao<T, ?> dao = Dao<T, ID>.lookupDao(connectionSource, clazz);
-		if (dao == null) {
-			// try to use our new reflection magic
-			DatabaseTableConfig<T> tableConfig = DatabaseTableConfigUtil.fromClass(connectionSource, clazz);
-			if (tableConfig == null) {
-				dao = (Dao<T, ?>) DaoManager.createDao(connectionSource, clazz);
-			} else {
-				dao = (Dao<T, ?>) DaoManager.createDao(connectionSource, tableConfig);
-			}
-		}
-
+		Dao<T, ?> dao = (Dao<T, ?>) DaoManager.createDao(connectionSource, clazz);
 		@SuppressWarnings("unchecked")
 		D castDao = (D) dao;
 		return castDao;
-	}*/
+	}
+	
+	/**
+	 * Close the database connections and clear any cached DAOs.
+	 */
+	@Override
+	public void close() {
+		super.close();
+		taskDao = null;
+		formDao = null;
+		photoDao = null;
+		userDao = null;
+		addressDao = null;
+	}
 }

@@ -36,7 +36,7 @@
         <activity android:name="br.org.funcate.mobile.form.GeoForm" android:screenOrientation="portrait"></activity>
         <activity android:name="br.org.funcate.mobile.map.GeoMap" android:screenOrientation="portrait"></activity>
         <activity android:name="br.org.funcate.mobile.task.TaskActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name="br.org.funcate.mobile.photo.Photo" android:screenOrientation="portrait"></activity>
+        <activity android:name="br.org.funcate.mobile.photo.PhotoActivity" android:screenOrientation="portrait"></activity>
         <activity
             android:name="br.org.funcate.mobile.Main"
             android:label="@string/title_activity_main" 
