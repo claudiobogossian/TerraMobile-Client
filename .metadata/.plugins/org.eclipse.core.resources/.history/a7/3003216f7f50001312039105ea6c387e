@@ -1,0 +1,5 @@
+package br.org.funcate.baurudigital.user;
+
+public class UserDAO {
+
+}

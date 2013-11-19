@@ -1,0 +1,42 @@
+package br.org.funcate.baurudigital.common.service;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import br.org.funcate.baurudigital.user.User;
+
+public class JSONService {
+	public Object parseJSON(String json, Class clazz)
+	{
+		User user = new User();
+		ObjectMapper mapper = new ObjectMapper();
+	 
+		try {
+	 
+			// convert user object to json string, and save to a file
+			mapper.writeValue(new File("/home/bogo/workspace-bauru/bauru-digital/bauru-server/src/main/resources/users.json"), user);
+	 
+			// display to console
+			//System.out.println(mapper.writeValueAsString(user));
+
+			return user;
+			
+		} catch (JsonGenerationException e) {
+	 
+			e.printStackTrace();
+	 
+		} catch (JsonMappingException e) {
+	 
+			e.printStackTrace();
+	 
+		} catch (IOException e) {
+	 
+			e.printStackTrace();
+	 
+		}
+	}
+}

@@ -1,0 +1,37 @@
+package br.org.funcate.baurudigital.server.controller.rest;
+
+import java.io.File;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+
+import br.org.funcate.baurudigital.server.model.domain.User;
+import br.org.funcate.baurudigital.server.model.exception.ConfigException;
+import br.org.funcate.baurudigital.server.model.exception.TilesException;
+import br.org.funcate.baurudigital.server.util.PropertiesReader;
+
+@Path("/users")
+public class UsersRestService
+{
+
+	@GET
+	@Path("/get")
+	@Produces("application/json")
+	public Response getUsers() throws ConfigException, TilesException {
+
+		User user = new User();
+		user.setId(1);
+		user.setLogin("bogo");
+		user.setName("Claudio Henrique Bogossian");
+		user.setPassword("12qwaszx");
+		
+        ResponseBuilder response = Response.ok((Object) tilesZip);
+        response.header("Content-Disposition", "attachment; filename=\"tiles.zip\"");
+		return response.build();
+
+	}
+	
+}

@@ -1,0 +1,31 @@
+package br.org.funcate.baurudigital.user;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+@Path("/users")
+@Produces({MediaType.APPLICATION_JSON })
+public class UsersRestService
+{
+
+	@GET
+	@Path("/get")
+	@Produces(MediaType.APPLICATION_JSON)
+	public User getUsers() {
+
+		User user = new User();
+		user.setId(1);
+		user.setLogin("bogo");
+		user.setName("Claudio Henrique Bogossian");
+		user.setPassword("12qwaszx");
+		
+       
+		return user;
+
+	}
+	
+}

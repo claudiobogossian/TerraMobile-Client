@@ -1,0 +1,15 @@
+package br.org.funcate.baurudigital.task;
+
+import java.util.List;
+
+public class TaskService {
+
+	public static List<Task> getTask()
+	{
+		return new TaskDAO().getAll();
+	}
+	public static void populateTasks(List<Task> users)
+	{
+		new TaskDAO().populate(users);
+	}
+}

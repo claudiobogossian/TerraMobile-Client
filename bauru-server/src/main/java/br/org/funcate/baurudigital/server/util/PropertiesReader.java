@@ -3,8 +3,6 @@ package br.org.funcate.baurudigital.server.util;
 import java.io.IOException;
 import java.util.Properties;
 
-import br.org.funcate.baurudigital.user.controller.exception.ConfigException;
-
 
 
 public class PropertiesReader {

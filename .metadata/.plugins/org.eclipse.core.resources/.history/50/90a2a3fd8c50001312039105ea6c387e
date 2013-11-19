@@ -1,0 +1,27 @@
+package br.org.funcate.baurudigital.task;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import br.org.funcate.baurudigital.common.JPA.HibernateFactory;
+import br.org.funcate.baurudigital.user.User;
+
+public class TaskDAO {
+	public List<Task> getUserTask(User user)
+	{
+		EntityManager em = HibernateFactory.getEntityManager();
+		List<User> users = em.createQuery("from User").getResultList();
+		return users;
+	}
+	public void populate(List<User> users)
+	{
+		EntityManager em = HibernateFactory.getEntityManager();
+		em.getTransaction().begin();
+		for (User user : users) {
+			em.persist(user);	
+		}
+		em.flush();
+		em.getTransaction().commit();
+	}
+}

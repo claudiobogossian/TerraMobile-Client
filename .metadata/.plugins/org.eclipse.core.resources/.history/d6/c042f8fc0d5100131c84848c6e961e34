@@ -1,0 +1,20 @@
+[
+    {
+        "name": "Claudio Henrique Bogossian",
+        "login": "bogo",
+        "password": "123"
+        "hash": ""
+    },
+    {
+        "name": "Paulo Luan",
+        "login": "luan",
+        "password": "123"
+        "hash": ""
+    },
+     {
+        "name": "Joãozinho 30",
+        "login": "joao",
+        "password": "123"
+        "hash": ""
+    }
+]

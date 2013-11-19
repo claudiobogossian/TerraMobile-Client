@@ -1,0 +1,11 @@
+package br.org.funcate.baurudigital.user;
+
+import java.util.List;
+
+public class UserService {
+
+	public static List<User> getUsers()
+	{
+		return new UserDAO().getUsers();
+	}
+}

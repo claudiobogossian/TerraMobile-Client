@@ -1,0 +1,8 @@
+package br.org.funcate.baurudigital.common.service;
+
+public class JSONService {
+	public Object parseJSON(String json, Class clazz)
+	{
+		
+	}
+}

@@ -1,0 +1,10 @@
+package br.org.funcate.baurudigital.user;
+
+import java.util.List;
+
+public class UserDAO {
+	public List<User> getUsers()
+	{
+		
+	}
+}

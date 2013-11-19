@@ -1,0 +1,26 @@
+package br.org.funcate.baurudigital.common.utils;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+public class Util {
+
+	public static String generateHashMD5(String text)
+	{
+		String result ="";
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("MD5");
+	
+		md.update(text.getBytes());
+		byte[] hashMd5 = md.digest();
+		result = new String(hashMd5);
+		
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+}

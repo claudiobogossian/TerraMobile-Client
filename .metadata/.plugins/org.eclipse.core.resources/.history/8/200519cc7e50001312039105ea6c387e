@@ -1,0 +1,9 @@
+package br.org.funcate.baurudigital.user;
+
+public class UserService {
+
+	public ArrayList<User> static getUsers()
+	{
+		
+	}
+}

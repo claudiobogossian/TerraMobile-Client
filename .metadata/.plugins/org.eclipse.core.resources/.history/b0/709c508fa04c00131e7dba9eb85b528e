@@ -1,7 +1,0 @@
-package br.org.funcate.baurudigital.server.util;
-
-import com.sun.xml.internal.stream.buffer.sax.Properties;
-
-public class PropertyReader {
-		Properties p = new Properties();
-}

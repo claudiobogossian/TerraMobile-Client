@@ -1,0 +1,15 @@
+package br.org.funcate.baurudigital.user;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import br.org.funcate.baurudigital.common.JPA.HibernateFactory;
+
+public class UserDAO {
+	public List<User> getUsers()
+	{
+		EntityManager em = HibernateFactory.getEntityManager();
+		List<Pessoa> pessoas = em.createQuery("from Pessoa").getResultList();
+	}
+}

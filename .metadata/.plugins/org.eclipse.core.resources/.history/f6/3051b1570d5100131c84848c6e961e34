@@ -1,0 +1,27 @@
+package br.org.funcate.baurudigital.common.utils;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import br.org.funcate.baurudigital.common.exception.UtilException;
+
+public class Util {
+
+	public static String generateHashMD5(String text)
+	{
+		String result ="";
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("MD5");
+	
+		md.update(text.getBytes());
+		byte[] hashMd5 = md.digest();
+		result = new String(hashMd5);
+		
+		} catch (NoSuchAlgorithmException e) {
+			throw new UtilException("Não foi possível codificar o texto solicitado.", e);
+		}
+		
+		return result;
+	}
+}
