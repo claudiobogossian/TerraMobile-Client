@@ -13,17 +13,25 @@ public class User implements Serializable {
 	private String login;
 	@DatabaseField
 	private String password;
+	@DatabaseField
+	private String hash;
 
 	public User() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public User(Integer id, String name, String login, String password) {
+	public User(
+			Integer id, 
+			String name, 
+			String login, 
+			String password,
+			String hash) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.login = login;
 		this.password = password;
+		this.hash = hash;
 	}
 
 	public Integer getId() {
@@ -56,6 +64,14 @@ public class User implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getHash() {
+		return hash;
+	}
+
+	public void setHash(String hash) {
+		this.hash = hash;
 	}
 
 }

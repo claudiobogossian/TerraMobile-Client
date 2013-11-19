@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -111,7 +113,7 @@ public class Utility {
 		if (connect_mng.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
 				.getState() == NetworkInfo.State.CONNECTED
 				|| connect_mng.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
-						.getState() == NetworkInfo.State.CONNECTED)
+				.getState() == NetworkInfo.State.CONNECTED)
 			return true;
 		return false;
 	}
@@ -294,13 +296,47 @@ public class Utility {
 		return findGeocode;
 	}
 
+
+	/**
+	 * 
+	 * Generate MD5 hash of a string.
+	 * 
+	 * @param String text
+	 * @return String result
+	 */
+	public static String generateHashMD5(String text){
+		String result = "";
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("MD5");
+			md.update(text.getBytes());
+			byte[] hashMd5 = md.digest();
+			result = stringHexa(hashMd5);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	private static String stringHexa(byte[] bytes) {
+		StringBuilder s = new StringBuilder();
+		for (int i = 0; i < bytes.length; i++) {
+			int parteAlta = ((bytes[i] >> 4) & 0xf) << 4;
+			int parteBaixa = bytes[i] & 0xf;
+			if (parteAlta == 0)
+				s.append('0');
+			s.append(Integer.toHexString(parteAlta | parteBaixa));
+		}
+		return s.toString();
+	}
+
+
 	/**
 	 * 
 	 * 
 	 * @param scorevalue
 	 * @return
 	 */
-
 	public static String formatScore(int scorevalue) {
 		String result = "" + scorevalue;
 

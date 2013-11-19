@@ -20,8 +20,8 @@
     
     
     <!-- Task Screen -->
-    <string name="btn_get_tasks">Receber serviços do servidor</string>
-    <string name="btn_send_tasks">Enviar serviços para o servidor</string>
+    <string name="btn_sync_tasks">Sincronizar com o servidor</string>
+    <string name="info_send_tasks">Enviando informaçãoes ao servidor</string>
     <string name="btn_clear_tasks">Apagar trechos</string>
     
     <!-- Colors -->

@@ -3,6 +3,7 @@ package br.org.funcate.mobile.task;
 import java.sql.SQLException;
 import java.util.List;
 
+import android.accounts.Account;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import br.org.funcate.mobile.R;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 
 /**
  * Activity for loading layout resources
@@ -43,9 +45,7 @@ public class TaskActivity extends Activity {
 		this.getLocalTasks();
 
 		Button btn_get_tasks = (Button) findViewById(R.id.btn_get_tasks);
-		Button btn_send_tasks = (Button) findViewById(R.id.btn_send_tasks);
-		Button btn_clear_tasks = (Button) findViewById(R.id.btn_clear_tasks);
-
+		
 		btn_get_tasks.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -53,36 +53,6 @@ public class TaskActivity extends Activity {
 
 				try {
 					self.getRemoteTasks();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-				self.hideLoadMask();
-			}
-		});
-
-		btn_send_tasks.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				self.showLoadingMask();
-
-				try {
-					self.saveTasksRemotely();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-				self.hideLoadMask();
-			}
-		});
-
-		btn_clear_tasks.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				self.showLoadingMask();
-
-				try {
-					self.clearAllTasks();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -123,7 +93,8 @@ public class TaskActivity extends Activity {
 	 */
 	public List<Task> getRemoteTasks() {
 		// faz chamada ajax.
-		List<Task> remoteTasks = service.getTasks();
+		List<Task> remoteTasks = null;// = service.getTasks();
+		service.getTasks();
 		return remoteTasks;
 	}
 
@@ -132,11 +103,30 @@ public class TaskActivity extends Activity {
 	}
 
 	public void saveTasksRemotely() {
-		service.getTasks();
+		List<Task> tasks;
+		//service.saveTasks(tasks);
 	}
 
-	public void clearAllTasks() {
-		// local.
+	/**
+	 * 
+	 * Delete the rows where is syncronized with the server.
+	 * 
+	 * @author Paulo Luan
+	 * @return Boolean result
+	 */
+	public Integer deleteSincronizedTasks() {
+		DeleteBuilder<Task, Integer> deleteBuilder = db.taskDao.deleteBuilder();
+		Integer result = 0;
+
+		try {
+			// only delete the rows where syncronized is true
+			deleteBuilder.where().eq("syncronized", Boolean.TRUE);
+			result = deleteBuilder.delete();
+		} catch (SQLException e) {
+
+		}
+
+		return result;
 	}
 
 	public void showLoadingMask() {

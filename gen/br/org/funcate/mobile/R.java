@@ -93,18 +93,16 @@ public final class R {
     public static final class id {
         public static final int TableRow01=0x7f090029;
         public static final int TextView01=0x7f09002a;
-        public static final int action_settings=0x7f090060;
-        public static final int btnContextExit=0x7f09005d;
-        public static final int btnContextGetTasks=0x7f09005f;
-        public static final int btnContextNewForm=0x7f09005e;
-        public static final int btn_clear_tasks=0x7f090047;
+        public static final int action_settings=0x7f09005e;
+        public static final int btnContextExit=0x7f09005b;
+        public static final int btnContextGetTasks=0x7f09005d;
+        public static final int btnContextNewForm=0x7f09005c;
         public static final int btn_get_tasks=0x7f090045;
-        public static final int btn_send_tasks=0x7f090046;
-        public static final int bubble_description=0x7f09004b;
-        public static final int bubble_image=0x7f090048;
-        public static final int bubble_moreinfo=0x7f09004a;
-        public static final int bubble_subdescription=0x7f09004c;
-        public static final int bubble_title=0x7f090049;
+        public static final int bubble_description=0x7f090049;
+        public static final int bubble_image=0x7f090046;
+        public static final int bubble_moreinfo=0x7f090048;
+        public static final int bubble_subdescription=0x7f09004a;
+        public static final int bubble_title=0x7f090047;
         public static final int cp_button_cancel=0x7f090034;
         public static final int cp_button_clear=0x7f090018;
         public static final int cp_button_ok=0x7f090035;
@@ -127,14 +125,14 @@ public final class R {
         public static final int cp_lont=0x7f09000f;
         public static final int cp_num=0x7f090020;
         public static final int cp_numt=0x7f09001e;
-        public static final int foto_control_bt_cancel=0x7f09005b;
-        public static final int foto_control_bt_fotografar=0x7f090059;
-        public static final int foto_control_bt_ok=0x7f09005c;
-        public static final int foto_control_bt_voltar=0x7f090058;
-        public static final int foto_control_lay0=0x7f090055;
-        public static final int foto_control_lay2=0x7f090056;
-        public static final int foto_control_lay3=0x7f090057;
-        public static final int foto_control_lay4=0x7f09005a;
+        public static final int foto_control_bt_cancel=0x7f090059;
+        public static final int foto_control_bt_fotografar=0x7f090057;
+        public static final int foto_control_bt_ok=0x7f09005a;
+        public static final int foto_control_bt_voltar=0x7f090056;
+        public static final int foto_control_lay0=0x7f090053;
+        public static final int foto_control_lay2=0x7f090054;
+        public static final int foto_control_lay3=0x7f090055;
+        public static final int foto_control_lay4=0x7f090058;
         public static final int foto_lay0=0x7f090043;
         public static final int foto_surface1=0x7f090044;
         public static final int geoform_lay=0x7f090000;
@@ -164,14 +162,14 @@ public final class R {
         public static final int geoform_tr_stub1_lay1=0x7f090023;
         public static final int geoform_tr_stub2=0x7f090025;
         public static final int geoform_tr_stub2_lay1=0x7f090027;
-        public static final int geomap_control_bt_back=0x7f090050;
-        public static final int geomap_control_bt_form=0x7f090051;
-        public static final int geomap_control_bt_update_tasks=0x7f090052;
-        public static final int geomap_control_lay0=0x7f09004d;
-        public static final int geomap_control_lay2=0x7f09004e;
-        public static final int geomap_control_lay3=0x7f09004f;
-        public static final int itemcep=0x7f090054;
-        public static final int itemlog=0x7f090053;
+        public static final int geomap_control_bt_back=0x7f09004e;
+        public static final int geomap_control_bt_form=0x7f09004f;
+        public static final int geomap_control_bt_update_tasks=0x7f090050;
+        public static final int geomap_control_lay0=0x7f09004b;
+        public static final int geomap_control_lay2=0x7f09004c;
+        public static final int geomap_control_lay3=0x7f09004d;
+        public static final int itemcep=0x7f090052;
+        public static final int itemlog=0x7f090051;
         public static final int lblLogin=0x7f09003c;
         public static final int login_form=0x7f09003b;
         public static final int main_bt_begin=0x7f090041;
@@ -214,8 +212,8 @@ public final class R {
         /**  Form Screen 
  Task Screen 
          */
-        public static final int btn_get_tasks=0x7f06000a;
-        public static final int btn_send_tasks=0x7f06000b;
+        public static final int btn_sync_tasks=0x7f06000a;
+        public static final int info_send_tasks=0x7f06000b;
         public static final int lbl_exit=0x7f060006;
         public static final int lbl_get_task=0x7f060009;
         /**   GeoMap Screen 

@@ -4,22 +4,23 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/btn_get_tasks"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/geoform_lay2"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/btn_get_tasks" />
+        android:layout_weight="0"
+        android:background="@color/cinza3"
+        android:paddingTop="3dp"
+        android:weightSum="1" >
 
-    <Button
-        android:id="@+id/btn_send_tasks"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_send_tasks" />
-
-    <Button
-        android:id="@+id/btn_clear_tasks"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_clear_tasks" />
+        <Button
+            android:id="@+id/btn_get_tasks"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:drawableLeft="@drawable/ico_update"
+            android:gravity="center_vertical|left"
+            android:text="@string/btn_sync_tasks" />
+    </LinearLayout>
 
 </LinearLayout>
