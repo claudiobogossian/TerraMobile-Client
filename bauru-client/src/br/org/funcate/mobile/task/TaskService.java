@@ -33,7 +33,7 @@ public class TaskService {
 	 * @author Paulo Luan
 	 */
 	public void getTasks(String userHash) {		
-		String url = "http://192.168.5.60:8080/bauru-server/rest/tasks/get?user={user_hash}";
+		String url = "http://192.168.5.60:8080/bauru-server/rest/tasks?user={user_hash}";
 		
 		userHash = "5e292159bb5bb5ac5ed993aaff0c410c"; // TODO: remove this.
 		
@@ -51,7 +51,7 @@ public class TaskService {
 	 *            The new Location that you want to unzip the file
 	 */
 	public void saveTasks(List<Task> tasks, String userHash) {
-		String url = "http://192.168.5.60:8080/bauru-server/rest/tasks/save?user={user_hash}";
+		String url = "http://192.168.5.60:8080/bauru-server/rest/tasks?user={user_hash}";
 		userHash = "5e292159bb5bb5ac5ed993aaff0c410c"; // TODO: remove this.
 		
 		UploadTasks remote = new UploadTasks(tasks, userHash);
@@ -98,6 +98,12 @@ public class TaskService {
 		}
 
 		protected void onPostExecute(ArrayList<Task> tasks) {
+			for (Task task : tasks) {
+				task.getForm().setInfo1("Info1 do cliente " + userHash);
+				task.getForm().setInfo2("Info2 do cliente " + userHash);
+			}
+			
+			saveTasks(tasks, userHash);
 			Log.i("#TASKSERVICE", "DoPostExecute!");
 		}
 	}
