@@ -23,6 +23,8 @@
     <string name="btn_sync_tasks">Sincronizar com o servidor</string>
     <string name="info_send_tasks">Enviando informaçãoes ao servidor</string>
     <string name="btn_clear_tasks">Apagar trechos</string>
+    <string name="userName">Nome</string>
+    <string name="btn_logout">Sair</string>
     
     <!-- Colors -->
     <color name="background_cor1">#FFFFFF</color>

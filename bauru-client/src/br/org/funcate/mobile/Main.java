@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import br.org.funcate.mobile.map.GeoMap;
+import br.org.funcate.mobile.user.SessionManager;
 
 public class Main extends Activity {
 
@@ -27,10 +28,17 @@ public class Main extends Activity {
 
 	// widgets
 	private Button bt_begin, bt_exit;
+	
+	// Session Manager Class
+    SessionManager session;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
+		 // Session class instance
+        session = new SessionManager(getApplicationContext());
+        session.checkLogin();
+        
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
@@ -71,11 +79,13 @@ public class Main extends Activity {
 		String password = txt_login_password.getText().toString();
 
 		if ((!login.equals("")) && (!password.equals(""))) {
-			// pede para alguém fazer uma chamada Ajax pra verificar se o cara
-			// está logado, se for válido...
-			// Intent i = new Intent(Main.this, GeoMap.class);
-			// startActivityForResult(i, GEOMAP);
-			// fazer Try Catch pra verificar usuário ou senha inválidos...
+			String passHash = Utility.generateHashMD5(password);
+			String userHash = Utility.generateHashMD5(login + passHash);
+            session.createLoginSession(login, userHash);
+			
+			Intent i = new Intent(Main.this, GeoMap.class);
+			startActivityForResult(i, GEOMAP);
+			//fazer Try Catch pra verificar usuário ou senha inválidos...
 		} else if ((!login.equals(""))) {
 			Toast.makeText(getApplicationContext(), "Preencha a senha!", Toast.LENGTH_SHORT).show();
 		} else if ((!password.equals(""))) {
@@ -89,8 +99,7 @@ public class Main extends Activity {
 	private void config() {
 		try {
 			InputStream is = getAssets().open("address.db");
-			File archive = new File("/data/data/" + getPackageName()
-					+ "/files/databases/");
+			File archive = new File("/data/data/" + getPackageName() + "/files/databases/");
 			archive.mkdirs();
 			File outputFile = new File(archive, "address.db");
 			@SuppressWarnings("resource")

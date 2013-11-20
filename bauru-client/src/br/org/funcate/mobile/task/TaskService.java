@@ -4,18 +4,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import br.org.funcate.mobile.Utility;
 
 /**
  * 
  * Service REST. Ajax calls to get, post and put objects to server.
  * 
+ * @author Paulo Luan
  * */
 public class TaskService {
 
@@ -23,33 +24,64 @@ public class TaskService {
 
 	public TaskService() {
 		this.restTemplate = new RestTemplate();
-		this.restTemplate.getMessageConverters().add(
-				new MappingJackson2HttpMessageConverter());
+		this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 	}
 
-	public void getTasks() {		
+	/**
+	 * Get a list of Taks, sending a get request to server.
+	 * 
+	 * @author Paulo Luan
+	 */
+	public void getTasks(String userHash) {		
 		String url = "http://192.168.5.60:8080/bauru-server/rest/tasks/get?user={user_hash}";
-		DownloadTasks remote = new DownloadTasks();
+		
+		userHash = "5e292159bb5bb5ac5ed993aaff0c410c"; // TODO: remove this.
+		
+		DownloadTasks remote = new DownloadTasks(userHash);
 		remote.execute(new String[] { url });
 	}
 
-	public void saveTasks() {
-		String url = "http://192.168.5.60:8080/bauru-server/rest/tasks/get?user={user_hash}";
-		UploadTasks remote = new UploadTasks();
+	/**
+	 * Save a list of Taks, sending a post request to server.
+	 * 
+	 * @author Paulo Luan
+	 * @param zipfile
+	 *            The path of the zip file
+	 * @param location
+	 *            The new Location that you want to unzip the file
+	 */
+	public void saveTasks(List<Task> tasks, String userHash) {
+		String url = "http://192.168.5.60:8080/bauru-server/rest/tasks/save?user={user_hash}";
+		userHash = "5e292159bb5bb5ac5ed993aaff0c410c"; // TODO: remove this.
+		
+		UploadTasks remote = new UploadTasks(tasks, userHash);
 		remote.execute(new String[] { url });
 	}
 
+
+	/**
+	 * Async class implementation to get tasks from server.
+	 * 
+	 * @author Paulo Luan
+	 * 
+	 * @param String... urls
+	 *            URL's that will called.
+	 */
 	private class DownloadTasks extends AsyncTask<String, Void, ArrayList<Task>> {
+		
+		private String userHash = "";
+		
+		public DownloadTasks(String userHash) {
+			this.userHash = userHash;
+		}
 
 		@Override
 		protected ArrayList<Task> doInBackground(String... urls) {
 			ArrayList<Task> list = null;
 
 			for (String url : urls) {
-				try {
-					//String hash = Utility.generateHashMD5("123");
-					String hash = "5e292159bb5bb5ac5ed993aaff0c410c";
-					ResponseEntity<Task[]> response = restTemplate.getForEntity(url, Task[].class, hash);
+				try {					
+					ResponseEntity<Task[]> response = restTemplate.getForEntity(url, Task[].class, userHash);
 					response.getStatusCode();
 					Task[] tasks = response.getBody();
 					list = new ArrayList<Task>(Arrays.asList(tasks));
@@ -70,16 +102,34 @@ public class TaskService {
 		}
 	}
 
+
+
+	/**
+	 * Async object implemetation to PostTasks to server
+	 * 
+	 * @param String... urls
+	 *            URL's that will called.
+	 * @author Paulo Luan 
+	 */
 	private class UploadTasks extends AsyncTask<String, Void, ArrayList<Task>> {
+
+		private List<Task> tasks;
+		private String userHash;
+
+		public UploadTasks() {}
+
+		public UploadTasks(List<Task> tasks, String userHash) {
+			this.tasks = tasks;
+			this.userHash = userHash;
+		}
+
 		@Override
 		protected ArrayList<Task> doInBackground(String... urls) {
 			ArrayList<Task> list = null;
 
 			for (String url : urls) {
 				try {
-					String hash = Utility.generateHashMD5("123");
-					List<Task> tasks = null; // TODO: pegar do Banco todas as consultas marcadas como true.
-					Task returnedTask = restTemplate.postForObject(url, tasks, Task.class);
+					restTemplate.postForObject(url, this.tasks, ResponseEntity.class, userHash);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -91,8 +141,9 @@ public class TaskService {
 			Log.i("#TASKSERVICE", " Progress: " + progress[0]);
 		}
 
-		protected void onPostExecute(ArrayList<Task> tasks) {
-			Log.i("#TASKSERVICE", "DoPostExecute!");
+		protected void onPostExecute(ResponseEntity response) {
+			HttpStatus status = response.getStatusCode();
+			Log.i("#TASKPOSTSERVICE", "DoPostExecute!");
 		}
 	}
 

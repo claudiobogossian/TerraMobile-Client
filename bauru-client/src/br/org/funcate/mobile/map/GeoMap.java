@@ -29,6 +29,7 @@ import br.org.funcate.mobile.task.Task;
 import br.org.funcate.mobile.task.TaskActivity;
 import br.org.funcate.mobile.task.TaskDatabase;
 import br.org.funcate.mobile.task.TaskDatabaseHelper;
+import br.org.funcate.mobile.user.SessionManager;
 
 import com.j256.ormlite.dao.Dao;
 
@@ -98,6 +99,7 @@ public class GeoMap extends Activity {
 	}
 
 	public void finishThisScreen() {
+		SessionManager.logoutUser();
 		setResult(RESULT_CANCELED, new Intent());
 		finish();
 	}

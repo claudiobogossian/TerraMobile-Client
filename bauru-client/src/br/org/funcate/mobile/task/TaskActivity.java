@@ -3,14 +3,16 @@ package br.org.funcate.mobile.task;
 import java.sql.SQLException;
 import java.util.List;
 
-import android.accounts.Account;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import br.org.funcate.mobile.R;
+import br.org.funcate.mobile.user.SessionManager;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
@@ -60,6 +62,19 @@ public class TaskActivity extends Activity {
 				self.hideLoadMask();
 			}
 		});
+		
+		String name = SessionManager.getUserName();
+        TextView lblName = (TextView) findViewById(R.id.lblName);
+        lblName.setText(Html.fromHtml("Nome: <b>" + name + "</b>"));
+        Button btnLogout = (Button) findViewById(R.id.btnLogout);
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                // Clear the session data This will clear all session data and redirect user to LoginActivity
+            	SessionManager.logoutUser();
+            }
+        });
+		
 	}
 		
 	/**
@@ -94,7 +109,10 @@ public class TaskActivity extends Activity {
 	public List<Task> getRemoteTasks() {
 		// faz chamada ajax.
 		List<Task> remoteTasks = null;// = service.getTasks();
-		service.getTasks();
+		
+		String hash = SessionManager.getUserHash();
+		
+		service.getTasks(hash);
 		return remoteTasks;
 	}
 
