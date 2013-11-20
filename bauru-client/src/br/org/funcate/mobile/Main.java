@@ -21,6 +21,7 @@ import br.org.funcate.mobile.user.SessionManager;
 
 public class Main extends Activity {
 
+	private Main self = this;
 	public static final String TAG = "#MAIN";
 
 	// other activities
@@ -50,9 +51,7 @@ public class Main extends Activity {
 		bt_begin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//self.login();
-				Intent i = new Intent(Main.this, GeoMap.class);
-				startActivityForResult(i, GEOMAP);
+				self.login();
 			}
 		});
 
@@ -81,11 +80,13 @@ public class Main extends Activity {
 		if ((!login.equals("")) && (!password.equals(""))) {
 			String passHash = Utility.generateHashMD5(password);
 			String userHash = Utility.generateHashMD5(login + passHash);
-            session.createLoginSession(login, userHash);
+            
+			if(this.isValidHash(userHash)){
+				session.createLoginSession(login, userHash);
+				Intent i = new Intent(Main.this, GeoMap.class);
+				startActivityForResult(i, GEOMAP);
+			}
 			
-			Intent i = new Intent(Main.this, GeoMap.class);
-			startActivityForResult(i, GEOMAP);
-			//fazer Try Catch pra verificar usuário ou senha inválidos...
 		} else if ((!login.equals(""))) {
 			Toast.makeText(getApplicationContext(), "Preencha a senha!", Toast.LENGTH_SHORT).show();
 		} else if ((!password.equals(""))) {
@@ -93,6 +94,12 @@ public class Main extends Activity {
 		} else {
 			Toast.makeText(getApplicationContext(), "Preencha Nome de usuário e Senhas!", Toast.LENGTH_SHORT).show();
 		}
+	}
+	
+	public boolean isValidHash(String hash){
+		//verifica no banco de dados local.
+		
+		return true;
 	}
 
 	@SuppressLint("SdCardPath")

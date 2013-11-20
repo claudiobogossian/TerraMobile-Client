@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import br.org.funcate.mobile.DatabaseAdapter;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.user.SessionManager;
 
@@ -29,7 +30,7 @@ import com.j256.ormlite.stmt.DeleteBuilder;
 public class TaskActivity extends Activity {
 
 	private TaskService service = new TaskService();
-	private TaskDatabase db;
+	private DatabaseAdapter db;
 
 	private final String LOG_TAG = "#" + getClass().getSimpleName();
 
@@ -42,7 +43,7 @@ public class TaskActivity extends Activity {
 		// this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_task);
 		
-		db = TaskDatabaseHelper.getDatabase(this);
+		db = DatabaseAdapter.getInstance(this);
 		
 		this.getLocalTasks();
 
@@ -88,7 +89,7 @@ public class TaskActivity extends Activity {
 		List<Task> list = null;
 		try {
 			// get our dao
-			Dao<Task, Integer> taskDao = db.taskDao;
+			Dao<Task, Integer> taskDao = db.getTaskDao();
 			// query for all of the data objects in the database
 			list = taskDao.queryForAll();
 			Log.i(LOG_TAG, "GetAll!");
@@ -133,7 +134,7 @@ public class TaskActivity extends Activity {
 	 * @return Boolean result
 	 */
 	public Integer deleteSincronizedTasks() {
-		DeleteBuilder<Task, Integer> deleteBuilder = db.taskDao.deleteBuilder();
+		DeleteBuilder<Task, Integer> deleteBuilder = db.getTaskDao().deleteBuilder();
 		Integer result = 0;
 
 		try {

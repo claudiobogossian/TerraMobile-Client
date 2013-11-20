@@ -21,14 +21,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
+import br.org.funcate.mobile.DatabaseAdapter;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
-import br.org.funcate.mobile.address.Address;
 import br.org.funcate.mobile.form.GeoForm;
 import br.org.funcate.mobile.task.Task;
 import br.org.funcate.mobile.task.TaskActivity;
-import br.org.funcate.mobile.task.TaskDatabase;
-import br.org.funcate.mobile.task.TaskDatabaseHelper;
 import br.org.funcate.mobile.user.SessionManager;
 
 import com.j256.ormlite.dao.Dao;
@@ -44,7 +42,7 @@ public class GeoMap extends Activity {
 	protected LocationManager locationManager;
 	ItemizedOverlayWithBubble<ExtendedOverlayItem> poiMarkers;
 
-	private TaskDatabase db;
+	private DatabaseAdapter db;
 
 	private Location lastLocation;
 	private GeoMap self = this;
@@ -82,7 +80,7 @@ public class GeoMap extends Activity {
 			//updateLoc(lastLocation);
 		}
 
-		db = TaskDatabaseHelper.getDatabase(this);
+		db = DatabaseAdapter.getInstance(this);
 		db.createMockFeatures();
 		this.showLandmarks();
 	}
@@ -134,7 +132,7 @@ public class GeoMap extends Activity {
 
 	public void showLandmarks() {
 		try {
-			Dao<Task, Integer> dao = db.taskDao;
+			Dao<Task, Integer> dao = db.getTaskDao();
 			List<Task> features = dao.queryForAll();
 
 			for (Task feature : features) {

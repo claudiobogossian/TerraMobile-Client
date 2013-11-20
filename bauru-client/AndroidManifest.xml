@@ -31,16 +31,14 @@
         android:icon="@drawable/ico_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <provider android:name=".data.ProviderAddress" android:authorities="br.org.funcate.mobile.data.ProviderAddress"/>
-        <provider android:name=".data.Provider" android:authorities="br.org.funcate.mobile.data.Provider"/>
-        <activity android:name="br.org.funcate.mobile.form.GeoForm" android:screenOrientation="portrait"></activity>
-        <activity android:name="br.org.funcate.mobile.map.GeoMap" android:screenOrientation="portrait"></activity>
-        <activity android:name="br.org.funcate.mobile.task.TaskActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name="br.org.funcate.mobile.photo.PhotoActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name="br.org.funcate.mobile.form.GeoForm"></activity>
+        <activity android:name="br.org.funcate.mobile.map.GeoMap"></activity>
+        <activity android:name="br.org.funcate.mobile.task.TaskActivity"></activity>
+        <activity android:name="br.org.funcate.mobile.photo.PhotoActivity"></activity>
         <activity
             android:name="br.org.funcate.mobile.Main"
             android:label="@string/title_activity_main" 
-            android:screenOrientation="portrait">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

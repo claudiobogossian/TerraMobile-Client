@@ -61,7 +61,7 @@ public class AddressAdapter extends SimpleCursorAdapter implements Filterable {
 		Cursor c = context.getContentResolver().query(
 				ProviderAddress.Lograd.CONTENT_URI, null,
 				buffer == null ? null : buffer.toString(), args,
-				ProviderAddress.Lograd.LOG + " ASC");
+						ProviderAddress.Lograd.LOG + " ASC");
 		return c;
 	}
 }

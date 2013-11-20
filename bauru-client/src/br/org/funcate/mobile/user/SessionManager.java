@@ -64,7 +64,7 @@ public class SessionManager {
 	 * */
 	public void checkLogin() {
 		// Check login status
-		if (!this.isLoggedIn()) {
+		if (this.isLoggedIn()) {
 			// user is not logged in redirect him to Login Activity
 			Intent i = new Intent(_context, GeoMap.class);
 			// Closing all the Activities
@@ -72,11 +72,10 @@ public class SessionManager {
 
 			// Add new Flag to start new Activity
 			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
+			
 			// Staring Login Activity
 			_context.startActivity(i);
 		}
-
 	}
 
 	/**
@@ -120,6 +119,7 @@ public class SessionManager {
 
 		// After logout redirect user to Loing Activity
 		Intent i = new Intent(_context, Main.class);
+		
 		// Closing all the Activities
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -135,6 +135,7 @@ public class SessionManager {
 	 * **/
 	// Get Login State
 	public boolean isLoggedIn() {
-		return pref.getBoolean(IS_LOGIN, false);
+		Boolean isLogged = pref.getBoolean(IS_LOGIN, false); 
+		return isLogged;
 	}
 }
