@@ -1,5 +1,6 @@
 package br.org.funcate.mobile.task;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,6 +12,10 @@ import org.springframework.web.client.RestTemplate;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import br.org.funcate.mobile.DatabaseAdapter;
+import br.org.funcate.mobile.data.DatabaseHelper;
+
+import com.j256.ormlite.dao.Dao;
 
 /**
  * 
@@ -98,12 +103,12 @@ public class TaskService {
 		}
 
 		protected void onPostExecute(ArrayList<Task> tasks) {
-			for (Task task : tasks) {
-				task.getForm().setInfo1("Info1 do cliente " + userHash);
-				task.getForm().setInfo2("Info2 do cliente " + userHash);
+			
+			if(tasks != null){
+				
 			}
 			
-			saveTasks(tasks, userHash);
+			
 			Log.i("#TASKSERVICE", "DoPostExecute!");
 		}
 	}

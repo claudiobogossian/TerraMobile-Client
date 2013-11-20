@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -16,8 +17,12 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import br.org.funcate.mobile.data.DatabaseHelper;
 import br.org.funcate.mobile.map.GeoMap;
 import br.org.funcate.mobile.user.SessionManager;
+import br.org.funcate.mobile.user.User;
+
+import com.j256.ormlite.dao.Dao;
 
 public class Main extends Activity {
 
@@ -96,8 +101,21 @@ public class Main extends Activity {
 		}
 	}
 	
+	public void getRemoteUsers(){
+		
+	}
+	
 	public boolean isValidHash(String hash){
 		//verifica no banco de dados local.
+		
+		DatabaseAdapter db = DatabaseHelper.getInstance().getDatabase();
+		Dao<User, Integer> dao = db.getUserDao();
+		
+		try {
+			dao.queryBuilder().where().eq("coluna", "valor");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 		return true;
 	}
