@@ -5,10 +5,10 @@ import java.io.Serializable;
 import com.j256.ormlite.field.DatabaseField;
 
 public class Address implements Serializable {
-	@DatabaseField(generatedId = true, columnName = "id")
+	@DatabaseField(generatedId = true, columnName = "_id")
 	private Integer id;
 	@DatabaseField
-	private String name;
+	private String name; // Logradouro
 	@DatabaseField
 	private String number; // Base de dados pode ter String no número
 	@DatabaseField
@@ -25,6 +25,8 @@ public class Address implements Serializable {
 	private String state;
 	@DatabaseField
 	private String featureId; // O idenfificador da feição (SSQQQNNNN),
+	@DatabaseField
+	private String neighborhood;
 
 	public Address() {
 		// TODO Auto-generated constructor stub
@@ -126,4 +128,20 @@ public class Address implements Serializable {
 		this.featureId = featureId;
 	}
 
+	public String getNeighborhood() {
+		return neighborhood;
+	}
+
+	public void setNeighborhood(String neighborhood) {
+		this.neighborhood = neighborhood;
+	}
+
+	@Override
+	public String toString() {
+		return "Address [name=" + name + ", number=" + number + ", extra="
+				+ extra + ", coordx=" + coordx + ", coordy=" + coordy
+				+ ", postalCode=" + postalCode + ", city=" + city + ", state="
+				+ state + ", featureId=" + featureId + ", neighborhood="
+				+ neighborhood + "]";
+	}
 }

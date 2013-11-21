@@ -27,6 +27,7 @@ import br.org.funcate.mobile.data.DatabaseHelper;
 import br.org.funcate.mobile.map.GeoMap;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.Where;
 
 public class LoginActivity extends Activity {
 	// tag used to debug
@@ -100,7 +101,6 @@ public class LoginActivity extends Activity {
 			} else {
 				Toast.makeText(getApplicationContext(), "Usuário ou senha inválidos", Toast.LENGTH_LONG).show();
 			}
-
 		} else if ((!login.equals(""))) {
 			Toast.makeText(getApplicationContext(), "Preencha a senha!", Toast.LENGTH_SHORT).show();
 		} else if ((!password.equals(""))) {
@@ -111,17 +111,22 @@ public class LoginActivity extends Activity {
 	}
 
 	public boolean isValidHash(String hash){
+		boolean userExists = false;
 		// verify hash at local database.
 		DatabaseAdapter db = DatabaseHelper.getInstance().getDatabase();
 		Dao<User, Integer> dao = db.getUserDao();
 
 		try {
-			dao.queryBuilder().where().eq("hash", hash);
+			User user = dao.queryBuilder().where().eq("hash", hash).queryForFirst();
+			
+			if(user != null){
+				userExists = true;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		return true;
+		return userExists;
 	}
 
 	/**
