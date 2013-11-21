@@ -32,7 +32,6 @@ public class TaskRestService
 	
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	public void saveTasks(List<Task> tasks, @QueryParam("user") String userHash) throws TaskException, UserException
 	{
 		if (userHash==null) 

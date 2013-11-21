@@ -21,7 +21,7 @@ public class TaskService {
 			throw new TaskException("Não foi possível obter as task solicitadas pois o usuário solicitado não existe.", e);
 		}
 		
-		return new TaskDAO().getUserTask(user);
+		return new TaskDAO().retrieve(user);
 	}
 	public static void saveTasks(List<Task> tasks, String userHash) throws TaskException 
 	{
@@ -37,7 +37,7 @@ public class TaskService {
 						e);
 			}
 		}
-		new TaskDAO().saveTasks(tasks);
+		new TaskDAO().save(tasks);
 	}
 	public static void taskDecoderTest()
 	{
