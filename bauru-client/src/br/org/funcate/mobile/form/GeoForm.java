@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -23,30 +24,38 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import br.org.funcate.mobile.AddressAdapter;
 import br.org.funcate.mobile.R;
+import br.org.funcate.mobile.address.Address;
+import br.org.funcate.mobile.data.AddressAdapter;
 import br.org.funcate.mobile.data.DatabaseAdapter;
-import br.org.funcate.mobile.data.Provider;
-import br.org.funcate.mobile.data.ProviderAddress;
+import br.org.funcate.mobile.data.DatabaseHelper;
 import br.org.funcate.mobile.photo.PhotoActivity;
 import br.org.funcate.mobile.task.Task;
 
+import com.j256.ormlite.android.AndroidDatabaseResults;
+import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 public class GeoForm extends Activity {
 
-	private static final String TAG = "#GEOFORM";
+	// tag used to debug
+	private final String LOG_TAG = "#" + getClass().getSimpleName();
 
 	// other activities
 	private static final int PHOTO = 102;
 
+	private Task task;
+	
+	private Location currentLocation = null;
+	
 	// widgets
 	private AutoCompleteTextView log;
 	private EditText cep, num, cit, est, if1, if2;
 	private TextView lat, lon;
 	private ImageButton bt_clear;
 	private Button bt_cancel, bt_ok, bt_photo;
-	private String fot;
+	private String photoPath;
 	private Date dat = null;
 
 	private GeoForm self = this;
@@ -57,99 +66,55 @@ public class GeoForm extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_geoform);
 		
-		Task task = (Task)getIntent().getSerializableExtra("task");
-
-		Location currentLocation = null;
+		task = (Task) getIntent().getSerializableExtra("task");
 
 		try {
-			currentLocation = getIntent().getExtras().getParcelable(
-					"CURRENT_LOCATION");
+			currentLocation = getIntent().getExtras().getParcelable("CURRENT_LOCATION");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		// iniciate providers
-		Cursor c_ini2 = getContentResolver().query(
-				ProviderAddress.Lograd.CONTENT_URI,
-				new String[] { "count(*) AS count" }, null, null, null);
-		c_ini2.moveToFirst();
-		c_ini2.close();
-		c_ini2 = null;
-
+		
 		// linking widgets
 		log = (AutoCompleteTextView) findViewById(R.id.cp_log);
 		cep = (EditText) findViewById(R.id.cp_cep);
-		cep.setText(task.getAddress().getPostalCode());
 		num = (EditText) findViewById(R.id.cp_num);
-		num.setText(task.getAddress().getNumber());
 		lat = (TextView) findViewById(R.id.cp_lat);
 		lon = (TextView) findViewById(R.id.cp_lon);
 		cit = (EditText) findViewById(R.id.cp_cit);
-		cit.setText(task.getAddress().getCity());
 		est = (EditText) findViewById(R.id.cp_est);
-		est.setText(task.getAddress().getState());
 		if1 = (EditText) findViewById(R.id.cp_if1);
-		if1.setText(task.getForm().getInfo1());
-		if2 = (EditText) findViewById(R.id.cp_if2);
-		if2.setText(task.getForm().getInfo2());
+		if2 = (EditText) findViewById(R.id.cp_if2);	
+		
+		if(task != null){
+			cep.setText(task.getAddress().getPostalCode());
+			num.setText(task.getAddress().getNumber());
+			cit.setText(task.getAddress().getCity());
+			est.setText(task.getAddress().getState());
+			if1.setText(task.getForm().getInfo1());
+			if2.setText(task.getForm().getInfo2());
+		}
+
 		bt_clear = (ImageButton) findViewById(R.id.cp_button_clear);
 		bt_cancel = (Button) findViewById(R.id.cp_button_cancel);
 		bt_ok = (Button) findViewById(R.id.cp_button_ok);
 		bt_photo = (Button) findViewById(R.id.cp_button_photo);
-
-		DatabaseAdapter db = DatabaseAdapter.getInstance(this);
-		try {
-			Dao<Task, Integer> dao = db.getTaskDao();
-			dao.create(task);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		if (currentLocation != null) {
-			lat.setText("" + currentLocation.getLatitude());
-			lon.setText("" + currentLocation.getLongitude());
-		}
-
-		log.setAdapter(new AddressAdapter(this, R.layout.item_list, null,
-				new String[] { ProviderAddress.Lograd.LOG,
-						ProviderAddress.Lograd.CEP }, new int[] { R.id.itemlog,
-						R.id.itemcep }));
-		log.setHint("pesquisar...");
-
-		log.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
+		
+		// Database query can be a time consuming task, so its safe to call database query in another thread
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+            	Cursor cursor;
+            	
 				try {
-					TextView t1 = (TextView) arg1.findViewById(R.id.itemlog);
-					String logvalue = t1.getText().toString();
-					log.setText(logvalue);
-					TextView t2 = (TextView) arg1.findViewById(R.id.itemcep);
-					String[] split1 = t2.getText().toString().split(" ");
-					String cepvalue;
-					if (split1[1].compareTo("---") == 0) {
-						cepvalue = "";
-					} else {
-						cepvalue = split1[1];
-					}
-					cep.setText(cepvalue);
-
-					log.setInputType(InputType.TYPE_NULL);
-					cep.setInputType(InputType.TYPE_NULL);
-
-					log.clearFocus();
-					log.setEnabled(false);
-					cep.setEnabled(false);
-
-					InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-					mgr.hideSoftInputFromWindow(log.getWindowToken(), 0);
-
-				} catch (Exception ex) {
-					Log.e(TAG, "Exception onItemClick: " + ex);
+					cursor = AddressAdapter.getAddressCursor(null);
+					self.setAutoCompleteAdapterPropertiers(cursor);
+				} catch (SQLException e) {
+					Log.e(self.LOG_TAG, "ERRO AO CRIAR CURSOR!" + e.getMessage());
+					e.printStackTrace();
 				}
-			}
-		});
-
+            }
+        });
+		
 		bt_clear.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -166,8 +131,7 @@ public class GeoForm extends Activity {
 		bt_cancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				setResult(RESULT_CANCELED,
-						new Intent().putExtra("RESULT", "CANCEL"));
+				setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "CANCEL"));
 				finish();
 			}
 		});
@@ -204,23 +168,32 @@ public class GeoForm extends Activity {
 			private void validate() {
 				// save database
 				ContentValues row = new ContentValues();
-
-				row.put(Provider.Dados.LOG, log.getText().toString());
-				row.put(Provider.Dados.CEP, cep.getText().toString());
-				row.put(Provider.Dados.NUM, num.getText().toString());
-				row.put(Provider.Dados.CID, cit.getText().toString());
-				row.put(Provider.Dados.EST, est.getText().toString());
-				row.put(Provider.Dados.IF1, if1.getText().toString());
-				row.put(Provider.Dados.IF2, if2.getText().toString());
-				row.put(Provider.Dados.FOT, fot);
-				row.put(Provider.Dados.LAT, lat.getText().toString());
-				row.put(Provider.Dados.LON, lon.getText().toString());
-				if (dat != null) {
-					row.put(Provider.Dados.DAT, dat.toString());
+				
+				DatabaseAdapter db = DatabaseHelper.getInstance().getDatabase();
+				
+				try {
+					Dao<Task, Integer> dao = db.getTaskDao();
+					dao.createOrUpdate(task);
+				} catch (SQLException e) {
+					e.printStackTrace();
 				}
 
-				getContentResolver().insert(Provider.Dados.CONTENT_URI, row);
+				if (currentLocation != null) {
+					lat.setText("" + currentLocation.getLatitude());
+					lon.setText("" + currentLocation.getLongitude());
+				}
 
+				log.getText().toString();
+				cep.getText().toString();
+				num.getText().toString();
+				cit.getText().toString();
+				est.getText().toString();
+				if1.getText().toString();
+				if2.getText().toString();
+				// photoPath;
+				lat.getText().toString();
+				lon.getText().toString();
+				
 				Intent data = new Intent();
 				data.putExtra("RESULT", "Registro concluído!");
 				setResult(RESULT_OK, data);
@@ -228,14 +201,60 @@ public class GeoForm extends Activity {
 				finish();
 			}
 		});
+	}
+	
+	public void setAutoCompleteAdapterPropertiers(Cursor cursor){
 
+		AddressAdapter addressAdapter = new AddressAdapter(GeoForm.this,
+				R.layout.item_list, 
+				cursor,
+				new String[] { "name", "postalCode" },
+				new int[] {R.id.itemlog, R.id.itemcep }
+		);
+
+        log.setAdapter(addressAdapter);
+		log.setHint("pesquisar...");
+		log.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				try {
+					TextView t1 = (TextView) arg1.findViewById(R.id.itemlog);
+					String logvalue = t1.getText().toString();
+					log.setText(logvalue);
+					TextView t2 = (TextView) arg1.findViewById(R.id.itemcep);
+					String[] split1 = t2.getText().toString().split(" ");
+					String cepvalue;
+					
+					if (split1[1].compareTo("---") == 0) {
+						cepvalue = "";
+					} else {
+						cepvalue = split1[1];
+					}
+					
+					cep.setText(cepvalue);
+
+					log.setInputType(InputType.TYPE_NULL);
+					cep.setInputType(InputType.TYPE_NULL);
+
+					log.clearFocus();
+					log.setEnabled(false);
+					cep.setEnabled(false);
+
+					InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					mgr.hideSoftInputFromWindow(log.getWindowToken(), 0);
+
+				} catch (Exception ex) {
+					Log.e(LOG_TAG, "Exception onItemClick: " + ex);
+				}
+			}
+		});
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == PHOTO) {
 			if (resultCode == RESULT_OK) {
-				fot = getIntent().getExtras().getString("RESULT");
+				photoPath = getIntent().getExtras().getString("RESULT");
 				dat = new Date();
 				double latitude = data.getDoubleExtra("latitude", 0);
 				double longitude = data.getDoubleExtra("longitude", 0);

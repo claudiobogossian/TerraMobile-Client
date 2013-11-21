@@ -1,4 +1,4 @@
-package br.org.funcate.mobile.data;
+/*package br.org.funcate.mobile.data;
 
 import java.util.HashMap;
 
@@ -171,4 +171,4 @@ public class ProviderAddress extends ContentProvider {
 
 		}
 	}
-}
+}*/
