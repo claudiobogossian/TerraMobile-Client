@@ -35,6 +35,7 @@
         <activity android:name="br.org.funcate.mobile.map.GeoMap"></activity>
         <activity android:name="br.org.funcate.mobile.task.TaskActivity"></activity>
         <activity android:name="br.org.funcate.mobile.photo.PhotoActivity"></activity>
+        <activity android:name="br.org.funcate.mobile.user.LoginActivity"></activity>
         <activity
             android:name="br.org.funcate.mobile.Main"
             android:label="@string/title_activity_main" 

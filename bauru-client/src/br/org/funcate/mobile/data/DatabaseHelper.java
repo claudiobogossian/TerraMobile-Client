@@ -1,7 +1,6 @@
 package br.org.funcate.mobile.data;
 
 import android.app.Application;
-import br.org.funcate.mobile.DatabaseAdapter;
 
 public class DatabaseHelper extends Application {
 	
@@ -18,21 +17,16 @@ public class DatabaseHelper extends Application {
 	public static DatabaseHelper getInstance(){
 		if(self == null){
 			self = new DatabaseHelper();
+			self.db = DatabaseAdapter.getInstance(self);
 		}
 		return self;
 	}
 	
 	@Override
-	public void onCreate() {
-		super.onCreate();
-		this.db = DatabaseAdapter.getInstance(this);
-	}
-	
-	@Override
 	public void onTerminate() {
 		super.onTerminate();
-		this.db.close();
-		this.db = null;
+		self.db.close();
+		self.db = null;
 	}
 	
 	/**
@@ -41,6 +35,6 @@ public class DatabaseHelper extends Application {
 	 * 
 	 * */
 	public DatabaseAdapter getDatabase(){
-		return this.db;
+		return self.db;
 	}
 }

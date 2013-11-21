@@ -107,20 +107,17 @@ public class Utility {
 	}
 
 	/**
-	 * Determines whether the Internet is available
+	 * Determines whether the Network is available
 	 * 
 	 * @param context
 	 *            context of the implementation
 	 */
-	public static boolean isInternetOn(Context context) {
-		ConnectivityManager connect_mng = (ConnectivityManager) context
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		if (connect_mng.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-				.getState() == NetworkInfo.State.CONNECTED
-				|| connect_mng.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
-				.getState() == NetworkInfo.State.CONNECTED)
-			return true;
-		return false;
+	public static boolean isNetworkAvailable(Context context) {
+		Boolean isAvailable = false;
+		ConnectivityManager connect_mng = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (connect_mng.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED || connect_mng.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED)
+			isAvailable = true;
+		return isAvailable;
 	}
 
 	/**
@@ -382,7 +379,6 @@ public class Utility {
 			f.mkdirs(); 
 		} 
 	} 
-
 
 	/**
 	 * 

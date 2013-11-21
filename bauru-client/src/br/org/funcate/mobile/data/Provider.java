@@ -14,6 +14,8 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+@Deprecated
+//TODO: remove this class
 public class Provider extends ContentProvider {
 
 	public static final String TAG = "#PROVIDER";

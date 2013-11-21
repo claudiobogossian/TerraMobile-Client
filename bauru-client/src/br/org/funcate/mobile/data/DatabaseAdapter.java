@@ -1,4 +1,4 @@
-package br.org.funcate.mobile;
+package br.org.funcate.mobile.data;
 
 import java.sql.SQLException;
 import java.util.Date;
