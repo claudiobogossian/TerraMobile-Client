@@ -16,6 +16,8 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+@Deprecated
+//TODO: remove this class
 public class ProviderAddress extends ContentProvider {
 
 	private static final String TAG = "#ProviderAddress";

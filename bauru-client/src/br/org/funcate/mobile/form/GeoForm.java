@@ -25,12 +25,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import br.org.funcate.mobile.AddressAdapter;
 import br.org.funcate.mobile.R;
+import br.org.funcate.mobile.data.DatabaseAdapter;
 import br.org.funcate.mobile.data.Provider;
 import br.org.funcate.mobile.data.ProviderAddress;
 import br.org.funcate.mobile.photo.PhotoActivity;
 import br.org.funcate.mobile.task.Task;
-import br.org.funcate.mobile.task.TaskDatabase;
-import br.org.funcate.mobile.task.TaskDatabaseHelper;
 
 import com.j256.ormlite.dao.Dao;
 
@@ -98,9 +97,9 @@ public class GeoForm extends Activity {
 		bt_ok = (Button) findViewById(R.id.cp_button_ok);
 		bt_photo = (Button) findViewById(R.id.cp_button_photo);
 
-		TaskDatabase db = TaskDatabaseHelper.getDatabase(this);
+		DatabaseAdapter db = DatabaseAdapter.getInstance(this);
 		try {
-			Dao<Task, Integer> dao = db.taskDao;
+			Dao<Task, Integer> dao = db.getTaskDao();
 			dao.create(task);
 		} catch (SQLException e) {
 			e.printStackTrace();

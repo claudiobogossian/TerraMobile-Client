@@ -23,4 +23,21 @@
             android:text="@string/btn_sync_tasks" />
     </LinearLayout>
 
+    <!-- Name Label -->
+    <TextView
+        android:id="@+id/lblName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dip"
+        android:layout_marginTop="40dip"
+        android:singleLine="true" />
+
+    
+    <!-- Button to show session data -->
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Logout" />
+
 </LinearLayout>

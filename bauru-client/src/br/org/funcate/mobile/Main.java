@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -16,81 +17,66 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import br.org.funcate.mobile.data.DatabaseAdapter;
+import br.org.funcate.mobile.data.DatabaseHelper;
 import br.org.funcate.mobile.map.GeoMap;
+import br.org.funcate.mobile.user.LoginActivity;
+import br.org.funcate.mobile.user.SessionManager;
+import br.org.funcate.mobile.user.User;
+
+import com.j256.ormlite.dao.Dao;
 
 public class Main extends Activity {
 
+	private Main self = this;
 	public static final String TAG = "#MAIN";
 
 	// other activities
 	private static final int GEOMAP = 100;
-
-	// widgets
-	private Button bt_begin, bt_exit;
+	
+	// Session Manager Class
+    SessionManager session;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
+		 // Session class instance
+        session = new SessionManager(getApplicationContext());
+        this.checkLogin();
 		super.onCreate(savedInstanceState);
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_main);
-
-		// linking the widgets to the layout
-		bt_begin = (Button) findViewById(R.id.main_bt_begin);
-		bt_exit = (Button) findViewById(R.id.main_bt_exit);
-
-		bt_begin.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				//self.login();
-				Intent i = new Intent(Main.this, GeoMap.class);
-				startActivityForResult(i, GEOMAP);
-			}
-		});
-
-		bt_exit.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				setResult(RESULT_CANCELED, new Intent());
-				finish();
-			}
-		});
-
 		config();
-	}
+	}	
 
 	/**
-	 * Login button click event. A Toast is set to alert when the Email and
-	 * Password field is empty
-	 **/
-	public void login() {
-		EditText txt_login_username = (EditText) findViewById(R.id.txt_login_username);
-		EditText txt_login_password = (EditText) findViewById(R.id.txt_login_password);
-
-		String login = txt_login_username.getText().toString();
-		String password = txt_login_password.getText().toString();
-
-		if ((!login.equals("")) && (!password.equals(""))) {
-			// pede para alguém fazer uma chamada Ajax pra verificar se o cara
-			// está logado, se for válido...
-			// Intent i = new Intent(Main.this, GeoMap.class);
-			// startActivityForResult(i, GEOMAP);
-			// fazer Try Catch pra verificar usuário ou senha inválidos...
-		} else if ((!login.equals(""))) {
-			Toast.makeText(getApplicationContext(), "Preencha a senha!", Toast.LENGTH_SHORT).show();
-		} else if ((!password.equals(""))) {
-			Toast.makeText(getApplicationContext(), "Preencha o nome de usuário!", Toast.LENGTH_SHORT).show();
+	 * Check login method wil check user login status If false it will redirect
+	 * user to login page Else won't do anything
+	 * */
+	public void checkLogin() {
+		
+		boolean isLoggedIn = session.isLoggedIn();
+		Intent intent = null;
+		
+		if (isLoggedIn) {
+			intent = new Intent(this, GeoMap.class);
 		} else {
-			Toast.makeText(getApplicationContext(), "Preencha Nome de usuário e Senhas!", Toast.LENGTH_SHORT).show();
+			// user is not logged in redirect him to Login Activity
+			intent = new Intent(this, LoginActivity.class);
 		}
-	}
+		
+		// Closing all the Activities
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
+		// Add new Flag to start new Activity
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		
+		// Staring Login Activity
+		this.startActivity(intent);
+	}
+	
 	@SuppressLint("SdCardPath")
 	private void config() {
 		try {
 			InputStream is = getAssets().open("address.db");
-			File archive = new File("/data/data/" + getPackageName()
-					+ "/files/databases/");
+			File archive = new File("/data/data/" + getPackageName() + "/files/databases/");
 			archive.mkdirs();
 			File outputFile = new File(archive, "address.db");
 			@SuppressWarnings("resource")
