@@ -102,6 +102,10 @@ public class GeoForm extends Activity implements LocationListener{
 			est.setText(task.getAddress().getState());
 			if1.setText(task.getForm().getInfo1());
 			if2.setText(task.getForm().getInfo2());
+			
+			if(task.getId() != null){
+				bt_ok.setEnabled(false);
+			}
 		}
 		
 		// Database query can be a time consuming task, so its safe to call database query in another thread
@@ -251,6 +255,8 @@ public class GeoForm extends Activity implements LocationListener{
 
 					InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 					mgr.hideSoftInputFromWindow(log.getWindowToken(), 0);
+					
+					bt_ok.setEnabled(true); // TODO: teste um novo GEOFORM e selecione um registro pra ver o botão ok habilitando e desabilitando... 
 
 				} catch (Exception ex) {
 					Log.e(LOG_TAG, "Exception onItemClick: " + ex);
