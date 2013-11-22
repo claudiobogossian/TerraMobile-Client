@@ -1,0 +1,33 @@
+package br.org.funcate.baurudigital.server.photo;
+
+import java.util.List;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import br.org.funcate.baurudigital.server.user.UserException;
+
+@XmlRootElement
+@Path("/photos")
+@Produces({MediaType.APPLICATION_JSON })
+public class PhotoRestService
+{
+	@POST
+	public void saveTasks(List<Photo> photo, @QueryParam("user") String userHash) throws TaskException, UserException
+	{
+		if (userHash==null) 
+		{
+			throw new PhotoException("Favor informar o usuário para salvar suas tarefas.");
+		}
+		if (!photo.isEmpty()) {
+			PhotoService.saveTasks(tasks, userHash);	
+		}
+		
+	}
+		
+}

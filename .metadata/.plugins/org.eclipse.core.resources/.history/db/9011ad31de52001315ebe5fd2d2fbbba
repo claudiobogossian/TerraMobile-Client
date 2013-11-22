@@ -1,0 +1,11 @@
+package br.org.funcate.baurudigital.server.form;
+
+
+public class FormService {
+
+	public static Form getForm(int id) 
+	{
+		
+		return new FormDAO().retrieve(id);
+	}
+}

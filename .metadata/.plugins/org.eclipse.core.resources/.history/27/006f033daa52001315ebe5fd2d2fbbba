@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory name="baurudigital-postgresql">
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.password">postgres</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/baurudigital2</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <property name="hibernate.show_sql" >true</property>
+
+
+        <mapping class="br.org.funcate.baurudigital.address.Address" />
+        <mapping class="br.org.funcate.baurudigital.form.Form" />
+        <mapping class="br.org.funcate.baurudigital.Photo.photo" />
+        <mapping class="br.org.funcate.baurudigital.task.task" />
+        <mapping class="br.org.funcate.baurudigital.user.User" />
+    </session-factory>
+</hibernate-configuration>

@@ -1,0 +1,6 @@
+INDEX VERSION 1.122+/home/bogo/workspace-bauru/bauru-digital/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
+1887801945.index
+617007654.index
+2787183763.index
+1133851033.index
+1488127068.index

@@ -1,0 +1,26 @@
+package br.org.funcate.baurudigital.server.form;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import br.org.funcate.baurudigital.server.address.Address;
+import br.org.funcate.baurudigital.server.common.service.JSONService;
+import br.org.funcate.baurudigital.server.form.Form;
+import br.org.funcate.baurudigital.server.user.User;
+import br.org.funcate.baurudigital.server.user.UserException;
+import br.org.funcate.baurudigital.server.user.UserService;
+
+public class FormService {
+
+	public static Form getTask(String hash) throws TaskException
+	{
+		User user;
+		try {
+			user = UserService.getUserByHash(hash);
+		} catch (UserException e) {
+			throw new TaskException("Não foi possível obter as task solicitadas pois o usuário solicitado não existe.", e);
+		}
+		
+		return new TaskDAO().retrieve(user);
+	}
+}

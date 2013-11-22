@@ -1,0 +1,16 @@
+package br.org.funcate.baurudigital.tools.extraction.Domain;
+
+public class SourceAddress {
+
+	private int imo_id;
+	private int log_id;
+	private String log_codlogradouro;
+	private String imo_inscricao;
+	private String endereco;
+	private String numero;
+	private String cep;
+	private String complemento;
+	private String estado;
+	private String municipio;
+	private String bairro
+}

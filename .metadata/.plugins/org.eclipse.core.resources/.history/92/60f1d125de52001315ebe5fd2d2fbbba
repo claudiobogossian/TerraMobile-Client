@@ -1,0 +1,21 @@
+package br.org.funcate.baurudigital.server.form;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import br.org.funcate.baurudigital.server.address.Address;
+import br.org.funcate.baurudigital.server.common.service.JSONService;
+import br.org.funcate.baurudigital.server.form.Form;
+import br.org.funcate.baurudigital.server.user.User;
+import br.org.funcate.baurudigital.server.user.UserException;
+import br.org.funcate.baurudigital.server.user.UserService;
+
+public class FormService {
+
+	public static Form getForm(int id) 
+	{
+		
+		
+		return new TaskDAO().retrieve(user);
+	}
+}

@@ -1,0 +1,9 @@
+package br.org.funcate.baurudigital.tools.extraction.Domain;
+
+public class SourceAddress {
+
+	private int imo_id;
+	private int log_id;
+	private int log_codlogradouro;
+	private int imo_inscricao;
+	private String endereco;                                                    numero        cep       complemento                                              estado     municipio     bairro}

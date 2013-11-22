@@ -19,8 +19,7 @@ public class TaskDAO {
 
 		String query = "from Task where user_id=:user_id";
 		@SuppressWarnings("unchecked")
-		List<Task> tasks = (List<Task>) session.createQuery(query)
-				.setString("user_id", user.getId().toString()).list();
+		List<Task> tasks = (List<Task>) session.createQuery(query).setInteger("user_id", user.getId()).list();
 
 		session.getTransaction().commit();
 		session.close();

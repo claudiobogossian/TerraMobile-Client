@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="br.org.funcate.baurudigital.task.TaskService"/>
+<fullyQualifiedTypeName name="br.org.funcate.baurudigital.user.UserService"/>
+<fullyQualifiedTypeName name="br.org.funcate.baurudigital.server.common.utils.Util"/>
+<fullyQualifiedTypeName name="br.org.funcate.baurudigital.server.address.Address"/>
+<fullyQualifiedTypeName name="br.org.funcate.baurudigital.server.form.Form"/>
+<fullyQualifiedTypeName name="br.org.funcate.baurudigital.server.common.exception.UtilException"/>
+<fullyQualifiedTypeName name="br.org.funcate.baurudigital.server.task.Task"/>
+<fullyQualifiedTypeName name="br.org.funcate.baurudigital.server.user.UserException"/>
+</qualifiedTypeNameHistroy>

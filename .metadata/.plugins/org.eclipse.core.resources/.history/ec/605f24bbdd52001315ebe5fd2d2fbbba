@@ -1,0 +1,23 @@
+package br.org.funcate.baurudigital.server.form;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
+import br.org.funcate.baurudigital.server.common.JPA.HibernateFactory;
+import br.org.funcate.baurudigital.server.user.User;
+
+public class FormDAO {
+
+	public void retrieve(int id) {
+		SessionFactory sessionFactory = HibernateFactory.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		session.createQuery("from Form where id=:id").setInteger("id", id).list();
+		session.getTransaction().commit();
+		session.close();
+	}
+}
