@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20/11/2013 16:28:26 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="br.org.funcate.baurudigital.tools.extraction.ViewFctEnderecoImovelBogo" table="view_fct_endereco_imovel_bogo" schema="dbo" catalog="Bauru_420">
+        <composite-id name="id" class="br.org.funcate.baurudigital.tools.extraction.ViewFctEnderecoImovelBogoId">
+            <key-property name="imoId" type="int">
+                <column name="imo_id" />
+            </key-property>
+            <key-property name="logId" type="java.lang.Integer">
+                <column name="log_id" />
+            </key-property>
+            <key-property name="logCodlogradouro" type="string">
+                <column name="log_codlogradouro" length="10" />
+            </key-property>
+            <key-property name="imoInscricao" type="string">
+                <column name="imo_inscricao" length="40" />
+            </key-property>
+            <key-property name="endereco" type="string">
+                <column name="endereco" length="123" />
+            </key-property>
+            <key-property name="numero" type="string">
+                <column name="numero" length="100" />
+            </key-property>
+            <key-property name="cep" type="string">
+                <column name="cep" length="8" />
+            </key-property>
+            <key-property name="complemento" type="string">
+                <column name="complemento" length="100" />
+            </key-property>
+            <key-property name="estado" type="string">
+                <column name="estado" length="2" />
+            </key-property>
+            <key-property name="municipio" type="string">
+                <column name="municipio" length="5" />
+            </key-property>
+            <key-property name="bairro" type="string">
+                <column name="bairro" length="100" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

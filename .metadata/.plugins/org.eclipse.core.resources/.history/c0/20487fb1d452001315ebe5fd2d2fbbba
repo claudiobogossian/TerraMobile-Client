@@ -1,0 +1,10 @@
+package br.org.funcate.baurudigital.server.photo;
+
+public class PhotoService {
+
+	public static void savePhotos(List<Photo> photos)
+	{
+		
+	}
+
+}

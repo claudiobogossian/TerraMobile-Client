@@ -1,0 +1,12 @@
+package br.org.funcate.baurudigital.server.photo;
+
+import java.util.List;
+
+public class PhotoService {
+
+	public static void savePhotos(List<Photo> photos)
+	{
+		new PhotoDAO().save(photos);
+	}
+
+}

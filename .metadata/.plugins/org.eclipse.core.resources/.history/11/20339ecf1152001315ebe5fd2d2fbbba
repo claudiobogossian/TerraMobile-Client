@@ -1,0 +1,73 @@
+package br.org.funcate.baurudigital.tools.extraction;
+
+// Generated 20/11/2013 16:29:26 by Hibernate Tools 3.4.0.CR1
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ * Home object for domain model class ViewFctEnderecoImovelBogo.
+ * @see br.org.funcate.baurudigital.tools.extraction.ViewFctEnderecoImovelBogo
+ * @author Hibernate Tools
+ */
+@Stateless
+public class ViewFctEnderecoImovelBogoHome {
+
+	private static final Log log = LogFactory
+			.getLog(ViewFctEnderecoImovelBogoHome.class);
+
+	@PersistenceContext
+	private EntityManager entityManager;
+
+	public void persist(ViewFctEnderecoImovelBogo transientInstance) {
+		log.debug("persisting ViewFctEnderecoImovelBogo instance");
+		try {
+			entityManager.persist(transientInstance);
+			log.debug("persist successful");
+		} catch (RuntimeException re) {
+			log.error("persist failed", re);
+			throw re;
+		}
+	}
+
+	public void remove(ViewFctEnderecoImovelBogo persistentInstance) {
+		log.debug("removing ViewFctEnderecoImovelBogo instance");
+		try {
+			entityManager.remove(persistentInstance);
+			log.debug("remove successful");
+		} catch (RuntimeException re) {
+			log.error("remove failed", re);
+			throw re;
+		}
+	}
+
+	public ViewFctEnderecoImovelBogo merge(
+			ViewFctEnderecoImovelBogo detachedInstance) {
+		log.debug("merging ViewFctEnderecoImovelBogo instance");
+		try {
+			ViewFctEnderecoImovelBogo result = entityManager
+					.merge(detachedInstance);
+			log.debug("merge successful");
+			return result;
+		} catch (RuntimeException re) {
+			log.error("merge failed", re);
+			throw re;
+		}
+	}
+
+	public ViewFctEnderecoImovelBogo findById(ViewFctEnderecoImovelBogoId id) {
+		log.debug("getting ViewFctEnderecoImovelBogo instance with id: " + id);
+		try {
+			ViewFctEnderecoImovelBogo instance = entityManager.find(
+					ViewFctEnderecoImovelBogo.class, id);
+			log.debug("get successful");
+			return instance;
+		} catch (RuntimeException re) {
+			log.error("get failed", re);
+			throw re;
+		}
+	}
+}

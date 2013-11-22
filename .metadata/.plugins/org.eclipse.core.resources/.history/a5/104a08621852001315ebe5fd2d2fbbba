@@ -1,0 +1,31 @@
+package br.org.funcate.baurudigital.tools.extraction;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import br.org.funcate.baurudigital.server.address.Address;
+import br.org.funcate.baurudigital.server.task.Task;
+import br.org.funcate.baurudigital.server.user.User;
+import br.org.funcate.baurudigital.server.user.UserService;
+import br.org.funcate.baurudigital.tools.extraction.domain.DAO.SourceAddressDAO;
+
+public class Main {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		String blockId1 = "042264"; 
+		String blockId2 = "042264";
+		List<Address> addressList =  new SourceAddressDAO().getAddressByBlock();
+		List<Task> tasks = new ArrayList<Task>();
+		
+		List<User> users = UserService.getUsers();
+		for (Address address : addressList) {
+			Task task = new Task();
+			task.set
+		}
+		
+	}
+
+}
