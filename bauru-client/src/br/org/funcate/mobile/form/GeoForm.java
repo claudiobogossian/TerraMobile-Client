@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
@@ -37,7 +39,7 @@ import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
-public class GeoForm extends Activity {
+public class GeoForm extends Activity implements LocationListener{
 
 	// tag used to debug
 	private final String LOG_TAG = "#" + getClass().getSimpleName();
@@ -57,6 +59,7 @@ public class GeoForm extends Activity {
 	private Button bt_cancel, bt_ok, bt_photo;
 	private String photoPath;
 	private Date dat = null;
+	private LocationManager locationManager;
 
 	private GeoForm self = this;
 
@@ -65,6 +68,9 @@ public class GeoForm extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_geoform);
+		
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 		
 		task = (Task) getIntent().getSerializableExtra("task");
 
@@ -256,13 +262,42 @@ public class GeoForm extends Activity {
 			if (resultCode == RESULT_OK) {
 				photoPath = getIntent().getExtras().getString("RESULT");
 				dat = new Date();
-				double latitude = data.getDoubleExtra("latitude", 0);
-				double longitude = data.getDoubleExtra("longitude", 0);
-				lat.setText(String.valueOf(latitude));
-				lon.setText(String.valueOf(longitude));
+				Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+				if (location != null) {
+					lat.setText("" + location.getLatitude());
+					lon.setText("" + location.getLongitude());
+				}
+				else {
+					lat.setText("Location not available");
+					lon.setText("Location not available");
+				}
 				
 			} else if (resultCode == RESULT_CANCELED) {
 			}
 		}
+	}
+
+	@Override
+	public void onLocationChanged(Location arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onProviderDisabled(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onProviderEnabled(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
+		// TODO Auto-generated method stub
+		
 	}
 }
