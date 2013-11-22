@@ -56,7 +56,7 @@ public class TaskActivity extends Activity {
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_task);
 
-		db = DatabaseAdapter.getInstance(this);
+		db = DatabaseHelper.getDatabase();
 
 		this.getLocalTasks();
 
@@ -142,7 +142,7 @@ public class TaskActivity extends Activity {
 	 */
 	public void saveTasksIntoLocalSqlite(List<Task> tasks) {
 		if(tasks != null){
-			DatabaseAdapter db = DatabaseHelper.getInstance().getDatabase();
+			DatabaseAdapter db = DatabaseHelper.getDatabase();
 			Dao<Task, Integer> dao = db.getTaskDao();
 
 			try {

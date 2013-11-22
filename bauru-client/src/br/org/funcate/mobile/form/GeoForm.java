@@ -169,7 +169,7 @@ public class GeoForm extends Activity {
 				// save database
 				ContentValues row = new ContentValues();
 				
-				DatabaseAdapter db = DatabaseHelper.getInstance().getDatabase();
+				DatabaseAdapter db = DatabaseHelper.getDatabase();
 				
 				try {
 					Dao<Task, Integer> dao = db.getTaskDao();

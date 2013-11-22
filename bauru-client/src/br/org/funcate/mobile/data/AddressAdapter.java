@@ -1,11 +1,7 @@
 package br.org.funcate.mobile.data;
 
 import java.sql.SQLException;
-
-import com.j256.ormlite.android.AndroidDatabaseResults;
-import com.j256.ormlite.dao.CloseableIterator;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,6 +15,11 @@ import android.widget.TextView;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.address.Address;
+
+import com.j256.ormlite.android.AndroidDatabaseResults;
+import com.j256.ormlite.dao.CloseableIterator;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 public class AddressAdapter extends CursorAdapter implements Filterable {
 
@@ -69,7 +70,7 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
 	
 	public static Cursor getAddressCursor(String propertieFilter) throws SQLException {
 		// build your query
-		Dao<Address, Integer> addressDao = DatabaseHelper.getInstance().getDatabase().getAddressDao();
+		Dao<Address, Integer> addressDao = DatabaseHelper.getDatabase().getAddressDao();
 		QueryBuilder<Address, Integer> queryBuilder = addressDao.queryBuilder();
 		
 		// if has some filters on params it execute the filters in the properties.
@@ -97,6 +98,11 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
 				iterator.closeQuietly();
 			}
 		}
+		
+		List<Address> a = addressDao.queryForAll();
+		int f = a.size();
+		
+		int teste = cursor.getCount();
 		
 		return cursor;
 	}

@@ -24,6 +24,7 @@ import android.widget.Toast;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.data.DatabaseAdapter;
+import br.org.funcate.mobile.data.DatabaseHelper;
 import br.org.funcate.mobile.form.GeoForm;
 import br.org.funcate.mobile.task.Task;
 import br.org.funcate.mobile.task.TaskActivity;
@@ -80,7 +81,7 @@ public class GeoMap extends Activity {
 			//updateLoc(lastLocation);
 		}
 
-		db = DatabaseAdapter.getInstance(this);
+		db = DatabaseHelper.getDatabase();
 		db.createMockFeatures();
 		this.showLandmarks();
 	}

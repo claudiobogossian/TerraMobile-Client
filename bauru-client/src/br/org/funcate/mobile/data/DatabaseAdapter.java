@@ -5,8 +5,8 @@ import java.util.Date;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.address.Address;
 import br.org.funcate.mobile.form.Form;
 import br.org.funcate.mobile.photo.Photo;
@@ -15,8 +15,10 @@ import br.org.funcate.mobile.user.User;
 
 import com.j256.ormlite.android.AndroidConnectionSource;
 import com.j256.ormlite.android.AndroidDatabaseConnection;
+import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
 
@@ -25,7 +27,7 @@ import com.j256.ormlite.table.TableUtils;
  * database. This class also usually provides the DAOs used by the other
  * classes.
  */
-public class DatabaseAdapter extends SQLiteOpenHelper {
+public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 
 	private final String LOG_TAG = "#" + getClass().getSimpleName();
 	protected AndroidConnectionSource connectionSource = new AndroidConnectionSource(this);
@@ -44,23 +46,25 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
 	private Dao<User, Integer> userDao = null;
 	private Dao<Address, Integer> addressDao = null;
 
-	private static DatabaseAdapter instance;
+	//private static DatabaseAdapter instance;
 
-	private DatabaseAdapter(Context context) {
+	public DatabaseAdapter(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
 		try {
 			this.createDaos();
+			this.createMockFeatures();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
+	/*
 	public static DatabaseAdapter getInstance(Context context) {
 		if (instance == null)
 			instance = new DatabaseAdapter(context);
 		return instance;
-	}
+	}*/
 
 	public void createDaos() throws SQLException {
 		taskDao = getDao(Task.class);
@@ -76,7 +80,7 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
 	 * your data.
 	 */
 	@Override
-	public void onCreate(SQLiteDatabase db) {
+	public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
 		DatabaseConnection conn = connectionSource.getSpecialConnection();
 		boolean clearSpecial = false;
 		if (conn == null) {
@@ -99,9 +103,7 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
 		}
 	}
 
-	@Override
-	public final void onUpgrade(SQLiteDatabase db, int oldVersion,
-			int newVersion) {
+	public void onUpgrade(SQLiteDatabase db, ConnectionSource arg1, int oldVersion, int newVersion) {
 		DatabaseConnection conn = connectionSource.getSpecialConnection();
 		boolean clearSpecial = false;
 		if (conn == null) {
@@ -147,10 +149,11 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
 			form.setInfo2("Informação2");
 
 			User user = new User();
-			user.setLogin("UserLogin");
+			user.setLogin("user");
 			user.setName("UserName");
-			user.setPassword("password123");
-
+			user.setPassword("123");
+			user.setHash(Utility.generateHashMD5(user.getLogin() + Utility.generateHashMD5(user.getPassword())));
+			
 			Task task = new Task();
 			task.setForm(form);
 			task.setAddress(address);
@@ -210,10 +213,8 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
 		}
 	}
 
-	private <D extends Dao<T, ?>, T> D getDao(Class<T> clazz)
-			throws SQLException {
-		Dao<T, ?> dao = (Dao<T, ?>) DaoManager.createDao(connectionSource,
-				clazz);
+	public <D extends Dao<T, ?>, T> D getDao(Class<T> clazz) throws SQLException {
+		Dao<T, ?> dao = (Dao<T, ?>) DaoManager.createDao(connectionSource, clazz);
 		@SuppressWarnings("unchecked")
 		D castDao = (D) dao;
 		return castDao;

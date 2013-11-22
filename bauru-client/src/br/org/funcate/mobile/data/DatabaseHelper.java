@@ -1,40 +1,23 @@
 package br.org.funcate.mobile.data;
 
-import android.app.Application;
+import android.content.Context;
 
-public class DatabaseHelper extends Application {
-	
-	private DatabaseAdapter db;
-	private static DatabaseHelper self;
-	
-	private DatabaseHelper() {}
-	
-	/**
-	 * 
-	 * Singleton Class.
-	 * 
-	 * */
-	public static DatabaseHelper getInstance(){
-		if(self == null){
-			self = new DatabaseHelper();
-			self.db = DatabaseAdapter.getInstance(self);
-		}
-		return self;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
+public class DatabaseHelper {
+
+	private static DatabaseAdapter databaseHelper;
+
+	public static DatabaseAdapter getDatabase() {
+		return databaseHelper;
 	}
-	
-	@Override
-	public void onTerminate() {
-		super.onTerminate();
-		self.db.close();
-		self.db = null;
+
+	public static void setHelper(Context context) {
+		databaseHelper = OpenHelperManager.getHelper(context, DatabaseAdapter.class);
 	}
-	
-	/**
-	 * 
-	 *  Create new DatabaseAdapter, based on this instance.
-	 * 
-	 * */
-	public DatabaseAdapter getDatabase(){
-		return self.db;
+
+	public static void releaseHelper() {
+		OpenHelperManager.releaseHelper();
+		databaseHelper = null;
 	}
 }

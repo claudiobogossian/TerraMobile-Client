@@ -113,10 +113,11 @@ public class LoginActivity extends Activity {
 	public boolean isValidHash(String hash){
 		boolean userExists = false;
 		// verify hash at local database.
-		DatabaseAdapter db = DatabaseHelper.getInstance().getDatabase();
+		DatabaseAdapter db = DatabaseHelper.getDatabase();
 		Dao<User, Integer> dao = db.getUserDao();
 
 		try {
+			List<User> users = dao.queryForAll();
 			User user = dao.queryBuilder().where().eq("hash", hash).queryForFirst();
 			
 			if(user != null){
@@ -154,7 +155,7 @@ public class LoginActivity extends Activity {
 	 *            Users that will be saved into database.
 	 */
 	public void saveUsersIntoLocalSqlite(List<User> users){
-		DatabaseAdapter db = DatabaseHelper.getInstance().getDatabase();
+		DatabaseAdapter db = DatabaseHelper.getDatabase();
 		Dao<User, Integer> dao = db.getUserDao();
 
 		try {
