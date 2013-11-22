@@ -16,11 +16,11 @@ public class Task implements Serializable {
 
 	@DatabaseField(generatedId = true, columnName = "id")
 	private Integer id;
-	@DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3)
+	@DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true, maxForeignAutoRefreshLevel = 3)
 	private Address address;
-	@DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3)
+	@DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true, maxForeignAutoRefreshLevel = 3)
 	private User user;
-	@DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3)
+	@DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true, maxForeignAutoRefreshLevel = 3)
 	private Form form;
 	@DatabaseField
 	private boolean syncronized; // sincronizado com o servidor?
@@ -81,6 +81,11 @@ public class Task implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	@Override
+	public String toString() {
+		return "Task [address=" + address + "]";
 	}
 
 }

@@ -21,10 +21,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
+import br.org.funcate.mobile.address.Address;
 import br.org.funcate.mobile.database.DatabaseAdapter;
 import br.org.funcate.mobile.database.DatabaseHelper;
+<<<<<<< HEAD
 import br.org.funcate.mobile.map.ServiceBaseMap;
+=======
+import br.org.funcate.mobile.form.Form;
+import br.org.funcate.mobile.photo.Photo;
+>>>>>>> e9af9b4090123d533170eac67457611616a88c7d
 import br.org.funcate.mobile.user.SessionManager;
+import br.org.funcate.mobile.user.User;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
@@ -168,12 +175,19 @@ public class TaskActivity extends Activity {
 	 */
 	public void saveTasksIntoLocalSqlite(List<Task> tasks) {
 		if(tasks != null){
-			DatabaseAdapter db = DatabaseHelper.getDatabase();
-			Dao<Task, Integer> dao = db.getTaskDao();
+			DatabaseAdapter db = DatabaseHelper.getDatabase();	
+			
+			Dao<Task, Integer>  taskDao = db.getTaskDao();
+			Dao<Form, Integer> formDao = db.getFormDao();
+			Dao<User, Integer> userDao = db.getUserDao();
+			Dao<Address, Integer> addressDao = db.getAddressDao();
 
 			try {
 				for (Task task : tasks) {
-					dao.create(task);
+					formDao.create(task.getForm());
+					userDao.createIfNotExists(task.getUser());
+					addressDao.create(task.getAddress());
+					taskDao.create(task);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();

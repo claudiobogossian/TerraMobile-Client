@@ -23,6 +23,7 @@ import android.view.Window;
 import android.widget.Toast;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
+import br.org.funcate.mobile.address.Address;
 import br.org.funcate.mobile.database.DatabaseAdapter;
 import br.org.funcate.mobile.database.DatabaseHelper;
 import br.org.funcate.mobile.form.GeoForm;
@@ -138,8 +139,15 @@ public class GeoMap extends Activity {
 			List<Task> features = dao.queryForAll();
 
 			for (Task feature : features) {
-				ExtendedOverlayItem poiMarker = createOverlayItem(feature);
-				poiMarkers.addItem(poiMarker);
+				
+				Double lat, lon;
+				lat = feature.getAddress().getCoordx();
+				lon = feature.getAddress().getCoordy();
+				
+				if(lat != null && lon != null) {
+					ExtendedOverlayItem poiMarker = createOverlayItem(feature);
+					poiMarkers.addItem(poiMarker);
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -151,13 +159,12 @@ public class GeoMap extends Activity {
 	 * @return
 	 */
 	public ExtendedOverlayItem createOverlayItem(Task feature) {
-		
-		/*Address address = feature.getAddress();
+		Address address = feature.getAddress();
 		Double latitude = address.getCoordx();
 		Double longitude = address.getCoordy();
-		GeoPoint geoPoint = new GeoPoint(latitude, longitude);*/
+		GeoPoint geoPoint = new GeoPoint(latitude, longitude);
 		
-		GeoPoint geoPoint = new GeoPoint(-22.318567, -49.060907);
+		//GeoPoint geoPoint = new GeoPoint(-22.318567, -49.060907);
 
 		ExtendedOverlayItem poiMarker = new ExtendedOverlayItem("Dados do Terreno", feature.toString(), geoPoint, this);		
 
