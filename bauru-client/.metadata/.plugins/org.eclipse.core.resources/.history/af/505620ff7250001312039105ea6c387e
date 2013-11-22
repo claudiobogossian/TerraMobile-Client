@@ -1,5 +1,0 @@
-package br.org.funcate.baurudigital.common.JPA;
-
-public class SQLiteDialect {
-
-}
