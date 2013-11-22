@@ -26,7 +26,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.address.Address;
-import br.org.funcate.mobile.data.AddressAdapter;
+import br.org.funcate.mobile.address.AddressAdapter;
 import br.org.funcate.mobile.data.DatabaseAdapter;
 import br.org.funcate.mobile.data.DatabaseHelper;
 import br.org.funcate.mobile.photo.PhotoActivity;

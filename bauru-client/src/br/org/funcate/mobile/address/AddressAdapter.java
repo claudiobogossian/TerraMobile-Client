@@ -1,4 +1,4 @@
-package br.org.funcate.mobile.data;
+package br.org.funcate.mobile.address;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -14,7 +14,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
-import br.org.funcate.mobile.address.Address;
+import br.org.funcate.mobile.data.DatabaseHelper;
 
 import com.j256.ormlite.android.AndroidDatabaseResults;
 import com.j256.ormlite.dao.CloseableIterator;
@@ -60,7 +60,7 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
 		Cursor cursor = null;
 		
 		try {
-			cursor = AddressAdapter.getAddressCursor(filter);
+			cursor = AddressAdapter.getAddressCursor("%" + filter + "%");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -95,7 +95,7 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
 			e.printStackTrace();
 		} finally {
 			if(iterator != null) {
-				iterator.closeQuietly();
+				//iterator.closeQuietly();
 			}
 		}
 		
