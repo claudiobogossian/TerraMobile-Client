@@ -22,8 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
-import br.org.funcate.mobile.data.DatabaseAdapter;
-import br.org.funcate.mobile.data.DatabaseHelper;
+import br.org.funcate.mobile.database.DatabaseAdapter;
+import br.org.funcate.mobile.database.DatabaseHelper;
 import br.org.funcate.mobile.user.SessionManager;
 
 import com.j256.ormlite.dao.Dao;
@@ -52,7 +52,7 @@ public class TaskActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_task);
 
@@ -68,7 +68,7 @@ public class TaskActivity extends Activity {
 				if (Utility.isNetworkAvailable(self)) {
 					try {
 						self.showLoadingMask();
-						self.getRemoteTasks();
+						self.saveTasksOnServer();
 					} catch (Exception e) {
 						self.hideLoadMask();
 						e.printStackTrace();
@@ -110,7 +110,6 @@ public class TaskActivity extends Activity {
 			Dao<Task, Integer> taskDao = db.getTaskDao();
 			// query for all of the data objects in the database
 			list = taskDao.queryForAll();
-			Log.i(LOG_TAG, "GetAll!");
 		} catch (SQLException e) {
 			Log.e(LOG_TAG, "Database exception", e);
 		}
@@ -146,7 +145,7 @@ public class TaskActivity extends Activity {
 			Dao<Task, Integer> dao = db.getTaskDao();
 
 			try {
-				for (Task task : dao) {
+				for (Task task : tasks) {
 					dao.create(task);
 				}
 			} catch (SQLException e) {
@@ -155,10 +154,6 @@ public class TaskActivity extends Activity {
 		}
 		
 		self.hideLoadMask();
-	}
-	
-	public void postTasksToServer(List<Task> tasks) {
-		//service.saveTasks(tasks);
 	}
 
 	/**
@@ -183,7 +178,26 @@ public class TaskActivity extends Activity {
 		return result;
 	}
 
+	/**
+	 * 
+	 * Delete a collection of Tasks from local database.
+	 * 
+	 * @author Paulo Luan
+	 * @return Boolean result
+	 */
+	public Integer deleteTasks(List<Task> tasks) {
+		Dao<Task, Integer> dao = db.getTaskDao();
+		Integer result = 0;
 
+		try {
+			result = dao.delete(tasks);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+	
 	/**
 	 * Get a list of Taks, sending a get request to server.
 	 * 
@@ -191,7 +205,6 @@ public class TaskActivity extends Activity {
 	 */
 	public void getTasks(String userHash) {		
 		String url = "http://192.168.5.60:8080/bauru-server/rest/tasks?user={user_hash}";
-		userHash = "5e292159bb5bb5ac5ed993aaff0c410c"; // TODO: remove this.
 		DownloadTasks remote = new DownloadTasks(userHash);
 		remote.execute(new String[] { url });
 	}
@@ -205,14 +218,32 @@ public class TaskActivity extends Activity {
 	 * @param location
 	 *            The new Location that you want to unzip the file
 	 */
-	public void saveTasks(List<Task> tasks, String userHash) {
-		String url = "http://192.168.5.60:8080/bauru-server/rest/tasks?user={user_hash}";
-		userHash = "5e292159bb5bb5ac5ed993aaff0c410c"; // TODO: remove this.
-
-		UploadTasks remote = new UploadTasks(tasks, userHash);
-		remote.execute(new String[] { url });
+	public void saveTasksOnServer() {
+		String userHash = SessionManager.getUserHash();
+		List<Task> tasks = self.getNotSyncronizedTasks();
+		
+		if(tasks != null) {
+			String url = "http://192.168.5.60:8080/bauru-server/rest/tasks?user={user_hash}";
+			UploadTasks remote = new UploadTasks(tasks, userHash);
+			remote.execute(new String[] { url });
+		} else {
+			self.getRemoteTasks();
+		}
 	}
-
+	
+	public List<Task> getNotSyncronizedTasks() {
+		// db.getTasks ...
+		Dao<Task, Integer> dao = db.getTaskDao();
+		List<Task> tasks = null;
+		
+		try {
+			tasks = dao.queryForEq("syncronized", Boolean.FALSE);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return tasks;
+	}
 
 	/**
 	 * Async class implementation to get tasks from server.
@@ -248,10 +279,11 @@ public class TaskActivity extends Activity {
 			return list;
 		}
 
-		protected void onProgressUpdate(Integer... progress) {
-			Log.i("#TASKSERVICE", " Progress: " + progress[0]);
+		@Override
+		protected void onProgressUpdate(Void... values) {
+			Log.i("#TASKSERVICE", " Progress: " + values);
 		}
-
+		
 		protected void onPostExecute(ArrayList<Task> tasks) {
 			self.saveTasksIntoLocalSqlite(tasks);
 			Log.i("#TASKSERVICE", "DoPostExecute!");
@@ -261,7 +293,7 @@ public class TaskActivity extends Activity {
 
 
 	/**
-	 * Async object implemetation to PostTasks to server
+	 * Async object implementation to PostTasks to server
 	 * 
 	 * @param String... urls
 	 *            URL's that will called.
@@ -291,14 +323,25 @@ public class TaskActivity extends Activity {
 			return list;
 		}
 
-		protected void onProgressUpdate(Integer... progress) {
-			Log.i(self.LOG_TAG, " Progress: " + progress[0]);
+		@Override
+		protected void onProgressUpdate(Void... values) {			
+			Log.i(self.LOG_TAG, " Progress: " + values);
 		}
 
-		protected void onPostExecute(ResponseEntity response) {
-			HttpStatus status = response.getStatusCode();
-			Log.i(self.LOG_TAG, "DoPostExecute!");
+		@Override
+		protected void onPostExecute(ArrayList<Task> result) {
+			//HttpStatus status = response.getStatusCode();
+			
+			if(result != null){
+				//TODO: verificar o status para excluir somente quando tiver certeza de que foi salvo remotamente.
+				self.deleteTasks(tasks);
+			}
+			
+			self.getRemoteTasks();
+			
+			Log.i(self.LOG_TAG, "UploadTasks");
 		}
+		
 	}
 
 	public void showLoadingMask() {

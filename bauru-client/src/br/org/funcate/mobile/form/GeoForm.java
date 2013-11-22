@@ -29,8 +29,8 @@ import android.widget.TextView;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.address.Address;
 import br.org.funcate.mobile.address.AddressAdapter;
-import br.org.funcate.mobile.data.DatabaseAdapter;
-import br.org.funcate.mobile.data.DatabaseHelper;
+import br.org.funcate.mobile.database.DatabaseAdapter;
+import br.org.funcate.mobile.database.DatabaseHelper;
 import br.org.funcate.mobile.photo.PhotoActivity;
 import br.org.funcate.mobile.task.Task;
 

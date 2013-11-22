@@ -22,8 +22,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
-import br.org.funcate.mobile.data.DatabaseAdapter;
-import br.org.funcate.mobile.data.DatabaseHelper;
+import br.org.funcate.mobile.database.DatabaseAdapter;
+import br.org.funcate.mobile.database.DatabaseHelper;
 import br.org.funcate.mobile.map.GeoMap;
 
 import com.j256.ormlite.dao.Dao;

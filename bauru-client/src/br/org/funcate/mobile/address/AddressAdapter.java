@@ -14,7 +14,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
-import br.org.funcate.mobile.data.DatabaseHelper;
+import br.org.funcate.mobile.database.DatabaseHelper;
 
 import com.j256.ormlite.android.AndroidDatabaseResults;
 import com.j256.ormlite.dao.CloseableIterator;

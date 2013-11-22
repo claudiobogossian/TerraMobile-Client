@@ -23,8 +23,8 @@ import android.view.Window;
 import android.widget.Toast;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
-import br.org.funcate.mobile.data.DatabaseAdapter;
-import br.org.funcate.mobile.data.DatabaseHelper;
+import br.org.funcate.mobile.database.DatabaseAdapter;
+import br.org.funcate.mobile.database.DatabaseHelper;
 import br.org.funcate.mobile.form.GeoForm;
 import br.org.funcate.mobile.task.Task;
 import br.org.funcate.mobile.task.TaskActivity;
@@ -82,7 +82,7 @@ public class GeoMap extends Activity {
 		}
 
 		db = DatabaseHelper.getDatabase();
-		db.createMockFeatures();
+		//db.createMockFeatures();
 		this.showLandmarks();
 	}
 

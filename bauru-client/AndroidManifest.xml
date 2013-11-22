@@ -31,7 +31,7 @@
         android:icon="@drawable/ico_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" 
-        android:name="br.org.funcate.mobile.data.ApplicationMemory">
+        android:name="br.org.funcate.mobile.database.ApplicationMemory">
     	
         <activity android:name="br.org.funcate.mobile.form.GeoForm"></activity>
         <activity android:name="br.org.funcate.mobile.map.GeoMap"></activity>

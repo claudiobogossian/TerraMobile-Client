@@ -1,4 +1,4 @@
-package br.org.funcate.mobile.data;
+package br.org.funcate.mobile.database;
 
 import android.app.Application;
 
