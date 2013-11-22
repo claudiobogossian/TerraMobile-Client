@@ -8,15 +8,15 @@ public class UserService {
 
 	public static List<User> getUsers()
 	{
-		return new UserDAO().getAll();
+		return new UserDAO().retrieve();
 	}
 	public static User getUserByHash(String hash) throws UserException
 	{
-		return new UserDAO().getUserByHash(hash);
+		return new UserDAO().retrieve(hash);
 	}
 	public static void populateTestUsers(List<User> users) throws UtilException
 	{
-		new UserDAO().populate(users);
+		new UserDAO().save(users);
 	}
 	
 }

@@ -13,7 +13,7 @@ import br.org.funcate.baurudigital.server.common.utils.Util;
 import br.org.funcate.baurudigital.server.task.Task;
 
 public class UserDAO {
-	public List<User> getAll()
+	public List<User> retrieve()
 	{
 		
 		SessionFactory sessionFactory = HibernateFactory.getSessionFactory();
@@ -27,7 +27,7 @@ public class UserDAO {
 
 		return users;
 	}
-	public User getUserByHash(String hash) throws UserException
+	public User retrieve(String hash) throws UserException
 	{
 		SessionFactory sessionFactory = HibernateFactory.getSessionFactory();
 		Session session = sessionFactory.openSession();
@@ -43,7 +43,7 @@ public class UserDAO {
 		
 		return users.get(0);
 	}
-	public void populate(List<User> users) throws UtilException
+	public void save(List<User> users) throws UtilException
 	{
 		SessionFactory sessionFactory = HibernateFactory.getSessionFactory();
 		Session session = sessionFactory.openSession();
