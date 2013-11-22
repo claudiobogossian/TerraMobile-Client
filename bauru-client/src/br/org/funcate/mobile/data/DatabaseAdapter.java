@@ -195,6 +195,16 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 		TableUtils.createTable(connectionSource, Form.class);
 		TableUtils.createTable(connectionSource, Task.class);
 	}
+	
+	/**
+	 * Clear all user registers, by droping and recreating the user table. 
+	 * 
+	 * @author Paulo Luan
+	 * */
+	public void resetUserTable() throws SQLException {
+		TableUtils.dropTable(connectionSource, User.class, true);
+		TableUtils.createTable(connectionSource, User.class);
+	}
 
 	/**
 	 * This is called when your application is upgraded and it has a higher

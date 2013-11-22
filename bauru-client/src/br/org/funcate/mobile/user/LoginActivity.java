@@ -27,12 +27,11 @@ import br.org.funcate.mobile.data.DatabaseHelper;
 import br.org.funcate.mobile.map.GeoMap;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.Where;
 
 public class LoginActivity extends Activity {
 	// tag used to debug
 	private final String LOG_TAG = "#" + getClass().getSimpleName();
-	
+
 	// widgets
 	private Button bt_begin, bt_exit;
 
@@ -63,7 +62,8 @@ public class LoginActivity extends Activity {
 		bt_begin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				self.login();
+				self.showLoadingMask();
+				self.getRemoteUsers();
 			}
 		});
 
@@ -94,7 +94,7 @@ public class LoginActivity extends Activity {
 			String passHash = Utility.generateHashMD5(password);
 			String userHash = Utility.generateHashMD5(login + passHash);
 
-			if(this.isValidHash(userHash)){
+			if(this.isValidHash(userHash)) {
 				session.createLoginSession(login, userHash);
 				Intent i = new Intent(this, GeoMap.class);
 				startActivity(i);
@@ -108,8 +108,20 @@ public class LoginActivity extends Activity {
 		} else {
 			Toast.makeText(getApplicationContext(), "Preencha Nome de usuário e Senhas!", Toast.LENGTH_SHORT).show();
 		}
+		
+		self.hideLoadMask();
 	}
 
+
+	/**
+	 * Verify in the database if exists any users with that hash
+	 * 
+	 * @author Paulo Luan
+	 * @param hash
+	 *            The Hash of user, this hash is the hash of (name +
+	 *            (hash(password)))
+	 * 
+	 */
 	public boolean isValidHash(String hash){
 		boolean userExists = false;
 		// verify hash at local database.
@@ -119,7 +131,7 @@ public class LoginActivity extends Activity {
 		try {
 			List<User> users = dao.queryForAll();
 			User user = dao.queryBuilder().where().eq("hash", hash).queryForFirst();
-			
+
 			if(user != null){
 				userExists = true;
 			}
@@ -136,12 +148,13 @@ public class LoginActivity extends Activity {
 	 * @author Paulo Luan
 	 * 
 	 */
-	public void getRemoteUsers(){
+	public void getRemoteUsers() {
 		if(Utility.isNetworkAvailable(this)){
 			String url = "http://192.168.5.60:8080/bauru-server/rest/users";
 			DownloadUsers remote = new DownloadUsers();
 			remote.execute(new String[] { url });
 		} else {
+			self.login();
 			Log.i(this.LOG_TAG, "Sem conexão com a internet.");
 		}
 	}
@@ -154,16 +167,19 @@ public class LoginActivity extends Activity {
 	 * @param List<User> 
 	 *            Users that will be saved into database.
 	 */
-	public void saveUsersIntoLocalSqlite(List<User> users){
+	public void saveUsersIntoLocalSqlite(List<User> users) {
 		DatabaseAdapter db = DatabaseHelper.getDatabase();
 		Dao<User, Integer> dao = db.getUserDao();
 
-		try {
-			for (User user : dao) {
-				dao.create(user);
-			}				
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if(users != null) {
+			try {
+				db.resetUserTable(); // clear all registers
+				for (User user : users) {
+					dao.create(user);
+				}				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -197,6 +213,7 @@ public class LoginActivity extends Activity {
 
 		protected void onPostExecute(ArrayList<User> users) {
 			saveUsersIntoLocalSqlite(users);
+			self.login();
 		}
 	}
 
