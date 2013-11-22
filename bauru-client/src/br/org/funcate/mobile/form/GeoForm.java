@@ -90,6 +90,10 @@ public class GeoForm extends Activity implements LocationListener{
 		est = (EditText) findViewById(R.id.cp_est);
 		if1 = (EditText) findViewById(R.id.cp_if1);
 		if2 = (EditText) findViewById(R.id.cp_if2);	
+		bt_clear = (ImageButton) findViewById(R.id.cp_button_clear);
+		bt_cancel = (Button) findViewById(R.id.cp_button_cancel);
+		bt_ok = (Button) findViewById(R.id.cp_button_ok);
+		bt_photo = (Button) findViewById(R.id.cp_button_photo);
 		
 		if(task != null){
 			cep.setText(task.getAddress().getPostalCode());
@@ -99,11 +103,6 @@ public class GeoForm extends Activity implements LocationListener{
 			if1.setText(task.getForm().getInfo1());
 			if2.setText(task.getForm().getInfo2());
 		}
-
-		bt_clear = (ImageButton) findViewById(R.id.cp_button_clear);
-		bt_cancel = (Button) findViewById(R.id.cp_button_cancel);
-		bt_ok = (Button) findViewById(R.id.cp_button_ok);
-		bt_photo = (Button) findViewById(R.id.cp_button_photo);
 		
 		// Database query can be a time consuming task, so its safe to call database query in another thread
         new Handler().post(new Runnable() {
@@ -214,8 +213,8 @@ public class GeoForm extends Activity implements LocationListener{
 		AddressAdapter addressAdapter = new AddressAdapter(GeoForm.this,
 				R.layout.item_list, 
 				cursor,
-				new String[] { "name", "postalCode" },
-				new int[] {R.id.itemlog, R.id.itemcep }
+				new String[] { "name", "postalCode", "number"},
+				new int[] {R.id.item_log, R.id.item_cep }
 		);
 
         log.setAdapter(addressAdapter);
@@ -224,10 +223,11 @@ public class GeoForm extends Activity implements LocationListener{
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				try {
-					TextView t1 = (TextView) arg1.findViewById(R.id.itemlog);
+					TextView t1 = (TextView) arg1.findViewById(R.id.item_log);
 					String logvalue = t1.getText().toString();
 					log.setText(logvalue);
-					TextView t2 = (TextView) arg1.findViewById(R.id.itemcep);
+					
+					TextView t2 = (TextView) arg1.findViewById(R.id.item_cep);
 					String[] split1 = t2.getText().toString().split(" ");
 					String cepvalue;
 					
@@ -238,6 +238,9 @@ public class GeoForm extends Activity implements LocationListener{
 					}
 					
 					cep.setText(cepvalue);
+					
+					TextView txt_number = (TextView) arg1.findViewById(R.id.item_number);
+					num.setText(txt_number.getText().toString());
 
 					log.setInputType(InputType.TYPE_NULL);
 					cep.setInputType(InputType.TYPE_NULL);

@@ -44,11 +44,14 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
 
 	@Override
 	public void bindView(View v, Context ctx, Cursor c) {
-		TextView name_text1 = (TextView) v.findViewById(R.id.itemlog);
+		TextView name_text1 = (TextView) v.findViewById(R.id.item_log);
 		name_text1.setText(c.getString(c.getColumnIndex("name")));
 		
-		TextView name_text2 = (TextView) v.findViewById(R.id.itemcep);
+		TextView name_text2 = (TextView) v.findViewById(R.id.item_cep);
 		name_text2.setText("CEP: " + Utility.correctNull(c.getString(c.getColumnIndex("postalCode"))));
+		
+		TextView txt_number = (TextView) v.findViewById(R.id.item_number);
+		txt_number.setText("Número: " + c.getString(c.getColumnIndex("number")));
 	}
 	
 	@SuppressLint("DefaultLocale")

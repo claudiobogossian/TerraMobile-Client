@@ -13,7 +13,7 @@ public class Photo implements Serializable {
 	private String blob;
 	@DatabaseField
 	private String path;
-	@DatabaseField(canBeNull = false, foreign = true)
+	@DatabaseField(canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
 	private Form form;
 
 	public Photo() {
