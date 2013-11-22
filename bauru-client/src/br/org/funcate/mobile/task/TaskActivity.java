@@ -24,12 +24,8 @@ import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.address.Address;
 import br.org.funcate.mobile.database.DatabaseAdapter;
 import br.org.funcate.mobile.database.DatabaseHelper;
-<<<<<<< HEAD
-import br.org.funcate.mobile.map.ServiceBaseMap;
-=======
 import br.org.funcate.mobile.form.Form;
-import br.org.funcate.mobile.photo.Photo;
->>>>>>> e9af9b4090123d533170eac67457611616a88c7d
+import br.org.funcate.mobile.map.ServiceBaseMap;
 import br.org.funcate.mobile.user.SessionManager;
 import br.org.funcate.mobile.user.User;
 
