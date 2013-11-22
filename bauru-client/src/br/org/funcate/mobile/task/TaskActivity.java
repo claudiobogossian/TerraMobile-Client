@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -24,6 +23,7 @@ import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.database.DatabaseAdapter;
 import br.org.funcate.mobile.database.DatabaseHelper;
+import br.org.funcate.mobile.map.ServiceBaseMap;
 import br.org.funcate.mobile.user.SessionManager;
 
 import com.j256.ormlite.dao.Dao;
@@ -91,9 +91,36 @@ public class TaskActivity extends Activity {
 				SessionManager.logoutUser();
 			}
 		});
+		
+		Button btn_get_tiles = (Button) findViewById(R.id.btn_get_tiles);
+
+		btn_get_tiles.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (Utility.isNetworkAvailable(self)) {
+					try {
+						self.showLoadingMask();
+						self.getTiles();
+					} catch (Exception e) {
+						self.hideLoadMask();
+						e.printStackTrace();
+					}
+				} else {
+					Toast.makeText(getApplicationContext(), "Sem conexão com a internet.", Toast.LENGTH_LONG).show();
+					Log.i(self.LOG_TAG, "Sem conexão com a internet.");
+				}
+			}
+		});
 
 		this.restTemplate = new RestTemplate();
 		this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+	}
+	/**
+	 * This function is responsible to request do ServiceBaseMap to get cached tiles zip file from server
+	 */
+	public void getTiles()
+	{
+		new ServiceBaseMap().getRemoteZipBaseMap();
 	}
 
 	/**

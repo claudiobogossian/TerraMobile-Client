@@ -35,5 +35,6 @@
     <color name="background_cor6">#CCCCCC</color>
     <color name="background_cor7">#104E8B</color>
     <color name="background_cor8">#C11B17</color>
+    <string name="btn_sync_tiles">Baixar mapa de base</string>
 
 </resources>

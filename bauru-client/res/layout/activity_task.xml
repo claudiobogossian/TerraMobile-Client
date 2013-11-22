@@ -24,6 +24,39 @@
     </LinearLayout>
 
     <!-- Name Label -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:background="@color/cinza3" >
+
+        <Button
+            android:id="@+id/btn_get_tiles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/map"
+            android:gravity="center_vertical|left"
+            android:text="@string/btn_sync_tiles" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="348dp"
+        android:background="@color/cinza3"
+        android:gravity="bottom"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/logout"
+            android:gravity="center_vertical|left"
+            android:text="Logout" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/lblName"
         android:layout_width="fill_parent"
@@ -34,10 +67,5 @@
 
     
     <!-- Button to show session data -->
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Logout" />
 
 </LinearLayout>
