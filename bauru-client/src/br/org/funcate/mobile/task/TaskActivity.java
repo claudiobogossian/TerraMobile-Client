@@ -170,24 +170,8 @@ public class TaskActivity extends Activity {
 	 *            <Task> Tasks that will be saved into database.
 	 */
 	public void saveTasksIntoLocalSqlite(List<Task> tasks) {
-		if(tasks != null){
-			DatabaseAdapter db = DatabaseHelper.getDatabase();	
-			
-			Dao<Task, Integer>  taskDao = db.getTaskDao();
-			Dao<Form, Integer> formDao = db.getFormDao();
-			Dao<User, Integer> userDao = db.getUserDao();
-			Dao<Address, Integer> addressDao = db.getAddressDao();
-
-			try {
-				for (Task task : tasks) {
-					formDao.create(task.getForm());
-					userDao.createIfNotExists(task.getUser());
-					addressDao.create(task.getAddress());
-					taskDao.create(task);
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		if(tasks != null) {
+			DatabaseAdapter.saveTasks(tasks);
 		}
 		
 		self.hideLoadMask();
