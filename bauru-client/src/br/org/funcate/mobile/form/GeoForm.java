@@ -95,6 +95,8 @@ public class GeoForm extends Activity implements LocationListener{
 		bt_ok = (Button) findViewById(R.id.cp_button_ok);
 		bt_photo = (Button) findViewById(R.id.cp_button_photo);
 		
+		bt_ok.setEnabled(false);
+		
 		if(task != null){
 			cep.setText(task.getAddress().getPostalCode());
 			num.setText(task.getAddress().getNumber());
@@ -104,7 +106,7 @@ public class GeoForm extends Activity implements LocationListener{
 			if2.setText(task.getForm().getInfo2());
 			
 			if(task.getId() != null){
-				bt_ok.setEnabled(false);
+				bt_ok.setEnabled(true);
 			}
 		}
 		
@@ -134,6 +136,8 @@ public class GeoForm extends Activity implements LocationListener{
 				log.setEnabled(true);
 				cep.setEnabled(false);
 				log.requestFocus();
+				
+				bt_ok.setEnabled(false);
 			}
 		});
 
