@@ -9,9 +9,19 @@ import org.hibernate.SessionFactory;
 
 import br.org.funcate.baurudigital.server.common.JPA.HibernateFactory;
 import br.org.funcate.baurudigital.server.user.User;
-
+/**
+ * Keep's state less functions to comunicate with the Database. Can be only accessed by services. 
+ * Works only with Form entity
+ * @author bogo
+ *
+ */
 public class FormDAO {
-
+	/**
+	 * Get Form POJO by ID
+	 * @param id 
+	 * @return Requested Form
+	 * @throws FormException
+	 */
 	public Form retrieve(int id) throws FormException {
 		SessionFactory sessionFactory = HibernateFactory.getSessionFactory();
 		Session session = sessionFactory.openSession();

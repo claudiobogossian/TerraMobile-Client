@@ -10,7 +10,12 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 
 import br.org.funcate.baurudigital.server.util.ConfigException;
 import br.org.funcate.baurudigital.server.util.PropertiesReader;
-
+/**
+ * Keep's functions that are mapped throw http rest service
+ * Works only with Tiles entity
+ * @author bogo
+ *
+ */
 @Path("/tiles")
 public class TilesRestService
 {

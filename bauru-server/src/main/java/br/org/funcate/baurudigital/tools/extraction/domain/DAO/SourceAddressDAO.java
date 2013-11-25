@@ -9,7 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.org.funcate.baurudigital.server.address.Address;
-
+/**
+ *  This class was created to extract data from original database to this application model database
+ * @author bogo
+ *
+ */
 public class SourceAddressDAO {
 
 	public List<Address> getAddressByBlock(String blockId)

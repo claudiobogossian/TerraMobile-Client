@@ -11,7 +11,12 @@ import br.org.funcate.baurudigital.server.common.JPA.HibernateFactory;
 import br.org.funcate.baurudigital.server.common.exception.UtilException;
 import br.org.funcate.baurudigital.server.common.utils.Util;
 import br.org.funcate.baurudigital.server.task.Task;
-
+/**
+ * Keep's state less functions to comunicate with the Database. Can be only accessed by services. 
+ * Works only with User entity
+ * @author bogo
+ *
+ */
 public class UserDAO {
 	public List<User> retrieve()
 	{
