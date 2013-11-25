@@ -9,9 +9,18 @@ import br.org.funcate.baurudigital.server.form.Form;
 import br.org.funcate.baurudigital.server.user.User;
 import br.org.funcate.baurudigital.server.user.UserException;
 import br.org.funcate.baurudigital.server.user.UserService;
-
+/**
+ * Keep's state less functions as a service class and comunicate with DAO and others entity's service.  
+ * @author bogo
+ *
+ */
 public class TaskService {
-
+	/**
+	 * List tasks for user Hash 
+	 * @param hash User hash
+	 * @return
+	 * @throws TaskException
+	 */
 	public static List<Task> getTask(String hash) throws TaskException
 	{
 		User user;
@@ -23,6 +32,12 @@ public class TaskService {
 		
 		return new TaskDAO().retrieve(user);
 	}
+	/**
+	 * Save tasks if user is valid 
+	 * @param tasks
+	 * @param userHash
+	 * @throws TaskException
+	 */
 	public static void saveTasks(List<Task> tasks, String userHash) throws TaskException 
 	{
 		//Remover clausula em produção
@@ -39,6 +54,9 @@ public class TaskService {
 		}
 		new TaskDAO().save(tasks);
 	}
+	/**
+	 * Only for testing
+	 */
 	public static void taskDecoderTest()
 	{
 		List<Task> tasks = new ArrayList<Task>();

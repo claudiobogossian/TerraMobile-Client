@@ -10,22 +10,21 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
-
+/**
+ * Keeps Hibernate functions and variables, to be user by DAO Classes
+ * @author bogo
+ *
+ */
 public class HibernateFactory {
 	private static EntityManager em;
 	private static EntityManagerFactory emf;
 	private static SessionFactory sessionFactory;
 
-	public static synchronized EntityManager getEntityManager() {
-		if (em == null) {
-			if (emf == null)
-				emf = Persistence
-						.createEntityManagerFactory("baurudigital");
-			em = emf.createEntityManager();
-		}
-		return em;
-	}
-
+	
+	/**
+	 * Allow to get a SessionFactory to start a new HQL
+	 * @return
+	 */
 	public static synchronized SessionFactory getSessionFactory() {
 		if (sessionFactory == null) {
 			Configuration configuration = new Configuration();
@@ -37,17 +36,4 @@ public class HibernateFactory {
 		}
 		return sessionFactory;
 	}
-	
-	public static void updateSchema() {
-		try {
-			Configuration configuration = new Configuration();
-			configuration.configure();
-			SchemaExport schema = new SchemaExport(configuration);
-			schema.create(true, true);
-			getSessionFactory().openSession().beginTransaction().commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 }

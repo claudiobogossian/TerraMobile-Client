@@ -11,7 +11,12 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import br.org.funcate.baurudigital.server.user.UserException;
-
+/**
+ * Keep's functions that are mapped throw http rest service
+ * Works only with Task entity
+ * @author bogo
+ *
+ */
 @XmlRootElement
 @Path("/tasks")
 @Produces({MediaType.APPLICATION_JSON })

@@ -13,7 +13,12 @@ import org.codehaus.jackson.type.TypeReference;
 
 import br.org.funcate.baurudigital.server.common.exception.UtilException;
 import br.org.funcate.baurudigital.server.common.service.JSONService;
-
+/**
+ * Keep's functions that are mapped throw http rest service
+ * Works only with User entity
+ * @author bogo
+ *
+ */
 @XmlRootElement
 @Path("/users")
 @Produces({MediaType.APPLICATION_JSON })

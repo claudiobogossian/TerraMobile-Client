@@ -12,7 +12,12 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import br.org.funcate.baurudigital.server.form.FormException;
-
+/**
+ * Keep's functions that are mapped throw http rest service
+ * Works only with Photo entity
+ * @author bogo
+ *
+ */
 @XmlRootElement
 @Path("/photos")
 public class PhotoRestService

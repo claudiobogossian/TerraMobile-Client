@@ -11,7 +11,11 @@ import br.org.funcate.baurudigital.server.task.TaskService;
 import br.org.funcate.baurudigital.server.user.User;
 import br.org.funcate.baurudigital.server.user.UserService;
 import br.org.funcate.baurudigital.tools.extraction.domain.DAO.SourceAddressDAO;
-
+/**
+ * This class was created to extract data from original database to this application model database
+ * @author bogo
+ *
+ */
 public class Main {
 
 	/**

@@ -11,7 +11,12 @@ import br.org.funcate.baurudigital.server.common.JPA.HibernateFactory;
 import br.org.funcate.baurudigital.server.form.Form;
 import br.org.funcate.baurudigital.server.form.FormException;
 import br.org.funcate.baurudigital.server.user.User;
-
+/**
+ * Keep's state less functions to comunicate with the Database. Can be only accessed by services. 
+ * Works only with Photo entity
+ * @author bogo
+ *
+ */
 public class PhotoDAO {
 
 	public void save(List<Photo> photos) {
