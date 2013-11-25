@@ -52,8 +52,8 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 
 		try {
 			this.createDaos();
-			this.dropTables();
-			this.createTables();
+			//this.dropTables();
+			//this.createTables();
 //			this.createMockFeatures();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -310,7 +310,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 	public static boolean savePhotos(List<Photo> photos) {
 		boolean isSaved = false;
 		
-		if(photos != null){
+		if(photos != null) {
 			DatabaseAdapter db = DatabaseHelper.getDatabase();	
 			Dao<Photo, Integer>  photoDao = db.getPhotoDao();
 

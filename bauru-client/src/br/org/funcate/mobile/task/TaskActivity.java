@@ -21,16 +21,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
-import br.org.funcate.mobile.address.Address;
 import br.org.funcate.mobile.database.DatabaseAdapter;
 import br.org.funcate.mobile.database.DatabaseHelper;
-import br.org.funcate.mobile.form.Form;
 import br.org.funcate.mobile.map.ServiceBaseMap;
 import br.org.funcate.mobile.user.SessionManager;
 import br.org.funcate.mobile.user.User;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 /**
  * Activity for loading layout resources
@@ -253,13 +252,27 @@ public class TaskActivity extends Activity {
 		}
 	}
 	
+	//TODO: TESTAR
 	public List<Task> getNotSyncronizedTasks() {
-		// db.getTasks ...
-		Dao<Task, Integer> dao = db.getTaskDao();
 		List<Task> tasks = null;
 		
+		Dao<Task, Integer> taskDao = DatabaseHelper.getDatabase().getTaskDao();
+		Dao<User, Integer> userDao = DatabaseHelper.getDatabase().getUserDao();
+		
+		QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+		QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+				
 		try {
-			tasks = dao.queryForEq("syncronized", Boolean.FALSE);
+			String userHash = SessionManager.getUserHash();
+			userQueryBuilder.where()
+				.eq("hash", userHash);
+			
+			taskQueryBuilder.where()
+				.eq("done", Boolean.FALSE);
+			
+			taskQueryBuilder.join(userQueryBuilder);
+			
+			tasks = taskQueryBuilder.query();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

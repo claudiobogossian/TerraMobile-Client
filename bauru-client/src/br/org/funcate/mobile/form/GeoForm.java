@@ -204,7 +204,6 @@ public class GeoForm extends Activity implements LocationListener{
 					lon.setText("" + currentLocation.getLongitude());
 				}
 				
-				
 				String info1 = information1.getText().toString();
 				String info2 = information2.getText().toString();
 				double coordx = currentLocation.getLatitude();
@@ -216,10 +215,10 @@ public class GeoForm extends Activity implements LocationListener{
 				form.setCoordy(coordy);
 				form.setDate(new Date());
 				
-				if(task != null){
-					isSaved = DatabaseAdapter.saveTask(task);
-					isSaved = DatabaseAdapter.savePhotos(photos);
-				}
+				task.setDone(true);
+				
+				isSaved = DatabaseAdapter.saveTask(task);
+				isSaved = DatabaseAdapter.savePhotos(photos);
 
 				Intent data = new Intent();
 				

@@ -75,34 +75,6 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
 		return cursor;
 	}
 	
-	
-	/*
-	 
-	SELECT C.Description, D.ItemDescription
-	FROM OrderDetailStatement AS D 
-	INNER JOIN OrderHeaderStatement AS H ON H.OrderHeaderStatementRefID = D.OrderHeaderStatementRefID 
-	INNER JOIN customers AS C ON H.CustomerRefID = C.CustomerRefID
-	WHERE (D.MixedValue > 1000)
-	 
-	 
-	 
-	// start the order header query
-	QueryBuilder<OrderHeader, Integer> orderHeaderQb = orderHeaderDao.queryBuilder();
-	QueryBuilder<Customer, Integer> customerQb = customerDao.queryBuilder();
-	
-	// join with the order query
-	orderHeaderQb.join(customerQb);
-	
-	// start the order statement query
-	QueryBuilder<OrderStatement, Integer> orderStatementQb = orderStatementDao.queryBuilder();
-	orderStatementQb.where().gt("mixedvalue", 100);
-	
-	// join with the order-header query
-	orderStatementQb.join(orderHeaderQb);
-	List<OrderStatement> orderStatementQb.query();
-	 
-	 
-	 */
 	public static Cursor getAddressCursor(String propertieFilter) throws SQLException {
 		Dao<Task, Integer> taskDao = DatabaseHelper.getDatabase().getTaskDao();
 		Dao<User, Integer> userDao = DatabaseHelper.getDatabase().getUserDao();
@@ -116,6 +88,7 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
 		userQueryBuilder.where()
 			.eq("hash", userHash);
 		
+		taskQueryBuilder.where().eq("done", Boolean.FALSE);
 		taskQueryBuilder.join(userQueryBuilder);
 		
 		if(propertieFilter != null) {

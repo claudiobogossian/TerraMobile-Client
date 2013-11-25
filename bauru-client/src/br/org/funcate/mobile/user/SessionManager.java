@@ -2,14 +2,11 @@ package br.org.funcate.mobile.user;
 
 import java.util.HashMap;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.text.GetChars;
 import br.org.funcate.mobile.Main;
-import br.org.funcate.mobile.map.GeoMap;
 
 public class SessionManager {
 	// Shared Preferences

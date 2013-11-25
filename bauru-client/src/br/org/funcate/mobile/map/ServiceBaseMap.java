@@ -2,27 +2,18 @@ package br.org.funcate.mobile.map;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
-import org.springframework.http.HttpMethod;
-import org.springframework.http.client.ClientHttpRequest;
-import org.springframework.web.client.HttpMessageConverterExtractor;
-import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
-
-import br.org.funcate.mobile.Utility;
 
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
+import br.org.funcate.mobile.Utility;
 
 public class ServiceBaseMap {
 

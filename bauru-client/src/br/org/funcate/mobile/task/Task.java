@@ -23,20 +23,20 @@ public class Task implements Serializable {
 	@DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true, maxForeignAutoRefreshLevel = 3)
 	private Form form;
 	@DatabaseField
-	private boolean syncronized; // sincronizado com o servidor?
+	private boolean done; // sincronizado com o servidor?
 
 	public Task() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public Task(Integer id, Address address, User user, Form form,
-			boolean syncronized) {
+			boolean done) {
 		super();
 		this.id = id;
 		this.address = address;
 		this.user = user;
 		this.form = form;
-		this.syncronized = syncronized;
+		this.done = done;
 	}
 
 	public Integer getId() {
@@ -71,12 +71,12 @@ public class Task implements Serializable {
 		this.form = form;
 	}
 
-	public boolean isSyncronized() {
-		return syncronized;
+	public boolean isDone() {
+		return done;
 	}
 
-	public void setSyncronized(boolean syncronized) {
-		this.syncronized = syncronized;
+	public void setDone(boolean done) {
+		this.done = done;
 	}
 
 	public static long getSerialversionuid() {
