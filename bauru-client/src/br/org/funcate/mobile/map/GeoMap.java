@@ -170,7 +170,7 @@ public class GeoMap extends Activity {
 
 		Drawable marker = null;
 
-		if(feature.isSyncronized()){
+		if(feature.isDone()){
 			marker = getResources().getDrawable(R.drawable.ic_landmark_green);
 		} else {
 			marker = getResources().getDrawable(R.drawable.ic_landmark_red);

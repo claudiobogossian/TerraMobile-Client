@@ -33,15 +33,16 @@
         android:theme="@style/AppTheme" 
         android:name="br.org.funcate.mobile.database.ApplicationMemory">
     	
-        <activity android:name="br.org.funcate.mobile.form.GeoForm"></activity>
-        <activity android:name="br.org.funcate.mobile.map.GeoMap"></activity>
-        <activity android:name="br.org.funcate.mobile.task.TaskActivity"></activity>
-        <activity android:name="br.org.funcate.mobile.photo.PhotoActivity"></activity>
-        <activity android:name="br.org.funcate.mobile.user.LoginActivity"></activity>
+        <activity android:name="br.org.funcate.mobile.form.GeoForm" ></activity>
+        <activity android:name="br.org.funcate.mobile.map.GeoMap" ></activity>
+        <activity android:name="br.org.funcate.mobile.task.TaskActivity" ></activity>
+        <activity android:name="br.org.funcate.mobile.photo.PhotoActivity" ></activity>
+        <activity android:name="br.org.funcate.mobile.user.LoginActivity" ></activity>
         <activity
             android:name="br.org.funcate.mobile.Main"
             android:label="@string/title_activity_main" 
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

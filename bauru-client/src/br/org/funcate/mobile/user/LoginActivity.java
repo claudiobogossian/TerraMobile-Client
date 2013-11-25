@@ -49,7 +49,8 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-
+		
+		
 		session = new SessionManager(getApplicationContext());
 
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -98,6 +99,7 @@ public class LoginActivity extends Activity {
 				session.createLoginSession(login, userHash);
 				Intent i = new Intent(this, GeoMap.class);
 				startActivity(i);
+				finish();
 			} else {
 				Toast.makeText(getApplicationContext(), "Usuário ou senha inválidos", Toast.LENGTH_LONG).show();
 			}

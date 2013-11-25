@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import br.org.funcate.mobile.Main;
-import br.org.funcate.mobile.map.GeoMap;
 
 public class SessionManager {
 	// Shared Preferences
@@ -96,8 +95,8 @@ public class SessionManager {
 		// Clearing all data from Shared Preferences
 		editor.clear();
 		editor.commit();
-
-		// After logout redirect user to Loing Activity
+		
+		// After logout redirect user to Login Activity
 		Intent i = new Intent(_context, Main.class);
 		
 		// Closing all the Activities
@@ -118,4 +117,5 @@ public class SessionManager {
 		Boolean isLogged = pref.getBoolean(IS_LOGIN, false); 
 		return isLogged;
 	}
+	
 }

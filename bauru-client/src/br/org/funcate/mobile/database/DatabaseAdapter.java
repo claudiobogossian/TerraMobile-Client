@@ -1,12 +1,11 @@
 package br.org.funcate.mobile.database;
 
 import java.sql.SQLException;
-import java.util.Date;
+import java.util.List;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.address.Address;
 import br.org.funcate.mobile.form.Form;
 import br.org.funcate.mobile.photo.Photo;
@@ -46,7 +45,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 	private Dao<User, Integer> userDao = null;
 	private Dao<Address, Integer> addressDao = null;
 
-	//private static DatabaseAdapter instance;
+//	private static DatabaseAdapter instance;
 
 	public DatabaseAdapter(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -55,18 +54,17 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 			this.createDaos();
 			//this.dropTables();
 			//this.createTables();
-			//this.createMockFeatures();
+//			this.createMockFeatures();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	/*
-	public static DatabaseAdapter getInstance(Context context) {
-		if (instance == null)
-			instance = new DatabaseAdapter(context);
-		return instance;
-	}*/
+//	public static DatabaseAdapter getInstance(Context context) {
+//		if (instance == null)
+//			instance = new DatabaseAdapter(context);
+//		return instance;
+//	}
 
 	public void createDaos() throws SQLException {
 		taskDao = getDao(Task.class);
@@ -230,6 +228,103 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 		@SuppressWarnings("unchecked")
 		D castDao = (D) dao;
 		return castDao;
+	}
+	
+
+	/**
+	 * Save a list of tasks into local database.
+	 * 
+	 * @author Paulo Luan
+	 * @param List
+	 *            <Task> Tasks that will be saved into database.
+	 */
+	public static boolean saveTasks(List<Task> tasks) {
+		boolean isSaved = false;
+		
+		if(tasks != null){
+			DatabaseAdapter db = DatabaseHelper.getDatabase();	
+			
+			Dao<Task, Integer>  taskDao = db.getTaskDao();
+			Dao<Form, Integer> formDao = db.getFormDao();
+			Dao<User, Integer> userDao = db.getUserDao();
+			Dao<Address, Integer> addressDao = db.getAddressDao();
+
+			try {
+				for (Task task : tasks) {
+					formDao.create(task.getForm());
+					userDao.createIfNotExists(task.getUser());
+					addressDao.create(task.getAddress());
+					taskDao.create(task);
+				}
+				
+				isSaved = true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return isSaved;
+	}
+
+	/**
+	 * Save a task into local database.
+	 * 
+	 * @author Paulo Luan
+	 * @param List
+	 *            <Task> Tasks that will be saved into database.
+	 */
+	public static boolean saveTask(Task task) {
+		boolean isSaved = false;
+		
+		if(task != null){
+			DatabaseAdapter db = DatabaseHelper.getDatabase();	
+			
+			Dao<Task, Integer>  taskDao = db.getTaskDao();
+			Dao<Form, Integer> formDao = db.getFormDao();
+			Dao<User, Integer> userDao = db.getUserDao();
+			Dao<Address, Integer> addressDao = db.getAddressDao();
+
+			try {
+				formDao.create(task.getForm());
+				userDao.createIfNotExists(task.getUser());
+				addressDao.create(task.getAddress());
+				taskDao.create(task);
+				
+				isSaved = true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return isSaved;
+	}
+	
+	
+	/**
+	 * Save a Photo into local database.
+	 * 
+	 * @author Paulo Luan
+	 * @param List
+	 *            <Task> Tasks that will be saved into database.
+	 */
+	public static boolean savePhotos(List<Photo> photos) {
+		boolean isSaved = false;
+		
+		if(photos != null) {
+			DatabaseAdapter db = DatabaseHelper.getDatabase();	
+			Dao<Photo, Integer>  photoDao = db.getPhotoDao();
+
+			try {
+				for (Photo photo : photos) {
+					photoDao.create(photo);
+				}
+				isSaved = true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return isSaved;
 	}
 
 	public Dao<Task, Integer> getTaskDao() {

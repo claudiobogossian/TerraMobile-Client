@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.SQLException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -12,19 +11,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
-import br.org.funcate.mobile.database.DatabaseAdapter;
-import br.org.funcate.mobile.database.DatabaseHelper;
 import br.org.funcate.mobile.map.GeoMap;
 import br.org.funcate.mobile.user.LoginActivity;
 import br.org.funcate.mobile.user.SessionManager;
-import br.org.funcate.mobile.user.User;
-
-import com.j256.ormlite.dao.Dao;
 
 public class Main extends Activity {
 
@@ -39,7 +28,6 @@ public class Main extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		 // Session class instance
         session = new SessionManager(getApplicationContext());
         this.checkLogin();
 		super.onCreate(savedInstanceState);
@@ -57,6 +45,7 @@ public class Main extends Activity {
 		
 		if (isLoggedIn) {
 			intent = new Intent(this, GeoMap.class);
+			finish();
 		} else {
 			// user is not logged in redirect him to Login Activity
 			intent = new Intent(this, LoginActivity.class);
@@ -106,5 +95,5 @@ public class Main extends Activity {
 			}
 		}
 	}
-
+	
 }
