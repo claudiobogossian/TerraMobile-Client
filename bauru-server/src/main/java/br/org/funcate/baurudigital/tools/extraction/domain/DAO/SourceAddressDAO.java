@@ -1,5 +1,9 @@
 package br.org.funcate.baurudigital.tools.extraction.domain.DAO;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -7,6 +11,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.geotools.geometry.jts.GeometryBuilder;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKBReader;
 
 import br.org.funcate.baurudigital.server.address.Address;
 /**
@@ -16,7 +29,7 @@ import br.org.funcate.baurudigital.server.address.Address;
  */
 public class SourceAddressDAO {
 
-	public List<Address> getAddressByBlock(String blockId)
+	public List<Address> getAddressByBlock(String blockId) throws IOException, ParseException
 	{
 		List<Address> addressList = new ArrayList<Address>();
 		 try {
@@ -41,6 +54,39 @@ public class SourceAddressDAO {
 		        	address.setState(rs.getString("estado"));		        	                                              
 		        	address.setCity(rs.getString("municipio"));
 		        	address.setNeighborhood(rs.getString("bairro"));
+/*		        	Coordinate lower = new Coordinate(rs.getDouble("lower_x"), rs.getDouble("lower_y"));
+		        	Coordinate upper = new Coordinate(rs.getDouble("upper_x"), rs.getDouble("upper_y"));
+
+		        	Coordinate[] coords = {lower, upper};
+*/		        	
+		        	
+		        	GeometryBuilder gb = new GeometryBuilder();
+		        	Polygon box = gb.box(rs.getDouble("lower_x"), rs.getDouble("lower_y"), rs.getDouble("upper_x"), rs.getDouble("upper_y"));
+
+		        	address.setCoordx(box.getCentroid().getX());
+		        	address.setCoordy(box.getCentroid().getY());
+		        	/*		        	byte[] b = rs.getBytes("spatial_data");
+		     
+		        	WKBReader r = new WKBReader();
+		        	Geometry g = r.read(b);
+		        	System.out.println(g.getLength());
+		        	System.out.println(g.getArea());
+*/
+		        	
+		        	
+/*		        	BufferedReader br = null;
+		    		StringBuilder sb = new StringBuilder();
+		     
+		    		String line;
+		     
+	    			br = new BufferedReader(new InputStreamReader(is));
+	    			while ((line = br.readLine()) != null) {
+	    				sb.append(line);
+	    			}
+	    			
+	    			System.out.println(sb);
+*/		    			
+		        	
 		        	addressList.add(address);
 				}
 		        

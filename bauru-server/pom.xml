@@ -14,6 +14,7 @@
 		</hibernate.entitymanager.version>
 		<hibernate.commons.annotations.version>3.3.2.GA
 		</hibernate.commons.annotations.version>
+		<geotools.version>10-SNAPSHOT</geotools.version>
 	</properties>
 	<repositories>
 		<repository>
@@ -29,6 +30,19 @@
 				<enabled>true</enabled>
 				<updatePolicy>never</updatePolicy>
 			</snapshots>
+		</repository>
+		<repository>
+			<id>osgeo</id>
+			<name>Open Source Geospatial Foundation Repository</name>
+			<url>http://download.osgeo.org/webdav/geotools/</url>
+		</repository>
+		<repository> <!--Add the snapshot repository here -->
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>opengeo</id>
+			<name>OpenGeo Maven Repository</name>
+			<url>http://repo.opengeo.org</url>
 		</repository>
 	</repositories>
 	<pluginRepositories>
@@ -93,7 +107,16 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.16</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-main</artifactId>
+			<version>${geotools.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-epsg-hsql</artifactId>
+			<version>${geotools.version}</version>
+		</dependency>
 
 	</dependencies>
 
