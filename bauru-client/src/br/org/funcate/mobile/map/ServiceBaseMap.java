@@ -33,7 +33,7 @@ public class ServiceBaseMap {
 	}
 
 	public void getRemoteZipBaseMap(){
-		String url = "http://192.168.5.60:8080/bauru-server/rest/tiles/zip";
+		String url = "http://200.144.100.34:8080/bauru-server/rest/tiles/zip";
 		new DownloadZipAsync().execute(url);
 	}
 

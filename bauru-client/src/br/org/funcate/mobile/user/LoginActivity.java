@@ -150,7 +150,7 @@ public class LoginActivity extends Activity {
 	 */
 	public void getRemoteUsers() {
 		if(Utility.isNetworkAvailable(this)){
-			String url = "http://192.168.5.60:8080/bauru-server/rest/users";
+			String url = "http://200.144.100.34:8080/bauru-server/rest/users";
 			DownloadUsers remote = new DownloadUsers();
 			remote.execute(new String[] { url });
 		} else {

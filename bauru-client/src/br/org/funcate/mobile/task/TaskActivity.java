@@ -241,7 +241,7 @@ public class TaskActivity extends Activity {
 	 * @author Paulo Luan
 	 */
 	public void getTasks(String userHash) {		
-		String url = "http://192.168.5.60:8080/bauru-server/rest/tasks?user={user_hash}";
+		String url = "http://200.144.100.34:8080/bauru-server/rest/tasks?user={user_hash}";
 		DownloadTasks remote = new DownloadTasks(userHash);
 		remote.execute(new String[] { url });
 	}
@@ -260,7 +260,7 @@ public class TaskActivity extends Activity {
 		List<Task> tasks = self.getNotSyncronizedTasks();
 		
 		if(tasks != null) {
-			String url = "http://192.168.5.60:8080/bauru-server/rest/tasks?user={user_hash}";
+			String url = "http://200.144.100.34:8080/bauru-server/rest/tasks?user={user_hash}";
 			UploadTasks remote = new UploadTasks(tasks, userHash);
 			remote.execute(new String[] { url });
 		} else {
