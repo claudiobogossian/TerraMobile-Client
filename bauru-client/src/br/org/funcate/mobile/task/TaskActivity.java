@@ -92,6 +92,7 @@ public class TaskActivity extends Activity {
 			public void onClick(View arg0) {
 				// Clear the session data This will clear all session data and redirect user to LoginActivity
 				SessionManager.logoutUser();
+				finish();
 			}
 		});
 		
@@ -392,4 +393,5 @@ public class TaskActivity extends Activity {
 	public void hideLoadMask() {
 		dialog.hide();
 	}
+	
 }

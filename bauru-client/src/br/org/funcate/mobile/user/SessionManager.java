@@ -2,10 +2,12 @@ package br.org.funcate.mobile.user;
 
 import java.util.HashMap;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.text.GetChars;
 import br.org.funcate.mobile.Main;
 import br.org.funcate.mobile.map.GeoMap;
 
@@ -96,8 +98,8 @@ public class SessionManager {
 		// Clearing all data from Shared Preferences
 		editor.clear();
 		editor.commit();
-
-		// After logout redirect user to Loing Activity
+		
+		// After logout redirect user to Login Activity
 		Intent i = new Intent(_context, Main.class);
 		
 		// Closing all the Activities
@@ -118,4 +120,5 @@ public class SessionManager {
 		Boolean isLogged = pref.getBoolean(IS_LOGIN, false); 
 		return isLogged;
 	}
+	
 }
