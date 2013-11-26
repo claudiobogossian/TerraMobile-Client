@@ -1,6 +1,5 @@
 package br.org.funcate.mobile.task;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,11 +26,6 @@ import br.org.funcate.mobile.map.ServiceBaseMap;
 import br.org.funcate.mobile.photo.Photo;
 import br.org.funcate.mobile.photo.PhotoDao;
 import br.org.funcate.mobile.user.SessionManager;
-import br.org.funcate.mobile.user.User;
-
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.DeleteBuilder;
-import com.j256.ormlite.stmt.QueryBuilder;
 
 /**
  * Activity for loading layout resources
@@ -151,7 +145,7 @@ public class TaskActivity extends Activity {
 	 */
 	public void saveTasksIntoLocalSqlite(List<Task> tasks) {
 		if(tasks != null) {
-			DatabaseAdapter.saveTasks(tasks);
+			TaskDao.saveTasks(tasks);
 		}
 		
 		self.hideLoadMask();
@@ -169,19 +163,15 @@ public class TaskActivity extends Activity {
 	}
 
 	/**
-	 * Save a list of Taks, sending a post request to server.
+	 * Save a list of Tasks, creating an object that send a post request to server.
 	 * 
 	 * @author Paulo Luan
-	 * @param zipfile
-	 *            The path of the zip file
-	 * @param location
-	 *            The new Location that you want to unzip the file
 	 */
 	public void saveTasksOnServer() {
 		String userHash = SessionManager.getUserHash();
-		List<Task> tasks = TaskDao.getNotFinishedTasks();
+		List<Task> tasks = TaskDao.getFinishedTasks();
 		
-		if(tasks != null) {
+		if(tasks != null && !tasks.isEmpty()) {
 			String url = "http://200.144.100.34:8080/bauru-server/rest/tasks?user={user_hash}";
 			UploadTasks remote = new UploadTasks(tasks, userHash);
 			remote.execute(new String[] { url });

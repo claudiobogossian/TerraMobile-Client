@@ -135,7 +135,7 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
 		bt_ok.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				setResult(RESULT_OK, new Intent().putExtra("RESULT", pathfullapp + getPhotoActivityName()));
+				setResult(RESULT_OK, new Intent().putExtra("RESULT", pathfullapp + "/" + getPhotoActivityName()));
 				finish();
 			}
 		});

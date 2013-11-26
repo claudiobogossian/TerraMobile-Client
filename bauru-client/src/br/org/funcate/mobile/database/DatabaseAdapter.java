@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import br.org.funcate.mobile.address.Address;
 import br.org.funcate.mobile.form.Form;
 import br.org.funcate.mobile.photo.Photo;
@@ -218,76 +217,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 		@SuppressWarnings("unchecked")
 		D castDao = (D) dao;
 		return castDao;
-	}
-
-	/**
-	 * Save a list of tasks into local database.
-	 * 
-	 * @author Paulo Luan
-	 * @param List
-	 *            <Task> Tasks that will be saved into database.
-	 */
-	public static boolean saveTasks(List<Task> tasks) {
-		boolean isSaved = false;
-		
-		if(tasks != null){
-			DatabaseAdapter db = DatabaseHelper.getDatabase();	
-			
-			Dao<Task, Integer>  taskDao = db.getTaskDao();
-			Dao<Form, Integer> formDao = db.getFormDao();
-			Dao<User, Integer> userDao = db.getUserDao();
-			Dao<Address, Integer> addressDao = db.getAddressDao();
-
-			try {
-				for (Task task : tasks) {
-					formDao.createIfNotExists(task.getForm());
-					userDao.createIfNotExists(task.getUser());
-					addressDao.createIfNotExists(task.getAddress());
-					taskDao.createIfNotExists(task);
-				}
-				
-				isSaved = true;
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return isSaved;
-	}
-
-	/**
-	 * Save a task into local database.
-	 * 
-	 * @author Paulo Luan
-	 * @param List
-	 *            <Task> Tasks that will be saved into database.
-	 */
-	public static boolean saveTask(Task task) {
-		boolean isSaved = false;
-		
-		if(task != null){
-			DatabaseAdapter db = DatabaseHelper.getDatabase();	
-			
-			Dao<Task, Integer>  taskDao = db.getTaskDao();
-			Dao<Form, Integer> formDao = db.getFormDao();
-			Dao<User, Integer> userDao = db.getUserDao();
-			Dao<Address, Integer> addressDao = db.getAddressDao();
-
-			try {
-				formDao.createIfNotExists(task.getForm());
-				userDao.createIfNotExists(task.getUser());
-				addressDao.createIfNotExists(task.getAddress());
-				taskDao.createIfNotExists(task);
-				
-				isSaved = true;
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return isSaved;
-	}
-	
+	}	
 	
 	/**
 	 * Save a Photo into local database.

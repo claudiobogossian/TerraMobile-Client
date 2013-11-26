@@ -4,8 +4,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 import android.util.Log;
+import br.org.funcate.mobile.address.Address;
 import br.org.funcate.mobile.database.DatabaseAdapter;
 import br.org.funcate.mobile.database.DatabaseHelper;
+import br.org.funcate.mobile.form.Form;
 import br.org.funcate.mobile.user.SessionManager;
 import br.org.funcate.mobile.user.User;
 
@@ -81,7 +83,7 @@ public class TaskDao {
 		return result;
 	}
 	
-	public static List<Task> getNotFinishedTasks() {
+	public static List<Task> getFinishedTasks() {
 		List<Task> tasks = null;
 		
 		Dao<Task, Integer> taskDao = DatabaseHelper.getDatabase().getTaskDao();
@@ -106,5 +108,121 @@ public class TaskDao {
 		}
 		
 		return tasks;
+	}
+	
+	public static List<Task> getNotFinishedTasks() {
+		List<Task> tasks = null;
+		
+		Dao<Task, Integer> taskDao = DatabaseHelper.getDatabase().getTaskDao();
+		Dao<User, Integer> userDao = DatabaseHelper.getDatabase().getUserDao();
+		
+		QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+		QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+				
+		try {
+			String userHash = SessionManager.getUserHash();
+			userQueryBuilder.where()
+				.eq("hash", userHash);
+			
+			taskQueryBuilder.where()
+				.eq("done", Boolean.FALSE);
+			
+			taskQueryBuilder.join(userQueryBuilder);
+			
+			tasks = taskQueryBuilder.query();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return tasks;
+	}
+	
+
+	/**
+	 * Save a list of tasks into local database.
+	 * 
+	 * @author Paulo Luan
+	 * @param List
+	 *            <Task> Tasks that will be saved into database.
+	 */
+	public static boolean saveTasks(List<Task> tasks) {
+		boolean isSaved = false;
+		
+		if(tasks != null){
+			DatabaseAdapter db = DatabaseHelper.getDatabase();	
+			
+			Dao<Task, Integer>  taskDao = db.getTaskDao();
+			Dao<Form, Integer> formDao = db.getFormDao();
+			Dao<User, Integer> userDao = db.getUserDao();
+			Dao<Address, Integer> addressDao = db.getAddressDao();
+
+			try {
+				for (Task task : tasks) {
+					
+					boolean exists = taskDao.idExists(task.getId());
+					
+					if(exists){
+						formDao.update(task.getForm());
+						userDao.update(task.getUser());
+						addressDao.update(task.getAddress());
+						taskDao.update(task);
+					} else {
+						formDao.create(task.getForm());
+						userDao.create(task.getUser());
+						addressDao.create(task.getAddress());
+						taskDao.create(task);
+					}
+				}
+				
+				isSaved = true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return isSaved;
+	}
+
+	/**
+	 * Save a task into local database.
+	 * 
+	 * @author Paulo Luan
+	 * @param List
+	 *            <Task> Tasks that will be saved into database.
+	 */
+	public static boolean saveTask(Task task) {
+		boolean isSaved = false;
+		
+		if(task != null){
+			DatabaseAdapter db = DatabaseHelper.getDatabase();	
+			
+			Dao<Task, Integer>  taskDao = db.getTaskDao();
+			Dao<Form, Integer> formDao = db.getFormDao();
+			Dao<User, Integer> userDao = db.getUserDao();
+			Dao<Address, Integer> addressDao = db.getAddressDao();
+
+			try {
+				
+				boolean exists = taskDao.idExists(task.getId());
+				
+				if(exists) {
+					formDao.update(task.getForm());
+					userDao.update(task.getUser());
+					addressDao.update(task.getAddress());
+					taskDao.update(task);
+				} else {
+					formDao.create(task.getForm());
+					userDao.create(task.getUser());
+					addressDao.create(task.getAddress());
+					taskDao.create(task);
+				}
+
+				isSaved = true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return isSaved;
 	}
 }
