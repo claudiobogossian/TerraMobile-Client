@@ -144,6 +144,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 			address.setExtra("Logradouro");
 			address.setName("Rua Bauru");
 			address.setState("SP");
+			address.setNeighborhood("bairro");
 			address.setPostalCode("123456");
 
 			Form form = new Form();

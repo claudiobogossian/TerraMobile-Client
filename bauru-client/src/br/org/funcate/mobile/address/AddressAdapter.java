@@ -56,6 +56,9 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
 		
 		TextView txt_number = (TextView) v.findViewById(R.id.item_number);
 		txt_number.setText("Número: " + c.getString(c.getColumnIndex("number")));
+		
+		TextView txt_neighborhood = (TextView) v.findViewById(R.id.item_neighborhood);
+		txt_number.setText("Número: " + c.getString(c.getColumnIndex("neighborhood")));
 	}
 	
 	@SuppressLint("DefaultLocale")

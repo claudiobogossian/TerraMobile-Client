@@ -52,7 +52,7 @@ public class GeoForm extends Activity implements LocationListener{
 	
 	// widgets
 	private AutoCompleteTextView address;
-	private EditText postalCode, number, city, state, information1, information2;
+	private EditText neighborhood, postalCode, number, city, state, information1, information2;
 	private TextView lat, lon;
 	private ImageButton button_clear;
 	private Button buttonCancel, buttonOk, buttonPhoto;
@@ -89,6 +89,7 @@ public class GeoForm extends Activity implements LocationListener{
 		
 		// linking widgets
 		address = (AutoCompleteTextView) findViewById(R.id.cp_log);
+		neighborhood = (EditText) findViewById(R.id.cp_nh);
 		postalCode = (EditText) findViewById(R.id.cp_cep);
 		number = (EditText) findViewById(R.id.cp_num);
 		lat = (TextView) findViewById(R.id.cp_lat);
@@ -110,6 +111,7 @@ public class GeoForm extends Activity implements LocationListener{
 			lat.setText("" + task.getAddress().getCoordx());
 			lon.setText("" + task.getAddress().getCoordy());
 			address.setText(task.getAddress().getName());
+			neighborhood.setText(task.getAddress().getNeighborhood());
 			postalCode.setText(task.getAddress().getPostalCode());
 			number.setText(task.getAddress().getNumber());
 			city.setText(task.getAddress().getCity());
@@ -142,6 +144,7 @@ public class GeoForm extends Activity implements LocationListener{
 			@Override
 			public void onClick(View v) {
 				address.setText("");
+				neighborhood.setText("");
 				postalCode.setText("");
 				address.setInputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS);
 				postalCode.setInputType(InputType.TYPE_NULL);

@@ -32,12 +32,13 @@ public class Address implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Address(Integer id, String name, String number, String extra,
+	public Address(Integer id, String name, String neighborhood, String number, String extra,
 			Double coordx, Double coordy, String postalCode, String city,
 			String state, String featureId) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.neighborhood = neighborhood;
 		this.number = number;
 		this.extra = extra;
 		this.coordx = coordx;

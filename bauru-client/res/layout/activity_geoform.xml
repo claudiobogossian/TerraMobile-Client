@@ -220,6 +220,38 @@
                         android:id="@+id/geoform_tr2"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:weightSum="1" >
+
+                        <TextView
+                            android:id="@+id/cp_nht"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:text="Bairro:"
+                            android:textColor="@color/black" />
+
+                        <LinearLayout
+                            android:id="@+id/geoform_tr2_lay1"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:weightSum="1" >
+
+                            <EditText
+                                android:id="@+id/cp_nh"
+                                android:layout_width="0dip"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:enabled="false"
+                                android:text="" />
+                        </LinearLayout>
+                    </TableRow>
+                    
+                    <TableRow
+                        android:id="@+id/geoform_tr3"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:gravity="center_vertical"
                         android:weightSum="1" >
@@ -233,7 +265,7 @@
                             android:textColor="@color/black" />
 
                         <LinearLayout
-                            android:id="@+id/geoform_tr2_lay1"
+                            android:id="@+id/geoform_tr3_lay1"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -251,7 +283,7 @@
                     </TableRow>
 
                     <TableRow
-                        android:id="@+id/geoform_tr3"
+                        android:id="@+id/geoform_tr4"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -267,7 +299,7 @@
                         </TextView>
 
                         <LinearLayout
-                            android:id="@+id/geoform_tr3_lay1"
+                            android:id="@+id/geoform_tr4_lay1"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -367,7 +399,7 @@
                     </TableRow>
 
                     <TableRow
-                        android:id="@+id/geoform_tr4"
+                        android:id="@+id/geoform_tr5"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -382,7 +414,7 @@
                             android:textColor="@color/black" />
 
                         <LinearLayout
-                            android:id="@+id/geoform_tr4_lay1"
+                            android:id="@+id/geoform_tr5_lay1"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -399,7 +431,7 @@
                     </TableRow>
 
                     <TableRow
-                        android:id="@+id/geoform_tr5"
+                        android:id="@+id/geoform_tr6"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -414,7 +446,7 @@
                             android:textColor="@color/black" />
 
                         <LinearLayout
-                            android:id="@+id/geoform_tr5_lay1"
+                            android:id="@+id/geoform_tr6_lay1"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
