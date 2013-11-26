@@ -1,5 +1,9 @@
 package br.org.funcate.mobile.form;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,12 +15,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -249,6 +257,7 @@ public class GeoForm extends Activity implements LocationListener{
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
 				try {
+					
 					task = dao.queryForId((int) id);
 					
 					if(task != null){
@@ -289,18 +298,58 @@ public class GeoForm extends Activity implements LocationListener{
 				}
 			}
 		});
-	}
+	}	
 
+	/**
+	 * 
+	 * Returns Base64 String from filePath of a photo.
+	 * 
+	 * @param String filePath
+	 * 		 The path of the image that you want to get the base.
+	 * 
+	 * */
+	public String getBytesFromImage(String filePath) {
+		String imgString;
+		
+		File imagefile = new File(filePath);
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(imagefile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+	    
+        Bitmap bitmap = BitmapFactory.decodeStream(fis);
+		bitmap.compress(CompressFormat.JPEG, 70, stream);
+	    
+		byte[] imageBytes = stream.toByteArray();
+	    
+	    // get the base 64 string
+		imgString = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
+	    
+	    return imgString;	
+	}
+	
+	/**
+	 * 
+	 * Callback of the PhotoActivity
+	 * 
+	 * */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == PHOTO) {
 			if (resultCode == RESULT_OK) {
 				Photo photo = new Photo();
 				
-				String photoPath = data.getExtras().getString("RESULT");				
+				String photoPath = data.getExtras().getString("RESULT");
+				String blob = self.getBytesFromImage(photoPath);
+						
 				Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 				
 				photo.setPath(photoPath);
+				photo.setBlob(blob);
 				photo.setForm(task.getForm());
 				
 				if (location != null) {

@@ -9,6 +9,7 @@ import org.osmdroid.bonuspack.overlays.ItemizedOverlayWithBubble;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.MapView.Projection;
 
 import android.app.Activity;
 import android.content.Context;
@@ -29,6 +30,7 @@ import br.org.funcate.mobile.database.DatabaseHelper;
 import br.org.funcate.mobile.form.GeoForm;
 import br.org.funcate.mobile.task.Task;
 import br.org.funcate.mobile.task.TaskActivity;
+import br.org.funcate.mobile.task.TaskDao;
 import br.org.funcate.mobile.user.SessionManager;
 
 import com.j256.ormlite.dao.Dao;
@@ -43,8 +45,6 @@ public class GeoMap extends Activity {
 
 	protected LocationManager locationManager;
 	ItemizedOverlayWithBubble<ExtendedOverlayItem> poiMarkers;
-
-	private DatabaseAdapter db;
 
 	private Location lastLocation;
 	private GeoMap self = this;
@@ -81,8 +81,7 @@ public class GeoMap extends Activity {
 		if (lastLocation != null) {
 			//updateLoc(lastLocation);
 		}
-
-		db = DatabaseHelper.getDatabase();
+		
 		//db.createMockFeatures();
 		this.showLandmarks();
 	}
@@ -134,23 +133,19 @@ public class GeoMap extends Activity {
 	}
 
 	public void showLandmarks() {
-		try {
-			Dao<Task, Integer> dao = db.getTaskDao();
-			List<Task> features = dao.queryForAll();
+		List<Task> features = TaskDao.getNotFinishedTasks();
 
-			for (Task feature : features) {
-				
-				Double lat, lon;
-				lat = feature.getAddress().getCoordx();
-				lon = feature.getAddress().getCoordy();
-				
-				if(lat != null && lon != null) {
-					ExtendedOverlayItem poiMarker = createOverlayItem(feature);
-					poiMarkers.addItem(poiMarker);
-				}
+		for (Task feature : features) {
+			
+			Double lat, lon;
+			
+			lat = feature.getAddress().getCoordx();
+			lon = feature.getAddress().getCoordy();
+			
+			if(lat != null && lon != null) {
+				ExtendedOverlayItem poiMarker = createOverlayItem(feature);
+				poiMarkers.addItem(poiMarker);
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 	}
 
