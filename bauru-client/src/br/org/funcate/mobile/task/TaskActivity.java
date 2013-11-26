@@ -90,6 +90,7 @@ public class TaskActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// Clear the session data This will clear all session data and redirect user to LoginActivity
+				setResult(000);
 				SessionManager.logoutUser();
 				finish();
 			}

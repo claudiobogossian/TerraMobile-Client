@@ -1,11 +1,13 @@
 package br.org.funcate.mobile.database;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.address.Address;
 import br.org.funcate.mobile.form.Form;
 import br.org.funcate.mobile.photo.Photo;
@@ -54,7 +56,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 			this.createDaos();
 			//this.dropTables();
 			//this.createTables();
-//			this.createMockFeatures();
+			//this.createMockFeatures();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -141,6 +143,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 			address.setNumber("1234");
 			address.setExtra("Logradouro");
 			address.setName("Rua Bauru");
+			address.setState("SP");
 			address.setPostalCode("123456");
 
 			Form form = new Form();
@@ -157,7 +160,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 			Task task = new Task();
 			task.setForm(form);
 			task.setAddress(address);
-			task.setSyncronized(false);
+			task.setDone(false);
 			task.setUser(user);
 
 			Photo photo = new Photo();

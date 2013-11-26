@@ -79,10 +79,7 @@ public class GeoForm extends Activity implements LocationListener{
 		
 		photos = new ArrayList<Photo>();
 		
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-		
-		//task = (Task) getIntent().getSerializableExtra("task");
+		task = (Task) getIntent().getSerializableExtra("task");
 
 		try {
 			currentLocation = getIntent().getExtras().getParcelable("CURRENT_LOCATION");
@@ -109,8 +106,10 @@ public class GeoForm extends Activity implements LocationListener{
 		buttonPhoto.setEnabled(false);
 		buttonOk.setEnabled(false);
 		
-		/*
 		if(task != null){
+			lat.setText("" + task.getAddress().getCoordx());
+			lon.setText("" + task.getAddress().getCoordy());
+			address.setText(task.getAddress().getName());
 			postalCode.setText(task.getAddress().getPostalCode());
 			number.setText(task.getAddress().getNumber());
 			city.setText(task.getAddress().getCity());
@@ -121,7 +120,7 @@ public class GeoForm extends Activity implements LocationListener{
 			if(task.getId() != null){
 				buttonOk.setEnabled(true);
 			}
-		}*/
+		}
 		
 		// Database query can be a time consuming task, so its safe to call database query in another thread
         new Handler().post(new Runnable() {
@@ -297,7 +296,9 @@ public class GeoForm extends Activity implements LocationListener{
 			if (resultCode == RESULT_OK) {
 				Photo photo = new Photo();
 				
-				String photoPath = data.getExtras().getString("RESULT");				
+				String photoPath = data.getExtras().getString("RESULT");
+				locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 				Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 				
 				photo.setPath(photoPath);
