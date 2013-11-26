@@ -1,8 +1,10 @@
 package br.org.funcate.mobile.photo;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
 
+import android.util.Log;
 import br.org.funcate.mobile.database.DatabaseAdapter;
 import br.org.funcate.mobile.database.DatabaseHelper;
 import br.org.funcate.mobile.form.Form;
@@ -15,7 +17,8 @@ import com.j256.ormlite.stmt.QueryBuilder;
 
 public class PhotoDao {
 
-	private static DatabaseAdapter db = DatabaseHelper.getDatabase();
+	private static final String LOG_TAG = "#PHOTODAO";
+	private static DatabaseAdapter db = DatabaseHelper.getDatabase(); 
 	
 	public static List<Photo> getNotSyncPhotos() {
 		List<Photo> photos = null;
@@ -51,10 +54,31 @@ public class PhotoDao {
 		return photos;
 	}	
 
-	public static void deletePhotos(List<Photo> photos){
-		// TODO: excluir as fotos.
+
+	/**
+	 * 
+	 *  Delete photos locally.
+	 * 
+	 * @author Paulo Luan
+	 * @return Boolean result
+	 */
+	public static Integer deletePhotos(List<Photo> photos){
+		Dao<Photo, Integer> dao = db.getPhotoDao();
+		Integer result = 0;
+
+		try {
+			for (Photo photo : photos) {
+				File file = new File(photo.getPath());
+				file.delete();
+				result = dao.delete(photo);
+			}
+		} catch (SQLException e) {
+			Log.e(LOG_TAG, e.getMessage());
+			e.printStackTrace();
+		}
+
+		return result;
 	}
-	
 
 	/**
 	 * Save a list of photos into local database.
@@ -66,8 +90,7 @@ public class PhotoDao {
 	public static boolean savePhotos(List<Photo> photos) {
 		boolean isSaved = false;
 		
-		if(photos != null){
-			DatabaseAdapter db = DatabaseHelper.getDatabase();				
+		if(photos != null){			
 			Dao<Photo, Integer>  photoDao = db.getPhotoDao();
 
 			try {

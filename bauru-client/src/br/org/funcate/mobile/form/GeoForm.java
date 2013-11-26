@@ -346,14 +346,14 @@ public class GeoForm extends Activity implements LocationListener{
 				
 				String photoPath = data.getExtras().getString("RESULT");
 				String blob = self.getBytesFromImage(photoPath);
-						
-				locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-				Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 				
 				photo.setPath(photoPath);
 				photo.setBlob(blob);
 				photo.setForm(task.getForm());
+				
+				locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+				Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 				
 				if (location != null) {
 					lat.setText("" + location.getLatitude());
