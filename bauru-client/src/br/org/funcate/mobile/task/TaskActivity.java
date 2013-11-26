@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -89,7 +90,7 @@ public class TaskActivity extends Activity {
 				finish();
 			}
 		});
-		
+
 		Button btn_get_tiles = (Button) findViewById(R.id.btn_get_tiles);
 
 		btn_get_tiles.setOnClickListener(new View.OnClickListener() {
@@ -113,7 +114,8 @@ public class TaskActivity extends Activity {
 		this.restTemplate = new RestTemplate();
 		this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 	}
-	
+
+
 	/**
 	 * This function is responsible to request do ServiceBaseMap to get cached tiles zip file from server
 	 */
@@ -148,10 +150,10 @@ public class TaskActivity extends Activity {
 		if(tasks != null) {
 			TaskDao.saveTasks(tasks);
 		}
-		
+
 		self.hideLoadMask();
 	}
-	
+
 	/**
 	 * Get a list of Taks, sending a get request to server.
 	 * 
@@ -171,7 +173,7 @@ public class TaskActivity extends Activity {
 	public void saveTasksOnServer() {
 		String userHash = SessionManager.getUserHash();
 		List<Task> tasks = TaskDao.getFinishedTasks();
-		
+
 		if(tasks != null && !tasks.isEmpty()) {
 			String url = "http://200.144.100.34:8080/bauru-server/rest/tasks?user={user_hash}";
 			UploadTasks remote = new UploadTasks(tasks, userHash);
@@ -180,7 +182,7 @@ public class TaskActivity extends Activity {
 			self.getRemoteTasks();
 		}
 	}
-	
+
 
 	/**
 	 * Async class implementation to get tasks from server.
@@ -219,7 +221,7 @@ public class TaskActivity extends Activity {
 		protected void onProgressUpdate(Void... values) {
 			Log.i("#TASKSERVICE", " Progress: " + values);
 		}
-		
+
 		protected void onPostExecute(ArrayList<Task> tasks) {
 			self.saveTasksIntoLocalSqlite(tasks);
 			Log.i("#TASKSERVICE", "DoPostExecute!");
@@ -270,11 +272,11 @@ public class TaskActivity extends Activity {
 				//TODO: verificar o status para excluir somente quando tiver certeza de que foi salvo remotamente.
 				TaskDao.deleteTasks(tasks);
 			}
-			
+
 			self.getRemoteTasks();
 		}	
 	}
-	
+
 
 	/**
 	 * Async object implementation to Post Photos to server
@@ -333,5 +335,5 @@ public class TaskActivity extends Activity {
 	public void hideLoadMask() {
 		dialog.hide();
 	}
-	
+
 }

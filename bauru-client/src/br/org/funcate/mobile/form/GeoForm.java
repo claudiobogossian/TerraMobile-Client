@@ -251,8 +251,8 @@ public class GeoForm extends Activity implements LocationListener{
 		AddressAdapter addressAdapter = new AddressAdapter(GeoForm.this,
 				R.layout.item_list, 
 				cursor,
-				new String[] { "name", "postalCode", "number"},
-				new int[] {R.id.item_log, R.id.item_cep }
+				new String[] { "name", "postalCode", "number", "neighborhood"},
+				new int[] {R.id.item_log, R.id.item_cep, R.id.item_neighborhood }
 		);
 
         address.setAdapter(addressAdapter);
@@ -284,6 +284,9 @@ public class GeoForm extends Activity implements LocationListener{
 						TextView txt_number = (TextView) view.findViewById(R.id.item_number);
 						number.setText(txt_number.getText().toString());
 
+						TextView txt_neighborhood = (TextView) view.findViewById(R.id.item_neighborhood);
+						neighborhood.setText(txt_neighborhood.getText().toString());
+						
 						address.setInputType(InputType.TYPE_NULL);
 						postalCode.setInputType(InputType.TYPE_NULL);
 
