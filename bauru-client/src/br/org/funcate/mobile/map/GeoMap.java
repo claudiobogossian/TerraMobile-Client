@@ -36,6 +36,8 @@ public class GeoMap extends Activity {
 
 	// other activities
 	private static final int GEOFORM = 101;
+	
+	private static final int TASK = 103;
 
 	protected LocationManager locationManager;
 	ItemizedOverlayWithBubble<ExtendedOverlayItem> poiMarkers;
@@ -85,7 +87,7 @@ public class GeoMap extends Activity {
 
 	public void openTaskScreen() {
 		Intent occupantNewIntent = new Intent(GeoMap.this, TaskActivity.class);
-		startActivity(occupantNewIntent);
+		startActivityForResult(occupantNewIntent, 103);
 	}
 
 	public void finishThisScreen() {
@@ -215,6 +217,11 @@ public class GeoMap extends Activity {
 				String result = data.getExtras().getString("RESULT");
 				Utility.showToast(result, Toast.LENGTH_SHORT, GeoMap.this);
 			} else if (resultCode == RESULT_CANCELED) {
+			}
+		}
+		if(requestCode == TASK){
+			if(resultCode == 000){
+				finish();
 			}
 		}
 	}

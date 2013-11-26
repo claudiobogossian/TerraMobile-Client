@@ -54,5 +54,40 @@ public class PhotoDao {
 	public static void deletePhotos(List<Photo> photos){
 		// TODO: excluir as fotos.
 	}
+	
 
+	/**
+	 * Save a list of photos into local database.
+	 * 
+	 * @author Paulo Luan
+	 * @param List
+	 *            <Photo> Photos that will be saved into database.
+	 */
+	public static boolean savePhotos(List<Photo> photos) {
+		boolean isSaved = false;
+		
+		if(photos != null){
+			DatabaseAdapter db = DatabaseHelper.getDatabase();				
+			Dao<Photo, Integer>  photoDao = db.getPhotoDao();
+
+			try {
+				for (Photo photo : photos) {
+					
+					boolean exists = photoDao.idExists(photo.getId());
+					
+					if(exists){
+						photoDao.update(photo);
+					} else {
+						photoDao.create(photo);
+					}
+				}
+				
+				isSaved = true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return isSaved;
+	}
 }

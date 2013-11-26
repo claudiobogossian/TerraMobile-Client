@@ -42,7 +42,9 @@ import br.org.funcate.mobile.database.DatabaseAdapter;
 import br.org.funcate.mobile.database.DatabaseHelper;
 import br.org.funcate.mobile.photo.Photo;
 import br.org.funcate.mobile.photo.PhotoActivity;
+import br.org.funcate.mobile.photo.PhotoDao;
 import br.org.funcate.mobile.task.Task;
+import br.org.funcate.mobile.task.TaskDao;
 
 import com.j256.ormlite.dao.Dao;
 
@@ -87,10 +89,7 @@ public class GeoForm extends Activity implements LocationListener{
 		
 		photos = new ArrayList<Photo>();
 		
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-		
-		//task = (Task) getIntent().getSerializableExtra("task");
+		task = (Task) getIntent().getSerializableExtra("task");
 
 		try {
 			currentLocation = getIntent().getExtras().getParcelable("CURRENT_LOCATION");
@@ -117,8 +116,10 @@ public class GeoForm extends Activity implements LocationListener{
 		buttonPhoto.setEnabled(false);
 		buttonOk.setEnabled(false);
 		
-		/*
 		if(task != null){
+			lat.setText("" + task.getAddress().getCoordx());
+			lon.setText("" + task.getAddress().getCoordy());
+			address.setText(task.getAddress().getName());
 			postalCode.setText(task.getAddress().getPostalCode());
 			number.setText(task.getAddress().getNumber());
 			city.setText(task.getAddress().getCity());
@@ -129,7 +130,7 @@ public class GeoForm extends Activity implements LocationListener{
 			if(task.getId() != null){
 				buttonOk.setEnabled(true);
 			}
-		}*/
+		}
 		
 		// Database query can be a time consuming task, so its safe to call database query in another thread
         new Handler().post(new Runnable() {
@@ -225,8 +226,8 @@ public class GeoForm extends Activity implements LocationListener{
 				
 				task.setDone(true);
 				
-				isSaved = DatabaseAdapter.saveTask(task);
-				isSaved = DatabaseAdapter.savePhotos(photos);
+				isSaved = TaskDao.saveTask(task);
+				isSaved = PhotoDao.savePhotos(photos);
 
 				Intent data = new Intent();
 				
@@ -346,6 +347,8 @@ public class GeoForm extends Activity implements LocationListener{
 				String photoPath = data.getExtras().getString("RESULT");
 				String blob = self.getBytesFromImage(photoPath);
 						
+				locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 				Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 				
 				photo.setPath(photoPath);
