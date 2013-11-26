@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -20,8 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
-import br.org.funcate.mobile.database.DatabaseAdapter;
-import br.org.funcate.mobile.database.DatabaseHelper;
 import br.org.funcate.mobile.map.ServiceBaseMap;
 import br.org.funcate.mobile.photo.Photo;
 import br.org.funcate.mobile.photo.PhotoDao;
@@ -38,8 +37,6 @@ import br.org.funcate.mobile.user.SessionManager;
  */
 public class TaskActivity extends Activity {
 
-	private DatabaseAdapter db;
-
 	private final String LOG_TAG = "#" + getClass().getSimpleName();
 
 	private ProgressDialog dialog;
@@ -53,8 +50,6 @@ public class TaskActivity extends Activity {
 
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_task);
-
-		db = DatabaseHelper.getDatabase();
 
 		Button btn_get_tasks = (Button) findViewById(R.id.btn_get_tasks);
 
@@ -89,7 +84,7 @@ public class TaskActivity extends Activity {
 				finish();
 			}
 		});
-		
+
 		Button btn_get_tiles = (Button) findViewById(R.id.btn_get_tiles);
 
 		btn_get_tiles.setOnClickListener(new View.OnClickListener() {
@@ -113,7 +108,7 @@ public class TaskActivity extends Activity {
 		this.restTemplate = new RestTemplate();
 		this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 	}
-	
+
 	/**
 	 * This function is responsible to request do ServiceBaseMap to get cached tiles zip file from server
 	 */
@@ -148,10 +143,10 @@ public class TaskActivity extends Activity {
 		if(tasks != null) {
 			TaskDao.saveTasks(tasks);
 		}
-		
+
 		self.hideLoadMask();
 	}
-	
+
 	/**
 	 * Get a list of Taks, sending a get request to server.
 	 * 
@@ -171,7 +166,7 @@ public class TaskActivity extends Activity {
 	public void saveTasksOnServer() {
 		String userHash = SessionManager.getUserHash();
 		List<Task> tasks = TaskDao.getFinishedTasks();
-		
+
 		if(tasks != null && !tasks.isEmpty()) {
 			String url = "http://200.144.100.34:8080/bauru-server/rest/tasks?user={user_hash}";
 			UploadTasks remote = new UploadTasks(tasks, userHash);
@@ -180,7 +175,22 @@ public class TaskActivity extends Activity {
 			self.getRemoteTasks();
 		}
 	}
-	
+
+	/**
+	 * Save a list of Tasks, creating an object that send a post request to server.
+	 * 
+	 * @author Paulo Luan
+	 */
+	public void savePhotosOnServer() {
+		String userHash = SessionManager.getUserHash();
+		List<Photo> photos = PhotoDao.getNotSyncPhotos();
+
+		if(photos != null && !photos.isEmpty()) {
+			String url = "http://200.144.100.34:8080/bauru-server/rest/photos?user={user_hash}";
+			UploadPhotos remote = new UploadPhotos(photos, userHash);
+			remote.execute(new String[] { url });
+		}
+	}
 
 	/**
 	 * Async class implementation to get tasks from server.
@@ -219,7 +229,7 @@ public class TaskActivity extends Activity {
 		protected void onProgressUpdate(Void... values) {
 			Log.i("#TASKSERVICE", " Progress: " + values);
 		}
-		
+
 		protected void onPostExecute(ArrayList<Task> tasks) {
 			self.saveTasksIntoLocalSqlite(tasks);
 			Log.i("#TASKSERVICE", "DoPostExecute!");
@@ -250,6 +260,7 @@ public class TaskActivity extends Activity {
 			for (String url : urls) {
 				try {
 					ResponseEntity<Task[]> response = restTemplate.postForObject(url, this.tasks, ResponseEntity.class, userHash);
+					HttpStatus status = response.getStatusCode();
 					Task[] responseTasks = response.getBody();
 					list = new ArrayList<Task>(Arrays.asList(responseTasks));
 				} catch (Exception e) {
@@ -270,11 +281,11 @@ public class TaskActivity extends Activity {
 				//TODO: verificar o status para excluir somente quando tiver certeza de que foi salvo remotamente.
 				TaskDao.deleteTasks(tasks);
 			}
-			
+
 			self.getRemoteTasks();
 		}	
 	}
-	
+
 
 	/**
 	 * Async object implementation to Post Photos to server
@@ -301,6 +312,7 @@ public class TaskActivity extends Activity {
 				try {
 					ResponseEntity<Photo[]> response = restTemplate.postForObject(url, this.photos, ResponseEntity.class, userHash);
 					Photo[] photos = response.getBody();
+					HttpStatus status = response.getStatusCode();
 					list = new ArrayList<Photo>(Arrays.asList(photos));
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -333,5 +345,5 @@ public class TaskActivity extends Activity {
 	public void hideLoadMask() {
 		dialog.hide();
 	}
-	
+
 }

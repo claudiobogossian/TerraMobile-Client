@@ -18,8 +18,8 @@ import com.j256.ormlite.stmt.QueryBuilder;
 public class PhotoDao {
 
 	private static final String LOG_TAG = "#PHOTODAO";
-	private static DatabaseAdapter db = DatabaseHelper.getDatabase(); 
-	
+	private static DatabaseAdapter db = DatabaseHelper.getDatabase();
+
 	public static List<Photo> getNotSyncPhotos() {
 		List<Photo> photos = null;
 
@@ -30,18 +30,17 @@ public class PhotoDao {
 
 		QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
 		QueryBuilder<Form, Integer> formQueryBuilder = formDao.queryBuilder();
-		QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
+		QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao
+				.queryBuilder();
 		QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
 
 		try {
 			String userHash = SessionManager.getUserHash();
-			userQueryBuilder.where()
-				.eq("hash", userHash);
+			userQueryBuilder.where().eq("hash", userHash);
 
-			taskQueryBuilder.where()
-				.eq("done", Boolean.TRUE);
+			taskQueryBuilder.where().eq("done", Boolean.TRUE);
 			taskQueryBuilder.join(userQueryBuilder);
-			
+
 			formQueryBuilder.join(taskQueryBuilder);
 
 			photoQueryBuilder.join(formQueryBuilder);
@@ -52,17 +51,16 @@ public class PhotoDao {
 		}
 
 		return photos;
-	}	
-
+	}
 
 	/**
 	 * 
-	 *  Delete photos locally.
+	 * Delete photos locally.
 	 * 
 	 * @author Paulo Luan
 	 * @return Boolean result
 	 */
-	public static Integer deletePhotos(List<Photo> photos){
+	public static Integer deletePhotos(List<Photo> photos) {
 		Dao<Photo, Integer> dao = db.getPhotoDao();
 		Integer result = 0;
 
@@ -89,28 +87,21 @@ public class PhotoDao {
 	 */
 	public static boolean savePhotos(List<Photo> photos) {
 		boolean isSaved = false;
-		
-		if(photos != null){			
-			Dao<Photo, Integer>  photoDao = db.getPhotoDao();
+
+		if (photos != null) {
+			Dao<Photo, Integer> photoDao = db.getPhotoDao();
 
 			try {
 				for (Photo photo : photos) {
-					
-					boolean exists = photoDao.idExists(photo.getId());
-					
-					if(exists){
-						photoDao.update(photo);
-					} else {
-						photoDao.create(photo);
-					}
+					photoDao.create(photo);
 				}
-				
+
 				isSaved = true;
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return isSaved;
 	}
 }
