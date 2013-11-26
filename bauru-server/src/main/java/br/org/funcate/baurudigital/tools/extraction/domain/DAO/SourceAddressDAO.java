@@ -1,9 +1,6 @@
 package br.org.funcate.baurudigital.tools.extraction.domain.DAO;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -13,15 +10,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geotools.geometry.jts.GeometryBuilder;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKBReader;
+import org.geotools.geometry.jts.JTS;
+import org.geotools.referencing.CRS;
+import org.opengis.geometry.MismatchedDimensionException;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
 
 import br.org.funcate.baurudigital.server.address.Address;
+
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.io.ParseException;
 /**
  *  This class was created to extract data from original database to this application model database
  * @author bogo
@@ -29,7 +29,7 @@ import br.org.funcate.baurudigital.server.address.Address;
  */
 public class SourceAddressDAO {
 
-	public List<Address> getAddressByBlock(String blockId) throws IOException, ParseException
+	public List<Address> getAddressByBlock(String blockId) throws IOException, ParseException, MismatchedDimensionException, TransformException, FactoryException
 	{
 		List<Address> addressList = new ArrayList<Address>();
 		 try {
@@ -62,9 +62,16 @@ public class SourceAddressDAO {
 		        	
 		        	GeometryBuilder gb = new GeometryBuilder();
 		        	Polygon box = gb.box(rs.getDouble("lower_x"), rs.getDouble("lower_y"), rs.getDouble("upper_x"), rs.getDouble("upper_y"));
-
-		        	address.setCoordx(box.getCentroid().getX());
-		        	address.setCoordy(box.getCentroid().getY());
+		        	
+		        	
+		        	
+		        	CoordinateReferenceSystem toCRS = CRS.decode("EPSG:4326");
+		            CoordinateReferenceSystem fromCRS = CRS.decode("EPSG:29192");
+		            boolean lenient = true; // allow for some error due to different datums
+		            MathTransform transform = CRS.findMathTransform(fromCRS, toCRS, lenient);
+		        	Polygon p = (Polygon) JTS.transform(box, transform);
+		        	address.setCoordx(p.getCentroid().getX());
+		        	address.setCoordy(p.getCentroid().getY());
 		        	/*		        	byte[] b = rs.getBytes("spatial_data");
 		     
 		        	WKBReader r = new WKBReader();
