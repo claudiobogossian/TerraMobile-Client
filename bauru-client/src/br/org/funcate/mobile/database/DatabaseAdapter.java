@@ -1,13 +1,10 @@
 package br.org.funcate.mobile.database;
 
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.address.Address;
 import br.org.funcate.mobile.form.Form;
 import br.org.funcate.mobile.photo.Photo;
@@ -92,8 +89,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 				clearSpecial = true;
 				this.createTables();
 			} catch (SQLException e) {
-				throw new IllegalStateException(
-						"Could not save special connection", e);
+				throw new IllegalStateException("Could not save special connection", e);
 			}
 		}
 		try {
@@ -105,6 +101,11 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 		}
 	}
 
+	/**
+	 * This is called when your application is upgraded and it has a higher
+	 * version number. This allows you to adjust the various data to match the
+	 * new version number.
+	 */
 	public void onUpgrade(SQLiteDatabase db, ConnectionSource arg1, int oldVersion, int newVersion) {
 		DatabaseConnection conn = connectionSource.getSpecialConnection();
 		boolean clearSpecial = false;
@@ -114,12 +115,15 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 				connectionSource.saveSpecialConnection(conn);
 				clearSpecial = true;
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		
 		try {
-			this.upgradeDatabase(oldVersion, newVersion);
+			this.dropTables();
+			this.createTables();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		} finally {
 			if (clearSpecial) {
 				connectionSource.clearSpecialConnection(conn);
@@ -210,99 +214,12 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 		TableUtils.createTable(connectionSource, User.class);
 	}
 
-	/**
-	 * This is called when your application is upgraded and it has a higher
-	 * version number. This allows you to adjust the various data to match the
-	 * new version number.
-	 */
-	private void upgradeDatabase(int oldVersion, int newVersion) {
-		try {
-			Log.i(LOG_TAG, "onUpgrade");
-			this.dropTables();
-			this.createTables();
-			// after we drop the old databases, we create the new ones
-		} catch (SQLException e) {
-			Log.e(LOG_TAG, "Can't drop databases", e);
-			throw new RuntimeException(e);
-		}
-	}
-
 	public <D extends Dao<T, ?>, T> D getDao(Class<T> clazz) throws SQLException {
 		Dao<T, ?> dao = (Dao<T, ?>) DaoManager.createDao(connectionSource, clazz);
 		@SuppressWarnings("unchecked")
 		D castDao = (D) dao;
 		return castDao;
-	}
-	
-
-	/**
-	 * Save a list of tasks into local database.
-	 * 
-	 * @author Paulo Luan
-	 * @param List
-	 *            <Task> Tasks that will be saved into database.
-	 */
-	public static boolean saveTasks(List<Task> tasks) {
-		boolean isSaved = false;
-		
-		if(tasks != null){
-			DatabaseAdapter db = DatabaseHelper.getDatabase();	
-			
-			Dao<Task, Integer>  taskDao = db.getTaskDao();
-			Dao<Form, Integer> formDao = db.getFormDao();
-			Dao<User, Integer> userDao = db.getUserDao();
-			Dao<Address, Integer> addressDao = db.getAddressDao();
-
-			try {
-				for (Task task : tasks) {
-					formDao.create(task.getForm());
-					userDao.createIfNotExists(task.getUser());
-					addressDao.create(task.getAddress());
-					taskDao.create(task);
-				}
-				
-				isSaved = true;
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return isSaved;
-	}
-
-	/**
-	 * Save a task into local database.
-	 * 
-	 * @author Paulo Luan
-	 * @param List
-	 *            <Task> Tasks that will be saved into database.
-	 */
-	public static boolean saveTask(Task task) {
-		boolean isSaved = false;
-		
-		if(task != null){
-			DatabaseAdapter db = DatabaseHelper.getDatabase();	
-			
-			Dao<Task, Integer>  taskDao = db.getTaskDao();
-			Dao<Form, Integer> formDao = db.getFormDao();
-			Dao<User, Integer> userDao = db.getUserDao();
-			Dao<Address, Integer> addressDao = db.getAddressDao();
-
-			try {
-				formDao.create(task.getForm());
-				userDao.createIfNotExists(task.getUser());
-				addressDao.create(task.getAddress());
-				taskDao.create(task);
-				
-				isSaved = true;
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return isSaved;
-	}
-	
+	}	
 	
 	/**
 	 * Save a Photo into local database.
@@ -320,7 +237,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 
 			try {
 				for (Photo photo : photos) {
-					photoDao.create(photo);
+					photoDao.createIfNotExists(photo);
 				}
 				isSaved = true;
 			} catch (SQLException e) {

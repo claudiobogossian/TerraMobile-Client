@@ -1,6 +1,5 @@
 package br.org.funcate.mobile.task;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,12 +23,9 @@ import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.database.DatabaseAdapter;
 import br.org.funcate.mobile.database.DatabaseHelper;
 import br.org.funcate.mobile.map.ServiceBaseMap;
+import br.org.funcate.mobile.photo.Photo;
+import br.org.funcate.mobile.photo.PhotoDao;
 import br.org.funcate.mobile.user.SessionManager;
-import br.org.funcate.mobile.user.User;
-
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.DeleteBuilder;
-import com.j256.ormlite.stmt.QueryBuilder;
 
 /**
  * Activity for loading layout resources
@@ -59,8 +55,6 @@ public class TaskActivity extends Activity {
 		setContentView(R.layout.activity_task);
 
 		db = DatabaseHelper.getDatabase();
-
-		this.getLocalTasks();
 
 		Button btn_get_tasks = (Button) findViewById(R.id.btn_get_tasks);
 
@@ -119,32 +113,13 @@ public class TaskActivity extends Activity {
 		this.restTemplate = new RestTemplate();
 		this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 	}
+	
 	/**
 	 * This function is responsible to request do ServiceBaseMap to get cached tiles zip file from server
 	 */
 	public void getTiles()
 	{
 		new ServiceBaseMap().getRemoteZipBaseMap();
-	}
-
-	/**
-	 * 
-	 * This function return the local data, persisted in SQLite Database.
-	 * 
-	 * @author Paulo Luan
-	 * @return List<Task>
-	 */
-	public List<Task> getLocalTasks() {
-		List<Task> list = null;
-		try {
-			// get our dao
-			Dao<Task, Integer> taskDao = db.getTaskDao();
-			// query for all of the data objects in the database
-			list = taskDao.queryForAll();
-		} catch (SQLException e) {
-			Log.e(LOG_TAG, "Database exception", e);
-		}
-		return list;
 	}
 
 	/**
@@ -156,7 +131,6 @@ public class TaskActivity extends Activity {
 	 * @return List<Task>
 	 */
 	public void getRemoteTasks() {
-		// faz chamada ajax.
 		List<Task> remoteTasks = null;
 		String hash = SessionManager.getUserHash();
 		this.getTasks(hash);
@@ -172,52 +146,10 @@ public class TaskActivity extends Activity {
 	 */
 	public void saveTasksIntoLocalSqlite(List<Task> tasks) {
 		if(tasks != null) {
-			DatabaseAdapter.saveTasks(tasks);
+			TaskDao.saveTasks(tasks);
 		}
 		
 		self.hideLoadMask();
-	}
-
-	/**
-	 * 
-	 * Delete the rows where is syncronized with the server.
-	 * 
-	 * @author Paulo Luan
-	 * @return Boolean result
-	 */
-	public Integer deleteSincronizedTasks() {
-		DeleteBuilder<Task, Integer> deleteBuilder = db.getTaskDao().deleteBuilder();
-		Integer result = 0;
-
-		try {
-			// only delete the rows where syncronized is true
-			deleteBuilder.where().eq("syncronized", Boolean.TRUE);
-			result = deleteBuilder.delete();
-		} catch (SQLException e) {
-
-		}
-
-		return result;
-	}
-
-	/**
-	 * 
-	 * Delete a collection of Tasks from local database.
-	 * 
-	 * @author Paulo Luan
-	 * @return Boolean result
-	 */
-	public Integer deleteTasks(List<Task> tasks) {
-		Dao<Task, Integer> dao = db.getTaskDao();
-		Integer result = 0;
-
-		try {
-			result = dao.delete(tasks);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return result;
 	}
 	
 	/**
@@ -232,19 +164,15 @@ public class TaskActivity extends Activity {
 	}
 
 	/**
-	 * Save a list of Taks, sending a post request to server.
+	 * Save a list of Tasks, creating an object that send a post request to server.
 	 * 
 	 * @author Paulo Luan
-	 * @param zipfile
-	 *            The path of the zip file
-	 * @param location
-	 *            The new Location that you want to unzip the file
 	 */
 	public void saveTasksOnServer() {
 		String userHash = SessionManager.getUserHash();
-		List<Task> tasks = self.getNotSyncronizedTasks();
+		List<Task> tasks = TaskDao.getFinishedTasks();
 		
-		if(tasks != null) {
+		if(tasks != null && !tasks.isEmpty()) {
 			String url = "http://200.144.100.34:8080/bauru-server/rest/tasks?user={user_hash}";
 			UploadTasks remote = new UploadTasks(tasks, userHash);
 			remote.execute(new String[] { url });
@@ -253,33 +181,6 @@ public class TaskActivity extends Activity {
 		}
 	}
 	
-	//TODO: TESTAR
-	public List<Task> getNotSyncronizedTasks() {
-		List<Task> tasks = null;
-		
-		Dao<Task, Integer> taskDao = DatabaseHelper.getDatabase().getTaskDao();
-		Dao<User, Integer> userDao = DatabaseHelper.getDatabase().getUserDao();
-		
-		QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
-		QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
-				
-		try {
-			String userHash = SessionManager.getUserHash();
-			userQueryBuilder.where()
-				.eq("hash", userHash);
-			
-			taskQueryBuilder.where()
-				.eq("done", Boolean.FALSE);
-			
-			taskQueryBuilder.join(userQueryBuilder);
-			
-			tasks = taskQueryBuilder.query();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return tasks;
-	}
 
 	/**
 	 * Async class implementation to get tasks from server.
@@ -304,7 +205,6 @@ public class TaskActivity extends Activity {
 			for (String url : urls) {
 				try {					
 					ResponseEntity<Task[]> response = restTemplate.getForEntity(url, Task[].class, userHash);
-					response.getStatusCode();
 					Task[] tasks = response.getBody();
 					list = new ArrayList<Task>(Arrays.asList(tasks));
 				} catch (Exception e) {
@@ -325,8 +225,6 @@ public class TaskActivity extends Activity {
 			Log.i("#TASKSERVICE", "DoPostExecute!");
 		}
 	}
-
-
 
 	/**
 	 * Async object implementation to PostTasks to server
@@ -351,7 +249,9 @@ public class TaskActivity extends Activity {
 
 			for (String url : urls) {
 				try {
-					restTemplate.postForObject(url, this.tasks, ResponseEntity.class, userHash);
+					ResponseEntity<Task[]> response = restTemplate.postForObject(url, this.tasks, ResponseEntity.class, userHash);
+					Task[] responseTasks = response.getBody();
+					list = new ArrayList<Task>(Arrays.asList(responseTasks));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -366,18 +266,60 @@ public class TaskActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(ArrayList<Task> result) {
-			//HttpStatus status = response.getStatusCode();
-			
 			if(result != null){
 				//TODO: verificar o status para excluir somente quando tiver certeza de que foi salvo remotamente.
-				self.deleteTasks(tasks);
+				TaskDao.deleteTasks(tasks);
 			}
 			
 			self.getRemoteTasks();
-			
-			Log.i(self.LOG_TAG, "UploadTasks");
+		}	
+	}
+	
+
+	/**
+	 * Async object implementation to Post Photos to server
+	 * 
+	 * @param String... urls
+	 *            URL's that will called.
+	 * @author Paulo Luan 
+	 */
+	private class UploadPhotos extends AsyncTask<String, Void, ArrayList<Photo>> {
+
+		private List<Photo> photos;
+		private String userHash;
+
+		public UploadPhotos(List<Photo> photos, String userHash) {
+			this.photos = photos;
+			this.userHash = userHash;
 		}
-		
+
+		@Override
+		protected ArrayList<Photo> doInBackground(String... urls) {
+			ArrayList<Photo> list = null;
+
+			for (String url : urls) {
+				try {
+					ResponseEntity<Photo[]> response = restTemplate.postForObject(url, this.photos, ResponseEntity.class, userHash);
+					Photo[] photos = response.getBody();
+					list = new ArrayList<Photo>(Arrays.asList(photos));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			return list;
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {		
+			Log.i(self.LOG_TAG, " Progress: " + values);
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<Photo> result) {
+			if(result != null){
+				PhotoDao.deletePhotos(result);
+			}
+		}	
 	}
 
 	public void showLoadingMask() {
