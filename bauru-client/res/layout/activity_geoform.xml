@@ -247,7 +247,7 @@
                                 android:text="" />
                         </LinearLayout>
                     </TableRow>
-                    
+
                     <TableRow
                         android:id="@+id/geoform_tr3"
                         android:layout_width="fill_parent"
@@ -459,6 +459,34 @@
                                 android:layout_weight="1"
                                 android:enabled="true"
                                 android:text="" />
+                        </LinearLayout>
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/geoform_tr_stub2"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:weightSum="1" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:text="Confirmação do número"
+                            android:textColor="@color/black" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:weightSum="1" >
+
+                            <Spinner
+                                android:id="@+id/spnNumberConfirmation"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:entries="@array/number_confirmation" />
                         </LinearLayout>
                     </TableRow>
                 </TableLayout>
