@@ -40,6 +40,7 @@ import br.org.funcate.mobile.user.SessionManager;
 public class TaskActivity extends Activity {
 
 	private final String LOG_TAG = "#" + getClass().getSimpleName();
+	private final String hostUrl = "http://200.144.100.34:8080/";
 
 	private ProgressDialog dialog;
 	private TaskActivity self = this;
@@ -161,7 +162,7 @@ public class TaskActivity extends Activity {
 	 * @author Paulo Luan
 	 */
 	public void getTasks(String userHash) {		
-		String url = "http://200.144.100.34:8080/bauru-server/rest/tasks?user={user_hash}";
+		String url =  hostUrl + "bauru-server/rest/tasks?user={user_hash}";
 		DownloadTasks remote = new DownloadTasks(userHash);
 		remote.execute(new String[] { url });
 	}
@@ -177,7 +178,7 @@ public class TaskActivity extends Activity {
 
 		if(tasks != null && !tasks.isEmpty()) {
 			//String url = "http://200.144.100.34:8080/bauru-server/rest/tasks?user={user_hash}";
-			String url = "http://192.168.5.49:8888/bauru-server/rest/tasks?user={user_hash}";
+			String url =  hostUrl + "bauru-server/rest/tasks?user={user_hash}";
 			UploadTasks remote = new UploadTasks(tasks, userHash);
 			remote.execute(new String[] { url });
 		} else {
@@ -195,7 +196,7 @@ public class TaskActivity extends Activity {
 		List<Photo> photos = PhotoDao.getNotSyncPhotos();
 
 		if(photos != null && !photos.isEmpty()) {
-			String url = "http://200.144.100.34:8080/bauru-server/rest/photos?user={user_hash}";
+			String url = hostUrl + "bauru-server/rest/photos?user={user_hash}";
 			UploadPhotos remote = new UploadPhotos(photos, userHash);
 			remote.execute(new String[] { url });
 		}
