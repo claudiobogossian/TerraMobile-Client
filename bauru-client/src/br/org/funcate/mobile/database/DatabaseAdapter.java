@@ -1,3 +1,6 @@
+
+
+
 package br.org.funcate.mobile.database;
 
 import java.sql.SQLException;
@@ -56,7 +59,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 			this.createDaos();
 			this.dropTables();
 			this.createTables();
-			this.createMockFeatures();
+//			this.createMockFeatures();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -96,7 +99,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 			}
 		}
 		try {
-			//this.createMockFeatures();
+//			this.createMockFeatures();
 		} finally {
 			if (clearSpecial) {
 				connectionSource.clearSpecialConnection(conn);
@@ -134,7 +137,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 		}
 	}
 
-	public void createMockFeatures() {
+	/*public void createMockFeatures() {
 		try {
 //			this.dropTables();
 //			this.createTables();
@@ -189,7 +192,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 			Log.e(LOG_TAG, "Can't create database", e);
 			throw new RuntimeException(e);
 		}
-	}
+	}*/
 
 	public void dropTables() throws SQLException {
 		TableUtils.dropTable(connectionSource, Address.class, true);

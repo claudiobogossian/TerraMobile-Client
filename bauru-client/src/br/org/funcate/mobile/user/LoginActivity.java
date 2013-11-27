@@ -111,7 +111,7 @@ public class LoginActivity extends Activity {
 		} else {
 			Toast.makeText(getApplicationContext(), "Preencha Nome de usuário e Senhas!", Toast.LENGTH_SHORT).show();
 		}
-		
+		self.hideLoadMask();
 		
 	}
 

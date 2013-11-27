@@ -36,7 +36,7 @@ public class GeoMap extends Activity {
 
 	// other activities
 	private static final int GEOFORM = 101;
-	
+
 	private static final int TASK = 103;
 
 	protected LocationManager locationManager;
@@ -57,20 +57,20 @@ public class GeoMap extends Activity {
 		mapView.setMultiTouchControls(true);
 		//mapView.setUseDataConnection(false); // keeps the mapView from loading online tiles using network connection.
 		//mapView.setUseDataConnection(true);
-		
+
 		controller = (MapController) mapView.getController();
 		controller.setZoom(16);
 		controller.setCenter(new GeoPoint(-22.317773, -49.059534));
-		
+
 		// new GeoPoint(-22.317773, -49.059534) // Bauru 
 		// new GeoPoint(-23.157221, -45.792443) // SJC
-		
+
 		//POI markers:
 		final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
 		poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, poiItems, mapView, new POIInfoWindow(mapView));
 		//poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, poiItems, mapView);
 		mapView.getOverlays().add(poiMarkers);
-		
+
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
@@ -80,14 +80,14 @@ public class GeoMap extends Activity {
 	}
 
 	public void openGeoform() {
-		Intent i = new Intent(GeoMap.this, GeoForm.class);
+		Intent i = new Intent(self, GeoForm.class);
 		i.putExtra("CURRENT_LOCATION", self.lastLocation);
 		startActivityForResult(i, GEOFORM);
 	}
 
 	public void openTaskScreen() {
-		Intent occupantNewIntent = new Intent(GeoMap.this, TaskActivity.class);
-		startActivityForResult(occupantNewIntent, 103);
+		Intent occupantNewIntent = new Intent(self, TaskActivity.class);
+		startActivityForResult(occupantNewIntent, TASK);
 	}
 
 	public void finishThisScreen() {
@@ -99,7 +99,7 @@ public class GeoMap extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		//self.showLandmarks();
+		self.showLandmarks();
 	}
 
 	@Override
@@ -129,12 +129,12 @@ public class GeoMap extends Activity {
 		List<Task> features = TaskDao.getNotFinishedTasks();
 
 		for (Task feature : features) {
-			
+
 			Double lat, lon;
-			
+
 			lat = feature.getAddress().getCoordx();
 			lon = feature.getAddress().getCoordy();
-			
+
 			if(lat != null && lon != null) {
 				ExtendedOverlayItem poiMarker = createOverlayItem(feature);
 				poiMarkers.addItem(poiMarker);
@@ -151,11 +151,10 @@ public class GeoMap extends Activity {
 		Double latitude = address.getCoordx();
 		Double longitude = address.getCoordy();
 		GeoPoint geoPoint = new GeoPoint(latitude, longitude);
-		
+
 		//GeoPoint geoPoint = new GeoPoint(-22.318567, -49.060907);
 
-		ExtendedOverlayItem poiMarker = new ExtendedOverlayItem("Dados do Terreno", feature.toString(), geoPoint, this);		
-
+		ExtendedOverlayItem poiMarker = new ExtendedOverlayItem("Dados do Terreno", feature.toString(), geoPoint, this);
 		Drawable marker = null;
 
 		if(feature.isDone()){
@@ -223,7 +222,9 @@ public class GeoMap extends Activity {
 			if(resultCode == 000){
 				finish();
 			}
+			if(resultCode == RESULT_OK){
+
+			}
 		}
 	}
-
 }
