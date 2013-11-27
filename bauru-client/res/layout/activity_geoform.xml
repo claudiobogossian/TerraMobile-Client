@@ -489,6 +489,7 @@
                                 android:entries="@array/number_confirmation" />
                         </LinearLayout>
                     </TableRow>
+
                     <TableRow
                         android:id="@+id/geoform_tr_stub4"
                         android:layout_width="fill_parent"
@@ -513,9 +514,10 @@
                                 android:id="@+id/spnVariance"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:entries="@array/number_confirmation" />
+                                android:entries="@array/variance" />
                         </LinearLayout>
                     </TableRow>
+
                     <TableRow
                         android:id="@+id/geoform_tr_stub5"
                         android:layout_width="fill_parent"
@@ -536,13 +538,19 @@
                             android:layout_weight="1"
                             android:weightSum="1" >
 
-<!--                             <Spinner -->
-<!--                                 android:id="@+id/spnVariance" -->
-<!--                                 android:layout_width="fill_parent" -->
-<!--                                 android:layout_height="wrap_content" -->
-<!--                                 android:entries="@array/number_confirmation" /> -->
+                            <!-- Números encontrados: texto com até 24 caracteres, caso exista mais de uma numeração. -->
+
+                            <EditText
+                                android:id="@+id/edt_numbers_found"
+                                android:layout_width="0dip"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:enabled="true"
+                                android:hint="demais numerações do lote."
+                                android:text="" />
                         </LinearLayout>
                     </TableRow>
+
                     <TableRow
                         android:id="@+id/geoform_tr_stub6"
                         android:layout_width="fill_parent"
@@ -570,6 +578,7 @@
                                 android:entries="@array/primary_use" />
                         </LinearLayout>
                     </TableRow>
+
                     <TableRow
                         android:id="@+id/geoform_tr_stub7"
                         android:layout_width="fill_parent"
@@ -590,13 +599,14 @@
                             android:layout_weight="1"
                             android:weightSum="1" >
 
-<!--                             <Spinner -->
-<!--                                 android:id="@+id/spnSecundaryUse" -->
-<!--                                 android:layout_width="fill_parent" -->
-<!--                                 android:layout_height="wrap_content" -->
-<!--                                 android:entries="@array/number_confirmation" /> -->
+                            <!-- <Spinner -->
+                            <!-- android:id="@+id/spnSecundaryUse" -->
+                            <!-- android:layout_width="fill_parent" -->
+                            <!-- android:layout_height="wrap_content" -->
+                            <!-- android:entries="@array/number_confirmation" /> -->
                         </LinearLayout>
                     </TableRow>
+
                     <TableRow
                         android:id="@+id/geoform_tr_stub8"
                         android:layout_width="fill_parent"
@@ -624,6 +634,7 @@
                                 android:entries="@array/yes_no_parcial" />
                         </LinearLayout>
                     </TableRow>
+
                     <TableRow
                         android:id="@+id/geoform_tr_stub9"
                         android:layout_width="fill_parent"
@@ -651,6 +662,7 @@
                                 android:entries="@array/yes_no_parcial" />
                         </LinearLayout>
                     </TableRow>
+
                     <TableRow
                         android:id="@+id/geoform_tr_stub10"
                         android:layout_width="fill_parent"
@@ -678,10 +690,12 @@
                                 android:entries="@array/yes_no_parcial" />
                         </LinearLayout>
                     </TableRow>
+
                     <TableRow
                         android:id="@+id/geoform_tr_stub11"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
                         android:gravity="center_vertical"
                         android:weightSum="1" >
 
