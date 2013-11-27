@@ -45,7 +45,6 @@ public class Main extends Activity {
 		
 		if (isLoggedIn) {
 			intent = new Intent(this, GeoMap.class);
-			finish();
 		} else {
 			// user is not logged in redirect him to Login Activity
 			intent = new Intent(this, LoginActivity.class);
@@ -59,6 +58,7 @@ public class Main extends Activity {
 		
 		// Staring Login Activity
 		this.startActivity(intent);
+		finish();
 	}
 	
 	@SuppressLint("SdCardPath")

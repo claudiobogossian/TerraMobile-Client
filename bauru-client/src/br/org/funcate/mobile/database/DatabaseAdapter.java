@@ -1,10 +1,13 @@
 package br.org.funcate.mobile.database;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.address.Address;
 import br.org.funcate.mobile.form.Form;
 import br.org.funcate.mobile.photo.Photo;
@@ -51,9 +54,9 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 
 		try {
 			this.createDaos();
-			//this.dropTables();
-			//this.createTables();
-			//this.createMockFeatures();
+			this.dropTables();
+			this.createTables();
+			this.createMockFeatures();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -131,10 +134,10 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 		}
 	}
 
-	/*public void createMockFeatures() {
+	public void createMockFeatures() {
 		try {
-			this.dropTables();
-			this.createTables();
+//			this.dropTables();
+//			this.createTables();
 
 			int i = 1;
 
@@ -186,7 +189,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 			Log.e(LOG_TAG, "Can't create database", e);
 			throw new RuntimeException(e);
 		}
-	}*/
+	}
 
 	public void dropTables() throws SQLException {
 		TableUtils.dropTable(connectionSource, Address.class, true);

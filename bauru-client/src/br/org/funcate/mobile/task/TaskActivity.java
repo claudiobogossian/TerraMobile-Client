@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -109,6 +110,10 @@ public class TaskActivity extends Activity {
 		this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 	}
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 86b8be9ee273bf82ca4866f69d3dd0f4f6f8a9dd
 	/**
 	 * This function is responsible to request do ServiceBaseMap to get cached tiles zip file from server
 	 */
@@ -176,6 +181,8 @@ public class TaskActivity extends Activity {
 		}
 	}
 
+<<<<<<< HEAD
+=======
 	/**
 	 * Save a list of Tasks, creating an object that send a post request to server.
 	 * 
@@ -191,6 +198,7 @@ public class TaskActivity extends Activity {
 			remote.execute(new String[] { url });
 		}
 	}
+>>>>>>> 86b8be9ee273bf82ca4866f69d3dd0f4f6f8a9dd
 
 	/**
 	 * Async class implementation to get tasks from server.
