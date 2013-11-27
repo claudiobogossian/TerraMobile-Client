@@ -16,10 +16,10 @@ import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 public class TaskDao {
-	
+
 	private static final String LOG_TAG = "#TASKDAO";
 	private static DatabaseAdapter db = DatabaseHelper.getDatabase(); 
-	
+
 	/**
 	 * 
 	 * This function return the local data, persisted in SQLite Database.
@@ -39,7 +39,7 @@ public class TaskDao {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 
 	 * Delete the rows where is syncronized with the server.
@@ -54,7 +54,7 @@ public class TaskDao {
 		try {
 			// only delete the rows where syncronized is true
 			deleteBuilder.where()
-				.eq("done", Boolean.TRUE);
+			.eq("done", Boolean.TRUE);
 			result = deleteBuilder.delete();
 		} catch (SQLException e) {
 
@@ -82,61 +82,61 @@ public class TaskDao {
 
 		return result;
 	}
-	
+
 	public static List<Task> getFinishedTasks() {
 		List<Task> tasks = null;
-		
+
 		Dao<Task, Integer> taskDao = DatabaseHelper.getDatabase().getTaskDao();
 		Dao<User, Integer> userDao = DatabaseHelper.getDatabase().getUserDao();
-		
+
 		QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
 		QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
-				
+
 		try {
 			String userHash = SessionManager.getUserHash();
 			userQueryBuilder.where()
-				.eq("hash", userHash);
-			
+			.eq("hash", userHash);
+
 			taskQueryBuilder.where()
-				.eq("done", Boolean.TRUE);
-			
+			.eq("done", Boolean.TRUE);
+
 			taskQueryBuilder.join(userQueryBuilder);
-			
+
 			tasks = taskQueryBuilder.query();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return tasks;
 	}
-	
+
 	public static List<Task> getNotFinishedTasks() {
 		List<Task> tasks = null;
-		
+
 		Dao<Task, Integer> taskDao = DatabaseHelper.getDatabase().getTaskDao();
 		Dao<User, Integer> userDao = DatabaseHelper.getDatabase().getUserDao();
-		
+
 		QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
 		QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
-				
+
 		try {
 			String userHash = SessionManager.getUserHash();
 			userQueryBuilder.where()
-				.eq("hash", userHash);
-			
+			.eq("hash", userHash);
+
 			taskQueryBuilder.where()
-				.eq("done", Boolean.FALSE);
-			
+			.eq("done", Boolean.FALSE);
+
 			taskQueryBuilder.join(userQueryBuilder);
-			
+
 			tasks = taskQueryBuilder.query();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return tasks;
 	}
-	
+
 
 	/**
 	 * Save a list of tasks into local database.
@@ -147,10 +147,10 @@ public class TaskDao {
 	 */
 	public static boolean saveTasks(List<Task> tasks) {
 		boolean isSaved = false;
-		
+
 		if(tasks != null){
 			DatabaseAdapter db = DatabaseHelper.getDatabase();	
-			
+
 			Dao<Task, Integer>  taskDao = db.getTaskDao();
 			Dao<Form, Integer> formDao = db.getFormDao();
 			Dao<User, Integer> userDao = db.getUserDao();
@@ -158,28 +158,23 @@ public class TaskDao {
 
 			try {
 				for (Task task : tasks) {
-					
-					boolean exists = taskDao.idExists(task.getId());
-					
-					if(exists){
-						formDao.update(task.getForm());
-						userDao.update(task.getUser());
-						addressDao.update(task.getAddress());
-						taskDao.update(task);
-					} else {
+
+					Task persistedTask = taskDao.queryForId(task.getId());
+
+					if(persistedTask == null) {
 						formDao.create(task.getForm());
 						userDao.create(task.getUser());
 						addressDao.create(task.getAddress());
 						taskDao.create(task);
 					}
 				}
-				
+
 				isSaved = true;
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return isSaved;
 	}
 
@@ -192,25 +187,19 @@ public class TaskDao {
 	 */
 	public static boolean saveTask(Task task) {
 		boolean isSaved = false;
-		
+
 		if(task != null){
 			DatabaseAdapter db = DatabaseHelper.getDatabase();	
-			
+
 			Dao<Task, Integer>  taskDao = db.getTaskDao();
 			Dao<Form, Integer> formDao = db.getFormDao();
 			Dao<User, Integer> userDao = db.getUserDao();
 			Dao<Address, Integer> addressDao = db.getAddressDao();
 
 			try {
-				
-				boolean exists = taskDao.idExists(task.getId());
-				
-				if(exists) {
-					formDao.update(task.getForm());
-					userDao.update(task.getUser());
-					addressDao.update(task.getAddress());
-					taskDao.update(task);
-				} else {
+				Task persistedTask = taskDao.queryForId(task.getId());
+
+				if(persistedTask == null) {
 					formDao.create(task.getForm());
 					userDao.create(task.getUser());
 					addressDao.create(task.getAddress());
@@ -222,7 +211,7 @@ public class TaskDao {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return isSaved;
 	}
 }

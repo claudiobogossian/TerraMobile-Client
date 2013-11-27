@@ -36,7 +36,6 @@ public class GeoMap extends Activity {
 
 	// other activities
 	private static final int GEOFORM = 101;
-
 	private static final int TASK = 103;
 
 	protected LocationManager locationManager;
@@ -86,8 +85,8 @@ public class GeoMap extends Activity {
 	}
 
 	public void openTaskScreen() {
-		Intent occupantNewIntent = new Intent(self, TaskActivity.class);
-		startActivityForResult(occupantNewIntent, TASK);
+		Intent taskIntent = new Intent(self, TaskActivity.class);
+		startActivityForResult(taskIntent, TASK);
 	}
 
 	public void finishThisScreen() {
@@ -211,17 +210,19 @@ public class GeoMap extends Activity {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
+		if(resultCode == 999) {
+			finish();
+		}
+		
 		if (requestCode == GEOFORM) {
 			if (resultCode == RESULT_OK) {
 				String result = data.getExtras().getString("RESULT");
-				Utility.showToast(result, Toast.LENGTH_SHORT, GeoMap.this);
+				Utility.showToast(result, Toast.LENGTH_LONG, GeoMap.this);
 			} else if (resultCode == RESULT_CANCELED) {
 			}
 		}
 		if(requestCode == TASK){
-			if(resultCode == 000){
-				finish();
-			}
 			if(resultCode == RESULT_OK){
 
 			}

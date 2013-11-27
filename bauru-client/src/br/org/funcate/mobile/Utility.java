@@ -143,8 +143,7 @@ public class Utility {
 	 * @param context
 	 *            context of the implementation
 	 */
-	public static void showToast(CharSequence text, int duration,
-			Context context) {
+	public static void showToast(CharSequence text, int duration, Context context) {
 		Toast toast = Toast.makeText(context, text, duration);
 		toast.show();
 	}
