@@ -9,6 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import br.org.funcate.baurudigital.server.form.FormException;
@@ -23,7 +24,7 @@ import br.org.funcate.baurudigital.server.form.FormException;
 public class PhotoRestService
 {
 	@POST
-	public void savePhotos(List<Photo> photos, @QueryParam("user") String userHash) throws PhotoException 
+	public Response savePhotos(List<Photo> photos, @QueryParam("user") String userHash) throws PhotoException 
 	{
 		if (userHash==null) 
 		{
@@ -32,6 +33,7 @@ public class PhotoRestService
 		if (!photos.isEmpty()) {
 			PhotoService.savePhotos(photos, userHash);	
 		}
+		return Response.status(201).entity("luanzito").build();
 		
 	}
 	@GET
