@@ -1,3 +1,6 @@
+
+
+
 package br.org.funcate.mobile.database;
 
 import java.sql.SQLException;
@@ -92,7 +95,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 			}
 		}
 		try {
-			//this.createMockFeatures();
+//			this.createMockFeatures();
 		} finally {
 			if (clearSpecial) {
 				connectionSource.clearSpecialConnection(conn);

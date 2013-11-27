@@ -463,7 +463,7 @@
                     </TableRow>
 
                     <TableRow
-                        android:id="@+id/geoform_tr_stub2"
+                        android:id="@+id/geoform_tr_stub3"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -487,6 +487,222 @@
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:entries="@array/number_confirmation" />
+                        </LinearLayout>
+                    </TableRow>
+                    <TableRow
+                        android:id="@+id/geoform_tr_stub4"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:weightSum="1" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:text="Desconformidade"
+                            android:textColor="@color/black" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:weightSum="1" >
+
+                            <Spinner
+                                android:id="@+id/spnVariance"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:entries="@array/number_confirmation" />
+                        </LinearLayout>
+                    </TableRow>
+                    <TableRow
+                        android:id="@+id/geoform_tr_stub5"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:weightSum="1" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:text="Números encontrados"
+                            android:textColor="@color/black" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:weightSum="1" >
+
+<!--                             <Spinner -->
+<!--                                 android:id="@+id/spnVariance" -->
+<!--                                 android:layout_width="fill_parent" -->
+<!--                                 android:layout_height="wrap_content" -->
+<!--                                 android:entries="@array/number_confirmation" /> -->
+                        </LinearLayout>
+                    </TableRow>
+                    <TableRow
+                        android:id="@+id/geoform_tr_stub6"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:weightSum="1" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:text="Uso principal"
+                            android:textColor="@color/black" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:weightSum="1" >
+
+                            <Spinner
+                                android:id="@+id/spnPrimaryUse"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:entries="@array/primary_use" />
+                        </LinearLayout>
+                    </TableRow>
+                    <TableRow
+                        android:id="@+id/geoform_tr_stub7"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:weightSum="1" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:text="Uso secundário"
+                            android:textColor="@color/black" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:weightSum="1" >
+
+<!--                             <Spinner -->
+<!--                                 android:id="@+id/spnSecundaryUse" -->
+<!--                                 android:layout_width="fill_parent" -->
+<!--                                 android:layout_height="wrap_content" -->
+<!--                                 android:entries="@array/number_confirmation" /> -->
+                        </LinearLayout>
+                    </TableRow>
+                    <TableRow
+                        android:id="@+id/geoform_tr_stub8"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:weightSum="1" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:text="Guias"
+                            android:textColor="@color/black" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:weightSum="1" >
+
+                            <Spinner
+                                android:id="@+id/spnAsfaltGuides"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:entries="@array/yes_no_parcial" />
+                        </LinearLayout>
+                    </TableRow>
+                    <TableRow
+                        android:id="@+id/geoform_tr_stub9"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:weightSum="1" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:text="Iluminação pública"
+                            android:textColor="@color/black" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:weightSum="1" >
+
+                            <Spinner
+                                android:id="@+id/spnPublicIllumination"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:entries="@array/yes_no_parcial" />
+                        </LinearLayout>
+                    </TableRow>
+                    <TableRow
+                        android:id="@+id/geoform_tr_stub10"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:weightSum="1" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:text="Energia elétrica"
+                            android:textColor="@color/black" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:weightSum="1" >
+
+                            <Spinner
+                                android:id="@+id/spnEletricEnergy"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:entries="@array/yes_no_parcial" />
+                        </LinearLayout>
+                    </TableRow>
+                    <TableRow
+                        android:id="@+id/geoform_tr_stub11"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:weightSum="1" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:text="Galeria pluvial"
+                            android:textColor="@color/black" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:weightSum="1" >
+
+                            <Spinner
+                                android:id="@+id/spnPluvialGalery"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:entries="@array/yes_no" />
                         </LinearLayout>
                     </TableRow>
                 </TableLayout>

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
@@ -108,12 +109,12 @@ public class TaskActivity extends Activity {
 
 		this.restTemplate = new RestTemplate();
 
-	    // Add converters, Note I use the Jackson Converter, I removed the http form converter  because it is not needed when posting String, used for multipart forms.
+		// Add converters, Note I use the Jackson Converter, I removed the http form converter  because it is not needed when posting String, used for multipart forms.
 	    this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 	    this.restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 
 		// Set the request factory IMPORTANT: This section I had to add for POST request. Not needed for GET
-	    //this.restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+	    this.restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 	}
 
 	/**
@@ -338,7 +339,7 @@ public class TaskActivity extends Activity {
 			}
 		}	
 	}
-
+	
 	public void showLoadingMask() {
 		dialog = ProgressDialog.show(TaskActivity.this, "", "Carregando, aguarde...", true);
 	}

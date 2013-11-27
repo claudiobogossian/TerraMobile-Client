@@ -139,10 +139,11 @@ public class Address implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Address [name=" + name + ", number=" + number + ", extra="
+		return name + ", nº " + number/* + ", CEP " + postalCode*/;
+				/*"Address [name=" + name + ", number=" + number + ", extra="
 				+ extra + ", coordx=" + coordx + ", coordy=" + coordy
 				+ ", postalCode=" + postalCode + ", city=" + city + ", state="
 				+ state + ", featureId=" + featureId + ", neighborhood="
-				+ neighborhood + "]";
+				+ neighborhood + "]";*/
 	}
 }

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="260dp"
-    android:layout_height="130dp"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="@drawable/bonuspack_bubble_white"
     android:orientation="horizontal" >
 
     <ImageView
         android:id="@+id/bubble_image"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:paddingLeft="5dp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingLeft="999dp"
         android:visibility="gone" />
 
     <LinearLayout
