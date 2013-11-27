@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import android.app.Activity;
@@ -15,7 +16,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -107,13 +107,15 @@ public class TaskActivity extends Activity {
 		});
 
 		this.restTemplate = new RestTemplate();
-		this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+	    // Add converters, Note I use the Jackson Converter, I removed the http form converter  because it is not needed when posting String, used for multipart forms.
+	    this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+	    this.restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+
+		// Set the request factory IMPORTANT: This section I had to add for POST request. Not needed for GET
+	    //this.restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 	}
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 86b8be9ee273bf82ca4866f69d3dd0f4f6f8a9dd
 	/**
 	 * This function is responsible to request do ServiceBaseMap to get cached tiles zip file from server
 	 */
@@ -173,7 +175,8 @@ public class TaskActivity extends Activity {
 		List<Task> tasks = TaskDao.getFinishedTasks();
 
 		if(tasks != null && !tasks.isEmpty()) {
-			String url = "http://200.144.100.34:8080/bauru-server/rest/tasks?user={user_hash}";
+			//String url = "http://200.144.100.34:8080/bauru-server/rest/tasks?user={user_hash}";
+			String url = "http://192.168.5.49:8888/bauru-server/rest/tasks?user={user_hash}";
 			UploadTasks remote = new UploadTasks(tasks, userHash);
 			remote.execute(new String[] { url });
 		} else {
@@ -181,8 +184,6 @@ public class TaskActivity extends Activity {
 		}
 	}
 
-<<<<<<< HEAD
-=======
 	/**
 	 * Save a list of Tasks, creating an object that send a post request to server.
 	 * 
@@ -198,7 +199,6 @@ public class TaskActivity extends Activity {
 			remote.execute(new String[] { url });
 		}
 	}
->>>>>>> 86b8be9ee273bf82ca4866f69d3dd0f4f6f8a9dd
 
 	/**
 	 * Async class implementation to get tasks from server.
@@ -251,7 +251,7 @@ public class TaskActivity extends Activity {
 	 *            URL's that will called.
 	 * @author Paulo Luan 
 	 */
-	private class UploadTasks extends AsyncTask<String, Void, ArrayList<Task>> {
+	private class UploadTasks extends AsyncTask<String, Void, List<Task>> {
 
 		private List<Task> tasks;
 		private String userHash;
@@ -262,20 +262,19 @@ public class TaskActivity extends Activity {
 		}
 
 		@Override
-		protected ArrayList<Task> doInBackground(String... urls) {
-			ArrayList<Task> list = null;
-
+		protected List<Task> doInBackground(String... urls) {
+			List<Task> response = null;
+ 			
 			for (String url : urls) {
 				try {
-					String response = restTemplate.postForObject(url, this.tasks, String.class, userHash);				
-					//HttpStatus status = response.getStatusCode();
-					//Task[] responseTasks = response.getBody();
-//					//list = new ArrayList<Task>(Arrays.asList(responseTasks));
-				} catch (Exception e) {
+					Task[] responseTasks = restTemplate.postForObject(url, this.tasks, Task[].class, userHash);
+					response = new ArrayList<Task>(Arrays.asList(responseTasks));
+				} catch (HttpClientErrorException e) {
+					String error = e.getResponseBodyAsString();
 					e.printStackTrace();
 				}
 			}
-			return list;
+			return response;
 		}
 
 		@Override
@@ -284,7 +283,7 @@ public class TaskActivity extends Activity {
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<Task> result) {
+		protected void onPostExecute(List<Task> result) {
 			if(result != null){
 				//TODO: verificar o status para excluir somente quando tiver certeza de que foi salvo remotamente.
 				TaskDao.deleteTasks(tasks);
@@ -302,7 +301,7 @@ public class TaskActivity extends Activity {
 	 *            URL's that will called.
 	 * @author Paulo Luan 
 	 */
-	private class UploadPhotos extends AsyncTask<String, Void, ArrayList<Photo>> {
+	private class UploadPhotos extends AsyncTask<String, Void, List<Photo>> {
 
 		private List<Photo> photos;
 		private String userHash;
@@ -313,20 +312,18 @@ public class TaskActivity extends Activity {
 		}
 
 		@Override
-		protected ArrayList<Photo> doInBackground(String... urls) {
-			ArrayList<Photo> list = null;
+		protected List<Photo> doInBackground(String... urls) {
+			List<Photo> response = null;
 
 			for (String url : urls) {
 				try {
-					ResponseEntity<Photo[]> response = restTemplate.postForObject(url, this.photos, ResponseEntity.class, userHash);
-					Photo[] photos = response.getBody();
-					HttpStatus status = response.getStatusCode();
-					list = new ArrayList<Photo>(Arrays.asList(photos));
+					Photo[] responsePhotos = restTemplate.postForObject(url, this.photos, Photo[].class, userHash);
+					response = new ArrayList<Photo>(Arrays.asList(responsePhotos));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-			return list;
+			return response;
 		}
 
 		@Override
@@ -335,7 +332,7 @@ public class TaskActivity extends Activity {
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<Photo> result) {
+		protected void onPostExecute(List<Photo> result) {
 			if(result != null){
 				PhotoDao.deletePhotos(result);
 			}

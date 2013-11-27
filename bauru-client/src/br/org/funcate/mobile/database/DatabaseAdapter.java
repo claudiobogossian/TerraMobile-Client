@@ -1,13 +1,10 @@
 package br.org.funcate.mobile.database;
 
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.address.Address;
 import br.org.funcate.mobile.form.Form;
 import br.org.funcate.mobile.photo.Photo;
@@ -54,9 +51,8 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 
 		try {
 			this.createDaos();
-			this.dropTables();
-			this.createTables();
-			this.createMockFeatures();
+			//this.dropTables();
+			//this.createTables();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -131,63 +127,6 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 			if (clearSpecial) {
 				connectionSource.clearSpecialConnection(conn);
 			}
-		}
-	}
-
-	public void createMockFeatures() {
-		try {
-//			this.dropTables();
-//			this.createTables();
-
-			int i = 1;
-
-			// for (int i = 0; i < 20; i++) {
-
-			Address address = new Address();
-			address.setCoordx(-22.318567);
-			address.setCoordy(-49.060907);
-			address.setCity("Bauru");
-			address.setNumber("1234");
-			address.setExtra("Logradouro");
-			address.setName("Rua Bauru");
-			address.setState("SP");
-			address.setNeighborhood("bairro");
-			address.setPostalCode("123456");
-
-			Form form = new Form();
-			form.setDate(new Date());
-			form.setInfo1("Informação1");
-			form.setInfo2("Informação2");
-
-			User user = new User();
-			user.setLogin("user");
-			user.setName("UserName");
-			user.setPassword("123");
-			user.setHash(Utility.generateHashMD5(user.getLogin() + Utility.generateHashMD5(user.getPassword())));
-			
-			Task task = new Task();
-			task.setForm(form);
-			task.setAddress(address);
-			task.setDone(false);
-			task.setUser(user);
-
-			Photo photo = new Photo();
-			photo.setForm(form);
-
-			userDao.create(user);
-			addressDao.create(address);
-			formDao.create(form);
-			photoDao.create(photo);
-			taskDao.create(task);
-
-			Log.i(LOG_TAG,
-					"ID_TASK: " + task.getId() + "  ID_FORM: " + form.getId());
-			// }
-
-			Log.i(LOG_TAG, "created new entries in onCreate: ");
-		} catch (SQLException e) {
-			Log.e(LOG_TAG, "Can't create database", e);
-			throw new RuntimeException(e);
 		}
 	}
 
