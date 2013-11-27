@@ -99,7 +99,7 @@ public class GeoMap extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		//self.showLandmarks();
+		self.showLandmarks();
 	}
 
 	@Override

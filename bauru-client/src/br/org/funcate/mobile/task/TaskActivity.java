@@ -259,10 +259,10 @@ public class TaskActivity extends Activity {
 
 			for (String url : urls) {
 				try {
-					ResponseEntity<Task[]> response = restTemplate.postForObject(url, this.tasks, ResponseEntity.class, userHash);
-					HttpStatus status = response.getStatusCode();
-					Task[] responseTasks = response.getBody();
-					list = new ArrayList<Task>(Arrays.asList(responseTasks));
+					String response = restTemplate.postForObject(url, this.tasks, String.class, userHash);				
+					//HttpStatus status = response.getStatusCode();
+					//Task[] responseTasks = response.getBody();
+//					//list = new ArrayList<Task>(Arrays.asList(responseTasks));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
