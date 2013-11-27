@@ -2,15 +2,12 @@ package br.org.funcate.baurudigital.server.user;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import br.org.funcate.baurudigital.server.common.JPA.HibernateFactory;
 import br.org.funcate.baurudigital.server.common.exception.UtilException;
 import br.org.funcate.baurudigital.server.common.utils.Util;
-import br.org.funcate.baurudigital.server.task.Task;
 /**
  * Keep's state less functions to comunicate with the Database. Can be only accessed by services. 
  * Works only with User entity

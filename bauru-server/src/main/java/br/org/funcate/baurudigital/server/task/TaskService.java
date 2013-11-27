@@ -75,7 +75,7 @@ public class TaskService {
 		task.setForm(new Form());
 		//task.getForm().setId(1);
 		//task.setId(1);
-		task.setSyncronized(false);
+		task.setDone(false);
 		task.setUser(new User());
 		task.getUser().setId(1);
 		

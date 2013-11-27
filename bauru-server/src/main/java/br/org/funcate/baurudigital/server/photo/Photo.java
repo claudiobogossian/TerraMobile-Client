@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import br.org.funcate.baurudigital.server.form.Form;
@@ -18,7 +17,7 @@ public class Photo implements Serializable {
 	@GeneratedValue
 	private Integer id;
 	
-	private byte[] blob;
+	private String blob;
 	
 	private String path;
 	@ManyToOne(cascade=CascadeType.ALL, targetEntity=Form.class)
@@ -28,7 +27,7 @@ public class Photo implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Photo(Integer id, byte[] blob, String path, Form form) {
+	public Photo(Integer id, String blob, String path, Form form) {
 		super();
 		this.id = id;
 		this.blob = blob;
@@ -44,11 +43,11 @@ public class Photo implements Serializable {
 		this.id = id;
 	}
 
-	public byte[] getBlob() {
+	public String getBlob() {
 		return blob;
 	}
 
-	public void setBlob(byte[] blob) {
+	public void setBlob(String blob) {
 		this.blob = blob;
 	}
 

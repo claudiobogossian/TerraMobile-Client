@@ -2,8 +2,6 @@ package br.org.funcate.baurudigital.server.task;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 

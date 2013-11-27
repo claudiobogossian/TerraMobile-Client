@@ -1,10 +1,8 @@
 package br.org.funcate.baurudigital.tools.extraction;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.type.TypeReference;
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
@@ -14,20 +12,15 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.io.ParseException;
-
-import br.org.funcate.baurudigital.server.address.Address;
 import br.org.funcate.baurudigital.server.common.exception.UtilException;
-import br.org.funcate.baurudigital.server.common.service.JSONService;
-import br.org.funcate.baurudigital.server.form.Form;
 import br.org.funcate.baurudigital.server.task.Task;
 import br.org.funcate.baurudigital.server.task.TaskException;
 import br.org.funcate.baurudigital.server.task.TaskService;
 import br.org.funcate.baurudigital.server.user.User;
 import br.org.funcate.baurudigital.server.user.UserService;
-import br.org.funcate.baurudigital.tools.extraction.domain.DAO.SourceAddressDAO;
+
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.io.ParseException;
 
 /**
  * This class was created to extract data from original database to this

@@ -1,6 +1,5 @@
 package br.org.funcate.baurudigital.server.photo;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.List;
@@ -35,7 +34,7 @@ public class PhotoService {
 		byte[] b = new byte[(int)f.length()];
 		f.read(b);
 		Photo photo = new Photo();
-		photo.setBlob(b);
+		photo.setBlob(b.toString()); //TODO: verificar se o toString é valido.
 		photo.setPath(filePath);
 		photo.setForm(FormService.getForm(54));
 		

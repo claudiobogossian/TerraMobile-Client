@@ -2,13 +2,10 @@ package br.org.funcate.baurudigital.server.form;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import br.org.funcate.baurudigital.server.common.JPA.HibernateFactory;
-import br.org.funcate.baurudigital.server.user.User;
 /**
  * Keep's state less functions to comunicate with the Database. Can be only accessed by services. 
  * Works only with Form entity

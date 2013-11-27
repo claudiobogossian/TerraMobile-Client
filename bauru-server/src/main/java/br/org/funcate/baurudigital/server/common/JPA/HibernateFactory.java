@@ -2,14 +2,11 @@ package br.org.funcate.baurudigital.server.common.JPA;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
-import org.hibernate.tool.hbm2ddl.SchemaExport;
 /**
  * Keeps Hibernate functions and variables, to be user by DAO Classes
  * @author bogo
