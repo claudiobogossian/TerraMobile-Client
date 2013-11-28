@@ -38,7 +38,7 @@
                 <LinearLayout
                     android:id="@+id/geoform_lay1111"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_height="0dip"
                     android:layout_weight="0"
                     android:background="@color/cinza3"
                     android:orientation="vertical"
@@ -49,7 +49,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Inserir Dados"
+                        android:text="@string/tv_insertData"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
                 </LinearLayout>
             </LinearLayout>
@@ -84,7 +84,7 @@
                         android:layout_weight="0.5"
                         android:drawableLeft="@drawable/ico_foto"
                         android:gravity="center_vertical|left"
-                        android:text="   Obter Foto" />
+                        android:text="@string/btn_get_photo"/>
                 </LinearLayout>
 
                 <TableLayout
@@ -107,7 +107,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Latitude: "
+                            android:text="@string/tv_lat"
                             android:textColor="@color/black" />
 
                         <LinearLayout
@@ -139,7 +139,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Longitude: "
+                            android:text="@string/tv_long"
                             android:textColor="@color/black" />
 
                         <LinearLayout
@@ -171,7 +171,7 @@
                             android:layout_span="2"
                             android:paddingBottom="10dp"
                             android:paddingTop="5dp"
-                            android:text="Endereço: "
+                            android:text="@string/tv_address"
                             android:textColor="@color/black" />
                     </TableRow>
 
@@ -187,7 +187,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Logradouro: "
+                            android:text="@string/tv_log"
                             android:textColor="@color/black" />
 
                         <LinearLayout
@@ -228,7 +228,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Bairro:"
+                            android:text="@string/tv_neighborhood"
                             android:textColor="@color/black" />
 
                         <LinearLayout
@@ -261,7 +261,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="CEP: "
+                            android:text="@string/tv_postal_code"
                             android:textColor="@color/black" />
 
                         <LinearLayout
@@ -273,7 +273,7 @@
 
                             <EditText
                                 android:id="@+id/cp_cep"
-                                android:layout_width="0dip"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:enabled="false"
@@ -294,7 +294,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Número: "
+                            android:text="@string/tv_number"
                             android:textColor="@color/black" >
                         </TextView>
 
@@ -307,7 +307,7 @@
 
                             <EditText
                                 android:id="@+id/cp_num"
-                                android:layout_width="0dip"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:enabled="false"
@@ -328,7 +328,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Cidade: "
+                            android:text="@string/tv_city"
                             android:textColor="@color/black" />
 
                         <LinearLayout
@@ -340,12 +340,12 @@
 
                             <EditText
                                 android:id="@+id/cp_cit"
-                                android:layout_width="0dip"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:enabled="false"
                                 android:inputType="number"
-                                android:text="São José dos Campos" />
+                                android:text="" />
                         </LinearLayout>
                     </TableRow>
 
@@ -361,7 +361,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="UF: "
+                            android:text="@string/tv_state"
                             android:textColor="@color/black" />
 
                         <LinearLayout
@@ -373,12 +373,12 @@
 
                             <EditText
                                 android:id="@+id/cp_est"
-                                android:layout_width="0dip"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:enabled="false"
                                 android:inputType="number"
-                                android:text="SP" />
+                                android:text="" />
                         </LinearLayout>
                     </TableRow>
 
@@ -394,7 +394,7 @@
                             android:layout_span="2"
                             android:paddingBottom="10dp"
                             android:paddingTop="10dp"
-                            android:text="Outras Informações: "
+                            android:text="@string/tv_other_info"
                             android:textColor="@color/black" />
                     </TableRow>
 
@@ -410,7 +410,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Info 1: "
+                            android:text="@string/tv_info1"
                             android:textColor="@color/black" />
 
                         <LinearLayout
@@ -422,7 +422,7 @@
 
                             <EditText
                                 android:id="@+id/cp_if1"
-                                android:layout_width="0dip"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:enabled="true"
@@ -442,7 +442,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Info 2:"
+                            android:text="@string/tv_info2"
                             android:textColor="@color/black" />
 
                         <LinearLayout
@@ -454,7 +454,7 @@
 
                             <EditText
                                 android:id="@+id/cp_if2"
-                                android:layout_width="0dip"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:enabled="true"
@@ -473,7 +473,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Confirmação do número"
+                            android:text="@string/tv_number_confirmation"
                             android:textColor="@color/black" />
 
                         <LinearLayout
@@ -501,7 +501,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Desconformidade"
+                            android:text="@string/tv_variance"
                             android:textColor="@color/black" />
 
                         <LinearLayout
@@ -529,7 +529,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Números encontrados"
+                            android:text="@string/tv_numbers_found"
                             android:textColor="@color/black" />
 
                         <LinearLayout
@@ -542,11 +542,11 @@
 
                             <EditText
                                 android:id="@+id/edt_numbers_found"
-                                android:layout_width="0dip"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:enabled="true"
-                                android:hint="demais numerações do lote."
+                                android:hint="@string/tv_other_batch_numbering"
                                 android:text="" />
                         </LinearLayout>
                     </TableRow>
@@ -562,7 +562,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Uso principal"
+                            android:text="@string/tv_primary_use"
                             android:textColor="@color/black" />
 
                         <LinearLayout
@@ -590,21 +590,21 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Uso secundário"
+                            android:text="@string/tv_secondary_use"
                             android:textColor="@color/black" />
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:weightSum="1" >
+<!--                         <LinearLayout -->
+<!--                             android:layout_width="fill_parent" -->
+<!--                             android:layout_height="wrap_content" -->
+<!--                             android:layout_weight="1" -->
+<!--                             android:weightSum="1" > -->
 
-                            <!-- <Spinner -->
-                            <!-- android:id="@+id/spnSecundaryUse" -->
-                            <!-- android:layout_width="fill_parent" -->
-                            <!-- android:layout_height="wrap_content" -->
-                            <!-- android:entries="@array/number_confirmation" /> -->
-                        </LinearLayout>
+<!--                             <Spinner -->
+<!--                             android:id="@+id/spnSecundaryUse" -->
+<!--                             android:layout_width="fill_parent" -->
+<!--                             android:layout_height="wrap_content" -->
+<!--                             android:entries="@array/number_confirmation" /> -->
+<!--                         </LinearLayout> -->
                     </TableRow>
 
                     <TableRow
@@ -618,7 +618,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Guias"
+                            android:text="@string/tv_asphalt_guides"
                             android:textColor="@color/black" />
 
                         <LinearLayout
@@ -628,7 +628,7 @@
                             android:weightSum="1" >
 
                             <Spinner
-                                android:id="@+id/spnAsfaltGuides"
+                                android:id="@+id/spnAsphaltGuides"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:entries="@array/yes_no_parcial" />
@@ -646,7 +646,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Iluminação pública"
+                            android:text="@string/tv_public_illumination"
                             android:textColor="@color/black" />
 
                         <LinearLayout
@@ -674,7 +674,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Energia elétrica"
+                            android:text="@string/tv_eletric_energy"
                             android:textColor="@color/black" />
 
                         <LinearLayout
@@ -703,7 +703,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Galeria pluvial"
+                            android:text="@string/tv_pluvial_galery"
                             android:textColor="@color/black" />
 
                         <LinearLayout
@@ -740,7 +740,7 @@
             android:layout_weight="0.5"
             android:drawableLeft="@drawable/ico_cancelar"
             android:gravity="center_vertical|left"
-            android:text="Cancelar" />
+            android:text="@string/btn_cancel" />
 
         <Button
             android:id="@+id/cp_button_ok"
@@ -749,7 +749,7 @@
             android:layout_weight="0.5"
             android:drawableLeft="@drawable/ico_ok"
             android:gravity="center_vertical|left"
-            android:text="OK" />
+            android:text="@string/btn_ok" />
     </LinearLayout>
 
 </LinearLayout>

@@ -136,6 +136,7 @@ public class TaskActivity extends Activity {
 	 */
 	public void getRemoteTasks() {
 		List<Task> remoteTasks = null;
+		String hash = SessionManager.getUserHash();
 		String userHash = SessionManager.getUserHash();
 		String url =  hostUrl + "bauru-server/rest/tasks?user={user_hash}";
 		DownloadTasks remote = new DownloadTasks(userHash);
