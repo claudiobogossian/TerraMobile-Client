@@ -167,7 +167,7 @@ public class TaskDao {
 		if(task != null){
 
 			try {
-				Task persistedTask = getTaskById(task.get_Id());
+				Task persistedTask = getTaskById(task.getId());
 
 				if(persistedTask == null) {
 					formDao.create(task.getForm());

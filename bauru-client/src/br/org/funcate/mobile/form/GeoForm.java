@@ -137,7 +137,7 @@ public class GeoForm extends Activity implements LocationListener{
 			edtInformation1.setText(task.getForm().getInfo1());
 			edtInformation2.setText(task.getForm().getInfo2());
 
-			if(task.get_Id() != null){
+			if(task.getId() != null){
 				buttonOk.setEnabled(true);
 			}
 		}

@@ -15,7 +15,7 @@ public class Task implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@DatabaseField( columnName = "_id", generatedId = true, canBeNull = false, allowGeneratedIdInsert = true)
-	private Integer _id;
+	private Integer id;
 	@DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true, maxForeignAutoRefreshLevel = 3)
 	private Address address;
 	@DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true, maxForeignAutoRefreshLevel = 3)
@@ -29,22 +29,22 @@ public class Task implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Task(Integer _id, Address address, User user, Form form,
+	public Task(Integer id, Address address, User user, Form form,
 			boolean done) {
 		super();
-		this._id = _id;
+		this.id = id;
 		this.address = address;
 		this.user = user;
 		this.form = form;
 		this.done = done;
 	}
 
-	public Integer get_Id() {
-		return _id;
+	public Integer getId() {
+		return id;
 	}
 
-	public void set_Id(Integer _id) {
-		this._id = _id;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public Address getAddress() {
