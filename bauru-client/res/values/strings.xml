@@ -37,6 +37,7 @@
     <string name="tv_other_batch_numbering">Demais numerações do lote</string>
     <string name="tv_primary_use">Uso principal</string>
     <string name="tv_secondary_use">Uso secundário</string>
+    <string name="tv_pavimentation">Pavimentação</string>
     <string name="tv_asphalt_guides">Guias</string>
     <string name="tv_public_illumination">Iluminação pública</string>
     <string name="tv_eletric_energy">Energia elétrica</string>

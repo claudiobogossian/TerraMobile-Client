@@ -26,9 +26,9 @@ public class Form implements Serializable {
 	@DatabaseField
 	private String otherNumbers;
 	@DatabaseField
-	private String primaryUser;
+	private String primaryUse;
 	@DatabaseField
-	private String secondaryUser;
+	private String secondaryUse;
 	@DatabaseField
 	private String pavimentation;
 	@DatabaseField
@@ -46,8 +46,8 @@ public class Form implements Serializable {
 
 	public Form(Integer id, Date date, Double coordx, Double coordy,
 			String info1, String info2, String numberConfirmation,
-			String variance, String otherNumbers, String primaryUser,
-			String secondaryUser, String pavimentation, String asphaltGuide,
+			String variance, String otherNumbers, String primaryUse,
+			String secondaryUse, String pavimentation, String asphaltGuide,
 			String publicIlumination, String energy, String pluvialGallery) {
 		super();
 		this.id = id;
@@ -59,8 +59,8 @@ public class Form implements Serializable {
 		this.numberConfirmation = numberConfirmation;
 		this.variance = variance;
 		this.otherNumbers = otherNumbers;
-		this.primaryUser = primaryUser;
-		this.secondaryUser = secondaryUser;
+		this.primaryUse = primaryUse;
+		this.secondaryUse = secondaryUse;
 		this.pavimentation = pavimentation;
 		this.asphaltGuide = asphaltGuide;
 		this.publicIlumination = publicIlumination;
@@ -140,20 +140,20 @@ public class Form implements Serializable {
 		this.otherNumbers = otherNumbers;
 	}
 
-	public String getPrimaryUser() {
-		return primaryUser;
+	public String getPrimaryUse() {
+		return primaryUse;
 	}
 
-	public void setPrimaryUser(String primaryUser) {
-		this.primaryUser = primaryUser;
+	public void setPrimaryUse(String primaryUse) {
+		this.primaryUse = primaryUse;
 	}
 
-	public String getSecondaryUser() {
-		return secondaryUser;
+	public String getSecondaryUse() {
+		return secondaryUse;
 	}
 
-	public void setSecondaryUser(String secondaryUser) {
-		this.secondaryUser = secondaryUser;
+	public void setSecondaryUse(String secondaryUse) {
+		this.secondaryUse = secondaryUse;
 	}
 
 	public String getPavimentation() {
