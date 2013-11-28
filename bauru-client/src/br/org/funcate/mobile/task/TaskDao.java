@@ -19,6 +19,11 @@ public class TaskDao {
 
 	private static final String LOG_TAG = "#TASKDAO";
 	private static DatabaseAdapter db = DatabaseHelper.getDatabase(); 
+	
+	private static Dao<Task, Integer>  taskDao = db.getTaskDao();
+	private static Dao<Form, Integer> formDao = db.getFormDao();
+	private static Dao<User, Integer> userDao = db.getUserDao();
+	private static Dao<Address, Integer> addressDao = db.getAddressDao();
 
 	/**
 	 * 
@@ -30,8 +35,6 @@ public class TaskDao {
 	public static List<Task> getLocalTasks() {
 		List<Task> list = null;
 		try {
-			// get our dao
-			Dao<Task, Integer> taskDao = db.getTaskDao();
 			// query for all of the data objects in the database
 			list = taskDao.queryForAll();
 		} catch (SQLException e) {
@@ -48,13 +51,13 @@ public class TaskDao {
 	 * @return Boolean result
 	 */
 	public static Integer deleteSincronizedTasks() {
-		DeleteBuilder<Task, Integer> deleteBuilder = db.getTaskDao().deleteBuilder();
+		DeleteBuilder<Task, Integer> deleteBuilder = taskDao.deleteBuilder();
 		Integer result = 0;
 
 		try {
 			// only delete the rows where syncronized is true
 			deleteBuilder.where()
-			.eq("done", Boolean.TRUE);
+				.eq("done", Boolean.TRUE);
 			result = deleteBuilder.delete();
 		} catch (SQLException e) {
 
@@ -71,11 +74,10 @@ public class TaskDao {
 	 * @return Boolean result
 	 */
 	public static Integer deleteTasks(List<Task> tasks) {
-		Dao<Task, Integer> dao = db.getTaskDao();
 		Integer result = 0;
 
 		try {
-			result = dao.delete(tasks);
+			result = taskDao.delete(tasks);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -85,9 +87,6 @@ public class TaskDao {
 
 	public static List<Task> getFinishedTasks() {
 		List<Task> tasks = null;
-
-		Dao<Task, Integer> taskDao = DatabaseHelper.getDatabase().getTaskDao();
-		Dao<User, Integer> userDao = DatabaseHelper.getDatabase().getUserDao();
 
 		QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
 		QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
@@ -112,9 +111,6 @@ public class TaskDao {
 
 	public static List<Task> getNotFinishedTasks() {
 		List<Task> tasks = null;
-
-		Dao<Task, Integer> taskDao = DatabaseHelper.getDatabase().getTaskDao();
-		Dao<User, Integer> userDao = DatabaseHelper.getDatabase().getUserDao();
 
 		QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
 		QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
@@ -149,18 +145,11 @@ public class TaskDao {
 		boolean isSaved = false;
 
 		if(tasks != null){
-			DatabaseAdapter db = DatabaseHelper.getDatabase();	
-
-			Dao<Task, Integer>  taskDao = db.getTaskDao();
-			Dao<Form, Integer> formDao = db.getFormDao();
-			Dao<User, Integer> userDao = db.getUserDao();
-			Dao<Address, Integer> addressDao = db.getAddressDao();
 
 			try {
 				for (Task task : tasks) {
-
 					Task persistedTask = taskDao.queryForId(task.getId());
-
+					
 					if(persistedTask == null) {
 						formDao.create(task.getForm());
 						userDao.create(task.getUser());
@@ -189,12 +178,6 @@ public class TaskDao {
 		boolean isSaved = false;
 
 		if(task != null){
-			DatabaseAdapter db = DatabaseHelper.getDatabase();	
-
-			Dao<Task, Integer>  taskDao = db.getTaskDao();
-			Dao<Form, Integer> formDao = db.getFormDao();
-			Dao<User, Integer> userDao = db.getUserDao();
-			Dao<Address, Integer> addressDao = db.getAddressDao();
 
 			try {
 				Task persistedTask = taskDao.queryForId(task.getId());
