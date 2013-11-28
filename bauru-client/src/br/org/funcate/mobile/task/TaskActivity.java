@@ -264,11 +264,12 @@ public class TaskActivity extends Activity {
 				try {
 					Task[] responseTasks = restTemplate.postForObject(url, this.tasks, Task[].class, userHash);
 					response = new ArrayList<Task>(Arrays.asList(responseTasks));
-				} catch (Exception e) {
-					//String error = e.getResponseBodyAsString();
+				} catch (HttpClientErrorException e) {
+					String error = e.getResponseBodyAsString();
 					e.printStackTrace();
 				}
 			}
+			
 			return response;
 		}
 
