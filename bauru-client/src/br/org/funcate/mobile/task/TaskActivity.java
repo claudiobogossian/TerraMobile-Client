@@ -136,8 +136,10 @@ public class TaskActivity extends Activity {
 	 */
 	public void getRemoteTasks() {
 		List<Task> remoteTasks = null;
-		String hash = SessionManager.getUserHash();
-		this.getTasks(hash);
+		String userHash = SessionManager.getUserHash();
+		String url =  hostUrl + "bauru-server/rest/tasks?user={user_hash}";
+		DownloadTasks remote = new DownloadTasks(userHash);
+		remote.execute(new String[] { url });
 	}
 
 	/**
@@ -154,17 +156,6 @@ public class TaskActivity extends Activity {
 		}
 
 		self.hideLoadMask();
-	}
-
-	/**
-	 * Get a list of Taks, sending a get request to server.
-	 * 
-	 * @author Paulo Luan
-	 */
-	public void getTasks(String userHash) {		
-		String url =  hostUrl + "bauru-server/rest/tasks?user={user_hash}";
-		DownloadTasks remote = new DownloadTasks(userHash);
-		remote.execute(new String[] { url });
 	}
 
 	/**

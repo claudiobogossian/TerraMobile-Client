@@ -54,8 +54,8 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 
 		try {
 			this.createDaos();
-			this.dropTables();
-			this.createTables();
+			//this.dropTables();
+			//this.createTables();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

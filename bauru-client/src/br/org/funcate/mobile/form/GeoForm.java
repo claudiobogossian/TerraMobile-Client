@@ -48,6 +48,7 @@ import br.org.funcate.mobile.task.TaskDao;
 
 import com.j256.ormlite.dao.Dao;
 
+
 public class GeoForm extends Activity implements LocationListener{
 
 	// tag used to debug
@@ -74,7 +75,7 @@ public class GeoForm extends Activity implements LocationListener{
 	private List<Photo> photos;
 	
 	private DatabaseAdapter db;
-	private Dao<Task, Integer> dao;
+	private Dao<Task, Integer> taskDao;
 
 	private ProgressDialog dialog;
 	
@@ -85,7 +86,7 @@ public class GeoForm extends Activity implements LocationListener{
 		setContentView(R.layout.activity_geoform);
 		
 		db = DatabaseHelper.getDatabase();
-		dao = db.getTaskDao();
+		taskDao = db.getTaskDao();
 		
 		photos = new ArrayList<Photo>();
 		
@@ -262,9 +263,9 @@ public class GeoForm extends Activity implements LocationListener{
 			public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
 				try {
 					
-					task = dao.queryForId((int) id);
+					task = taskDao.queryForId((int) id);
 					
-					if(task != null){
+					if(task != null) {
 						TextView t1 = (TextView) view.findViewById(R.id.item_log);
 						String logvalue = t1.getText().toString();
 						address.setText(logvalue);
