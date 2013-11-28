@@ -135,7 +135,7 @@ public class TaskActivity extends Activity {
 	 * @return List<Task>
 	 */
 	public void getRemoteTasks() {
-		List<Task> remoteTasks = null;
+//		List<Task> remoteTasks = null;
 		String hash = SessionManager.getUserHash();
 		this.getTasks(hash);
 	}

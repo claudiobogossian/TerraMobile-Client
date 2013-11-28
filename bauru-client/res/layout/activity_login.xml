@@ -85,7 +85,7 @@
                         android:drawableLeft="@drawable/ic_begin"
                         android:drawablePadding="3dp"
                         android:gravity="left|center_vertical"
-                        android:text="Iniciar" />
+                        android:text="@string/btn_begin" />
 
                 </RelativeLayout>
 
@@ -109,7 +109,7 @@
                 android:drawableLeft="@drawable/ic_exit"
                 android:drawablePadding="3dp"
                 android:gravity="left|center_vertical"
-                android:text="Sair" />
+                android:text="@string/btn_exit" />
 
         </LinearLayout>
     </LinearLayout>

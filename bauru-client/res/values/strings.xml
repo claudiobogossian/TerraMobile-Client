@@ -7,7 +7,8 @@
     <string name="user_name_hint">Usuário</string>
     <string name="password_hint">Senha</string>
     <string name="action_settings">Opções</string>
-    <string name="lbl_start">Iniciar</string>
+    <string name="btn_begin">Iniciar</string>
+    <string name="btn_exit">Sair</string>
     <string name="lbl_exit">Sair</string>
     <string name="title_activity_main">Funcate Mobile</string>
     
@@ -15,9 +16,33 @@
     <string name="lbl_new_form">Novo formulárío</string>
     <string name="lbl_get_task">Atualizar trechos</string>
     
-    
     <!-- Form Screen -->
-    
+    <string name="tv_insertData">Inserir dados</string>
+    <string name="btn_get_photo">Obter Foto</string>
+    <string name="tv_lat">Latitude: </string>
+    <string name="tv_long">Longitude: </string>
+    <string name="tv_address">Endereço: </string>
+    <string name="tv_log">Logradouro: </string>
+    <string name="tv_neighborhood">Bairro: </string>
+    <string name="tv_postal_code">CEP: </string>
+    <string name="tv_number">Number: </string>
+    <string name="tv_city">Cidade: </string>
+    <string name="tv_state">UF: </string>
+    <string name="tv_other_info">Outras Informações</string>
+    <string name="tv_info1">Info 1: </string>
+    <string name="tv_info2">Info 2: </string>
+    <string name="tv_number_confirmation">Confirmação do número</string>
+    <string name="tv_variance">Desconformidade</string>
+    <string name="tv_numbers_found">Números encontrados</string>
+    <string name="tv_other_batch_numbering">Demais numerações do lote</string>
+    <string name="tv_primary_use">Uso principal</string>
+    <string name="tv_secondary_use">Uso secundário</string>
+    <string name="tv_asphalt_guides">Guias</string>
+    <string name="tv_public_illumination">Iluminação pública</string>
+    <string name="tv_eletric_energy">Energia elétrica</string>
+    <string name="tv_pluvial_galery">Galeria pluvial</string>
+    <string name="btn_cancel">Cancelar</string>
+    <string name="btn_ok">OK</string>
     
     <!-- Task Screen -->
     <string name="btn_sync_tasks">Sincronizar com o servidor</string>

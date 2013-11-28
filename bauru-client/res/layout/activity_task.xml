@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/logout"
             android:gravity="center_vertical|left"
-            android:text="Logout" />
+            android:text="@string/btn_logout" />
     </LinearLayout>
 
     <TextView
