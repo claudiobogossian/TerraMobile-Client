@@ -22,7 +22,7 @@ public class Task implements Serializable {
 
 	@Id
 	@GeneratedValue
-	private Integer id;
+	private Integer _id;
 	
 	@OneToOne(cascade=CascadeType.ALL, targetEntity=Address.class)
 	private Address address;
@@ -39,22 +39,22 @@ public class Task implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Task(Integer id, Address address, User user, Form form,
+	public Task(Integer _id, Address address, User user, Form form,
 			boolean done) {
 		super();
-		this.id = id;
+		this._id = _id;
 		this.address = address;
 		this.user = user;
 		this.form = form;
 		this.done = done;
 	}
 
-	public Integer getId() {
-		return id;
+	public Integer get_Id() {
+		return _id;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void set_Id(Integer _id) {
+		this._id = _id;
 	}
 
 	public Address getAddress() {

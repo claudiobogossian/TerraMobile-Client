@@ -93,7 +93,7 @@ public class GeoForm extends Activity implements LocationListener{
 
 	private GeoForm self = this;
 
-	private Task task; 
+	private static Task task;
 	private List<Photo> photos;
 
 	private DatabaseAdapter db;
@@ -137,7 +137,7 @@ public class GeoForm extends Activity implements LocationListener{
 			edtInformation1.setText(task.getForm().getInfo1());
 			edtInformation2.setText(task.getForm().getInfo2());
 
-			if(task.getId() != null){
+			if(task.get_Id() != null){
 				buttonOk.setEnabled(true);
 			}
 		}
@@ -227,12 +227,10 @@ public class GeoForm extends Activity implements LocationListener{
 				boolean isSaved = false;
 
 				self.showLoadingMask();
-
 				self.setFormPropertiesWithFields();		
-
 				task.setDone(true);
 
-				isSaved = TaskDao.saveTask(task);
+				isSaved = TaskDao.updateTask(task);
 				isSaved = PhotoDao.savePhotos(photos);
 
 				Intent data = new Intent();
@@ -342,10 +340,11 @@ public class GeoForm extends Activity implements LocationListener{
 		address.setHint("pesquisar...");
 		address.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> adapter, View view, int position, long addressId) {
 				try {
-
-					task = taskDao.queryForId((int) id);
+					task = taskDao.queryBuilder().where()
+							.eq("address_id", addressId)
+							.queryForFirst();
 
 					if(task != null) {
 						TextView t1 = (TextView) view.findViewById(R.id.item_log);

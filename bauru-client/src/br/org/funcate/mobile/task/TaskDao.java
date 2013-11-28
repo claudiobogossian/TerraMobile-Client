@@ -24,6 +24,10 @@ public class TaskDao {
 	private static Dao<Form, Integer> formDao = db.getFormDao();
 	private static Dao<User, Integer> userDao = db.getUserDao();
 	private static Dao<Address, Integer> addressDao = db.getAddressDao();
+	
+	private static QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+	private static QueryBuilder<Address, Integer> addressQueryBuilder = addressDao.queryBuilder();
+	private static QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
 
 	/**
 	 * 
@@ -112,16 +116,13 @@ public class TaskDao {
 	public static List<Task> getNotFinishedTasks() {
 		List<Task> tasks = null;
 
-		QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
-		QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
-
 		try {
 			String userHash = SessionManager.getUserHash();
 			userQueryBuilder.where()
-			.eq("hash", userHash);
+				.eq("hash", userHash);
 
 			taskQueryBuilder.where()
-			.eq("done", Boolean.FALSE);
+				.eq("done", Boolean.FALSE);
 
 			taskQueryBuilder.join(userQueryBuilder);
 
@@ -145,22 +146,8 @@ public class TaskDao {
 		boolean isSaved = false;
 
 		if(tasks != null){
-
-			try {
-				for (Task task : tasks) {
-					Task persistedTask = taskDao.queryForId(task.getId());
-					
-					if(persistedTask == null) {
-						formDao.create(task.getForm());
-						userDao.create(task.getUser());
-						addressDao.create(task.getAddress());
-						taskDao.create(task);
-					}
-				}
-
-				isSaved = true;
-			} catch (SQLException e) {
-				e.printStackTrace();
+			for (Task task : tasks) {
+				isSaved = saveTask(task);
 			}
 		}
 
@@ -180,7 +167,7 @@ public class TaskDao {
 		if(task != null){
 
 			try {
-				Task persistedTask = taskDao.queryForId(task.getId());
+				Task persistedTask = getTaskById(task.get_Id());
 
 				if(persistedTask == null) {
 					formDao.create(task.getForm());
@@ -196,5 +183,43 @@ public class TaskDao {
 		}
 
 		return isSaved;
+	}
+	
+
+	/**
+	 * Update an existing task into local database.
+	 * 
+	 * @author Paulo Luan
+	 * @param List
+	 *            <Task> Tasks that will be saved into database.
+	 */
+	public static boolean updateTask(Task task) {
+		boolean isSaved = false;
+
+		if(task != null){
+
+			try {
+				formDao.update(task.getForm());
+				userDao.update(task.getUser());
+				addressDao.update(task.getAddress());
+				taskDao.update(task);
+
+				isSaved = true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return isSaved;
+	}
+	
+	public static Task getTaskById(int id) {
+		Task task = null;
+		try {
+			task = taskDao.queryForId(id);
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return task;
 	}
 }
