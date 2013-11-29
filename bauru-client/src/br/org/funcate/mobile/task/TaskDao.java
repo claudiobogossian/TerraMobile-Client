@@ -222,8 +222,6 @@ public class TaskDao {
 					addressDao.create(task.getAddress());
 					taskDao.create(task);
 				}
-				
-				List<Task> t = taskDao.queryForAll();
 
 				isSaved = true;
 			} catch (SQLException e) {

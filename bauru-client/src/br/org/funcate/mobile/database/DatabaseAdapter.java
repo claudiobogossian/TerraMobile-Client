@@ -165,33 +165,6 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 		D castDao = (D) dao;
 		return castDao;
 	}	
-	
-	/**
-	 * Save a Photo into local database.
-	 * 
-	 * @author Paulo Luan
-	 * @param List
-	 *            <Task> Tasks that will be saved into database.
-	 */
-	public static boolean savePhotos(List<Photo> photos) {
-		boolean isSaved = false;
-		
-		if(photos != null) {
-			DatabaseAdapter db = DatabaseHelper.getDatabase();	
-			Dao<Photo, Integer>  photoDao = db.getPhotoDao();
-
-			try {
-				for (Photo photo : photos) {
-					photoDao.createIfNotExists(photo);
-				}
-				isSaved = true;
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return isSaved;
-	}
 
 	public Dao<Task, Integer> getTaskDao() {
 		return taskDao;
