@@ -29,16 +29,14 @@ public class Address implements Serializable {
 	private String neighborhood;
 
 	public Address() {
-		// TODO Auto-generated constructor stub
 	}
 
-	public Address(Integer id, String name, String neighborhood, String number, String extra,
+	public Address(Integer id, String name, String number, String extra,
 			Double coordx, Double coordy, String postalCode, String city,
-			String state, String featureId) {
+			String state, String featureId, String neighborhood) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.neighborhood = neighborhood;
 		this.number = number;
 		this.extra = extra;
 		this.coordx = coordx;
@@ -47,6 +45,7 @@ public class Address implements Serializable {
 		this.city = city;
 		this.state = state;
 		this.featureId = featureId;
+		this.neighborhood = neighborhood;
 	}
 
 	public Integer getId() {
@@ -139,11 +138,12 @@ public class Address implements Serializable {
 
 	@Override
 	public String toString() {
-		return name + ", nº " + number/* + ", CEP " + postalCode*/;
-				/*"Address [name=" + name + ", number=" + number + ", extra="
-				+ extra + ", coordx=" + coordx + ", coordy=" + coordy
-				+ ", postalCode=" + postalCode + ", city=" + city + ", state="
-				+ state + ", featureId=" + featureId + ", neighborhood="
-				+ neighborhood + "]";*/
+		return name + ", nº " + number/* + ", CEP " + postalCode */;
+		/*
+		 * "Address [name=" + name + ", number=" + number + ", extra=" + extra +
+		 * ", coordx=" + coordx + ", coordy=" + coordy + ", postalCode=" +
+		 * postalCode + ", city=" + city + ", state=" + state + ", featureId=" +
+		 * featureId + ", neighborhood=" + neighborhood + "]";
+		 */
 	}
 }

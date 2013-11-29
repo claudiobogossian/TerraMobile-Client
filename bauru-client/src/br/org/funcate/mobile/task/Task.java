@@ -26,11 +26,9 @@ public class Task implements Serializable {
 	private boolean done; // sincronizado com o servidor?
 
 	public Task() {
-		// TODO Auto-generated constructor stub
 	}
 
-	public Task(Integer id, Address address, User user, Form form,
-			boolean done) {
+	public Task(Integer id, Address address, User user, Form form, boolean done) {
 		super();
 		this.id = id;
 		this.address = address;
@@ -85,7 +83,8 @@ public class Task implements Serializable {
 
 	@Override
 	public String toString() {
-		return "" + address;
+		return "Task [id=" + id + ", address=" + address + ", user=" + user
+				+ ", form=" + form + ", done=" + done + "]";
 	}
 
 }

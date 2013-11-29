@@ -25,13 +25,6 @@ public class TaskDao {
 	private static Dao<User, Integer> userDao = db.getUserDao();
 	private static Dao<Address, Integer> addressDao = db.getAddressDao();
 
-	private static QueryBuilder<Task, Integer> taskQueryBuilder = taskDao
-			.queryBuilder();
-	private static QueryBuilder<Address, Integer> addressQueryBuilder = addressDao
-			.queryBuilder();
-	private static QueryBuilder<User, Integer> userQueryBuilder = userDao
-			.queryBuilder();
-
 	/**
 	 * 
 	 * This function return the local data, persisted in SQLite Database.
@@ -114,6 +107,9 @@ public class TaskDao {
 
 	public static List<Task> getNotFinishedTasks() {
 		List<Task> tasks = null;
+		
+		QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+		QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
 
 		try {
 			String userHash = SessionManager.getUserHash();
@@ -156,12 +152,16 @@ public class TaskDao {
 	 */
 	public static long getCountOfIncompletedTasks() {
 		long count = 0;
+		
+		QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+		QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+		
 		try {
 			String userHash = SessionManager.getUserHash();
 			
 			userQueryBuilder.where().eq("hash", userHash);
-			taskQueryBuilder.where().eq("done", Boolean.FALSE);
 			taskQueryBuilder.join(userQueryBuilder);
+			taskQueryBuilder.where().eq("done", Boolean.FALSE);
 
 			count = taskQueryBuilder.countOf();
 		} catch (SQLException e) {
@@ -178,6 +178,10 @@ public class TaskDao {
 	 */
 	public static long getCountOfCompletedTasks() {
 		long count = 0;
+		
+		QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+		QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+
 		try {
 			String userHash = SessionManager.getUserHash();
 			
@@ -202,18 +206,24 @@ public class TaskDao {
 	 */
 	public static boolean saveTask(Task task) {
 		boolean isSaved = false;
-
+		Task persistedTask = null;
+		
 		if (task != null) {
+			
+			try {
+				persistedTask = getTaskById(task.getId());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 			try {
-				Task persistedTask = getTaskById(task.getId());
-
 				if (persistedTask == null) {
 					formDao.create(task.getForm());
-					userDao.create(task.getUser());
 					addressDao.create(task.getAddress());
 					taskDao.create(task);
 				}
+				
+				List<Task> t = taskDao.queryForAll();
 
 				isSaved = true;
 			} catch (SQLException e) {
@@ -238,7 +248,6 @@ public class TaskDao {
 
 			try {
 				formDao.update(task.getForm());
-				userDao.update(task.getUser());
 				addressDao.update(task.getAddress());
 				taskDao.update(task);
 

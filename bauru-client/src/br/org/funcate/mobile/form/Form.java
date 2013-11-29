@@ -196,4 +196,17 @@ public class Form implements Serializable {
 		this.pluvialGallery = pluvialGallery;
 	}
 
+	@Override
+	public String toString() {
+		return "Form [id=" + id + ", date=" + date + ", coordx=" + coordx
+				+ ", coordy=" + coordy + ", info1=" + info1 + ", info2="
+				+ info2 + ", numberConfirmation=" + numberConfirmation
+				+ ", variance=" + variance + ", otherNumbers=" + otherNumbers
+				+ ", primaryUse=" + primaryUse + ", secondaryUse="
+				+ secondaryUse + ", pavimentation=" + pavimentation
+				+ ", asphaltGuide=" + asphaltGuide + ", publicIlumination="
+				+ publicIlumination + ", energy=" + energy
+				+ ", pluvialGallery=" + pluvialGallery + "]";
+	}
+
 }

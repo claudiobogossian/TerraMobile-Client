@@ -10,14 +10,13 @@ public class Photo implements Serializable {
 	@DatabaseField(generatedId = true, columnName = "id")
 	private Integer id;
 	@DatabaseField
-	private String blob; //BASE64
+	private String blob; // BASE64
 	@DatabaseField
 	private String path;
 	@DatabaseField(canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
 	private Form form;
 
 	public Photo() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public Photo(Integer id, String blob, String path, Form form) {
@@ -59,5 +58,5 @@ public class Photo implements Serializable {
 	public void setForm(Form form) {
 		this.form = form;
 	}
-	
+
 }

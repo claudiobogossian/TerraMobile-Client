@@ -179,7 +179,7 @@ public class LoginActivity extends Activity {
 				db.resetUserTable(); // clear all registers
 				for (User user : users) {
 					dao.create(user);
-				}				
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -206,6 +206,7 @@ public class LoginActivity extends Activity {
 					ResponseEntity<User[]> response = restTemplate.getForEntity(url, User[].class);
 					User[] users = response.getBody();
 					list = new ArrayList<User>(Arrays.asList(users));
+					self.saveUsersIntoLocalSqlite(list);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -215,7 +216,6 @@ public class LoginActivity extends Activity {
 		}
 
 		protected void onPostExecute(ArrayList<User> users) {
-			saveUsersIntoLocalSqlite(users);
 			self.login();
 		}
 	}

@@ -179,8 +179,6 @@ public class TaskActivity extends Activity {
 		if(tasks != null) {
 			TaskDao.saveTasks(tasks);
 		}
-
-		self.hideLoadMask();
 	}
 
 	/**
@@ -239,10 +237,13 @@ public class TaskActivity extends Activity {
 			ArrayList<Task> list = null;
 
 			for (String url : urls) {
-				try {					
+				try {	
 					ResponseEntity<Task[]> response = restTemplate.getForEntity(url, Task[].class, userHash);
 					Task[] tasks = response.getBody();
 					list = new ArrayList<Task>(Arrays.asList(tasks));
+					
+					//self.setLoadMaskMessage("Salvando tarefas no banco de dados local...");
+					self.saveTasksIntoLocalSqlite(list);
 				} catch (HttpClientErrorException e) {
 					String error = e.getResponseBodyAsString();
 					e.printStackTrace();
@@ -251,6 +252,11 @@ public class TaskActivity extends Activity {
 
 			return list;
 		}
+		
+		@Override
+		protected void onPreExecute() {
+			self.setLoadMaskMessage("Fazendo Download das tarefas...");
+		}
 
 		@Override
 		protected void onProgressUpdate(Void... values) {
@@ -258,7 +264,7 @@ public class TaskActivity extends Activity {
 		}
 
 		protected void onPostExecute(ArrayList<Task> tasks) {
-			self.saveTasksIntoLocalSqlite(tasks);
+			self.hideLoadMask();
 			Log.i("#TASKSERVICE", "DoPostExecute!");
 		}
 	}
@@ -288,6 +294,11 @@ public class TaskActivity extends Activity {
 				try {
 					Task[] responseTasks = restTemplate.postForObject(url, this.tasks, Task[].class, userHash);
 					response = new ArrayList<Task>(Arrays.asList(responseTasks));
+					
+					if(response != null) {
+						//self.setLoadMaskMessage("Excluindo tarefas concluídas...");
+						TaskDao.deleteTasks(tasks);
+					}
 				} catch (HttpClientErrorException e) {
 					String error = e.getResponseBodyAsString();
 					e.printStackTrace();
@@ -295,6 +306,11 @@ public class TaskActivity extends Activity {
 			}
 
 			return response;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			self.setLoadMaskMessage("Enviando o seu trabalho para o servidor...");
 		}
 
 		@Override
@@ -304,11 +320,6 @@ public class TaskActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(List<Task> result) {
-			if(result != null){
-				//TODO: verificar o status para excluir somente quando tiver certeza de que foi salvo remotamente.
-				TaskDao.deleteTasks(tasks);
-			}
-
 			self.getRemoteTasks();
 		}	
 	}
@@ -339,6 +350,12 @@ public class TaskActivity extends Activity {
 				try {
 					Photo[] responsePhotos = restTemplate.postForObject(url, this.photos, Photo[].class, userHash);
 					response = new ArrayList<Photo>(Arrays.asList(responsePhotos));
+					
+					if(response != null) {
+						self.setLoadMaskMessage("Verificando se existem imagens não utilizadas no aparelho...");
+						PhotoDao.deletePhotos(response);
+					}
+					
 				} catch (HttpClientErrorException e) {
 					String error = e.getResponseBodyAsString();
 					e.printStackTrace();
@@ -346,17 +363,21 @@ public class TaskActivity extends Activity {
 			}
 			return response;
 		}
+		
 
 		@Override
-		protected void onProgressUpdate(Void... values) {		
+		protected void onPreExecute() {
+			self.setLoadMaskMessage("Fazendo Upload das fotos...");
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
 			Log.i(self.LOG_TAG, " Progress: " + values);
 		}
 
 		@Override
 		protected void onPostExecute(List<Photo> result) {
-			if(result != null) {
-				PhotoDao.deletePhotos(result);
-			}
+			self.hideLoadMask();
 		}	
 	}
 
@@ -366,6 +387,10 @@ public class TaskActivity extends Activity {
 
 	public void showLoadingMask(String message) {
 		dialog = ProgressDialog.show(TaskActivity.this, "", message, true);
+	}
+	
+	public void setLoadMaskMessage(String message) {
+		//this.dialog.setMessage(message);
 	}
 
 	public void hideLoadMask() {
