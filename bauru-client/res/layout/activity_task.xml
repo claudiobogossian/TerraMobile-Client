@@ -5,31 +5,86 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/geoform_lay2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_general_informations"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.06"
+                android:gravity="left"
+                android:text="@string/txt_count_incompleted_tasks"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/txt_count_incompleted_tasks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.06"
+                android:gravity="left|right"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/red" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.06"
+                android:gravity="left"
+                android:text="@string/txt_count_not_sync"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/txt_count_completed_tasks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.06"
+                android:gravity="left"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/green" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/buttons_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:background="@color/cinza3"
-        android:paddingTop="3dp"
+        android:background="@color/white"
+        android:gravity="bottom"
+        android:orientation="vertical"
         android:weightSum="1" >
 
         <Button
             android:id="@+id/btn_get_tasks"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
             android:drawableLeft="@drawable/ico_update"
             android:gravity="center_vertical|left"
             android:text="@string/btn_sync_tasks" />
-    </LinearLayout>
-
-    <!-- Name Label -->
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:background="@color/cinza3" >
 
         <Button
             android:id="@+id/btn_get_tiles"
@@ -38,15 +93,6 @@
             android:drawableLeft="@drawable/map"
             android:gravity="center_vertical|left"
             android:text="@string/btn_sync_tiles" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="348dp"
-        android:background="@color/cinza3"
-        android:gravity="bottom"
-        android:orientation="vertical" >
 
         <Button
             android:id="@+id/btnLogout"
@@ -57,15 +103,6 @@
             android:text="@string/btn_logout" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/lblName"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dip"
-        android:layout_marginTop="40dip"
-        android:singleLine="true" />
-
-    
     <!-- Button to show session data -->
 
 </LinearLayout>

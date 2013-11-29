@@ -42,6 +42,9 @@ public class TaskActivity extends Activity {
 	private final String LOG_TAG = "#" + getClass().getSimpleName();
 	private final String hostUrl = "http://200.144.100.34:8080/";
 
+	private TextView txtIncompleteTasks;
+	private TextView txtNotSyncRegisters;
+
 	private ProgressDialog dialog;
 	private TaskActivity self = this;
 
@@ -54,8 +57,16 @@ public class TaskActivity extends Activity {
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_task);
 
-		Button btn_get_tasks = (Button) findViewById(R.id.btn_get_tasks);
+		txtIncompleteTasks = (TextView) findViewById(R.id.txt_count_incompleted_tasks);
+		txtNotSyncRegisters = (TextView) findViewById(R.id.txt_count_completed_tasks);
 
+		this.setButtonsListeners();
+		this.initializeRestTemplate();
+		this.updateCountLabels();
+	}
+
+	public void setButtonsListeners() {
+		Button btn_get_tasks = (Button) findViewById(R.id.btn_get_tasks);
 		btn_get_tasks.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -75,9 +86,8 @@ public class TaskActivity extends Activity {
 		});
 
 		String name = SessionManager.getUserName();
-		TextView lblName = (TextView) findViewById(R.id.lblName);
-		lblName.setText(Html.fromHtml("Nome: <b>" + name + "</b>"));
 		Button btnLogout = (Button) findViewById(R.id.btnLogout);
+		btnLogout.setText(Html.fromHtml("Sair <b>" + name + "</b>"));
 		btnLogout.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -89,7 +99,6 @@ public class TaskActivity extends Activity {
 		});
 
 		Button btn_get_tiles = (Button) findViewById(R.id.btn_get_tiles);
-
 		btn_get_tiles.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -107,15 +116,17 @@ public class TaskActivity extends Activity {
 				}
 			}
 		});
+	}
 
+	public void initializeRestTemplate() {
 		this.restTemplate = new RestTemplate();
 
 		// Add converters, Note I use the Jackson Converter, I removed the http form converter  because it is not needed when posting String, used for multipart forms.
-	    this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-	    this.restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+		this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+		this.restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 
 		// Set the request factory IMPORTANT: This section I had to add for POST request. Not needed for GET
-	    this.restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+		this.restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 	}
 
 	/**
@@ -124,6 +135,19 @@ public class TaskActivity extends Activity {
 	public void getTiles()
 	{
 		new ServiceBaseMap().getRemoteZipBaseMap();
+	}
+
+	/**
+	 * 
+	 *  Update the labels that show to user the count of registers on the local database.
+	 *
+	 */
+	public void updateCountLabels() {
+		String incompletedTasks = "" + TaskDao.getCountOfIncompletedTasks();
+		String completedTasks = "" + TaskDao.getCountOfCompletedTasks();
+
+		txtIncompleteTasks.setText(incompletedTasks);
+		txtNotSyncRegisters.setText(completedTasks);
 	}
 
 	/**
@@ -259,7 +283,7 @@ public class TaskActivity extends Activity {
 		@Override
 		protected List<Task> doInBackground(String... urls) {
 			List<Task> response = null;
- 			
+
 			for (String url : urls) {
 				try {
 					Task[] responseTasks = restTemplate.postForObject(url, this.tasks, Task[].class, userHash);
@@ -269,7 +293,7 @@ public class TaskActivity extends Activity {
 					e.printStackTrace();
 				}
 			}
-			
+
 			return response;
 		}
 
@@ -330,12 +354,12 @@ public class TaskActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(List<Photo> result) {
-			if(result != null){
+			if(result != null) {
 				PhotoDao.deletePhotos(result);
 			}
 		}	
 	}
-	
+
 	public void showLoadingMask() {
 		dialog = ProgressDialog.show(TaskActivity.this, "", "Carregando, aguarde...", true);
 	}
@@ -346,6 +370,7 @@ public class TaskActivity extends Activity {
 
 	public void hideLoadMask() {
 		dialog.hide();
+		this.updateCountLabels();
 	}
 
 }

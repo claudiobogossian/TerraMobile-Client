@@ -61,6 +61,10 @@
     <color name="background_cor6">#CCCCCC</color>
     <color name="background_cor7">#104E8B</color>
     <color name="background_cor8">#C11B17</color>
+    
     <string name="btn_sync_tiles">Baixar mapa de base</string>
+    <string name="txt_general_informations">Informações Gerais</string>
+    <string name="txt_count_incompleted_tasks">Tarefas Incompletas:</string>
+    <string name="txt_count_not_sync">Tarefas completas:</string>
 
 </resources>

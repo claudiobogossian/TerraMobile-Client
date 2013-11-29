@@ -750,7 +750,7 @@
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/geoform_lay2"
+        android:id="@+id/buttons_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
