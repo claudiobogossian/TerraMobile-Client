@@ -74,6 +74,7 @@ public class TaskActivity extends Activity {
 					try {
 						self.showLoadingMask();
 						self.saveTasksOnServer();
+						self.savePhotosOnServer();
 					} catch (Exception e) {
 						self.hideLoadMask();
 						e.printStackTrace();
@@ -352,7 +353,7 @@ public class TaskActivity extends Activity {
 					response = new ArrayList<Photo>(Arrays.asList(responsePhotos));
 					
 					if(response != null) {
-						self.setLoadMaskMessage("Verificando se existem imagens não utilizadas no aparelho...");
+						//self.setLoadMaskMessage("Verificando se existem imagens não utilizadas no aparelho...");
 						PhotoDao.deletePhotos(response);
 					}
 					
@@ -367,7 +368,7 @@ public class TaskActivity extends Activity {
 
 		@Override
 		protected void onPreExecute() {
-			self.setLoadMaskMessage("Fazendo Upload das fotos...");
+			//self.setLoadMaskMessage("Fazendo Upload das fotos...");
 		}
 
 		@Override
@@ -377,7 +378,7 @@ public class TaskActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(List<Photo> result) {
-			self.hideLoadMask();
+			//self.hideLoadMask();
 		}	
 	}
 

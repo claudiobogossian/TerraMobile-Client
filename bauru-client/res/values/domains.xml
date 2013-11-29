@@ -10,9 +10,9 @@
     
     <string-array name="variance"> 
         <item></item>
-        <item>desmembrado</item>
-        <item>anexado</item>
-        <item>desconforme</item>
+        <item>Desmembrado</item>
+        <item>Anexado</item>
+        <item>Desconforme</item>
     </string-array>
     
     <string-array name="primary_use">
@@ -36,15 +36,15 @@
     
     <string-array name="yes_no_parcial">
         <item></item>
-        <item>sim</item>
-        <item>não</item>
-        <item>parcial</item>
+        <item>Sim</item>
+        <item>Não</item>
+        <item>Parcial</item>
     </string-array>
     
     <string-array name="yes_no">
         <item></item>
-        <item>sim</item>
-        <item>não</item>
+        <item>Sim</item>
+        <item>Não</item>
     </string-array>
 
 </resources>

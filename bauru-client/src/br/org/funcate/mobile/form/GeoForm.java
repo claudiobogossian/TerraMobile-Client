@@ -261,10 +261,14 @@ public class GeoForm extends Activity implements LocationListener{
 		edtNumber = (EditText) findViewById(R.id.cp_num);
 		lat = (TextView) findViewById(R.id.cp_lat);
 		lon = (TextView) findViewById(R.id.cp_lon);
+		
+		/*
 		edtCity = (EditText) findViewById(R.id.cp_cit);
 		edtState = (EditText) findViewById(R.id.cp_est);
 		edtInformation1 = (EditText) findViewById(R.id.cp_if1);
 		edtInformation2 = (EditText) findViewById(R.id.cp_if2);	
+		*/
+		
 		edtOtherNumbers = (EditText) findViewById(R.id.edt_other_numbers);
 
 		// Spinners

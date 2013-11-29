@@ -316,6 +316,8 @@
                         </LinearLayout>
                     </TableRow>
 
+                    
+                    <!--  
                     <TableRow
                         android:id="@+id/geoform_tr_stub1"
                         android:layout_width="fill_parent"
@@ -349,6 +351,7 @@
                         </LinearLayout>
                     </TableRow>
 
+                    
                     <TableRow
                         android:id="@+id/geoform_tr_stub2"
                         android:layout_width="fill_parent"
@@ -462,6 +465,11 @@
                         </LinearLayout>
                     </TableRow>
 
+
+ -->
+ 
+ 
+ 
                     <TableRow
                         android:id="@+id/geoform_tr_stub3"
                         android:layout_width="fill_parent"
