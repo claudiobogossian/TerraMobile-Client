@@ -1,13 +1,11 @@
 package br.org.funcate.mobile.address;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +44,7 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
 	}
 
 	@Override
-	public void bindView(View v, Context ctx, Cursor c) {
+	public void bindView(View v, Context ctx, Cursor c) {	
 		TextView name_text1 = (TextView) v.findViewById(R.id.item_log);
 		name_text1.setText(c.getString(c.getColumnIndex("name")));
 		
@@ -103,13 +101,6 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
 		} else {
 			addressQueryBuilder.query();
 		}
-		
-		
-		List<Task> tasks = taskDao.queryForAll();
-		Log.d(LOG_TAG, " LENGHT: " + tasks.size());
-		
-		String query = addressQueryBuilder.prepareStatementString();
-		Log.d(LOG_TAG, " QUERY: " + query);
 		
 		CloseableIterator<Address> iterator = null;
 		Cursor cursor = null;

@@ -14,7 +14,7 @@ public class Task implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@DatabaseField(generatedId = true, allowGeneratedIdInsert = true,  columnName = "id")
+	@DatabaseField(columnName = "_id", generatedId = true, canBeNull = false, allowGeneratedIdInsert = true)
 	private Integer id;
 	@DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true, maxForeignAutoRefreshLevel = 3)
 	private Address address;

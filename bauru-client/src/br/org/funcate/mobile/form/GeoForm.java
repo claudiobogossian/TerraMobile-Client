@@ -35,6 +35,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.address.AddressAdapter;
@@ -58,38 +59,59 @@ public class GeoForm extends Activity implements LocationListener{
 	private static final int PHOTO = 102;
 
 	//private Task task;
-	
+
 	private Location currentLocation = null;
-	
+
 	// widgets
 	private AutoCompleteTextView address;
-	private EditText neighborhood, postalCode, number, city, state, information1, information2;
+
+	private EditText 
+		edtNeighborhood, 
+		edtPostalCode, 
+		edtNumber, 
+		edtCity, 
+		edtState, 
+		edtInformation1, 
+		edtInformation2, 
+		edtOtherNumbers;
+
+	private Spinner 
+		spnNumberConfirmation, 
+		spnVariance, 
+		spnPrimaryUse,
+		spnSecondaryUse, 
+		spnPavimentation, 
+		spnAsphaltGuide, 
+		spnPublicIlumination, 
+		spnEnergy, 
+		spnPluvialGallery;
+
 	private TextView lat, lon;
 	private ImageButton button_clear;
 	private Button buttonCancel, buttonOk, buttonPhoto;
 	private LocationManager locationManager;
 
 	private GeoForm self = this;
-	
-	private Task task; 
+
+	private static Task task;
 	private List<Photo> photos;
-	
+
 	private DatabaseAdapter db;
 	private Dao<Task, Integer> taskDao;
 
 	private ProgressDialog dialog;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_geoform);
-		
+
 		db = DatabaseHelper.getDatabase();
 		taskDao = db.getTaskDao();
-		
+
 		photos = new ArrayList<Photo>();
-		
+
 		task = (Task) getIntent().getSerializableExtra("task");
 
 		try {
@@ -97,50 +119,35 @@ public class GeoForm extends Activity implements LocationListener{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		// linking widgets
-		address = (AutoCompleteTextView) findViewById(R.id.cp_log);
-		neighborhood = (EditText) findViewById(R.id.cp_nh);
-		postalCode = (EditText) findViewById(R.id.cp_cep);
-		number = (EditText) findViewById(R.id.cp_num);
-		lat = (TextView) findViewById(R.id.cp_lat);
-		lon = (TextView) findViewById(R.id.cp_lon);
-		city = (EditText) findViewById(R.id.cp_cit);
-		state = (EditText) findViewById(R.id.cp_est);
-		information1 = (EditText) findViewById(R.id.cp_if1);
-		information2 = (EditText) findViewById(R.id.cp_if2);	
-		
-		button_clear = (ImageButton) findViewById(R.id.cp_button_clear);
-		buttonCancel = (Button) findViewById(R.id.cp_button_cancel);
-		buttonOk = (Button) findViewById(R.id.cp_button_ok);
-		buttonPhoto = (Button) findViewById(R.id.cp_button_photo);
-		
+
+		self.mapFieldsToObjects();
+
 		buttonPhoto.setEnabled(false);
 		buttonOk.setEnabled(false);
-		
+
 		if(task != null){
 			lat.setText("" + task.getAddress().getCoordx());
 			lon.setText("" + task.getAddress().getCoordy());
 			address.setText(task.getAddress().getName());
-			neighborhood.setText(task.getAddress().getNeighborhood());
-			postalCode.setText(task.getAddress().getPostalCode());
-			number.setText(task.getAddress().getNumber());
-			city.setText(task.getAddress().getCity());
-			state.setText(task.getAddress().getState());
-			information1.setText(task.getForm().getInfo1());
-			information2.setText(task.getForm().getInfo2());
-			
+			edtNeighborhood.setText(task.getAddress().getNeighborhood());
+			edtPostalCode.setText(task.getAddress().getPostalCode());
+			edtNumber.setText(task.getAddress().getNumber());
+			edtCity.setText(task.getAddress().getCity());
+			edtState.setText(task.getAddress().getState());
+			edtInformation1.setText(task.getForm().getInfo1());
+			edtInformation2.setText(task.getForm().getInfo2());
+
 			if(task.getId() != null){
 				buttonOk.setEnabled(true);
 			}
 		}
-		
+
 		// Database query can be a time consuming task, so its safe to call database query in another thread
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-            	Cursor cursor;
-            	
+		new Handler().post(new Runnable() {
+			@Override
+			public void run() {
+				Cursor cursor;
+
 				try {
 					cursor = AddressAdapter.getAddressCursor(null);
 					self.setAutoCompleteAdapterPropertiers(cursor);
@@ -148,21 +155,32 @@ public class GeoForm extends Activity implements LocationListener{
 					Log.e(self.LOG_TAG, "ERRO AO CRIAR CURSOR!" + e.getMessage());
 					e.printStackTrace();
 				}
-            }
-        });
-		
+			}
+		});
+
+		self.setButtonsListeners();
+	}
+
+
+	/**
+	 * 
+	 * 
+	 * @author Paulo Luan
+	 * */
+	public void setButtonsListeners() {
+
 		button_clear.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				address.setText("");
-				neighborhood.setText("");
-				postalCode.setText("");
+				edtNeighborhood.setText("");
+				edtPostalCode.setText("");
 				address.setInputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS);
-				postalCode.setInputType(InputType.TYPE_NULL);
+				edtPostalCode.setInputType(InputType.TYPE_NULL);
 				address.setEnabled(true);
-				postalCode.setEnabled(false);
+				edtPostalCode.setEnabled(false);
 				address.requestFocus();
-				
+
 				buttonPhoto.setEnabled(false);
 				buttonOk.setEnabled(false);
 			}
@@ -207,97 +225,160 @@ public class GeoForm extends Activity implements LocationListener{
 
 			private void validate() {
 				boolean isSaved = false;
-				
-				Form form = task.getForm();
-				
+
 				self.showLoadingMask();
-				
-				if (currentLocation != null) {
-					lat.setText("" + currentLocation.getLatitude());
-					lon.setText("" + currentLocation.getLongitude());
-				}
-				
-				String info1 = information1.getText().toString();
-				String info2 = information2.getText().toString();
-				double coordx = currentLocation.getLatitude();
-				double coordy = currentLocation.getLongitude();
-				
-				form.setInfo1(info1);
-				form.setInfo2(info2);
-				form.setCoordx(coordx);
-				form.setCoordy(coordy);
-				form.setDate(new Date());
-				
+				self.setFormPropertiesWithFields();		
 				task.setDone(true);
-				
-				isSaved = TaskDao.saveTask(task);
+
+				isSaved = TaskDao.updateTask(task);
 				isSaved = PhotoDao.savePhotos(photos);
 
 				Intent data = new Intent();
-				
+
 				if(isSaved) {
 					data.putExtra("RESULT", "Registro salvo!");
 				} else {
 					data.putExtra("RESULT", "Registro não foi salvo!");
 				}
-				
+
 				setResult(RESULT_OK, data);
 				finish();
 			}
 		});
 	}
+
+
+	/**
+	 * 
+	 * 
+	 * @author Paulo Luan
+	 * */
+	private void mapFieldsToObjects() {
+		// EditTexts
+		address = (AutoCompleteTextView) findViewById(R.id.cp_log);
+		edtNeighborhood = (EditText) findViewById(R.id.cp_nh);
+		edtPostalCode = (EditText) findViewById(R.id.cp_cep);
+		edtNumber = (EditText) findViewById(R.id.cp_num);
+		lat = (TextView) findViewById(R.id.cp_lat);
+		lon = (TextView) findViewById(R.id.cp_lon);
+		edtCity = (EditText) findViewById(R.id.cp_cit);
+		edtState = (EditText) findViewById(R.id.cp_est);
+		edtInformation1 = (EditText) findViewById(R.id.cp_if1);
+		edtInformation2 = (EditText) findViewById(R.id.cp_if2);	
+		edtOtherNumbers = (EditText) findViewById(R.id.edt_other_numbers);
+
+		// Spinners
+		spnNumberConfirmation = (Spinner) findViewById(R.id.spnNumberConfirmation);
+		spnVariance = (Spinner) findViewById(R.id.spnVariance);
+		spnPrimaryUse = (Spinner) findViewById(R.id.spnPrimaryUse);
+		spnSecondaryUse = (Spinner) findViewById(R.id.spnSecundaryUse);
+		spnPavimentation = (Spinner) findViewById(R.id.spnPavimentation);
+		spnAsphaltGuide = (Spinner) findViewById(R.id.spnAsphaltGuides);
+		spnPublicIlumination = (Spinner) findViewById(R.id.spnPublicIllumination);
+		spnEnergy = (Spinner) findViewById(R.id.spnEletricEnergy);
+		spnPluvialGallery = (Spinner) findViewById(R.id.spnPluvialGalery);
+
+		// Buttons 
+		button_clear = (ImageButton) findViewById(R.id.cp_button_clear);
+		buttonCancel = (Button) findViewById(R.id.cp_button_cancel);
+		buttonOk = (Button) findViewById(R.id.cp_button_ok);
+		buttonPhoto = (Button) findViewById(R.id.cp_button_photo);
+	}
+
+
+	/**
+	 * 
+	 * 
+	 * @author Paulo Luan
+	 * */
+	public void setFormPropertiesWithFields(){
+		Form form = task.getForm();
+
+		Double coordx = null;
+		Double coordy = null;
+
+		if(currentLocation != null) {
+			coordx = currentLocation.getLatitude();
+			coordy = currentLocation.getLongitude();
+		}
+
+		form.setCoordx(coordx);
+		form.setCoordy(coordy);
+
+		form.setDate(new Date());
+
+		form.setInfo1(edtInformation1.getText().toString()); 
+		form.setInfo2(edtInformation2.getText().toString()); 
+		form.setOtherNumbers(edtOtherNumbers.getText().toString());
+
+		form.setNumberConfirmation(spnNumberConfirmation.getSelectedItem().toString());
+		form.setVariance(spnVariance.getSelectedItem().toString());
+		form.setPrimaryUse(spnPrimaryUse.getSelectedItem().toString());
+		form.setSecondaryUse(spnSecondaryUse.getSelectedItem().toString());
+		form.setPavimentation(spnPavimentation.getSelectedItem().toString());
+		form.setAsphaltGuide(spnAsphaltGuide.getSelectedItem().toString());
+		form.setPublicIlumination(spnPublicIlumination.getSelectedItem().toString());
+		form.setEnergy(spnEnergy.getSelectedItem().toString());
+		form.setPluvialGallery(spnPluvialGallery.getSelectedItem().toString());
+	}
 	
+	/**
+	 * 
+	 * 
+	 * @author Paulo Luan
+	 * */
 	public void setAutoCompleteAdapterPropertiers(Cursor cursor){
 
 		AddressAdapter addressAdapter = new AddressAdapter(GeoForm.this,
 				R.layout.item_list, 
 				cursor,
-				new String[] { "name", "postalCode", "number", "neighborhood"},
+				new String[] { "name", "edtPostalCode", "edtNumber", "edtNeighborhood"},
 				new int[] {R.id.item_log, R.id.item_cep, R.id.item_neighborhood }
-		);
+				);
 
-        address.setAdapter(addressAdapter);
+		address.setAdapter(addressAdapter);
 		address.setHint("pesquisar...");
 		address.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> adapter, View view, int position, long addressId) {
 				try {
-					
-					task = taskDao.queryForId((int) id);
-					
+					task = taskDao.queryBuilder().where()
+							.eq("address_id", addressId)
+							.queryForFirst();
+
 					if(task != null) {
 						TextView t1 = (TextView) view.findViewById(R.id.item_log);
 						String logvalue = t1.getText().toString();
 						address.setText(logvalue);
-						
+
 						TextView t2 = (TextView) view.findViewById(R.id.item_cep);
 						String[] split1 = t2.getText().toString().split(" ");
 						String cepvalue;
-						
+
 						if (split1[1].compareTo("---") == 0) {
 							cepvalue = "";
 						} else {
 							cepvalue = split1[1];
 						}
-						
-						postalCode.setText(cepvalue);
-						
-						TextView txt_number = (TextView) view.findViewById(R.id.item_number);
-						number.setText(txt_number.getText().toString());
+
+						edtPostalCode.setText(cepvalue);
+
+						TextView txt_edtNumber = (TextView) view.findViewById(R.id.item_number);
+						edtNumber.setText(txt_edtNumber.getText().toString());
 
 						TextView txt_neighborhood = (TextView) view.findViewById(R.id.item_neighborhood);
-						neighborhood.setText(txt_neighborhood.getText().toString());
-						
+						edtNeighborhood.setText(txt_neighborhood.getText().toString());
+
 						address.setInputType(InputType.TYPE_NULL);
-						postalCode.setInputType(InputType.TYPE_NULL);
+						edtPostalCode.setInputType(InputType.TYPE_NULL);
 
 						address.clearFocus();
 						address.setEnabled(false);
-						postalCode.setEnabled(false);
+						edtPostalCode.setEnabled(false);
 
 						InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 						mgr.hideSoftInputFromWindow(address.getWindowToken(), 0);
-						
+
 						buttonPhoto.setEnabled(true);
 						buttonOk.setEnabled(true);
 					}					
@@ -306,7 +387,45 @@ public class GeoForm extends Activity implements LocationListener{
 				}
 			}
 		});
-	}	
+	}
+
+	/**
+	 * 
+	 * Cleat all fields, and select the null fields of Spinners.
+	 * 
+	 * @param String filePath
+	 * 		 The path of the image that you want to get the base.
+	 * 
+	 * */
+	public void clearAllFields(){
+		edtNeighborhood.setText("");
+		edtPostalCode.setText("");
+		edtNumber.setText(""); 
+		edtCity.setText(""); 
+		edtState.setText(""); 
+		edtInformation1.setText(""); 
+		edtInformation2.setText(""); 
+		edtOtherNumbers.setText("");
+
+		spnNumberConfirmation.setSelection(0); 
+		spnVariance.setSelection(0); 
+		spnPrimaryUse.setSelection(0);
+		spnSecondaryUse.setSelection(0); 
+		spnPavimentation.setSelection(0); 
+		spnAsphaltGuide.setSelection(0); 
+		spnPublicIlumination.setSelection(0); 
+		spnEnergy.setSelection(0); 
+		spnPluvialGallery.setSelection(0);
+	}
+
+	/**
+	 * 
+	 *  Populates the fields based on the last completed form.
+	 * 
+	 * */
+	public void setFieldsWithLastForm(){
+
+	}
 
 	/**
 	 * 
@@ -318,28 +437,28 @@ public class GeoForm extends Activity implements LocationListener{
 	 * */
 	public String getBytesFromImage(String filePath) {
 		String imgString;
-		
+
 		File imagefile = new File(filePath);
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(imagefile);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-	    
-        Bitmap bitmap = BitmapFactory.decodeStream(fis);
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(imagefile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+		Bitmap bitmap = BitmapFactory.decodeStream(fis);
 		bitmap.compress(CompressFormat.JPEG, 70, stream);
-	    
+
 		byte[] imageBytes = stream.toByteArray();
-	    
-	    // get the base 64 string
+
+		// get the base 64 string
 		imgString = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
-	    
-	    return imgString;	
+
+		return imgString;	
 	}
-	
+
 	/**
 	 * 
 	 * Callback of the PhotoActivity
@@ -350,18 +469,18 @@ public class GeoForm extends Activity implements LocationListener{
 		if (requestCode == PHOTO) {
 			if (resultCode == RESULT_OK) {
 				Photo photo = new Photo();
-				
+
 				String photoPath = data.getExtras().getString("RESULT");
 				String blob = self.getBytesFromImage(photoPath);
-				
+
 				photo.setPath(photoPath);
 				photo.setBlob(blob);
 				photo.setForm(task.getForm());
-				
+
 				locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 				Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-				
+
 				if (location != null) {
 					lat.setText("" + location.getLatitude());
 					lon.setText("" + location.getLongitude());
@@ -370,9 +489,9 @@ public class GeoForm extends Activity implements LocationListener{
 					lat.setText("Location not available");
 					lon.setText("Location not available");
 				}
-				
+
 				photos.add(photo);
-				
+
 			} else if (resultCode == RESULT_CANCELED) {
 			}
 		}

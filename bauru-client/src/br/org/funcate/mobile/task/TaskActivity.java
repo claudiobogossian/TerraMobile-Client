@@ -219,7 +219,8 @@ public class TaskActivity extends Activity {
 					ResponseEntity<Task[]> response = restTemplate.getForEntity(url, Task[].class, userHash);
 					Task[] tasks = response.getBody();
 					list = new ArrayList<Task>(Arrays.asList(tasks));
-				} catch (Exception e) {
+				} catch (HttpClientErrorException e) {
+					String error = e.getResponseBodyAsString();
 					e.printStackTrace();
 				}
 			}
@@ -268,6 +269,7 @@ public class TaskActivity extends Activity {
 					e.printStackTrace();
 				}
 			}
+			
 			return response;
 		}
 
@@ -313,7 +315,8 @@ public class TaskActivity extends Activity {
 				try {
 					Photo[] responsePhotos = restTemplate.postForObject(url, this.photos, Photo[].class, userHash);
 					response = new ArrayList<Photo>(Arrays.asList(responsePhotos));
-				} catch (Exception e) {
+				} catch (HttpClientErrorException e) {
+					String error = e.getResponseBodyAsString();
 					e.printStackTrace();
 				}
 			}

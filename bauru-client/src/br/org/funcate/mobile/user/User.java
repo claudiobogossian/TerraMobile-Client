@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.j256.ormlite.field.DatabaseField;
 
 public class User implements Serializable {
-	@DatabaseField(generatedId = true, columnName = "id")
+	@DatabaseField(generatedId = true, columnName = "id", allowGeneratedIdInsert = true)
 	private Integer id;
 	@DatabaseField
 	private String name;

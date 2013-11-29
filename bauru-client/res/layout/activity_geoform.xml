@@ -84,7 +84,7 @@
                         android:layout_weight="0.5"
                         android:drawableLeft="@drawable/ico_foto"
                         android:gravity="center_vertical|left"
-                        android:text="@string/btn_get_photo"/>
+                        android:text="@string/btn_get_photo" />
                 </LinearLayout>
 
                 <TableLayout
@@ -541,7 +541,7 @@
                             <!-- Números encontrados: texto com até 24 caracteres, caso exista mais de uma numeração. -->
 
                             <EditText
-                                android:id="@+id/edt_numbers_found"
+                                android:id="@+id/edt_other_numbers"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -593,22 +593,48 @@
                             android:text="@string/tv_secondary_use"
                             android:textColor="@color/black" />
 
-<!--                         <LinearLayout -->
-<!--                             android:layout_width="fill_parent" -->
-<!--                             android:layout_height="wrap_content" -->
-<!--                             android:layout_weight="1" -->
-<!--                             android:weightSum="1" > -->
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:weightSum="1" >
 
-<!--                             <Spinner -->
-<!--                             android:id="@+id/spnSecundaryUse" -->
-<!--                             android:layout_width="fill_parent" -->
-<!--                             android:layout_height="wrap_content" -->
-<!--                             android:entries="@array/number_confirmation" /> -->
-<!--                         </LinearLayout> -->
+                            <Spinner
+                                android:id="@+id/spnSecundaryUse"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:entries="@array/primary_use" />
+                        </LinearLayout>
                     </TableRow>
 
                     <TableRow
-                        android:id="@+id/geoform_tr_stub8"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:weightSum="1" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:text="@string/tv_pavimentation"
+                            android:textColor="@color/black" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:weightSum="1" >
+
+                            <Spinner
+                                android:id="@+id/spnPavimentation"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:entries="@array/pavement" />
+                        </LinearLayout>
+                    </TableRow>
+
+                    <TableRow
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -636,7 +662,6 @@
                     </TableRow>
 
                     <TableRow
-                        android:id="@+id/geoform_tr_stub9"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
