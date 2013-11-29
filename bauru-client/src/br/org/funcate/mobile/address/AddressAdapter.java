@@ -25,7 +25,6 @@ import com.j256.ormlite.stmt.QueryBuilder;
 
 public class AddressAdapter extends CursorAdapter implements Filterable {
 
-	@SuppressWarnings("unused")
 	private static final String LOG_TAG = "#AddressAdapter";
 
 	private final Context context;
