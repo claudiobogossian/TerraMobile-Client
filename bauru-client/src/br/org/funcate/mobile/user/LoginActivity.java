@@ -227,5 +227,6 @@ public class LoginActivity extends Activity {
 
 	public void hideLoadMask() {
 		dialog.hide();
+		dialog.cancel();
 	}
 }

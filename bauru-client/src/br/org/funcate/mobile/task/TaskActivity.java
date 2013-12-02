@@ -398,6 +398,7 @@ public class TaskActivity extends Activity {
 
 	public void hideLoadMask() {
 		dialog.hide();
+		dialog.cancel();
 		this.updateCountLabels();
 	}
 
