@@ -1,6 +1,3 @@
-
-
-
 package br.org.funcate.mobile.database;
 
 import java.sql.SQLException;
@@ -46,25 +43,25 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 	private Dao<User, Integer> userDao = null;
 	private Dao<Address, Integer> addressDao = null;
 
-//	private static DatabaseAdapter instance;
+	//	private static DatabaseAdapter instance;
 
 	public DatabaseAdapter(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
 		try {
 			this.createDaos();
-			this.dropTables();
-			this.createTables();
+//			this.dropTables();
+//			this.createTables();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-//	public static DatabaseAdapter getInstance(Context context) {
-//		if (instance == null)
-//			instance = new DatabaseAdapter(context);
-//		return instance;
-//	}
+	//	public static DatabaseAdapter getInstance(Context context) {
+	//		if (instance == null)
+	//			instance = new DatabaseAdapter(context);
+	//		return instance;
+	//	}
 
 	public void createDaos() throws SQLException {
 		taskDao = getDao(Task.class);
@@ -120,7 +117,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 				e.printStackTrace();
 			}
 		}
-		
+
 		try {
 			this.dropTables();
 			this.createTables();
@@ -148,7 +145,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 		TableUtils.createTable(connectionSource, Form.class);
 		TableUtils.createTable(connectionSource, Task.class);
 	}
-	
+
 	/**
 	 * Clear all user registers, by droping and recreating the user table. 
 	 * 

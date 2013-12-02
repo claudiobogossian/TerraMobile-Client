@@ -267,4 +267,17 @@ public class TaskDao {
 		}
 		return task;
 	}
+
+	public static Task getTaskByAddressId(int addressId) {
+		Task task = null;
+		
+		try {
+			task = taskDao.queryBuilder().where()
+					.eq("address_id", addressId)
+					.queryForFirst();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return task;
+	}
 }

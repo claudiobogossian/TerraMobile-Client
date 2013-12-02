@@ -40,7 +40,6 @@ import android.widget.TextView;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.address.AddressAdapter;
 import br.org.funcate.mobile.database.DatabaseAdapter;
-import br.org.funcate.mobile.database.DatabaseHelper;
 import br.org.funcate.mobile.photo.Photo;
 import br.org.funcate.mobile.photo.PhotoActivity;
 import br.org.funcate.mobile.photo.PhotoDao;
@@ -71,8 +70,8 @@ public class GeoForm extends Activity implements LocationListener{
 		edtNumber, 
 		edtCity, 
 		edtState, 
-		edtInformation1, 
-		edtInformation2, 
+		//edtInformation1, 
+		//edtInformation2, 
 		edtOtherNumbers;
 
 	private Spinner 
@@ -88,16 +87,18 @@ public class GeoForm extends Activity implements LocationListener{
 
 	private TextView lat, lon;
 	private ImageButton button_clear;
-	private Button buttonCancel, buttonOk, buttonPhoto;
+	
+	private Button 
+		buttonCancel, 
+		buttonOk, 
+		buttonPhoto;
+	
 	private LocationManager locationManager;
 
 	private GeoForm self = this;
 
 	private static Task task;
 	private List<Photo> photos;
-
-	private DatabaseAdapter db;
-	private Dao<Task, Integer> taskDao;
 
 	private ProgressDialog dialog;
 
@@ -106,9 +107,6 @@ public class GeoForm extends Activity implements LocationListener{
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_geoform);
-
-		db = DatabaseHelper.getDatabase();
-		taskDao = db.getTaskDao();
 
 		photos = new ArrayList<Photo>();
 
@@ -125,22 +123,7 @@ public class GeoForm extends Activity implements LocationListener{
 		buttonPhoto.setEnabled(false);
 		buttonOk.setEnabled(false);
 
-		if(task != null){
-			lat.setText("" + task.getAddress().getCoordx());
-			lon.setText("" + task.getAddress().getCoordy());
-			address.setText(task.getAddress().getName());
-			edtNeighborhood.setText(task.getAddress().getNeighborhood());
-			edtPostalCode.setText(task.getAddress().getPostalCode());
-			edtNumber.setText(task.getAddress().getNumber());
-			edtCity.setText(task.getAddress().getCity());
-			edtState.setText(task.getAddress().getState());
-			edtInformation1.setText(task.getForm().getInfo1());
-			edtInformation2.setText(task.getForm().getInfo2());
-
-			if(task.getId() != null){
-				buttonOk.setEnabled(true);
-			}
-		}
+		this.setFieldsWithTaskProperties(task);
 
 		// Database query can be a time consuming task, so its safe to call database query in another thread
 		new Handler().post(new Runnable() {
@@ -160,7 +143,38 @@ public class GeoForm extends Activity implements LocationListener{
 
 		self.setButtonsListeners();
 	}
+	
+	public void setFieldsWithTaskProperties(Task taskParam) {
+		if(taskParam != null){
+			lat.setText("" + taskParam.getAddress().getCoordx());
+			lon.setText("" + taskParam.getAddress().getCoordy());
+			address.setText(taskParam.getAddress().getName());
+			
+			edtNeighborhood.setText(taskParam.getAddress().getNeighborhood());
+			edtPostalCode.setText(taskParam.getAddress().getPostalCode());
+			edtNumber.setText(taskParam.getAddress().getNumber());
+			edtCity.setText(taskParam.getAddress().getCity());
+			edtState.setText(taskParam.getAddress().getState());  
+			edtOtherNumbers.setText("");
+			
+			spnNumberConfirmation.setSelection(0);
+			spnVariance.setSelection(0); 
+			spnPrimaryUse.setSelection(0);
+			spnSecondaryUse.setSelection(0); 
+			spnPavimentation.setSelection(0); 
+			spnAsphaltGuide.setSelection(0); 
+			spnPublicIlumination.setSelection(0); 
+			spnEnergy.setSelection(0); 
+			spnPluvialGallery.setSelection(0);
+			
+			//edtInformation1.setText(taskParam.getForm().getInfo1());
+			//edtInformation2.setText(taskParam.getForm().getInfo2());
 
+			if(taskParam.getId() != null){
+				buttonOk.setEnabled(true);
+			}
+		}	
+	}
 
 	/**
 	 * 
@@ -227,7 +241,7 @@ public class GeoForm extends Activity implements LocationListener{
 				boolean isSaved = false;
 
 				self.showLoadingMask();
-				self.setFormPropertiesWithFields();		
+				self.setFormPropertiesWithFields(task);		
 				task.setDone(true);
 
 				isSaved = TaskDao.updateTask(task);
@@ -295,8 +309,8 @@ public class GeoForm extends Activity implements LocationListener{
 	 * 
 	 * @author Paulo Luan
 	 * */
-	public void setFormPropertiesWithFields(){
-		Form form = task.getForm();
+	public void setFormPropertiesWithFields(Task taskParam){
+		Form form = taskParam.getForm();
 
 		Double coordx = null;
 		Double coordy = null;
@@ -308,13 +322,8 @@ public class GeoForm extends Activity implements LocationListener{
 
 		form.setCoordx(coordx);
 		form.setCoordy(coordy);
-
 		form.setDate(new Date());
-
-		form.setInfo1(edtInformation1.getText().toString()); 
-		form.setInfo2(edtInformation2.getText().toString()); 
 		form.setOtherNumbers(edtOtherNumbers.getText().toString());
-
 		form.setNumberConfirmation(spnNumberConfirmation.getSelectedItem().toString());
 		form.setVariance(spnVariance.getSelectedItem().toString());
 		form.setPrimaryUse(spnPrimaryUse.getSelectedItem().toString());
@@ -324,6 +333,10 @@ public class GeoForm extends Activity implements LocationListener{
 		form.setPublicIlumination(spnPublicIlumination.getSelectedItem().toString());
 		form.setEnergy(spnEnergy.getSelectedItem().toString());
 		form.setPluvialGallery(spnPluvialGallery.getSelectedItem().toString());
+		
+		//form.setInfo1(edtInformation1.getText().toString()); 
+		//form.setInfo2(edtInformation2.getText().toString()); 
+				
 	}
 	
 	/**
@@ -346,9 +359,7 @@ public class GeoForm extends Activity implements LocationListener{
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view, int position, long addressId) {
 				try {
-					task = taskDao.queryBuilder().where()
-							.eq("address_id", addressId)
-							.queryForFirst();
+					task = TaskDao.getTaskByAddressId((int) addressId);
 
 					if(task != null) {
 						TextView t1 = (TextView) view.findViewById(R.id.item_log);
@@ -406,11 +417,8 @@ public class GeoForm extends Activity implements LocationListener{
 		edtPostalCode.setText("");
 		edtNumber.setText(""); 
 		edtCity.setText(""); 
-		edtState.setText(""); 
-		edtInformation1.setText(""); 
-		edtInformation2.setText(""); 
+		edtState.setText("");  
 		edtOtherNumbers.setText("");
-
 		spnNumberConfirmation.setSelection(0); 
 		spnVariance.setSelection(0); 
 		spnPrimaryUse.setSelection(0);
@@ -420,6 +428,8 @@ public class GeoForm extends Activity implements LocationListener{
 		spnPublicIlumination.setSelection(0); 
 		spnEnergy.setSelection(0); 
 		spnPluvialGallery.setSelection(0);
+		//edtInformation1.setText(""); 
+		//edtInformation2.setText("");
 	}
 
 	/**

@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Main Screen -->
-    <string name="app_name">Funcate Mobile</string>
+    <string name="app_name">Bauru Digital</string>
     <string name="str_lbl_login">Login</string>
     <string name="user_name_hint">Usuário</string>
     <string name="password_hint">Senha</string>
@@ -10,7 +10,7 @@
     <string name="btn_begin">Iniciar</string>
     <string name="btn_exit">Sair</string>
     <string name="lbl_exit">Sair</string>
-    <string name="title_activity_main">Funcate Mobile</string>
+    <string name="title_activity_main">Bauru Digital</string>
     
     <!--  GeoMap Screen -->
     <string name="lbl_new_form">Novo formulárío</string>

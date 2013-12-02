@@ -225,7 +225,7 @@ public class TaskActivity extends Activity {
 	 * @param String... urls
 	 *            URL's that will called.
 	 */
-	private class DownloadTasks extends AsyncTask<String, Void, ArrayList<Task>> {
+	private class DownloadTasks extends AsyncTask<String, Integer, ArrayList<Task>> {
 
 		private String userHash = "";
 
@@ -238,12 +238,13 @@ public class TaskActivity extends Activity {
 			ArrayList<Task> list = null;
 
 			for (String url : urls) {
-				try {	
+				try {
+					self.setLoadMaskMessage("Fazendo Download das tarefas...");
 					ResponseEntity<Task[]> response = restTemplate.getForEntity(url, Task[].class, userHash);
 					Task[] tasks = response.getBody();
 					list = new ArrayList<Task>(Arrays.asList(tasks));
 					
-					//self.setLoadMaskMessage("Salvando tarefas no banco de dados local...");
+					self.setLoadMaskMessage("Salvando tarefas no banco de dados local...");
 					self.saveTasksIntoLocalSqlite(list);
 				} catch (HttpClientErrorException e) {
 					String error = e.getResponseBodyAsString();
@@ -256,11 +257,11 @@ public class TaskActivity extends Activity {
 		
 		@Override
 		protected void onPreExecute() {
-			self.setLoadMaskMessage("Fazendo Download das tarefas...");
+			//self.setLoadMaskMessage("Fazendo Download das tarefas...");
 		}
 
 		@Override
-		protected void onProgressUpdate(Void... values) {
+		protected void onProgressUpdate(Integer... values) {
 			Log.i("#TASKSERVICE", " Progress: " + values);
 		}
 
