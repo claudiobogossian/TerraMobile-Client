@@ -88,13 +88,14 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 			try {
 				connectionSource.saveSpecialConnection(conn);
 				clearSpecial = true;
-				this.createTables();
 			} catch (SQLException e) {
 				throw new IllegalStateException("Could not save special connection", e);
 			}
 		}
 		try {
-//			this.createMockFeatures();
+			this.createTables();
+		} catch(Exception e) {
+			e.printStackTrace();
 		} finally {
 			if (clearSpecial) {
 				connectionSource.clearSpecialConnection(conn);

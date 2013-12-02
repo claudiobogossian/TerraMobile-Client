@@ -132,7 +132,6 @@ public class LoginActivity extends Activity {
 		Dao<User, Integer> dao = db.getUserDao();
 
 		try {
-			List<User> users = dao.queryForAll();
 			User user = dao.queryBuilder().where().eq("hash", hash).queryForFirst();
 
 			if(user != null){
@@ -202,7 +201,7 @@ public class LoginActivity extends Activity {
 			ArrayList<User> list = null;
 
 			for (String url : urls) {
-				try {					
+				try {				
 					ResponseEntity<User[]> response = restTemplate.getForEntity(url, User[].class);
 					User[] users = response.getBody();
 					list = new ArrayList<User>(Arrays.asList(users));
