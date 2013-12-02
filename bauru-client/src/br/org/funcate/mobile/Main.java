@@ -87,13 +87,13 @@ public class Main extends Activity {
 		return true;
 	}
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == GEOMAP) {
-			if (resultCode == RESULT_OK) {
-			} else if (resultCode == RESULT_CANCELED) {
-			}
-		}
-	}
+//	@Override
+//	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//		if (requestCode == GEOMAP) {
+//			if (resultCode == RESULT_OK) {
+//			} else if (resultCode == RESULT_CANCELED) {
+//			}
+//		}
+//	}
 	
 }

@@ -71,7 +71,7 @@ public class LoginActivity extends Activity {
 		bt_exit.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				setResult(RESULT_CANCELED, new Intent());
+//				setResult(RESULT_CANCELED, new Intent());
 				finish();
 			}
 		});
@@ -114,13 +114,6 @@ public class LoginActivity extends Activity {
 		
 	}
 	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		self.hideLoadMask();
-	}
-
-
 	/**
 	 * Verify in the database if exists any users with that hash
 	 * 

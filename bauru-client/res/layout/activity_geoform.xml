@@ -214,13 +214,6 @@
                                 android:contentDescription="@string/app_name"
                                 android:src="@drawable/ico_clear" />
 
-                            <Button
-                                android:id="@+id/btn_search"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="srch" />
-
                         </LinearLayout>
                     </TableRow>
 
