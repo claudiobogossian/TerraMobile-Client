@@ -1,5 +1,6 @@
 package br.org.funcate.mobile.task;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -238,12 +239,12 @@ public class TaskActivity extends Activity {
 			ArrayList<Task> list = null;
 
 			for (String url : urls) {
-				try {	
+				try {
 					ResponseEntity<Task[]> response = restTemplate.getForEntity(url, Task[].class, userHash);
 					Task[] tasks = response.getBody();
 					list = new ArrayList<Task>(Arrays.asList(tasks));
 					
-					//self.setLoadMaskMessage("Salvando tarefas no banco de dados local...");
+//					self.setLoadMaskMessage("Salvando tarefas no banco de dados local...");
 					self.saveTasksIntoLocalSqlite(list);
 				} catch (HttpClientErrorException e) {
 					String error = e.getResponseBodyAsString();
@@ -346,7 +347,7 @@ public class TaskActivity extends Activity {
 		@Override
 		protected List<Photo> doInBackground(String... urls) {
 			List<Photo> response = null;
-
+			
 			for (String url : urls) {
 				try {
 					Photo[] responsePhotos = restTemplate.postForObject(url, this.photos, Photo[].class, userHash);
@@ -391,7 +392,7 @@ public class TaskActivity extends Activity {
 	}
 	
 	public void setLoadMaskMessage(String message) {
-		//this.dialog.setMessage(message);
+		this.dialog.setMessage(message);
 	}
 
 	public void hideLoadMask() {

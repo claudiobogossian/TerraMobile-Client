@@ -4,7 +4,6 @@
 package br.org.funcate.mobile.database;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
