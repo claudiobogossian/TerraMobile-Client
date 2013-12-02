@@ -188,16 +188,19 @@ public class GeoForm extends Activity implements LocationListener{
 	 * */
 	public void setFieldsWithLastTask() {
 		if(lastTask != null) {
-			edtOtherNumbers.setText(lastTask.getForm().getOtherNumbers() == null ? "" : lastTask.getForm().getOtherNumbers());
-			spnNumberConfirmation.setSelection(((ArrayAdapter<String>) spnNumberConfirmation.getAdapter()).getPosition(lastTask.getForm().getNumberConfirmation()));
-			spnVariance.setSelection(((ArrayAdapter<String>) spnVariance.getAdapter()).getPosition(lastTask.getForm().getVariance()));
-			spnPrimaryUse.setSelection(((ArrayAdapter<String>) spnPrimaryUse.getAdapter()).getPosition(lastTask.getForm().getPrimaryUse()));
-			spnSecondaryUse.setSelection(((ArrayAdapter<String>) spnSecondaryUse.getAdapter()).getPosition(lastTask.getForm().getSecondaryUse())); 
-			spnPavimentation.setSelection(((ArrayAdapter<String>) spnPavimentation.getAdapter()).getPosition(lastTask.getForm().getPavimentation())); 
-			spnAsphaltGuide.setSelection(((ArrayAdapter<String>) spnAsphaltGuide.getAdapter()).getPosition(lastTask.getForm().getAsphaltGuide())); 
-			spnPublicIlumination.setSelection(((ArrayAdapter<String>) spnPublicIlumination.getAdapter()).getPosition(lastTask.getForm().getPublicIlumination())); 
-			spnEnergy.setSelection(((ArrayAdapter<String>) spnEnergy.getAdapter()).getPosition(lastTask.getForm().getEnergy())); 
-			spnPluvialGallery.setSelection(((ArrayAdapter<String>) spnPluvialGallery.getAdapter()).getPosition(lastTask.getForm().getPluvialGallery()));
+			try {
+				spnNumberConfirmation.setSelection(((ArrayAdapter<String>) spnNumberConfirmation.getAdapter()).getPosition(lastTask.getForm().getNumberConfirmation()));
+				spnVariance.setSelection(((ArrayAdapter<String>) spnVariance.getAdapter()).getPosition(lastTask.getForm().getVariance()));
+				spnPrimaryUse.setSelection(((ArrayAdapter<String>) spnPrimaryUse.getAdapter()).getPosition(lastTask.getForm().getPrimaryUse()));
+				spnSecondaryUse.setSelection(((ArrayAdapter<String>) spnSecondaryUse.getAdapter()).getPosition(lastTask.getForm().getSecondaryUse())); 
+				spnPavimentation.setSelection(((ArrayAdapter<String>) spnPavimentation.getAdapter()).getPosition(lastTask.getForm().getPavimentation())); 
+				spnAsphaltGuide.setSelection(((ArrayAdapter<String>) spnAsphaltGuide.getAdapter()).getPosition(lastTask.getForm().getAsphaltGuide())); 
+				spnPublicIlumination.setSelection(((ArrayAdapter<String>) spnPublicIlumination.getAdapter()).getPosition(lastTask.getForm().getPublicIlumination())); 
+				spnEnergy.setSelection(((ArrayAdapter<String>) spnEnergy.getAdapter()).getPosition(lastTask.getForm().getEnergy())); 
+				spnPluvialGallery.setSelection(((ArrayAdapter<String>) spnPluvialGallery.getAdapter()).getPosition(lastTask.getForm().getPluvialGallery()));	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -476,6 +479,7 @@ public class GeoForm extends Activity implements LocationListener{
 
 		File imagefile = new File(filePath);
 		FileInputStream fis = null;
+		
 		try {
 			fis = new FileInputStream(imagefile);
 		} catch (FileNotFoundException e) {
