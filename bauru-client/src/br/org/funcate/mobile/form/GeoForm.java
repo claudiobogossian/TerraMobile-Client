@@ -31,6 +31,7 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -65,10 +66,6 @@ public class GeoForm extends Activity implements LocationListener{
 		edtNeighborhood, 
 		edtPostalCode, 
 		edtNumber, 
-		edtCity, 
-		edtState, 
-		//edtInformation1, 
-		//edtInformation2, 
 		edtOtherNumbers;
 
 	private Spinner 
@@ -95,10 +92,18 @@ public class GeoForm extends Activity implements LocationListener{
 	private GeoForm self = this;
 
 	private static Task task;
+	public static Task lastTask;
+	
 	private List<Photo> photos;
 
 	private ProgressDialog dialog;
 
+
+	/**
+	 * 
+	 * 
+	 * @author Paulo Luan
+	 * */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -139,8 +144,15 @@ public class GeoForm extends Activity implements LocationListener{
 		});
 
 		self.setButtonsListeners();
+		self.setFieldsWithLastTask();
 	}
 	
+
+	/**
+	 * 
+	 * 
+	 * @author Paulo Luan
+	 * */
 	public void setFieldsWithTaskProperties(Task taskParam) {
 		if(taskParam != null){
 			lat.setText("" + taskParam.getAddress().getCoordx());
@@ -150,8 +162,6 @@ public class GeoForm extends Activity implements LocationListener{
 			edtNeighborhood.setText(taskParam.getAddress().getNeighborhood());
 			edtPostalCode.setText(taskParam.getAddress().getPostalCode());
 			edtNumber.setText(taskParam.getAddress().getNumber());
-			edtCity.setText(taskParam.getAddress().getCity());
-			edtState.setText(taskParam.getAddress().getState());  
 			edtOtherNumbers.setText("");
 			
 			spnNumberConfirmation.setSelection(0);
@@ -163,9 +173,6 @@ public class GeoForm extends Activity implements LocationListener{
 			spnPublicIlumination.setSelection(0); 
 			spnEnergy.setSelection(0); 
 			spnPluvialGallery.setSelection(0);
-			
-			//edtInformation1.setText(taskParam.getForm().getInfo1());
-			//edtInformation2.setText(taskParam.getForm().getInfo2());
 
 			if(taskParam.getId() != null){
 				buttonOk.setEnabled(true);
@@ -173,6 +180,27 @@ public class GeoForm extends Activity implements LocationListener{
 		}	
 	}
 
+
+	/**
+	 * 
+	 * 
+	 * @author Paulo Luan
+	 * */
+	public void setFieldsWithLastTask() {
+		if(lastTask != null) {
+			edtOtherNumbers.setText(lastTask.getForm().getOtherNumbers() == null ? "" : lastTask.getForm().getOtherNumbers());
+			spnNumberConfirmation.setSelection(((ArrayAdapter<String>) spnNumberConfirmation.getAdapter()).getPosition(lastTask.getForm().getNumberConfirmation()));
+			spnVariance.setSelection(((ArrayAdapter<String>) spnVariance.getAdapter()).getPosition(lastTask.getForm().getVariance()));
+			spnPrimaryUse.setSelection(((ArrayAdapter<String>) spnPrimaryUse.getAdapter()).getPosition(lastTask.getForm().getPrimaryUse()));
+			spnSecondaryUse.setSelection(((ArrayAdapter<String>) spnSecondaryUse.getAdapter()).getPosition(lastTask.getForm().getSecondaryUse())); 
+			spnPavimentation.setSelection(((ArrayAdapter<String>) spnPavimentation.getAdapter()).getPosition(lastTask.getForm().getPavimentation())); 
+			spnAsphaltGuide.setSelection(((ArrayAdapter<String>) spnAsphaltGuide.getAdapter()).getPosition(lastTask.getForm().getAsphaltGuide())); 
+			spnPublicIlumination.setSelection(((ArrayAdapter<String>) spnPublicIlumination.getAdapter()).getPosition(lastTask.getForm().getPublicIlumination())); 
+			spnEnergy.setSelection(((ArrayAdapter<String>) spnEnergy.getAdapter()).getPosition(lastTask.getForm().getEnergy())); 
+			spnPluvialGallery.setSelection(((ArrayAdapter<String>) spnPluvialGallery.getAdapter()).getPosition(lastTask.getForm().getPluvialGallery()));
+		}
+	}
+	
 	/**
 	 * 
 	 * 
@@ -247,6 +275,7 @@ public class GeoForm extends Activity implements LocationListener{
 				Intent data = new Intent();
 
 				if(isSaved) {
+					GeoForm.lastTask = task;
 					data.putExtra("RESULT", "Registro salvo!");
 				} else {
 					data.putExtra("RESULT", "Registro não foi salvo!");
@@ -413,8 +442,6 @@ public class GeoForm extends Activity implements LocationListener{
 		edtNeighborhood.setText("");
 		edtPostalCode.setText("");
 		edtNumber.setText(""); 
-		edtCity.setText(""); 
-		edtState.setText("");  
 		edtOtherNumbers.setText("");
 		spnNumberConfirmation.setSelection(0); 
 		spnVariance.setSelection(0); 
@@ -425,8 +452,6 @@ public class GeoForm extends Activity implements LocationListener{
 		spnPublicIlumination.setSelection(0); 
 		spnEnergy.setSelection(0); 
 		spnPluvialGallery.setSelection(0);
-		//edtInformation1.setText(""); 
-		//edtInformation2.setText("");
 	}
 
 	/**

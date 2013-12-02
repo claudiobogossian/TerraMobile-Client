@@ -241,23 +241,12 @@ public class TaskActivity extends Activity {
 
 			for (String url : urls) {
 				try {
-					self.setLoadMaskMessage("Fazendo Download das tarefas...");
-
+					publishProgress("Fazendo Download das tarefas...");
 					ResponseEntity<Task[]> response = restTemplate.getForEntity(url, Task[].class, userHash);
 					Task[] tasks = response.getBody();
 					list = new ArrayList<Task>(Arrays.asList(tasks));
 					
-					String[] msgs = new String[]{"Fazendo Download das tarefas...", "Salvando tarefas no banco de dados local..."};
-					
-					for(int cont = 0;cont < msgs.length;cont++){
-						publishProgress(msgs[cont]);
-						try {
-							Thread.sleep(2000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					}
-					
+					publishProgress("Salvando tarefas no banco de dados local...");
 					self.saveTasksIntoLocalSqlite(list);
 				} catch (HttpClientErrorException e) {
 					String error = e.getResponseBodyAsString();
@@ -302,19 +291,11 @@ public class TaskActivity extends Activity {
 
 			for (String url : urls) {
 				try {
+					publishProgress("Enviando o seu trabalho para o servidor...");
 					Task[] responseTasks = restTemplate.postForObject(url, this.tasks, Task[].class, userHash);
 					response = new ArrayList<Task>(Arrays.asList(responseTasks));
-
 					if(response != null) {
-						String[] msgs = new String[]{"Enviando o seu trabalho para o servidor...", "Excluindo tarefas concluídas..."};
-						for(int cont = 0;cont < msgs.length;cont++){
-							publishProgress(msgs[cont]);
-							try {
-								Thread.sleep(2000);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
+						publishProgress("Excluindo tarefas concluídas...");
 						TaskDao.deleteTasks(tasks);
 					}
 				} catch (HttpClientErrorException e) {
@@ -366,19 +347,12 @@ public class TaskActivity extends Activity {
 
 			for (String url : urls) {
 				try {
+					publishProgress("Fazendo Upload das fotos...");
 					Photo[] responsePhotos = restTemplate.postForObject(url, this.photos, Photo[].class, userHash);
 					response = new ArrayList<Photo>(Arrays.asList(responsePhotos));
 
 					if(response != null) {
-						String[] msgs = new String[]{"Fazendo Upload das fotos...", "Verificando se existem imagens não utilizadas no aparelho..."};
-						for(int cont = 0;cont < msgs.length;cont++){
-							publishProgress(msgs[cont]);
-							try {
-								Thread.sleep(2000);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
+						publishProgress("Verificando se existem imagens não utilizadas no aparelho...");
 						PhotoDao.deletePhotos(response);
 					}
 				} catch (HttpClientErrorException e) {
