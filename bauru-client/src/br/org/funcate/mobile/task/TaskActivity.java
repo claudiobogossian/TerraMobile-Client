@@ -356,7 +356,6 @@ public class TaskActivity extends Activity {
 						//self.setLoadMaskMessage("Verificando se existem imagens não utilizadas no aparelho...");
 						PhotoDao.deletePhotos(response);
 					}
-					
 				} catch (HttpClientErrorException e) {
 					String error = e.getResponseBodyAsString();
 					e.printStackTrace();
