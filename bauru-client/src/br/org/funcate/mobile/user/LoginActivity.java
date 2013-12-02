@@ -98,7 +98,6 @@ public class LoginActivity extends Activity {
 			if(this.isValidHash(userHash)) {
 				session.createLoginSession(login, userHash);
 				Intent i = new Intent(this, GeoMap.class);
-				self.hideLoadMask();
 				startActivity(i);
 				finish();
 			} else {
@@ -113,6 +112,12 @@ public class LoginActivity extends Activity {
 		}
 		self.hideLoadMask();
 		
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		self.hideLoadMask();
 	}
 
 
