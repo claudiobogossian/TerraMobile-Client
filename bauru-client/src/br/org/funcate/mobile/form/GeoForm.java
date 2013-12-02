@@ -39,14 +39,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.address.AddressAdapter;
-import br.org.funcate.mobile.database.DatabaseAdapter;
 import br.org.funcate.mobile.photo.Photo;
 import br.org.funcate.mobile.photo.PhotoActivity;
 import br.org.funcate.mobile.photo.PhotoDao;
 import br.org.funcate.mobile.task.Task;
 import br.org.funcate.mobile.task.TaskDao;
-
-import com.j256.ormlite.dao.Dao;
 
 
 public class GeoForm extends Activity implements LocationListener{

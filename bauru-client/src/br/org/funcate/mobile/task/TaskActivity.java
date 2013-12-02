@@ -65,6 +65,7 @@ public class TaskActivity extends Activity {
 		this.updateCountLabels();
 	}
 
+
 	public void setButtonsListeners() {
 		Button btn_get_tasks = (Button) findViewById(R.id.btn_get_tasks);
 		btn_get_tasks.setOnClickListener(new View.OnClickListener() {
@@ -225,13 +226,14 @@ public class TaskActivity extends Activity {
 	 * @param String... urls
 	 *            URL's that will called.
 	 */
-	private class DownloadTasks extends AsyncTask<String, Integer, ArrayList<Task>> {
+	private class DownloadTasks extends AsyncTask<String, String, ArrayList<Task>> {
 
 		private String userHash = "";
 
 		public DownloadTasks(String userHash) {
 			this.userHash = userHash;
 		}
+
 
 		@Override
 		protected ArrayList<Task> doInBackground(String... urls) {
@@ -240,11 +242,22 @@ public class TaskActivity extends Activity {
 			for (String url : urls) {
 				try {
 					self.setLoadMaskMessage("Fazendo Download das tarefas...");
+
 					ResponseEntity<Task[]> response = restTemplate.getForEntity(url, Task[].class, userHash);
 					Task[] tasks = response.getBody();
 					list = new ArrayList<Task>(Arrays.asList(tasks));
 					
-					self.setLoadMaskMessage("Salvando tarefas no banco de dados local...");
+					String[] msgs = new String[]{"Fazendo Download das tarefas...", "Salvando tarefas no banco de dados local..."};
+					
+					for(int cont = 0;cont < msgs.length;cont++){
+						publishProgress(msgs[cont]);
+						try {
+							Thread.sleep(2000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+					
 					self.saveTasksIntoLocalSqlite(list);
 				} catch (HttpClientErrorException e) {
 					String error = e.getResponseBodyAsString();
@@ -254,15 +267,10 @@ public class TaskActivity extends Activity {
 
 			return list;
 		}
-		
-		@Override
-		protected void onPreExecute() {
-			//self.setLoadMaskMessage("Fazendo Download das tarefas...");
-		}
 
 		@Override
-		protected void onProgressUpdate(Integer... values) {
-			Log.i("#TASKSERVICE", " Progress: " + values);
+		protected void onProgressUpdate(String... values) {
+			dialog.setMessage(values[0]);
 		}
 
 		protected void onPostExecute(ArrayList<Task> tasks) {
@@ -278,7 +286,7 @@ public class TaskActivity extends Activity {
 	 *            URL's that will called.
 	 * @author Paulo Luan 
 	 */
-	private class UploadTasks extends AsyncTask<String, Void, List<Task>> {
+	private class UploadTasks extends AsyncTask<String, String, List<Task>> {
 
 		private List<Task> tasks;
 		private String userHash;
@@ -296,9 +304,17 @@ public class TaskActivity extends Activity {
 				try {
 					Task[] responseTasks = restTemplate.postForObject(url, this.tasks, Task[].class, userHash);
 					response = new ArrayList<Task>(Arrays.asList(responseTasks));
-					
+
 					if(response != null) {
-						//self.setLoadMaskMessage("Excluindo tarefas concluídas...");
+						String[] msgs = new String[]{"Enviando o seu trabalho para o servidor...", "Excluindo tarefas concluídas..."};
+						for(int cont = 0;cont < msgs.length;cont++){
+							publishProgress(msgs[cont]);
+							try {
+								Thread.sleep(2000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
 						TaskDao.deleteTasks(tasks);
 					}
 				} catch (HttpClientErrorException e) {
@@ -309,14 +325,14 @@ public class TaskActivity extends Activity {
 
 			return response;
 		}
-		
+
 		@Override
 		protected void onPreExecute() {
-			self.setLoadMaskMessage("Enviando o seu trabalho para o servidor...");
 		}
 
 		@Override
-		protected void onProgressUpdate(Void... values) {			
+		protected void onProgressUpdate(String... values) {
+			setLoadMaskMessage(values[0]);
 			Log.i(self.LOG_TAG, " Progress: " + values);
 		}
 
@@ -334,7 +350,7 @@ public class TaskActivity extends Activity {
 	 *            URL's that will called.
 	 * @author Paulo Luan 
 	 */
-	private class UploadPhotos extends AsyncTask<String, Void, List<Photo>> {
+	private class UploadPhotos extends AsyncTask<String, String, List<Photo>> {
 
 		private List<Photo> photos;
 		private String userHash;
@@ -352,9 +368,17 @@ public class TaskActivity extends Activity {
 				try {
 					Photo[] responsePhotos = restTemplate.postForObject(url, this.photos, Photo[].class, userHash);
 					response = new ArrayList<Photo>(Arrays.asList(responsePhotos));
-					
+
 					if(response != null) {
-						//self.setLoadMaskMessage("Verificando se existem imagens não utilizadas no aparelho...");
+						String[] msgs = new String[]{"Fazendo Upload das fotos...", "Verificando se existem imagens não utilizadas no aparelho..."};
+						for(int cont = 0;cont < msgs.length;cont++){
+							publishProgress(msgs[cont]);
+							try {
+								Thread.sleep(2000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
 						PhotoDao.deletePhotos(response);
 					}
 				} catch (HttpClientErrorException e) {
@@ -364,15 +388,15 @@ public class TaskActivity extends Activity {
 			}
 			return response;
 		}
-		
+
 
 		@Override
 		protected void onPreExecute() {
-			//self.setLoadMaskMessage("Fazendo Upload das fotos...");
 		}
 
 		@Override
-		protected void onProgressUpdate(Void... values) {
+		protected void onProgressUpdate(String... values) {
+			setLoadMaskMessage(values[0]);
 			Log.i(self.LOG_TAG, " Progress: " + values);
 		}
 
@@ -389,9 +413,9 @@ public class TaskActivity extends Activity {
 	public void showLoadingMask(String message) {
 		dialog = ProgressDialog.show(TaskActivity.this, "", message, true);
 	}
-	
+
 	public void setLoadMaskMessage(String message) {
-		//this.dialog.setMessage(message);
+		this.dialog.setMessage(message);
 	}
 
 	public void hideLoadMask() {
