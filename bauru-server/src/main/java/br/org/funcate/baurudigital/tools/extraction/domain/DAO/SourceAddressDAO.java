@@ -105,5 +105,23 @@ public class SourceAddressDAO {
 			}
 		 return addressList;
 	}
+	
+	public void dropAllContent()
+	{
+		 try {
+			 	Class.forName("org.postgresql.Driver");
+			 
+		        Connection con = DriverManager.getConnection("jdbc:postgresql://200.144.100.34:5432/baurudigital", "postgres","R0xpqt3c");
+
+		        Statement stmt = con.createStatement();
+		        stmt.execute("delete from task; delete from photo; delete from form; delete from address; delete from \"user\";");
+		        
+		    } catch(SQLException e) {
+		        e.printStackTrace();
+		    } catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
 
 }

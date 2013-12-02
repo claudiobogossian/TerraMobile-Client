@@ -10,8 +10,14 @@
         "password": "123"
     },
      {
-        "name": "Joãozinho 30",
-        "login": "joao",
+        "name": "Ubirajara de Moura Freitas",
+        "login": "bira",
+        "password": "123"
+    },
+     {
+        "name": "André",
+        "login": "andre",
         "password": "123"
     }
+    
 ]
