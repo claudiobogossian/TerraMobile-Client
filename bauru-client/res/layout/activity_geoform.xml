@@ -213,7 +213,6 @@
                                 android:layout_weight="0"
                                 android:contentDescription="@string/app_name"
                                 android:src="@drawable/ico_clear" />
-
                         </LinearLayout>
                     </TableRow>
 
@@ -317,8 +316,7 @@
                         </LinearLayout>
                     </TableRow>
 
-                    
-                    <!--  
+                    <!--
                     <TableRow
                         android:id="@+id/geoform_tr_stub1"
                         android:layout_width="fill_parent"
@@ -465,12 +463,8 @@
                                 android:text="" />
                         </LinearLayout>
                     </TableRow>
+                    -->
 
-
- -->
- 
- 
- 
                     <TableRow
                         android:id="@+id/geoform_tr_stub3"
                         android:layout_width="fill_parent"
@@ -753,6 +747,23 @@
                                 android:entries="@array/yes_no" />
                         </LinearLayout>
                     </TableRow>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:paddingTop="3dp"
+                        android:weightSum="1" >
+
+                        <Button
+                            android:id="@+id/button_clear_fields"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:drawableLeft="@drawable/ico_clear"
+                            android:gravity="center_vertical|left"
+                            android:text="@string/btn_clear" />
+                    </LinearLayout>
                 </TableLayout>
             </LinearLayout>
         </LinearLayout>
