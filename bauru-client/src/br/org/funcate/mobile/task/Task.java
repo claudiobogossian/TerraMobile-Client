@@ -83,8 +83,7 @@ public class Task implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Task [id=" + id + ", address=" + address + ", user=" + user
-				+ ", form=" + form + ", done=" + done + "]";
+		return address.toString();
 	}
 
 }
