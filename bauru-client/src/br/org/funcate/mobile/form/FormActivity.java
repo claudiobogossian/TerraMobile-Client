@@ -285,6 +285,7 @@ public class FormActivity extends Activity implements LocationListener{
 				}
 
 				setResult(RESULT_OK, data);
+				hideLoadMask();
 				finish();
 			}
 		});
