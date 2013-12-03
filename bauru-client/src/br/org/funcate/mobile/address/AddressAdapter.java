@@ -88,7 +88,7 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
 		userQueryBuilder.where()
 			.eq("hash", userHash);
 		
-		taskQueryBuilder.where().eq("done", Boolean.FALSE);
+		//taskQueryBuilder.where().eq("done", Boolean.FALSE);
 		taskQueryBuilder.join(userQueryBuilder);
 		
 		if(propertieFilter != null) {

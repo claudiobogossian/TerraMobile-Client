@@ -122,87 +122,44 @@ public class FormActivity extends Activity implements LocationListener {
 		}
 
 		self.mapFieldsToObjects();
-
-		buttonPhoto.setEnabled(false);
-		buttonOk.setEnabled(false);
-
-		this.setFieldsWithTaskProperties(task);
-
-		// Database query can be a time consuming task, so its safe to call database query in another thread
-		new Handler().post(new Runnable() {
-			@Override
-			public void run() {
-				Cursor cursor;
-
-				try {
-					cursor = AddressAdapter.getAddressCursor(null);
-					self.setAutoCompleteAdapterPropertiers(cursor);
-				} catch (SQLException e) {
-					Log.e(self.LOG_TAG, "ERRO AO CRIAR CURSOR!" + e.getMessage());
-					e.printStackTrace();
-				}
-			}
-		});
-
+		
+		if(task != null) {
+			this.setFieldsWithTaskProperties(task);
+		} else {
+			buttonPhoto.setEnabled(false);
+			buttonOk.setEnabled(false);
+		}
+		
+		self.createThreadToCursorAdapter();
 		self.setButtonsListeners();
 		self.setFieldsWithLastTask();
 	}
 	
-
 	/**
 	 * 
 	 * 
 	 * @author Paulo Luan
 	 * */
-	public void setFieldsWithTaskProperties(Task taskParam) {
-		if(taskParam != null){
-			lat.setText("" + taskParam.getAddress().getCoordx());
-			lon.setText("" + taskParam.getAddress().getCoordy());
-			address.setText(taskParam.getAddress().getName());
-			
-			edtNeighborhood.setText(taskParam.getAddress().getNeighborhood());
-			edtPostalCode.setText(taskParam.getAddress().getPostalCode());
-			edtNumber.setText(taskParam.getAddress().getNumber());
-			edtOtherNumbers.setText("");
-			
-			spnNumberConfirmation.setSelection(0);
-			spnVariance.setSelection(0); 
-			spnPrimaryUse.setSelection(0);
-			spnSecondaryUse.setSelection(0); 
-			spnPavimentation.setSelection(0); 
-			spnAsphaltGuide.setSelection(0); 
-			spnPublicIlumination.setSelection(0); 
-			spnEnergy.setSelection(0); 
-			spnPluvialGallery.setSelection(0);
-
-			if(taskParam.getId() != null){
-				buttonOk.setEnabled(true);
-			}
-		}	
+	public void setButtonsListeners() {
+		self.setButtonClearListener();
+		self.setButtonCancelListener();
+		self.setButtonPhotoListener();
+		self.setButtonOkListener();
+		self.setButtonClearSpinnersListener();
 	}
-
-
+	
 	/**
 	 * 
 	 * 
 	 * @author Paulo Luan
 	 * */
-	public void setFieldsWithLastTask() {
-		if(lastTask != null) {
-			try {
-				spnNumberConfirmation.setSelection(((ArrayAdapter<String>) spnNumberConfirmation.getAdapter()).getPosition(lastTask.getForm().getNumberConfirmation()));
-				spnVariance.setSelection(((ArrayAdapter<String>) spnVariance.getAdapter()).getPosition(lastTask.getForm().getVariance()));
-				spnPrimaryUse.setSelection(((ArrayAdapter<String>) spnPrimaryUse.getAdapter()).getPosition(lastTask.getForm().getPrimaryUse()));
-				spnSecondaryUse.setSelection(((ArrayAdapter<String>) spnSecondaryUse.getAdapter()).getPosition(lastTask.getForm().getSecondaryUse())); 
-				spnPavimentation.setSelection(((ArrayAdapter<String>) spnPavimentation.getAdapter()).getPosition(lastTask.getForm().getPavimentation())); 
-				spnAsphaltGuide.setSelection(((ArrayAdapter<String>) spnAsphaltGuide.getAdapter()).getPosition(lastTask.getForm().getAsphaltGuide())); 
-				spnPublicIlumination.setSelection(((ArrayAdapter<String>) spnPublicIlumination.getAdapter()).getPosition(lastTask.getForm().getPublicIlumination())); 
-				spnEnergy.setSelection(((ArrayAdapter<String>) spnEnergy.getAdapter()).getPosition(lastTask.getForm().getEnergy())); 
-				spnPluvialGallery.setSelection(((ArrayAdapter<String>) spnPluvialGallery.getAdapter()).getPosition(lastTask.getForm().getPluvialGallery()));	
-			} catch (Exception e) {
-				e.printStackTrace();
+	public void setButtonClearListener() {
+		button_clear.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				self.clearAddressFields();
 			}
-		}
+		});
 	}
 	
 	/**
@@ -228,6 +185,7 @@ public class FormActivity extends Activity implements LocationListener {
 			}
 		});
 
+	public void setButtonCancelListener() {
 		buttonCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -235,7 +193,15 @@ public class FormActivity extends Activity implements LocationListener {
 				finish();
 			}
 		});
+	}
+	
 
+	/**
+	 * 
+	 * 
+	 * @author Paulo Luan
+	 * */
+	public void setButtonPhotoListener() {
 		PackageManager packageManager = self.getPackageManager();
 
 		// if device support camera?
@@ -253,7 +219,15 @@ public class FormActivity extends Activity implements LocationListener {
 			buttonPhoto.setEnabled(false);
 			Log.i("camera", "This device has no camera!");
 		}
+	}
+	
 
+	/**
+	 * 
+	 * 
+	 * @author Paulo Luan
+	 * */
+	public void setButtonOkListener() {
 		buttonOk.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -279,40 +253,67 @@ public class FormActivity extends Activity implements LocationListener {
 				 
 				    AlertDialog alertDialog = alertDialogBuilder.create();
 				    alertDialog.show();
+					validateFields();
 				}
-			}
-
-			private void validate() {
-				boolean isSaved = false;
-
-				self.showLoadingMask();
-				self.setFormPropertiesWithFields(task);		
-				task.setDone(true);
-
-				isSaved = TaskDao.updateTask(task);
-				isSaved = PhotoDao.savePhotos(photos);
-
-				Intent data = new Intent();
-
-				if(isSaved) {
-					FormActivity.lastTask = task;
-					data.putExtra("RESULT", "Registro salvo!");
-				} else {
-					data.putExtra("RESULT", "Registro não foi salvo!");
-				}
-
-				setResult(RESULT_OK, data);
-				hideLoadMask();
-				finish();
 			}
 		});
-		
+	}
+	
+
+	/**
+	 * 
+	 * 
+	 * @author Paulo Luan
+	 * */
+	public void setButtonClearSpinnersListener() {
 		buttonClearSpinners.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				self.clearSpinnerFields();
 			}
 		});
+	}
+	
+	/**
+	 * 
+	 * Database query can be a time consuming task, so its safe to call database query in another thread
+	 * 
+	 * @author Paulo Luan
+	 * */
+	public void createThreadToCursorAdapter() {
+		new Handler().post(new Runnable() {
+			@Override
+			public void run() {
+				Cursor cursor;
+				try {
+					cursor = AddressAdapter.getAddressCursor(null);
+					self.setAutoCompleteAdapterPropertiers(cursor);
+				} catch (SQLException e) {
+					Log.e(self.LOG_TAG, "ERRO AO CRIAR CURSOR!" + e.getMessage());
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
+
+	/**
+	 * 
+	 * 
+	 * @author Paulo Luan
+	 * */
+	public void clearAddressFields() {
+		address.setText("");
+		edtNeighborhood.setText("");
+		edtPostalCode.setText("");
+		address.setInputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS);
+		edtPostalCode.setInputType(InputType.TYPE_NULL);
+		address.setEnabled(true);
+		edtPostalCode.setEnabled(false);
+		address.requestFocus();
+
+		buttonPhoto.setEnabled(false);
+		buttonOk.setEnabled(false);
 	}
 
 
@@ -350,6 +351,67 @@ public class FormActivity extends Activity implements LocationListener {
 		buttonOk = (Button) findViewById(R.id.cp_button_ok);
 		buttonPhoto = (Button) findViewById(R.id.cp_button_photo);
 	}
+	
+
+	/**
+	 * 
+	 * 
+	 * @author Paulo Luan
+	 * */
+	public void setFieldsWithTaskProperties(Task taskParam) {
+		if(taskParam != null){
+			lat.setText("" + taskParam.getAddress().getCoordx());
+			lon.setText("" + taskParam.getAddress().getCoordy());
+			
+			address.setText(taskParam.getAddress().getName());
+			edtNeighborhood.setText(taskParam.getAddress().getNeighborhood());
+			edtPostalCode.setText(taskParam.getAddress().getPostalCode());
+			edtNumber.setText(taskParam.getAddress().getNumber());
+			edtOtherNumbers.setText("");
+			
+			try {
+				spnNumberConfirmation.setSelection(((ArrayAdapter<String>) spnNumberConfirmation.getAdapter()).getPosition(taskParam.getForm().getNumberConfirmation()));
+				spnVariance.setSelection(((ArrayAdapter<String>) spnVariance.getAdapter()).getPosition(taskParam.getForm().getVariance()));
+				spnPrimaryUse.setSelection(((ArrayAdapter<String>) spnPrimaryUse.getAdapter()).getPosition(taskParam.getForm().getPrimaryUse()));
+				spnSecondaryUse.setSelection(((ArrayAdapter<String>) spnSecondaryUse.getAdapter()).getPosition(taskParam.getForm().getSecondaryUse())); 
+				spnPavimentation.setSelection(((ArrayAdapter<String>) spnPavimentation.getAdapter()).getPosition(taskParam.getForm().getPavimentation())); 
+				spnAsphaltGuide.setSelection(((ArrayAdapter<String>) spnAsphaltGuide.getAdapter()).getPosition(taskParam.getForm().getAsphaltGuide())); 
+				spnPublicIlumination.setSelection(((ArrayAdapter<String>) spnPublicIlumination.getAdapter()).getPosition(taskParam.getForm().getPublicIlumination())); 
+				spnEnergy.setSelection(((ArrayAdapter<String>) spnEnergy.getAdapter()).getPosition(taskParam.getForm().getEnergy())); 
+				spnPluvialGallery.setSelection(((ArrayAdapter<String>) spnPluvialGallery.getAdapter()).getPosition(taskParam.getForm().getPluvialGallery()));	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			if(taskParam.getId() != null) {
+				address.setEnabled(false);
+				edtPostalCode.setEnabled(false);
+				buttonPhoto.setEnabled(true);
+				buttonOk.setEnabled(true);
+			}
+		}	
+	}
+
+
+	/**
+	 * 
+	 * 
+	 * @author Paulo Luan
+	 * */
+	public void setFieldsWithLastTask() {
+		if(lastTask != null) {
+			try {
+				// Only infrastructure spinners.
+				spnPavimentation.setSelection(((ArrayAdapter<String>) spnPavimentation.getAdapter()).getPosition(lastTask.getForm().getPavimentation())); 
+				spnAsphaltGuide.setSelection(((ArrayAdapter<String>) spnAsphaltGuide.getAdapter()).getPosition(lastTask.getForm().getAsphaltGuide())); 
+				spnPublicIlumination.setSelection(((ArrayAdapter<String>) spnPublicIlumination.getAdapter()).getPosition(lastTask.getForm().getPublicIlumination())); 
+				spnEnergy.setSelection(((ArrayAdapter<String>) spnEnergy.getAdapter()).getPosition(lastTask.getForm().getEnergy())); 
+				spnPluvialGallery.setSelection(((ArrayAdapter<String>) spnPluvialGallery.getAdapter()).getPosition(lastTask.getForm().getPluvialGallery()));	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 
 	/**
@@ -381,10 +443,6 @@ public class FormActivity extends Activity implements LocationListener {
 		form.setPublicIlumination(spnPublicIlumination.getSelectedItem().toString());
 		form.setEnergy(spnEnergy.getSelectedItem().toString());
 		form.setPluvialGallery(spnPluvialGallery.getSelectedItem().toString());
-		
-		//form.setInfo1(edtInformation1.getText().toString()); 
-		//form.setInfo2(edtInformation2.getText().toString()); 
-				
 	}
 	
 	/**
@@ -394,12 +452,13 @@ public class FormActivity extends Activity implements LocationListener {
 	 * */
 	public void setAutoCompleteAdapterPropertiers(Cursor cursor){
 
-		AddressAdapter addressAdapter = new AddressAdapter(FormActivity.this,
+		AddressAdapter addressAdapter = new AddressAdapter(
+				FormActivity.this,
 				R.layout.item_list, 
 				cursor,
 				new String[] { "name", "edtPostalCode", "edtNumber", "edtNeighborhood"},
 				new int[] {R.id.item_log, R.id.item_cep, R.id.item_neighborhood }
-				);
+		);
 
 		address.setAdapter(addressAdapter);
 		address.setHint("pesquisar...");
@@ -408,42 +467,14 @@ public class FormActivity extends Activity implements LocationListener {
 			public void onItemClick(AdapterView<?> adapter, View view, int position, long addressId) {
 				try {
 					task = TaskDao.getTaskByAddressId((int) addressId);
-
+					
 					if(task != null) {
-						TextView t1 = (TextView) view.findViewById(R.id.item_log);
-						String logvalue = t1.getText().toString();
-						address.setText(logvalue);
-
-						TextView t2 = (TextView) view.findViewById(R.id.item_cep);
-						String[] split1 = t2.getText().toString().split(" ");
-						String cepvalue;
-
-						if (split1[1].compareTo("---") == 0) {
-							cepvalue = "";
-						} else {
-							cepvalue = split1[1];
-						}
-
-						edtPostalCode.setText(cepvalue);
-
-						TextView txt_edtNumber = (TextView) view.findViewById(R.id.item_number);
-						edtNumber.setText(txt_edtNumber.getText().toString());
-
-						TextView txt_neighborhood = (TextView) view.findViewById(R.id.item_neighborhood);
-						edtNeighborhood.setText(txt_neighborhood.getText().toString());
-
-						address.setInputType(InputType.TYPE_NULL);
-						edtPostalCode.setInputType(InputType.TYPE_NULL);
-
+						self.setFieldsWithTaskProperties(task);
+						
 						address.clearFocus();
-						address.setEnabled(false);
-						edtPostalCode.setEnabled(false);
-
+						
 						InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 						mgr.hideSoftInputFromWindow(address.getWindowToken(), 0);
-
-						buttonPhoto.setEnabled(true);
-						buttonOk.setEnabled(true);
 					}					
 				} catch (Exception ex) {
 					Log.e(LOG_TAG, "Exception onItemClick: " + ex);
@@ -461,9 +492,6 @@ public class FormActivity extends Activity implements LocationListener {
 	 * 
 	 * */
 	public void clearSpinnerFields() {
-		//edtNeighborhood.setText("");
-		//edtPostalCode.setText("");
-		//edtNumber.setText(""); 
 		edtOtherNumbers.setText("");
 		spnNumberConfirmation.setSelection(0); 
 		spnVariance.setSelection(0); 
@@ -555,6 +583,31 @@ public class FormActivity extends Activity implements LocationListener {
 			}
 		}
 	}
+	
+	public void validateFields() {
+		boolean isSaved = false;
+
+		self.showLoadingMask();
+		self.setFormPropertiesWithFields(task);		
+		task.setDone(true);
+
+		isSaved = TaskDao.updateTask(task);
+		isSaved = PhotoDao.savePhotos(photos);
+
+		Intent data = new Intent();
+
+		if(isSaved) {
+			FormActivity.lastTask = task;
+			data.putExtra("RESULT", "Registro salvo!");
+		} else {
+			data.putExtra("RESULT", "Registro não foi salvo!");
+		}
+
+		setResult(RESULT_OK, data);
+		hideLoadMask();
+		finish();
+	}
+
 
 	@Override
 	public void onLocationChanged(Location arg0) {}
