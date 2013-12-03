@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:layout_gravity="center" >
 
     <TableLayout
@@ -468,8 +468,7 @@
         <TableRow
             android:id="@+id/tr_btn"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="fill_parent"
             android:baselineAligned="false" >
 
             <Button
@@ -482,18 +481,22 @@
 
             <Button
                 android:id="@+id/cp_button_cancel"
+                android:layout_width="250dp"
                 android:layout_height="fill_parent"
+                android:layout_weight="1"
                 android:drawableLeft="@drawable/ico_cancelar"
                 android:text="@string/btn_cancel" />
 
             <Button
                 android:id="@+id/cp_button_ok"
-                android:layout_width="110dp"
+                android:layout_width="210dp"
                 android:layout_height="fill_parent"
+                android:layout_weight="1"
                 android:drawableLeft="@drawable/ico_ok"
                 android:gravity="center_vertical|center_horizontal|left"
                 android:text="@string/btn_ok" />
         </TableRow>
+
     </TableLayout>
 
 </ScrollView>

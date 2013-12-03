@@ -549,8 +549,8 @@ public class FormActivity extends Activity implements LocationListener {
 					lon.setText("" + location.getLongitude());
 				}
 				else {
-					lat.setText("Location not available");
-					lon.setText("Location not available");
+					lat.setText("Localização não disponivel");
+					lon.setText("Localização não disponivel");
 				}
 
 				photos.add(photo);
