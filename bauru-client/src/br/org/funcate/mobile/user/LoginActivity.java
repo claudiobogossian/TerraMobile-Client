@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import android.app.Activity;
@@ -101,14 +102,14 @@ public class LoginActivity extends Activity {
 				startActivity(i);
 				finish();
 			} else {
-				Toast.makeText(getApplicationContext(), "Usuário ou senha inválidos", Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), "Usu��rio ou senha inv��lidos", Toast.LENGTH_LONG).show();
 			}
 		} else if ((!login.equals(""))) {
 			Toast.makeText(getApplicationContext(), "Preencha a senha!", Toast.LENGTH_SHORT).show();
 		} else if ((!password.equals(""))) {
-			Toast.makeText(getApplicationContext(), "Preencha o nome de usuário!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Preencha o nome de usu��rio!", Toast.LENGTH_SHORT).show();
 		} else {
-			Toast.makeText(getApplicationContext(), "Preencha Nome de usuário e Senhas!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Preencha Nome de usu��rio e Senhas!", Toast.LENGTH_SHORT).show();
 		}
 		self.hideLoadMask();
 		
@@ -155,7 +156,7 @@ public class LoginActivity extends Activity {
 			remote.execute(new String[] { url });
 		} else {
 			self.login();
-			Log.i(this.LOG_TAG, "Sem conexão com a internet.");
+			Log.i(this.LOG_TAG, "Sem conex��o com a internet.");
 		}
 	}
 
@@ -204,7 +205,7 @@ public class LoginActivity extends Activity {
 					User[] users = response.getBody();
 					list = new ArrayList<User>(Arrays.asList(users));
 					self.saveUsersIntoLocalSqlite(list);
-				} catch (Exception e) {
+				} catch (HttpClientErrorException e) {
 					e.printStackTrace();
 				}
 			}

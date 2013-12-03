@@ -10,13 +10,10 @@ import br.org.funcate.mobile.photo.Photo;
 import br.org.funcate.mobile.task.Task;
 import br.org.funcate.mobile.user.User;
 
-import com.j256.ormlite.android.AndroidConnectionSource;
-import com.j256.ormlite.android.AndroidDatabaseConnection;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
 
 /**
@@ -27,7 +24,6 @@ import com.j256.ormlite.table.TableUtils;
 public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 
 	private final String LOG_TAG = "#" + getClass().getSimpleName();
-	protected AndroidConnectionSource connectionSource = new AndroidConnectionSource(this);
 
 	// name of the database file for your application -- change to something
 	// appropriate for your app
@@ -71,73 +67,38 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 		addressDao = getDao(Address.class);
 	}
 
+
 	/**
-	 * This is called when the database is first created. Usually you should
-	 * call createTable statements here to create the tables that will store
-	 * your data.
+	 * This is called when the database is first created. Usually you should call createTable statements here to create
+	 * the tables that will store your data.
 	 */
 	@Override
 	public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
-		DatabaseConnection conn = connectionSource.getSpecialConnection();
-		boolean clearSpecial = false;
-		if (conn == null) {
-			conn = new AndroidDatabaseConnection(db, true);
-			try {
-				connectionSource.saveSpecialConnection(conn);
-				clearSpecial = true;
-			} catch (SQLException e) {
-				throw new IllegalStateException("Could not save special connection", e);
-			}
-		}
 		try {
+			//Log.i(DatabaseHelper.class.getName(), "onCreate");
 			this.createTables();
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (clearSpecial) {
-				connectionSource.clearSpecialConnection(conn);
-			}
+		} catch (SQLException e) {
+			//Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
+			throw new RuntimeException(e);
 		}
 	}
 
 	/**
-	 * This is called when your application is upgraded and it has a higher
-	 * version number. This allows you to adjust the various data to match the
-	 * new version number.
+	 * This is called when your application is upgraded and it has a higher version number. This allows you to adjust
+	 * the various data to match the new version number.
 	 */
-	public void onUpgrade(SQLiteDatabase db, ConnectionSource arg1, int oldVersion, int newVersion) {
-		DatabaseConnection conn = connectionSource.getSpecialConnection();
-		boolean clearSpecial = false;
-		if (conn == null) {
-			conn = new AndroidDatabaseConnection(db, true);
-			try {
-				connectionSource.saveSpecialConnection(conn);
-				clearSpecial = true;
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-
+	@Override
+	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
 		try {
 			this.dropTables();
-			this.createTables();
+			// after we drop the old databases, we create the new ones
+			onCreate(db, connectionSource);
 		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (clearSpecial) {
-				connectionSource.clearSpecialConnection(conn);
-			}
+			//Log.e(DatabaseHelper.class.getName(), "Can't drop databases", e);
+			throw new RuntimeException(e);
 		}
 	}
-
-	public void dropTables() throws SQLException {
-		TableUtils.dropTable(connectionSource, Address.class, true);
-		TableUtils.dropTable(connectionSource, User.class, true);
-		TableUtils.dropTable(connectionSource, Photo.class, true);
-		TableUtils.dropTable(connectionSource, Form.class, true);
-		TableUtils.dropTable(connectionSource, Task.class, true);
-	}
-
+	
 	public void createTables() throws SQLException {
 		TableUtils.createTable(connectionSource, Address.class);
 		TableUtils.createTable(connectionSource, User.class);
@@ -145,12 +106,20 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 		TableUtils.createTable(connectionSource, Form.class);
 		TableUtils.createTable(connectionSource, Task.class);
 	}
+	
+	public void dropTables()  throws SQLException {
+		TableUtils.dropTable(connectionSource, Address.class, true);
+		TableUtils.dropTable(connectionSource, User.class, true);
+		TableUtils.dropTable(connectionSource, Photo.class, true);
+		TableUtils.dropTable(connectionSource, Form.class, true);
+		TableUtils.dropTable(connectionSource, Task.class, true);
+	}
 
 	/**
 	 * Clear all user registers, by droping and recreating the user table. 
 	 * 
 	 * @author Paulo Luan
-	 * */
+	 * */ 
 	public void resetUserTable() throws SQLException {
 		TableUtils.dropTable(connectionSource, User.class, true);
 		TableUtils.createTable(connectionSource, User.class);
