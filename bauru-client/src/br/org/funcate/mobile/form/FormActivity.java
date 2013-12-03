@@ -188,10 +188,7 @@ public class FormActivity extends Activity implements LocationListener {
 	public void setFieldsWithLastTask() {
 		if(lastTask != null) {
 			try {
-				spnNumberConfirmation.setSelection(((ArrayAdapter<String>) spnNumberConfirmation.getAdapter()).getPosition(lastTask.getForm().getNumberConfirmation()));
-				spnVariance.setSelection(((ArrayAdapter<String>) spnVariance.getAdapter()).getPosition(lastTask.getForm().getVariance()));
-				spnPrimaryUse.setSelection(((ArrayAdapter<String>) spnPrimaryUse.getAdapter()).getPosition(lastTask.getForm().getPrimaryUse()));
-				spnSecondaryUse.setSelection(((ArrayAdapter<String>) spnSecondaryUse.getAdapter()).getPosition(lastTask.getForm().getSecondaryUse())); 
+				// Only infrastructure spinners. 
 				spnPavimentation.setSelection(((ArrayAdapter<String>) spnPavimentation.getAdapter()).getPosition(lastTask.getForm().getPavimentation())); 
 				spnAsphaltGuide.setSelection(((ArrayAdapter<String>) spnAsphaltGuide.getAdapter()).getPosition(lastTask.getForm().getAsphaltGuide())); 
 				spnPublicIlumination.setSelection(((ArrayAdapter<String>) spnPublicIlumination.getAdapter()).getPosition(lastTask.getForm().getPublicIlumination())); 
