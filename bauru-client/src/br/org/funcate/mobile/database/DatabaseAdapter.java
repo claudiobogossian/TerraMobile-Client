@@ -27,7 +27,6 @@ import com.j256.ormlite.table.TableUtils;
 public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 
 	private final String LOG_TAG = "#" + getClass().getSimpleName();
-	protected AndroidConnectionSource connectionSource = new AndroidConnectionSource(this);
 
 	// name of the database file for your application -- change to something
 	// appropriate for your app
@@ -43,25 +42,15 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 	private Dao<User, Integer> userDao = null;
 	private Dao<Address, Integer> addressDao = null;
 
-	//	private static DatabaseAdapter instance;
-
 	public DatabaseAdapter(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
 		try {
 			this.createDaos();
-//			this.dropTables();
-//			this.createTables();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-
-	//	public static DatabaseAdapter getInstance(Context context) {
-	//		if (instance == null)
-	//			instance = new DatabaseAdapter(context);
-	//		return instance;
-	//	}
 
 	public void createDaos() throws SQLException {
 		taskDao = getDao(Task.class);
@@ -118,16 +107,16 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
 			}
 		}
 
-		try {
-			this.dropTables();
-			this.createTables();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (clearSpecial) {
-				connectionSource.clearSpecialConnection(conn);
-			}
-		}
+//		try {
+//			this.dropTables();
+//			this.createTables();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			if (clearSpecial) {
+//				connectionSource.clearSpecialConnection(conn);
+//			}
+//		}
 	}
 
 	public void dropTables() throws SQLException {

@@ -559,5 +559,6 @@ public class GeoForm extends Activity implements LocationListener{
 
 	public void hideLoadMask() {
 		dialog.hide();
+		dialog.cancel();
 	}
 }
