@@ -10,8 +10,10 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -108,7 +110,7 @@ public class FormActivity extends Activity implements LocationListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_geoform);
+		setContentView(R.layout.activity_form);
 
 		photos = new ArrayList<Photo>();
 		task = (Task) getIntent().getSerializableExtra("task");
@@ -220,7 +222,6 @@ public class FormActivity extends Activity implements LocationListener {
 				edtPostalCode.setInputType(InputType.TYPE_NULL);
 				address.setEnabled(true);
 				edtPostalCode.setEnabled(false);
-				address.requestFocus();
 
 				buttonPhoto.setEnabled(false);
 				buttonOk.setEnabled(false);
@@ -260,7 +261,24 @@ public class FormActivity extends Activity implements LocationListener {
 				if (address.getText().toString().compareTo("") == 0) {
 					address.requestFocus();
 				} else {
-					validate();
+					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FormActivity.this);
+				    alertDialogBuilder.setTitle("Atenção");
+				    alertDialogBuilder.setMessage("Deseja salvar?").setCancelable(false).setPositiveButton("Sim",
+				        new DialogInterface.OnClickListener() {
+				        public void onClick(DialogInterface dialog, int id) {
+				                dialog.cancel();
+				                validate();
+				            }
+				        })
+				        .setNegativeButton("Não",
+				        new DialogInterface.OnClickListener() {
+				            public void onClick(DialogInterface dialog, int id) {
+				                dialog.cancel();
+				            }
+				        });
+				 
+				    AlertDialog alertDialog = alertDialogBuilder.create();
+				    alertDialog.show();
 				}
 			}
 
