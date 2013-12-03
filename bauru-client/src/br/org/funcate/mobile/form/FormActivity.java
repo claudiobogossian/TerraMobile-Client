@@ -162,29 +162,6 @@ public class FormActivity extends Activity implements LocationListener {
 		});
 	}
 	
-	/**
-	 * 
-	 * 
-	 * @author Paulo Luan
-	 * */
-	public void setButtonsListeners() {
-
-		button_clear.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				address.setText("");
-				edtNeighborhood.setText("");
-				edtPostalCode.setText("");
-				address.setInputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS);
-				edtPostalCode.setInputType(InputType.TYPE_NULL);
-				address.setEnabled(true);
-				edtPostalCode.setEnabled(false);
-
-				buttonPhoto.setEnabled(false);
-				buttonOk.setEnabled(false);
-			}
-		});
-
 	public void setButtonCancelListener() {
 		buttonCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -241,7 +218,7 @@ public class FormActivity extends Activity implements LocationListener {
 				        new DialogInterface.OnClickListener() {
 				        public void onClick(DialogInterface dialog, int id) {
 				                dialog.cancel();
-				                validate();
+				                validateFields();
 				            }
 				        })
 				        .setNegativeButton("Não",
@@ -253,7 +230,6 @@ public class FormActivity extends Activity implements LocationListener {
 				 
 				    AlertDialog alertDialog = alertDialogBuilder.create();
 				    alertDialog.show();
-					validateFields();
 				}
 			}
 		});
