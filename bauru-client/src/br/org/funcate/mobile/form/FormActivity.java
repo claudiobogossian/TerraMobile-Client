@@ -46,7 +46,6 @@ import br.org.funcate.mobile.photo.PhotoDao;
 import br.org.funcate.mobile.task.Task;
 import br.org.funcate.mobile.task.TaskDao;
 
-
 public class FormActivity extends Activity implements LocationListener {
 
 	// tag used to debug
@@ -85,7 +84,8 @@ public class FormActivity extends Activity implements LocationListener {
 	private Button 
 		buttonCancel, 
 		buttonOk, 
-		buttonPhoto;
+		buttonPhoto, 
+		buttonClearSpinners;
 	
 	private LocationManager locationManager;
 
@@ -111,7 +111,6 @@ public class FormActivity extends Activity implements LocationListener {
 		setContentView(R.layout.activity_geoform);
 
 		photos = new ArrayList<Photo>();
-
 		task = (Task) getIntent().getSerializableExtra("task");
 
 		try {
@@ -289,6 +288,13 @@ public class FormActivity extends Activity implements LocationListener {
 				finish();
 			}
 		});
+		
+		buttonClearSpinners.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				self.clearSpinnerFields();
+			}
+		});
 	}
 
 
@@ -306,13 +312,6 @@ public class FormActivity extends Activity implements LocationListener {
 		lat = (TextView) findViewById(R.id.cp_lat);
 		lon = (TextView) findViewById(R.id.cp_lon);
 		
-		/*
-		edtCity = (EditText) findViewById(R.id.cp_cit);
-		edtState = (EditText) findViewById(R.id.cp_est);
-		edtInformation1 = (EditText) findViewById(R.id.cp_if1);
-		edtInformation2 = (EditText) findViewById(R.id.cp_if2);	
-		*/
-		
 		edtOtherNumbers = (EditText) findViewById(R.id.edt_other_numbers);
 
 		// Spinners
@@ -328,6 +327,7 @@ public class FormActivity extends Activity implements LocationListener {
 
 		// Buttons 
 		button_clear = (ImageButton) findViewById(R.id.cp_button_clear);
+		buttonClearSpinners = (Button) findViewById(R.id.button_clear_fields);
 		buttonCancel = (Button) findViewById(R.id.cp_button_cancel);
 		buttonOk = (Button) findViewById(R.id.cp_button_ok);
 		buttonPhoto = (Button) findViewById(R.id.cp_button_photo);
@@ -442,10 +442,10 @@ public class FormActivity extends Activity implements LocationListener {
 	 * 		 The path of the image that you want to get the base.
 	 * 
 	 * */
-	public void clearAllFields(){
-		edtNeighborhood.setText("");
-		edtPostalCode.setText("");
-		edtNumber.setText(""); 
+	public void clearSpinnerFields() {
+		//edtNeighborhood.setText("");
+		//edtPostalCode.setText("");
+		//edtNumber.setText(""); 
 		edtOtherNumbers.setText("");
 		spnNumberConfirmation.setSelection(0); 
 		spnVariance.setSelection(0); 

@@ -19,7 +19,7 @@
     <!-- Form Screen -->
     <string name="tv_insertData">Inserir dados</string>
     <string name="btn_get_photo">Obter Foto</string>
-    <string name="btn_clear">Obter Foto</string>
+    <string name="btn_clear">Limpar Seleções</string>
     <string name="tv_lat">Latitude: </string>
     <string name="tv_long">Longitude: </string>
     <string name="tv_address">Endereço: </string>
