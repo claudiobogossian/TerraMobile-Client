@@ -47,7 +47,7 @@ import br.org.funcate.mobile.task.Task;
 import br.org.funcate.mobile.task.TaskDao;
 
 
-public class FormActivity extends Activity implements LocationListener{
+public class FormActivity extends Activity implements LocationListener {
 
 	// tag used to debug
 	private final String LOG_TAG = "#" + getClass().getSimpleName();
