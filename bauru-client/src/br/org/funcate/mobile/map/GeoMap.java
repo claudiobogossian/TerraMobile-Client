@@ -23,7 +23,7 @@ import android.widget.Toast;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.address.Address;
-import br.org.funcate.mobile.form.GeoForm;
+import br.org.funcate.mobile.form.FormActivity;
 import br.org.funcate.mobile.task.Task;
 import br.org.funcate.mobile.task.TaskActivity;
 import br.org.funcate.mobile.task.TaskDao;
@@ -79,7 +79,7 @@ public class GeoMap extends Activity {
 	}
 
 	public void openGeoform() {
-		Intent i = new Intent(self, GeoForm.class);
+		Intent i = new Intent(self, FormActivity.class);
 		i.putExtra("CURRENT_LOCATION", self.lastLocation);
 		startActivityForResult(i, GEOFORM);
 	}

@@ -47,7 +47,7 @@ import br.org.funcate.mobile.task.Task;
 import br.org.funcate.mobile.task.TaskDao;
 
 
-public class GeoForm extends Activity implements LocationListener{
+public class FormActivity extends Activity implements LocationListener{
 
 	// tag used to debug
 	private final String LOG_TAG = "#" + getClass().getSimpleName();
@@ -89,7 +89,7 @@ public class GeoForm extends Activity implements LocationListener{
 	
 	private LocationManager locationManager;
 
-	private GeoForm self = this;
+	private FormActivity self = this;
 
 	private static Task task;
 	public static Task lastTask;
@@ -244,7 +244,7 @@ public class GeoForm extends Activity implements LocationListener{
 			buttonPhoto.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Intent i = new Intent(GeoForm.this, PhotoActivity.class);
+					Intent i = new Intent(FormActivity.this, PhotoActivity.class);
 					startActivityForResult(i, PHOTO);
 				}
 			});
@@ -278,7 +278,7 @@ public class GeoForm extends Activity implements LocationListener{
 				Intent data = new Intent();
 
 				if(isSaved) {
-					GeoForm.lastTask = task;
+					FormActivity.lastTask = task;
 					data.putExtra("RESULT", "Registro salvo!");
 				} else {
 					data.putExtra("RESULT", "Registro não foi salvo!");
@@ -375,7 +375,7 @@ public class GeoForm extends Activity implements LocationListener{
 	 * */
 	public void setAutoCompleteAdapterPropertiers(Cursor cursor){
 
-		AddressAdapter addressAdapter = new AddressAdapter(GeoForm.this,
+		AddressAdapter addressAdapter = new AddressAdapter(FormActivity.this,
 				R.layout.item_list, 
 				cursor,
 				new String[] { "name", "edtPostalCode", "edtNumber", "edtNeighborhood"},
@@ -550,11 +550,11 @@ public class GeoForm extends Activity implements LocationListener{
 	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {}
 
 	public void showLoadingMask() {
-		dialog = ProgressDialog.show(GeoForm.this, "", "Salvando, aguarde...", true);
+		dialog = ProgressDialog.show(FormActivity.this, "", "Salvando, aguarde...", true);
 	}
 
 	public void showLoadingMask(String message) {
-		dialog = ProgressDialog.show(GeoForm.this, "", message, true);
+		dialog = ProgressDialog.show(FormActivity.this, "", message, true);
 	}
 
 	public void hideLoadMask() {

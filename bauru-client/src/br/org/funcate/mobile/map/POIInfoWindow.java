@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import br.org.funcate.mobile.R;
-import br.org.funcate.mobile.form.GeoForm;
+import br.org.funcate.mobile.form.FormActivity;
 import br.org.funcate.mobile.task.Task;
 
 /**
@@ -31,7 +31,7 @@ public class POIInfoWindow extends DefaultInfoWindow {
 			//bonuspack_bubble layouts already contain a "more info" button. 
 		btn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				Intent intent = new Intent(view.getContext(), GeoForm.class);
+				Intent intent = new Intent(view.getContext(), FormActivity.class);
 				intent.putExtra("task", task);
 				
 				view.getContext().startActivity(intent);

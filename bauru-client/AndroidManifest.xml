@@ -33,7 +33,7 @@
         android:theme="@style/AppTheme" 
         android:name="br.org.funcate.mobile.database.ApplicationMemory" >
     	
-        <activity android:name="br.org.funcate.mobile.form.GeoForm" android:configChanges="orientation" ></activity>
+        <activity android:name="br.org.funcate.mobile.form.FormActivity" android:configChanges="orientation" ></activity>
         <activity android:name="br.org.funcate.mobile.map.GeoMap" ></activity>
         <activity android:name="br.org.funcate.mobile.task.TaskActivity" ></activity>
         <activity android:name="br.org.funcate.mobile.photo.PhotoActivity" ></activity>
