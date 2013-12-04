@@ -38,10 +38,8 @@ public class GeoMap extends Activity {
 	private static final int GEOFORM = 101;
 	private static final int TASK = 103;
 
-	protected LocationManager locationManager;
 	ItemizedOverlayWithBubble<ExtendedOverlayItem> poiMarkers;
 
-	private Location lastLocation;
 	private GeoMap self = this;
 
 	@Override
@@ -69,18 +67,10 @@ public class GeoMap extends Activity {
 		poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, poiItems, mapView, new POIInfoWindow(mapView));
 		//poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, poiItems, mapView);
 		mapView.getOverlays().add(poiMarkers);
-
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-		if (lastLocation != null) {
-			//updateLoc(lastLocation);
-		}
 	}
 
 	public void openGeoform() {
 		Intent i = new Intent(self, FormActivity.class);
-		i.putExtra("CURRENT_LOCATION", self.lastLocation);
 		startActivityForResult(i, GEOFORM);
 	}
 
@@ -104,15 +94,6 @@ public class GeoMap extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-	}
-
-	private void updateLoc(Location loc) {
-		Double latitude = loc.getLatitude(); // -23.157618544172863
-		Double longitude = loc.getLongitude(); // -45.79068200523216
-		GeoPoint locGeoPoint = new GeoPoint(latitude, longitude);
-		controller.setCenter(locGeoPoint);
-		//setOverlayLoc(loc);
-		mapView.invalidate();
 	}
 
 	/**

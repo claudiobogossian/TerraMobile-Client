@@ -56,10 +56,6 @@ public class FormActivity extends Activity implements LocationListener {
 	// other activities
 	private static final int PHOTO = 102;
 
-	//private Task task;
-
-	private Location currentLocation = null;
-
 	// widgets
 	private AutoCompleteTextView address;
 
@@ -114,12 +110,6 @@ public class FormActivity extends Activity implements LocationListener {
 
 		photos = new ArrayList<Photo>();
 		task = (Task) getIntent().getSerializableExtra("task");
-
-		try {
-			currentLocation = getIntent().getExtras().getParcelable("CURRENT_LOCATION");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
 		self.mapFieldsToObjects();
 		
@@ -282,6 +272,7 @@ public class FormActivity extends Activity implements LocationListener {
 		address.setText("");
 		edtNeighborhood.setText("");
 		edtPostalCode.setText("");
+		edtNumber.setText("");
 		address.setInputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS);
 		edtPostalCode.setInputType(InputType.TYPE_NULL);
 		address.setEnabled(true);
@@ -397,17 +388,10 @@ public class FormActivity extends Activity implements LocationListener {
 	 * */
 	public void setFormPropertiesWithFields(Task taskParam){
 		Form form = taskParam.getForm();
-
-		Double coordx = null;
-		Double coordy = null;
-
-		if(currentLocation != null) {
-			coordx = currentLocation.getLatitude();
-			coordy = currentLocation.getLongitude();
-		}
-
-		form.setCoordx(coordx);
-		form.setCoordy(coordy);
+		
+		taskParam.getAddress().setCoordx(Double.valueOf(lat.getText().toString()));
+		taskParam.getAddress().setCoordy(Double.valueOf(lon.getText().toString()));
+		
 		form.setDate(new Date());
 		form.setOtherNumbers(edtOtherNumbers.getText().toString());
 		form.setNumberConfirmation(spnNumberConfirmation.getSelectedItem().toString());

@@ -37,13 +37,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
                     android:text="@string/tv_lat"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/cp_lat"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:textColor="@color/black" />
             </LinearLayout>
         </TableRow>
@@ -60,16 +61,17 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0"
                     android:text="@string/tv_long"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/cp_lon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0"
+                    android:layout_weight="0.10"
                     android:textColor="@color/black" />
+
             </LinearLayout>
         </TableRow>
 
@@ -79,28 +81,14 @@
             android:layout_weight="1" >
 
             <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_span="2"
-                android:paddingBottom="10dp"
-                android:paddingTop="5dp"
-                android:text="@string/tv_address"
-                android:textColor="@color/black" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" >
-
-            <TextView
                 android:id="@+id/cp_logt"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:text="@string/tv_log"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
         </TableRow>
 
         <TableRow
@@ -146,7 +134,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:text="@string/tv_neighborhood"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
         </TableRow>
 
         <TableRow
@@ -176,7 +166,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:text="@string/tv_postal_code"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
         </TableRow>
 
         <TableRow
@@ -206,7 +198,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:text="@string/tv_number"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
         </TableRow>
 
         <TableRow
@@ -234,7 +228,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:text="@string/tv_number_confirmation"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
         </TableRow>
 
         <TableRow
@@ -260,7 +256,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:text="@string/tv_variance"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
         </TableRow>
 
         <TableRow
@@ -286,7 +284,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:text="@string/tv_numbers_found"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
         </TableRow>
 
         <TableRow
@@ -314,7 +314,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:text="@string/tv_primary_use"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
         </TableRow>
 
         <TableRow
@@ -340,7 +342,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:text="@string/tv_secondary_use"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
         </TableRow>
 
         <TableRow
@@ -366,7 +370,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:text="@string/tv_pavimentation"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
         </TableRow>
 
         <TableRow
@@ -392,7 +398,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:text="@string/tv_asphalt_guides"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
         </TableRow>
 
         <TableRow
@@ -418,7 +426,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:text="@string/tv_public_illumination"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
         </TableRow>
 
         <TableRow
@@ -444,7 +454,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:text="@string/tv_eletric_energy"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
         </TableRow>
 
         <TableRow
@@ -470,7 +482,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:text="@string/tv_pluvial_galery"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
         </TableRow>
 
         <TableRow
