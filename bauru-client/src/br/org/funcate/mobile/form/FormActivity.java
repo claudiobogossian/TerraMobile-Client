@@ -111,10 +111,10 @@ public class FormActivity extends Activity implements LocationListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_form);
 
+		self.mapFieldsToObjects();
+		
 		photos = new ArrayList<Photo>();
 		task = (Task) getIntent().getSerializableExtra("task");
-
-		self.mapFieldsToObjects();
 		
 		if(task != null) {
 			this.setFieldsWithTaskProperties(task);
@@ -272,6 +272,8 @@ public class FormActivity extends Activity implements LocationListener {
 	 * @author Paulo Luan
 	 * */
 	public void clearAddressFields() {
+		lat.setText("");
+		lon.setText("");
 		address.setText("");
 		edtNeighborhood.setText("");
 		edtPostalCode.setText("");
