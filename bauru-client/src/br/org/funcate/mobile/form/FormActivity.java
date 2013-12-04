@@ -40,8 +40,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import br.org.funcate.mobile.R;
+import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.address.AddressAdapter;
+import br.org.funcate.mobile.map.GeoMap;
 import br.org.funcate.mobile.photo.Photo;
 import br.org.funcate.mobile.photo.PhotoActivity;
 import br.org.funcate.mobile.photo.PhotoDao;
@@ -533,8 +536,9 @@ public class FormActivity extends Activity implements LocationListener {
 					lon.setText("" + location.getLongitude());
 				}
 				else {
-					lat.setText("Localização não disponivel");
-					lon.setText("Localização não disponivel");
+					Utility.showToast("Erro, ative o GPS", Toast.LENGTH_LONG, FormActivity.this);
+					lat.setText("0.0");
+					lon.setText("0.0");
 				}
 
 				photos.add(photo);
