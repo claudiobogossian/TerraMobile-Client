@@ -24,31 +24,53 @@
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1" >
 
-            <TextView
-                android:id="@+id/cp_latt"
+            <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:text="@string/tv_lat"
-                android:textColor="@color/black" />
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:text="@string/tv_lat"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/cp_lat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:textColor="@color/black" />
+            </LinearLayout>
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1" >
 
-            <TextView
-                android:id="@+id/cp_lont"
+            <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:text="@string/tv_long"
-                android:textColor="@color/black" />
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:text="@string/tv_long"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/cp_lon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:textColor="@color/black" />
+            </LinearLayout>
         </TableRow>
 
         <TableRow
@@ -137,8 +159,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:enabled="false"
                 android:ems="10"
+                android:enabled="false"
                 android:inputType="text" />
         </TableRow>
 
@@ -169,7 +191,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                
                 android:inputType="number"
                 android:maxLength="8" />
         </TableRow>
@@ -496,7 +517,6 @@
                 android:gravity="center_vertical|center_horizontal|left"
                 android:text="@string/btn_ok" />
         </TableRow>
-
     </TableLayout>
 
 </ScrollView>

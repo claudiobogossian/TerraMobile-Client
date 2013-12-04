@@ -335,7 +335,7 @@ public class FormActivity extends Activity implements LocationListener {
 	 * @author Paulo Luan
 	 * */
 	public void setFieldsWithTaskProperties(Task taskParam) {
-		if(taskParam != null){
+		if(taskParam != null) {
 			lat.setText("" + taskParam.getAddress().getCoordx());
 			lon.setText("" + taskParam.getAddress().getCoordy());
 			
@@ -343,7 +343,7 @@ public class FormActivity extends Activity implements LocationListener {
 			edtNeighborhood.setText(taskParam.getAddress().getNeighborhood());
 			edtPostalCode.setText(taskParam.getAddress().getPostalCode());
 			edtNumber.setText(taskParam.getAddress().getNumber());
-			edtOtherNumbers.setText("");
+			edtOtherNumbers.setText(taskParam.getForm().getOtherNumbers());
 			
 			try {
 				spnNumberConfirmation.setSelection(((ArrayAdapter<String>) spnNumberConfirmation.getAdapter()).getPosition(taskParam.getForm().getNumberConfirmation()));
