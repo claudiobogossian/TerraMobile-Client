@@ -9,18 +9,28 @@
         android:layout_height="wrap_content" >
 
         <TableRow
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1" >
 
-            <Button
-                android:id="@+id/cp_button_photo"
+            <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:drawableLeft="@drawable/ico_foto"
-                android:gravity="center_vertical|left"
-                android:text="@string/btn_get_photo" />
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:text="@string/tv_lat"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/cp_lat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:textColor="@color/black" />
+            </LinearLayout>
         </TableRow>
 
         <TableRow
@@ -36,43 +46,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
-                    android:text="@string/tv_lat"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/cp_lat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:textColor="@color/black" />
-            </LinearLayout>
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" >
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="@string/tv_long"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/cp_lon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.10"
+                    android:layout_weight="0"
                     android:textColor="@color/black" />
-
             </LinearLayout>
+        </TableRow>
+
+        <LinearLayout>
+        </LinearLayout>
+
+        <TableRow>
         </TableRow>
 
         <TableRow
@@ -88,7 +77,6 @@
                 android:text="@string/tv_log"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
-
         </TableRow>
 
         <TableRow
@@ -114,13 +102,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
-            <ImageButton
-                android:id="@+id/cp_button_clear"
-                android:layout_width="fill_parent"
+            <Button
+                android:id="@+id/button_clear_fields"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/ico_clear" />
+                android:drawableRight="@drawable/ico_clear"
+                android:text="@string/btn_clear_address" />
         </TableRow>
 
         <TableRow
@@ -136,7 +123,6 @@
                 android:text="@string/tv_neighborhood"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
-
         </TableRow>
 
         <TableRow
@@ -168,7 +154,6 @@
                 android:text="@string/tv_postal_code"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
-
         </TableRow>
 
         <TableRow
@@ -200,7 +185,6 @@
                 android:text="@string/tv_number"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
-
         </TableRow>
 
         <TableRow
@@ -230,7 +214,6 @@
                 android:text="@string/tv_number_confirmation"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
-
         </TableRow>
 
         <TableRow
@@ -258,7 +241,6 @@
                 android:text="@string/tv_variance"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
-
         </TableRow>
 
         <TableRow
@@ -286,7 +268,6 @@
                 android:text="@string/tv_numbers_found"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
-
         </TableRow>
 
         <TableRow
@@ -316,7 +297,6 @@
                 android:text="@string/tv_primary_use"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
-
         </TableRow>
 
         <TableRow
@@ -344,7 +324,6 @@
                 android:text="@string/tv_secondary_use"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
-
         </TableRow>
 
         <TableRow
@@ -372,7 +351,6 @@
                 android:text="@string/tv_pavimentation"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
-
         </TableRow>
 
         <TableRow
@@ -400,7 +378,6 @@
                 android:text="@string/tv_asphalt_guides"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
-
         </TableRow>
 
         <TableRow
@@ -428,7 +405,6 @@
                 android:text="@string/tv_public_illumination"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
-
         </TableRow>
 
         <TableRow
@@ -456,7 +432,6 @@
                 android:text="@string/tv_eletric_energy"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
-
         </TableRow>
 
         <TableRow
@@ -484,7 +459,6 @@
                 android:text="@string/tv_pluvial_galery"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
-
         </TableRow>
 
         <TableRow
@@ -501,35 +475,43 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/tr_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:baselineAligned="false" >
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+
+            <Button
+                android:id="@+id/cp_button_photo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:drawableTop="@drawable/ico_foto"
+                android:text="@string/btn_get_photo" />
+        </TableRow>
+
+        <TableRow>
 
             <Button
                 android:id="@+id/button_clear_fields"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:drawableLeft="@drawable/ico_clear"
-                android:gravity="center_vertical|left"
+                android:drawableTop="@drawable/ico_clear"
                 android:text="@string/btn_clear" />
 
             <Button
                 android:id="@+id/cp_button_cancel"
-                android:layout_width="250dp"
+                android:layout_width="210dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:drawableLeft="@drawable/ico_cancelar"
+                android:drawableTop="@drawable/ico_cancelar"
                 android:text="@string/btn_cancel" />
 
             <Button
                 android:id="@+id/cp_button_ok"
-                android:layout_width="210dp"
+                android:layout_width="250dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:drawableLeft="@drawable/ico_ok"
-                android:gravity="center_vertical|center_horizontal|left"
-                android:text="@string/btn_ok" />
+                android:drawableTop="@drawable/ico_ok"
+                android:text="@string/btn_save" />
         </TableRow>
     </TableLayout>
 

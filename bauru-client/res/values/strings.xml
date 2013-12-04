@@ -43,8 +43,10 @@
     <string name="tv_eletric_energy">Energia elétrica</string>
     <string name="tv_pluvial_galery">Galeria pluvial</string>
     <string name="btn_cancel">Cancelar</string>
+    <string name="btn_save">Salvar</string>
     <string name="btn_ok">OK</string>
     <string name="btn_clear">Limpar</string>
+    <string name="btn_clear_address">Limpar Endereço</string>
     
     <!-- Task Screen -->
     <string name="btn_sync_tasks">Sincronizar com o servidor</string>

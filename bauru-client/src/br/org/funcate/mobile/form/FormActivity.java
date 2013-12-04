@@ -433,7 +433,9 @@ public class FormActivity extends Activity implements LocationListener {
 				try {
 					task = TaskDao.getTaskByAddressId((int) addressId);
 					
-					if(task != null) {
+					if(photos.isEmpty()) {
+						Utility.showToast("Você precisa tirar ao menos uma foto.", Toast.LENGTH_LONG, FormActivity.this);
+					} else if(task != null) {
 						self.setFieldsWithTaskProperties(task);
 						
 						address.clearFocus();
@@ -538,7 +540,7 @@ public class FormActivity extends Activity implements LocationListener {
 					lon.setText("" + location.getLongitude());
 				}
 				else {
-					Utility.showToast("Erro, ative o GPS", Toast.LENGTH_LONG, FormActivity.this);
+					//Utility.showToast("Erro, ative o GPS", Toast.LENGTH_LONG, FormActivity.this);
 					lat.setText("0.0");
 					lon.setText("0.0");
 				}
