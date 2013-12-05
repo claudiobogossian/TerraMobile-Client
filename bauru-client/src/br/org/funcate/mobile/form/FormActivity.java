@@ -237,8 +237,7 @@ public class FormActivity extends Activity implements LocationListener {
 			@Override
 			public void onClick(View v) {
 				self.clearSpinnerFields();
-				address.clearFocus();
-				edtOtherNumbers.clearFocus();
+				self.clearAddressFocus();				
 			}
 		});
 	}
@@ -290,6 +289,8 @@ public class FormActivity extends Activity implements LocationListener {
 		
 		address.setInputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS);
 		address.setEnabled(true);
+		address.setFocusable(true);
+		address.setFocusableInTouchMode(true);
 		address.requestFocus();
 
 		buttonPhoto.setEnabled(false);
@@ -369,6 +370,8 @@ public class FormActivity extends Activity implements LocationListener {
 				buttonPhoto.setEnabled(true);
 				buttonOk.setEnabled(true);
 			}
+			
+			self.clearAddressFocus();
 		}	
 	}
 
@@ -438,11 +441,18 @@ public class FormActivity extends Activity implements LocationListener {
 		address.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view, int position, long addressId) {
-				try {
+				try {					
 					address.clearFocus();
+					address.setFocusableInTouchMode(false);
+					address.setFocusable(false);
 					edtPostalCode.clearFocus();
 					edtNeighborhood.clearFocus();
 					edtNumber.clearFocus();
+					
+					edtPostalCode.setFocusable(false);
+					edtNeighborhood.setFocusable(false);
+					edtNeighborhood.setFocusableInTouchMode(false);
+					edtNumber.setFocusable(false);
 					
 					InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 					mgr.hideSoftInputFromWindow(address.getWindowToken(), 0);
@@ -451,12 +461,25 @@ public class FormActivity extends Activity implements LocationListener {
 					
 					if(task != null) {
 						self.setFieldsWithTaskProperties(task);
-					}					
+					}
 				} catch (Exception ex) {
 					Log.e(LOG_TAG, "Exception onItemClick: " + ex);
 				}
 			}
 		});
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @author Paulo Luan
+	 * */
+	public void clearAddressFocus() {
+		edtPostalCode.clearFocus();
+		edtNeighborhood.clearFocus();
+		edtNumber.clearFocus();
+		edtOtherNumbers.clearFocus();
+		address.clearFocus();
 	}
 
 	/**
@@ -549,7 +572,6 @@ public class FormActivity extends Activity implements LocationListener {
 					lon.setText("" + location.getLongitude());
 				}
 				else {
-					//Utility.showToast("Erro, ative o GPS", Toast.LENGTH_LONG, FormActivity.this);
 					lat.setText("0.0");
 					lon.setText("0.0");
 				}
