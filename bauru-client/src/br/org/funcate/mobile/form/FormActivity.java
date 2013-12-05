@@ -273,13 +273,21 @@ public class FormActivity extends Activity implements LocationListener {
 		lat.setText("");
 		lon.setText("");
 		address.setText("");
-		edtNeighborhood.setText("");
+		
 		edtPostalCode.setText("");
+		edtNeighborhood.setText("");
 		edtNumber.setText("");
-		address.setInputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS);
+		
 		edtPostalCode.setInputType(InputType.TYPE_NULL);
-		address.setEnabled(true);
+		edtNeighborhood.setInputType(InputType.TYPE_NULL);
+		edtNumber.setInputType(InputType.TYPE_NULL);
+		
 		edtPostalCode.setEnabled(false);
+		edtNeighborhood.setEnabled(false);
+		edtNumber.setEnabled(false);
+		
+		address.setInputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS);
+		address.setEnabled(true);
 		address.requestFocus();
 
 		buttonPhoto.setEnabled(false);
@@ -429,16 +437,17 @@ public class FormActivity extends Activity implements LocationListener {
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view, int position, long addressId) {
 				try {
-					
 					address.clearFocus();
+					edtPostalCode.clearFocus();
+					edtNeighborhood.clearFocus();
+					edtNumber.clearFocus();
+					
 					InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 					mgr.hideSoftInputFromWindow(address.getWindowToken(), 0);
 					
 					task = TaskDao.getTaskByAddressId((int) addressId);
 					
-					if(photos.isEmpty()) {
-						Utility.showToast("Você precisa tirar ao menos uma foto.", Toast.LENGTH_LONG, FormActivity.this);
-					} else if(task != null) {
+					if(task != null) {
 						self.setFieldsWithTaskProperties(task);
 					}					
 				} catch (Exception ex) {
@@ -552,26 +561,31 @@ public class FormActivity extends Activity implements LocationListener {
 	
 	public void validateFields() {
 		boolean isSaved = false;
-
-		self.showLoadingMask();
-		self.setFormPropertiesWithFields(task);		
-		task.setDone(true);
-
-		isSaved = TaskDao.updateTask(task);
-		isSaved = PhotoDao.savePhotos(photos);
-
-		Intent data = new Intent();
-
-		if(isSaved) {
-			FormActivity.lastTask = task;
-			data.putExtra("RESULT", "Registro salvo!");
+		
+		if(photos.isEmpty()) {
+			Utility.showToast("Você precisa tirar ao menos uma foto.", Toast.LENGTH_LONG, FormActivity.this);
 		} else {
-			data.putExtra("RESULT", "Registro não foi salvo!");
+			self.showLoadingMask();
+			self.setFormPropertiesWithFields(task);		
+			task.setDone(true);
+
+			isSaved = TaskDao.updateTask(task);
+			isSaved = PhotoDao.savePhotos(photos);
+
+			Intent data = new Intent();
+
+			if(isSaved) {
+				FormActivity.lastTask = task;
+				data.putExtra("RESULT", "Registro salvo!");
+			} else {
+				data.putExtra("RESULT", "Registro não foi salvo!");
+			}
+
+			setResult(RESULT_OK, data);
+			hideLoadMask();
+			finish();
 		}
 
-		setResult(RESULT_OK, data);
-		hideLoadMask();
-		finish();
 	}
 
 

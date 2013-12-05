@@ -94,7 +94,7 @@
                 android:maxLength="80"
                 android:textColor="#000" >
 
-                <requestFocus />
+                <!-- <requestFocus /> -->
             </AutoCompleteTextView>
         </TableRow>
 
