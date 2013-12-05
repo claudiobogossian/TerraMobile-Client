@@ -288,8 +288,11 @@ public class FormActivity extends Activity implements LocationListener {
 		edtNeighborhood.setEnabled(false);
 		edtNumber.setEnabled(false);
 		
+		
 		address.setInputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS);
 		address.setEnabled(true);
+		address.setFocusable(true);
+		address.setFocusableInTouchMode(true);
 		address.requestFocus();
 
 		buttonPhoto.setEnabled(false);
@@ -440,9 +443,16 @@ public class FormActivity extends Activity implements LocationListener {
 			public void onItemClick(AdapterView<?> adapter, View view, int position, long addressId) {
 				try {
 					address.clearFocus();
+					address.setFocusableInTouchMode(false);
+					address.setFocusable(false);
 					edtPostalCode.clearFocus();
 					edtNeighborhood.clearFocus();
 					edtNumber.clearFocus();
+					
+					edtPostalCode.setFocusable(false);
+					edtNeighborhood.setFocusable(false);
+					edtNeighborhood.setFocusableInTouchMode(false);
+					edtNumber.setFocusable(false);
 					
 					InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 					mgr.hideSoftInputFromWindow(address.getWindowToken(), 0);
@@ -549,7 +559,6 @@ public class FormActivity extends Activity implements LocationListener {
 					lon.setText("" + location.getLongitude());
 				}
 				else {
-					//Utility.showToast("Erro, ative o GPS", Toast.LENGTH_LONG, FormActivity.this);
 					lat.setText("0.0");
 					lon.setText("0.0");
 				}
