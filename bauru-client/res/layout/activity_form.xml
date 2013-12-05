@@ -491,7 +491,7 @@
         <TableRow>
 
             <Button
-                android:id="@+id/button_clear_fields"
+                android:id="@+id/button_clear_spinners"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:drawableTop="@drawable/ico_clear"

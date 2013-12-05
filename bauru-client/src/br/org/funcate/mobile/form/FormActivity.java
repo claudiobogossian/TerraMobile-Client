@@ -237,6 +237,8 @@ public class FormActivity extends Activity implements LocationListener {
 			@Override
 			public void onClick(View v) {
 				self.clearSpinnerFields();
+				address.clearFocus();
+				edtOtherNumbers.clearFocus();
 			}
 		});
 	}
@@ -324,7 +326,7 @@ public class FormActivity extends Activity implements LocationListener {
 
 		// Buttons 
 		buttonClearAddressFields = (Button) findViewById(R.id.button_clear_address);
-		buttonClearSpinners = (Button) findViewById(R.id.button_clear_fields);
+		buttonClearSpinners = (Button) findViewById(R.id.button_clear_spinners);
 		buttonCancel = (Button) findViewById(R.id.cp_button_cancel);
 		buttonOk = (Button) findViewById(R.id.cp_button_ok);
 		buttonPhoto = (Button) findViewById(R.id.cp_button_photo);
