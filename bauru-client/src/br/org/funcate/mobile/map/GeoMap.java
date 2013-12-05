@@ -52,6 +52,10 @@ public class GeoMap extends Activity implements LocationListener {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_geomap);
 
+		self.createMapView();
+	}
+	
+	public void createMapView() {
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
 		mapView.setMultiTouchControls(true);
@@ -63,8 +67,17 @@ public class GeoMap extends Activity implements LocationListener {
 		Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		
 		controller = (MapController) mapView.getController();
-		controller.setZoom(16);
-		controller.setCenter(new GeoPoint(location.getLatitude(), location.getLongitude()));
+		
+		if(location != null) {
+			controller.setZoom(16);
+			controller.setCenter(new GeoPoint(location.getLatitude(), location.getLongitude()));
+			
+			// habilita botão
+			// mostra landmark da posição atual.
+		} else {
+			controller.setZoom(10);
+			controller.setCenter(new GeoPoint(-22.317773, -49.059534));
+		}
 
 		// new GeoPoint(-22.317773, -49.059534) // Bauru 
 		// new GeoPoint(-23.157221, -45.792443) // SJC
@@ -73,7 +86,7 @@ public class GeoMap extends Activity implements LocationListener {
 		final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
 		poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, poiItems, mapView, new POIInfoWindow(mapView));
 		//poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, poiItems, mapView);
-		mapView.getOverlays().add(poiMarkers);
+		mapView.getOverlays().add(poiMarkers);		
 	}
 
 	public void openGeoform() {
