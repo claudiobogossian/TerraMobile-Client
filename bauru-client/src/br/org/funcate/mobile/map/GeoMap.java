@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -29,10 +30,12 @@ import br.org.funcate.mobile.task.TaskActivity;
 import br.org.funcate.mobile.task.TaskDao;
 import br.org.funcate.mobile.user.SessionManager;
 
-public class GeoMap extends Activity {
+public class GeoMap extends Activity implements LocationListener {
 
 	private MapView mapView;
 	private MapController controller;
+	
+	private LocationManager locationManager;
 
 	// other activities
 	private static final int GEOFORM = 101;
@@ -55,9 +58,13 @@ public class GeoMap extends Activity {
 		//mapView.setUseDataConnection(false); // keeps the mapView from loading online tiles using network connection.
 		//mapView.setUseDataConnection(true);
 
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+		Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		
 		controller = (MapController) mapView.getController();
 		controller.setZoom(16);
-		controller.setCenter(new GeoPoint(-22.317773, -49.059534));
+		controller.setCenter(new GeoPoint(location.getLatitude(), location.getLongitude()));
 
 		// new GeoPoint(-22.317773, -49.059534) // Bauru 
 		// new GeoPoint(-23.157221, -45.792443) // SJC
@@ -208,5 +215,29 @@ public class GeoMap extends Activity {
 
 			}
 		}
+	}
+
+	@Override
+	public void onLocationChanged(Location arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onProviderDisabled(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onProviderEnabled(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
+		// TODO Auto-generated method stub
+		
 	}
 }
