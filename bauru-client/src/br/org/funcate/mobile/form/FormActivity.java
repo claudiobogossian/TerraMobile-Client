@@ -441,18 +441,22 @@ public class FormActivity extends Activity implements LocationListener {
 		address.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view, int position, long addressId) {
-				try {					
+				try {
+					/*
 					address.clearFocus();
 					address.setFocusableInTouchMode(false);
 					address.setFocusable(false);
+					
 					edtPostalCode.clearFocus();
 					edtNeighborhood.clearFocus();
 					edtNumber.clearFocus();
 					
 					edtPostalCode.setFocusable(false);
 					edtNeighborhood.setFocusable(false);
-					edtNeighborhood.setFocusableInTouchMode(false);
 					edtNumber.setFocusable(false);
+					
+					edtNeighborhood.setFocusableInTouchMode(false);
+					*/
 					
 					InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 					mgr.hideSoftInputFromWindow(address.getWindowToken(), 0);
@@ -462,6 +466,9 @@ public class FormActivity extends Activity implements LocationListener {
 					if(task != null) {
 						self.setFieldsWithTaskProperties(task);
 					}
+					
+					self.clearAddressFocus();
+					
 				} catch (Exception ex) {
 					Log.e(LOG_TAG, "Exception onItemClick: " + ex);
 				}
@@ -480,6 +487,22 @@ public class FormActivity extends Activity implements LocationListener {
 		edtNumber.clearFocus();
 		edtOtherNumbers.clearFocus();
 		address.clearFocus();
+		
+		edtPostalCode.setFocusable(false);
+		edtNeighborhood.setFocusable(false);
+		edtNumber.setFocusable(false);
+		edtOtherNumbers.setFocusable(false);
+		address.setFocusable(false);
+		
+		// TODO: workaround.
+		edtOtherNumbers.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				edtOtherNumbers.setFocusable(true);
+				edtOtherNumbers.setFocusableInTouchMode(true);
+				edtOtherNumbers.requestFocus();
+			}
+		});
 	}
 
 	/**
