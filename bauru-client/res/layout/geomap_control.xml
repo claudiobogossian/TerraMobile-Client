@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/geomap_control_lay0"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="bottom"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:id="@+id/geomap_control_lay2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_margin="10px" >
+
+        <LinearLayout
+            android:id="@+id/geomap_control_lay3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <ImageButton
+                android:id="@+id/geomap_control_bt_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ico_voltar" >
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/geomap_control_bt_form"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_form" >
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/geomap_control_bt_update_tasks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ico_update" >
+            </ImageButton>
+        </LinearLayout>
+    </FrameLayout>
+
+</LinearLayout>

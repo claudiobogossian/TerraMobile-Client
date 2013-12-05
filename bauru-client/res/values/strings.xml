@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Main Screen -->
+    <string name="app_name">Bauru Digital</string>
+    <string name="str_lbl_login">Login</string>
+    <string name="user_name_hint">Usuário</string>
+    <string name="password_hint">Senha</string>
+    <string name="action_settings">Opções</string>
+    <string name="btn_begin">Iniciar</string>
+    <string name="btn_exit">Sair</string>
+    <string name="lbl_exit">Sair</string>
+    <string name="title_activity_main">Bauru Digital</string>
+    
+    <!--  GeoMap Screen -->
+    <string name="lbl_new_form">Novo formulárío</string>
+    <string name="lbl_get_task">Atualizar trechos</string>
+    
+    <!-- Form Screen -->
+    <string name="tv_insertData">Inserir dados</string>
+    <string name="btn_get_photo">Obter Foto</string>
+    <string name="tv_lat">Latitude: </string>
+    <string name="tv_long">Longitude: </string>
+    <string name="tv_address">Endereço: </string>
+    <string name="tv_log">Logradouro: </string>
+    <string name="tv_neighborhood">Bairro: </string>
+    <string name="tv_postal_code">CEP: </string>
+    <string name="tv_number">Número: </string>
+    <string name="tv_city">Cidade: </string>
+    <string name="tv_state">UF: </string>
+    <string name="tv_other_info">Outras Informações</string>
+    <string name="tv_info1">Info 1: </string>
+    <string name="tv_info2">Info 2: </string>
+    <string name="tv_number_confirmation">Confirmação do número</string>
+    <string name="tv_variance">Desconformidade</string>
+    <string name="tv_numbers_found">Números encontrados</string>
+    <string name="tv_other_batch_numbering">Demais numerações do lote</string>
+    <string name="tv_primary_use">Uso principal</string>
+    <string name="tv_secondary_use">Uso secundário</string>
+    <string name="tv_pavimentation">Pavimentação</string>
+    <string name="tv_asphalt_guides">Guias</string>
+    <string name="tv_public_illumination">Iluminação pública</string>
+    <string name="tv_eletric_energy">Energia elétrica</string>
+    <string name="tv_pluvial_galery">Galeria pluvial</string>
+    <string name="btn_cancel">Cancelar</string>
+    <string name="btn_save">Salvar</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_clear">Limpar</string>
+    <string name="btn_clear_address">Limpar Endereço</string>
+    
+    <!-- Task Screen -->
+    <string name="btn_sync_tasks">Sincronizar com o servidor</string>
+    <string name="info_send_tasks">Enviando informaçãoes ao servidor</string>
+    <string name="btn_clear_tasks">Apagar trechos</string>
+    <string name="userName">Nome</string>
+    <string name="btn_logout">Sair</string>
+    
+    <!-- Colors -->
+    <color name="background_cor1">#FFFFFF</color>
+    <color name="background_cor2">#000000</color>
+    <color name="background_cor3">#555555</color>
+    <color name="background_cor4">#FF4500</color>
+    <color name="background_cor5">#AAAAAA</color>
+    <color name="background_cor6">#CCCCCC</color>
+    <color name="background_cor7">#104E8B</color>
+    <color name="background_cor8">#C11B17</color>
+    
+    <string name="btn_sync_tiles">Baixar mapa de base</string>
+    <string name="txt_general_informations">Informações Gerais</string>
+    <string name="txt_count_incompleted_tasks">Tarefas Incompletas:</string>
+    <string name="txt_count_not_sync">Tarefas completas:</string>
+
+</resources>
