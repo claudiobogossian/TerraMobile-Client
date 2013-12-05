@@ -103,7 +103,7 @@
             android:layout_height="wrap_content" >
 
             <Button
-                android:id="@+id/button_clear_fields"
+                android:id="@+id/button_clear_address"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:drawableRight="@drawable/ico_clear"
@@ -499,7 +499,7 @@
 
             <Button
                 android:id="@+id/cp_button_cancel"
-                android:layout_width="210dp"
+                android:layout_width="250dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:drawableTop="@drawable/ico_cancelar"

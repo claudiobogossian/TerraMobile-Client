@@ -37,14 +37,12 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.address.AddressAdapter;
-import br.org.funcate.mobile.map.GeoMap;
 import br.org.funcate.mobile.photo.Photo;
 import br.org.funcate.mobile.photo.PhotoActivity;
 import br.org.funcate.mobile.photo.PhotoDao;
@@ -80,7 +78,7 @@ public class FormActivity extends Activity implements LocationListener {
 		spnPluvialGallery;
 
 	private TextView lat, lon;
-	private ImageButton button_clear;
+	private Button buttonClearAddressFields;
 	
 	private Button 
 		buttonCancel, 
@@ -147,7 +145,7 @@ public class FormActivity extends Activity implements LocationListener {
 	 * @author Paulo Luan
 	 * */
 	public void setButtonClearListener() {
-		button_clear.setOnClickListener(new View.OnClickListener() {
+		buttonClearAddressFields.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				self.clearAddressFields();
@@ -317,7 +315,7 @@ public class FormActivity extends Activity implements LocationListener {
 		spnPluvialGallery = (Spinner) findViewById(R.id.spnPluvialGalery);
 
 		// Buttons 
-		button_clear = (ImageButton) findViewById(R.id.cp_button_clear);
+		buttonClearAddressFields = (Button) findViewById(R.id.button_clear_address);
 		buttonClearSpinners = (Button) findViewById(R.id.button_clear_fields);
 		buttonCancel = (Button) findViewById(R.id.cp_button_cancel);
 		buttonOk = (Button) findViewById(R.id.cp_button_ok);
@@ -431,17 +429,17 @@ public class FormActivity extends Activity implements LocationListener {
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view, int position, long addressId) {
 				try {
+					
+					address.clearFocus();
+					InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					mgr.hideSoftInputFromWindow(address.getWindowToken(), 0);
+					
 					task = TaskDao.getTaskByAddressId((int) addressId);
 					
 					if(photos.isEmpty()) {
 						Utility.showToast("Você precisa tirar ao menos uma foto.", Toast.LENGTH_LONG, FormActivity.this);
 					} else if(task != null) {
 						self.setFieldsWithTaskProperties(task);
-						
-						address.clearFocus();
-						
-						InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-						mgr.hideSoftInputFromWindow(address.getWindowToken(), 0);
 					}					
 				} catch (Exception ex) {
 					Log.e(LOG_TAG, "Exception onItemClick: " + ex);
