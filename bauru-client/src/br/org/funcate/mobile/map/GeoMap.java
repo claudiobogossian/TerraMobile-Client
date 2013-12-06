@@ -91,7 +91,7 @@ public class GeoMap extends Activity implements LocationListener {
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0, this);
 		location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-		controller = (MapController) mapView.getController();	
+		controller = (MapController) mapView.getController();
 
 		if (location != null) {
 			controller.setZoom(16);
@@ -100,11 +100,11 @@ public class GeoMap extends Activity implements LocationListener {
 			// mostra landmark da posição atual.
 			MyLocationOverlay myLocationOverlay = new MyLocationOverlay(getApplicationContext(), mapView);
 			mapView.getOverlays().add(myLocationOverlay);
-		    myLocationOverlay.enableCompass();
+		    //myLocationOverlay.enableCompass();
 		    myLocationOverlay.enableMyLocation();
-		    myLocationOverlay.enableFollowLocation();
+		    //myLocationOverlay.enableFollowLocation();
 		} else {
-			controller.setZoom(4);
+			controller.setZoom(12);
 			controller.setCenter(new GeoPoint(-22.317773, -49.059534));
 		}
 
@@ -125,8 +125,14 @@ public class GeoMap extends Activity implements LocationListener {
 	}
 
 	public void openTaskScreen() {
-		Intent taskIntent = new Intent(self, TaskActivity.class);
-		startActivityForResult(taskIntent, TASK);
+		long count = TaskDao.getCountOfTasks();
+		
+		if(count == 0) {
+			Utility.showToast("Você não tem nenhum registro salvo, sincronize seu aplicativo.", Toast.LENGTH_LONG, GeoMap.this);
+		} else {
+			Intent taskIntent = new Intent(self, TaskActivity.class);
+			startActivityForResult(taskIntent, TASK);
+		}
 	}
 
 	public void finishThisScreen() {
@@ -202,7 +208,6 @@ public class GeoMap extends Activity implements LocationListener {
 		// performances.
 		poiMarker.setRelatedObject(feature);
 
-		// TODO: remove
 		controller.setCenter(geoPoint);
 
 		return poiMarker;

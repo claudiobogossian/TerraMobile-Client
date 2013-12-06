@@ -204,24 +204,7 @@ public class FormActivity extends Activity implements LocationListener {
 				if (address.getText().toString().compareTo("") == 0) {
 					address.requestFocus();
 				} else {
-					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FormActivity.this);
-				    alertDialogBuilder.setTitle("Atenção");
-				    alertDialogBuilder.setMessage("Deseja salvar?").setCancelable(false).setPositiveButton("Sim",
-				        new DialogInterface.OnClickListener() {
-				        public void onClick(DialogInterface dialog, int id) {
-				                dialog.cancel();
-				                validateFields();
-				            }
-				        })
-				        .setNegativeButton("Não",
-				        new DialogInterface.OnClickListener() {
-				            public void onClick(DialogInterface dialog, int id) {
-				                dialog.cancel();
-				            }
-				        });
-				 
-				    AlertDialog alertDialog = alertDialogBuilder.create();
-				    alertDialog.show();
+					self.validateFields();
 				}
 			}
 		});
@@ -599,34 +582,55 @@ public class FormActivity extends Activity implements LocationListener {
 		}
 	}
 	
-	public void validateFields() {
-		boolean isSaved = false;
-		
+	public void validateFields() {		
 		if(photos.isEmpty()) {
 			Utility.showToast("Você precisa tirar ao menos uma foto.", Toast.LENGTH_LONG, FormActivity.this);
 		} else {
-			self.showLoadingMask();
-			self.setFormPropertiesWithFields(task);		
-			task.setDone(true);
-
-			isSaved = TaskDao.updateTask(task);
-			isSaved = PhotoDao.savePhotos(photos);
-
-			Intent data = new Intent();
-
-			if(isSaved) {
-				FormActivity.lastTask = task;
-				data.putExtra("RESULT", "Registro salvo!");
-			} else {
-				data.putExtra("RESULT", "Registro não foi salvo!");
-			}
-
-			setResult(RESULT_OK, data);
-			hideLoadMask();
-			finish();
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FormActivity.this);
+		    alertDialogBuilder.setTitle("Atenção");
+		    alertDialogBuilder.setMessage("Deseja salvar?").setCancelable(false).setPositiveButton("Sim",
+		        new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int id) {
+		                dialog.cancel();
+		                self.saveTaskIntoLocalDatabase();
+		            }
+		        })
+		        .setNegativeButton("Não",
+		        new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int id) {
+		                dialog.cancel();
+		            }
+		        });
+		 
+		    AlertDialog alertDialog = alertDialogBuilder.create();
+		    alertDialog.show();
 		}
 	}
-	
+
+	protected void saveTaskIntoLocalDatabase() {
+		boolean isSaved = false;
+		
+		self.showLoadingMask();
+		self.setFormPropertiesWithFields(task);		
+		task.setDone(true);
+
+		isSaved = TaskDao.updateTask(task);
+		isSaved = PhotoDao.savePhotos(photos);
+
+		Intent data = new Intent();
+
+		if(isSaved) {
+			FormActivity.lastTask = task;
+			data.putExtra("RESULT", "Registro salvo!");
+		} else {
+			data.putExtra("RESULT", "Registro não foi salvo!");
+		}
+
+		setResult(RESULT_OK, data);
+		hideLoadMask();
+		finish();
+	}
+
 	public void showPictures(List<Photo> pictures) {
 		
 		// LinearLayOut Setup
@@ -635,23 +639,57 @@ public class FormActivity extends Activity implements LocationListener {
 		
 		for (Photo picture : pictures) {
 			try {
-				File imgFile = new  File(picture.getPath());
-				if(imgFile.exists()){
-				    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-				    ImageView imageView = new ImageView(this);
-				    
-				    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
-				    layoutParams.setMargins(5, 5, 5, 5);
-				    
-				    imageView.setLayoutParams(layoutParams);
-				    
-				    imageView.setImageBitmap(myBitmap);
-					linearLayout.addView(imageView);
-				}
+				final ImageView imageView = self.generateImageFromFilePath(picture.getPath());
+				linearLayout.addView(imageView);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public ImageView generateImageFromFilePath(String path) {
+		final File imgFile = new File(path);
+		final ImageView imageView = new ImageView(this);
+		
+		Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+	    
+	    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
+	    layoutParams.setMargins(5, 5, 5, 5);
+	    
+	    imageView.setLayoutParams(layoutParams);
+	    imageView.setImageBitmap(myBitmap);
+	    
+	    imageView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				self.showConfirmDeleteImageDialog(imageView, imgFile);
+			}
+		});
+	    
+	    return imageView;
+	}
+	
+	public void showConfirmDeleteImageDialog(final ImageView imageView, final File file) {
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FormActivity.this);
+	    alertDialogBuilder.setTitle("Atenção");
+	    alertDialogBuilder.setMessage("Deseja Excluir esta foto?").setCancelable(false).setPositiveButton("Sim",
+	        new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int id) {
+	                dialog.cancel();
+	                file.delete();
+	                photos.remove(imageView);
+	                self.showPictures(photos);
+	            }
+	        })
+	        .setNegativeButton("Não",
+	        new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int id) {
+	                dialog.cancel();
+	            }
+	        });
+	 
+	    AlertDialog alertDialog = alertDialogBuilder.create();
+	    alertDialog.show();
 	}
 
 

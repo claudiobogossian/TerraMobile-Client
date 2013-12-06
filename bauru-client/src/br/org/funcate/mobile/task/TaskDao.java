@@ -198,6 +198,30 @@ public class TaskDao {
 	}
 
 	/**
+	 * Get Count of completed tasks.
+	 * 
+	 * @author Paulo Luan
+	 */
+	public static long getCountOfTasks() {
+		long count = 0;
+		
+		QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+		QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+
+		try {
+			String userHash = SessionManager.getUserHash();
+			userQueryBuilder.where().eq("hash", userHash);
+			taskQueryBuilder.join(userQueryBuilder);
+			
+			count = taskQueryBuilder.countOf();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return count;
+	}
+
+	/**
 	 * Save a task into local database.
 	 * 
 	 * @author Paulo Luan
