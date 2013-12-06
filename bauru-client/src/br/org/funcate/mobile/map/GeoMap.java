@@ -8,6 +8,7 @@ import org.osmdroid.bonuspack.overlays.ItemizedOverlayWithBubble;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.MyLocationOverlay;
 
 import android.app.Activity;
 import android.content.Context;
@@ -95,28 +96,17 @@ public class GeoMap extends Activity implements LocationListener {
 		if (location != null) {
 			controller.setZoom(16);
 			controller.setCenter(new GeoPoint(location.getLatitude(), location.getLongitude()));
-
 			// habilita botão
 			// mostra landmark da posição atual.
+			MyLocationOverlay myLocationOverlay = new MyLocationOverlay(getApplicationContext(), mapView);
+			mapView.getOverlays().add(myLocationOverlay);
+		    myLocationOverlay.enableCompass();
+		    myLocationOverlay.enableMyLocation();
+		    myLocationOverlay.enableFollowLocation();
 		} else {
 			controller.setZoom(4);
 			controller.setCenter(new GeoPoint(-22.317773, -49.059534));
 		}
-
-//		if (location != null) {
-//			controller.setZoom(16);
-//			controller.setCenter(new GeoPoint(location.getLatitude(), location.getLongitude()));
-//			// habilita botão
-//			// mostra landmark da posição atual.
-//			MyLocationOverlay myLocationOverlay = new MyLocationOverlay(getApplicationContext(), mapView);
-//			mapView.getOverlays().add(myLocationOverlay);
-//		    myLocationOverlay.enableCompass();
-//		    myLocationOverlay.enableMyLocation();
-//		    myLocationOverlay.enableFollowLocation();
-//		} else {
-//			controller.setZoom(4);
-//			controller.setCenter(new GeoPoint(-22.317773, -49.059534));
-//		}
 
 		// new GeoPoint(-22.317773, -49.059534) // Bauru
 		// new GeoPoint(-23.157221, -45.792443) // SJC
