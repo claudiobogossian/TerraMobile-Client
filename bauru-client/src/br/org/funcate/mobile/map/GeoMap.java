@@ -66,7 +66,7 @@ public class GeoMap extends Activity implements LocationListener {
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 		Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		
-		controller = (MapController) mapView.getController();
+		controller = (MapController) mapView.getController();	
 		
 		if(location != null) {
 			controller.setZoom(16);
@@ -75,7 +75,7 @@ public class GeoMap extends Activity implements LocationListener {
 			// habilita botão
 			// mostra landmark da posição atual.
 		} else {
-			controller.setZoom(10);
+			controller.setZoom(4);
 			controller.setCenter(new GeoPoint(-22.317773, -49.059534));
 		}
 

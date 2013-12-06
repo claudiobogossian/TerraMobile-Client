@@ -37,6 +37,8 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,7 +74,7 @@ public class FormActivity extends Activity implements LocationListener {
 		spnPrimaryUse,
 		spnSecondaryUse, 
 		spnPavimentation, 
-		spnAsphaltGuide, 
+		spnAsphaltGuide,
 		spnPublicIlumination, 
 		spnEnergy, 
 		spnPluvialGallery;
@@ -286,7 +288,6 @@ public class FormActivity extends Activity implements LocationListener {
 		edtNeighborhood.setEnabled(false);
 		edtNumber.setEnabled(false);
 		
-		
 		address.setInputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS);
 		address.setEnabled(true);
 		address.setFocusable(true);
@@ -295,6 +296,9 @@ public class FormActivity extends Activity implements LocationListener {
 
 		buttonPhoto.setEnabled(false);
 		buttonOk.setEnabled(false);
+		
+		photos.clear();
+		this.showPictures(photos);
 	}
 
 
@@ -588,6 +592,7 @@ public class FormActivity extends Activity implements LocationListener {
 				}
 
 				photos.add(photo);
+				showPictures(photos);
 
 			} else if (resultCode == RESULT_CANCELED) {
 			}
@@ -620,7 +625,33 @@ public class FormActivity extends Activity implements LocationListener {
 			hideLoadMask();
 			finish();
 		}
-
+	}
+	
+	public void showPictures(List<Photo> pictures) {
+		
+		// LinearLayOut Setup
+		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.layout_pictures);
+		//linearLayout.removeAllViews();
+		
+		for (Photo picture : pictures) {
+			try {
+				File imgFile = new  File(picture.getPath());
+				if(imgFile.exists()){
+				    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+				    ImageView imageView = new ImageView(this);
+				    
+				    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
+				    layoutParams.setMargins(5, 5, 5, 5);
+				    
+				    imageView.setLayoutParams(layoutParams);
+				    
+				    imageView.setImageBitmap(myBitmap);
+					linearLayout.addView(imageView);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 

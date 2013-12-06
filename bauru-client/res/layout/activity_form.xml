@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <!--  
+        <!--
         <TableRow
             android:layout_width="match_parent"
             android:gravity="center"
@@ -511,6 +511,26 @@
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ico_foto"
                 android:text="@string/btn_get_photo" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <HorizontalScrollView
+                android:id="@+id/horizontalView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dip"
+                android:scrollbars="horizontal|vertical" >
+
+                <LinearLayout
+                    android:id="@+id/layout_pictures"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+                </LinearLayout>
+            </HorizontalScrollView>
         </TableRow>
 
         <TableRow>
