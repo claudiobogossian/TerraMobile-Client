@@ -17,10 +17,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
+import android.widget.ImageButton;
 import android.widget.Toast;
+import android.widget.LinearLayout.LayoutParams;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.address.Address;
@@ -34,8 +38,9 @@ public class GeoMap extends Activity implements LocationListener {
 
 	private MapView mapView;
 	private MapController controller;
-	
+
 	private LocationManager locationManager;
+	private Location location;
 
 	// other activities
 	private static final int GEOFORM = 101;
@@ -45,6 +50,8 @@ public class GeoMap extends Activity implements LocationListener {
 
 	private GeoMap self = this;
 
+	private LayoutInflater inflater;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -52,26 +59,46 @@ public class GeoMap extends Activity implements LocationListener {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_geomap);
 
+		inflater = LayoutInflater.from(getBaseContext());
+		View viewControl = inflater.inflate(R.layout.geomap_gps, null);
+		LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		this.addContentView(viewControl, layoutParamsControl);
+		ImageButton imageButton = (ImageButton) findViewById(R.id.btn_update_location);
+		imageButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (location != null) {
+					location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+					controller.setCenter(new GeoPoint(location.getLatitude(), location.getLongitude()));
+				}
+			}
+		});
+
 		self.createMapView();
 	}
-	
+
 	public void createMapView() {
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
 		mapView.setMultiTouchControls(true);
-		//mapView.setUseDataConnection(false); // keeps the mapView from loading online tiles using network connection.
-		//mapView.setUseDataConnection(true);
+		// mapView.setUseDataConnection(false); // keeps the mapView from
+		// loading online tiles using network connection.
+		// mapView.setUseDataConnection(true);
 
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-		Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
+				0, this);
+		location = locationManager
+				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
 		controller = (MapController) mapView.getController();
-		
-		if(location != null) {
+
+		if (location != null) {
 			controller.setZoom(16);
-			controller.setCenter(new GeoPoint(location.getLatitude(), location.getLongitude()));
-			
+			controller.setCenter(new GeoPoint(location.getLatitude(), location
+					.getLongitude()));
+
 			// habilita botão
 			// mostra landmark da posição atual.
 		} else {
@@ -79,14 +106,16 @@ public class GeoMap extends Activity implements LocationListener {
 			controller.setCenter(new GeoPoint(-22.317773, -49.059534));
 		}
 
-		// new GeoPoint(-22.317773, -49.059534) // Bauru 
+		// new GeoPoint(-22.317773, -49.059534) // Bauru
 		// new GeoPoint(-23.157221, -45.792443) // SJC
 
-		//POI markers:
+		// POI markers:
 		final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
-		poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, poiItems, mapView, new POIInfoWindow(mapView));
-		//poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, poiItems, mapView);
-		mapView.getOverlays().add(poiMarkers);		
+		poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this,
+				poiItems, mapView, new POIInfoWindow(mapView));
+		// poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this,
+		// poiItems, mapView);
+		mapView.getOverlays().add(poiMarkers);
 	}
 
 	public void openGeoform() {
@@ -108,7 +137,7 @@ public class GeoMap extends Activity implements LocationListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-//		self.showLandmarks();
+		// self.showLandmarks();
 	}
 
 	@Override
@@ -135,7 +164,7 @@ public class GeoMap extends Activity implements LocationListener {
 			lat = feature.getAddress().getCoordx();
 			lon = feature.getAddress().getCoordy();
 
-			if(lat != null && lon != null) {
+			if (lat != null && lon != null) {
 				ExtendedOverlayItem poiMarker = createOverlayItem(feature);
 				poiMarkers.addItem(poiMarker);
 			}
@@ -144,6 +173,7 @@ public class GeoMap extends Activity implements LocationListener {
 
 	/**
 	 * Creates an overlay item.
+	 * 
 	 * @return
 	 */
 	public ExtendedOverlayItem createOverlayItem(Task feature) {
@@ -152,30 +182,33 @@ public class GeoMap extends Activity implements LocationListener {
 		Double longitude = address.getCoordy();
 		GeoPoint geoPoint = new GeoPoint(latitude, longitude);
 
-		//GeoPoint geoPoint = new GeoPoint(-22.318567, -49.060907);
+		// GeoPoint geoPoint = new GeoPoint(-22.318567, -49.060907);
 
-		ExtendedOverlayItem poiMarker = new ExtendedOverlayItem("Dados do Terreno", feature.toString(), geoPoint, this);
+		ExtendedOverlayItem poiMarker = new ExtendedOverlayItem(
+				"Dados do Terreno", feature.toString(), geoPoint, this);
 		Drawable marker = null;
 
-		if(feature.isDone()){
+		if (feature.isDone()) {
 			marker = getResources().getDrawable(R.drawable.ic_landmark_green);
 		} else {
 			marker = getResources().getDrawable(R.drawable.ic_landmark_red);
 		}
 
 		poiMarker.setMarker(marker);
-		//poiMarker.setMarkerHotspot(poiMarker.HotspotPlace.CENTER);
+		// poiMarker.setMarkerHotspot(poiMarker.HotspotPlace.CENTER);
 
-		//thumbnail loading moved in POIInfoWindow.onOpen for better performances. 
+		// thumbnail loading moved in POIInfoWindow.onOpen for better
+		// performances.
 		poiMarker.setRelatedObject(feature);
 
-		//TODO: remove
+		// TODO: remove
 		controller.setCenter(geoPoint);
 
 		return poiMarker;
 	}
 
-	// TODO: listar todos os tasks e fazer landmarks disto, abrindo a tela de formulário baseado no objeto clicado.
+	// TODO: listar todos os tasks e fazer landmarks disto, abrindo a tela de
+	// formulário baseado no objeto clicado.
 
 	/*
 	 * 
@@ -211,11 +244,11 @@ public class GeoMap extends Activity implements LocationListener {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
-		if(resultCode == 999) {
+
+		if (resultCode == 999) {
 			finish();
 		}
-		
+
 		if (requestCode == GEOFORM) {
 			if (resultCode == RESULT_OK) {
 				String result = data.getExtras().getString("RESULT");
@@ -223,8 +256,8 @@ public class GeoMap extends Activity implements LocationListener {
 			} else if (resultCode == RESULT_CANCELED) {
 			}
 		}
-		if(requestCode == TASK){
-			if(resultCode == RESULT_OK){
+		if (requestCode == TASK) {
+			if (resultCode == RESULT_OK) {
 
 			}
 		}
@@ -233,24 +266,24 @@ public class GeoMap extends Activity implements LocationListener {
 	@Override
 	public void onLocationChanged(Location arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onProviderDisabled(String arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onProviderEnabled(String arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
