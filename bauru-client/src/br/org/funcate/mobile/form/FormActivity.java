@@ -639,7 +639,7 @@ public class FormActivity extends Activity implements LocationListener {
 		
 		for (Photo picture : pictures) {
 			try {
-				final ImageView imageView = self.generateImageFromFilePath(picture.getPath());
+				final ImageView imageView = self.generateImageFromFilePath(picture);
 				linearLayout.addView(imageView);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -647,8 +647,8 @@ public class FormActivity extends Activity implements LocationListener {
 		}
 	}
 	
-	public ImageView generateImageFromFilePath(String path) {
-		final File imgFile = new File(path);
+	public ImageView generateImageFromFilePath(final Photo picture) {
+		final File imgFile = new File(picture.getPath());
 		final ImageView imageView = new ImageView(this);
 		
 		Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
@@ -662,14 +662,14 @@ public class FormActivity extends Activity implements LocationListener {
 	    imageView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				self.showConfirmDeleteImageDialog(imageView, imgFile);
+				self.showConfirmDeleteImageDialog(picture, imgFile);
 			}
 		});
 	    
 	    return imageView;
 	}
 	
-	public void showConfirmDeleteImageDialog(final ImageView imageView, final File file) {
+	public void showConfirmDeleteImageDialog(final Photo picture, final File file) {
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FormActivity.this);
 	    alertDialogBuilder.setTitle("Atenção");
 	    alertDialogBuilder.setMessage("Deseja Excluir esta foto?").setCancelable(false).setPositiveButton("Sim",
@@ -677,7 +677,7 @@ public class FormActivity extends Activity implements LocationListener {
 	        public void onClick(DialogInterface dialog, int id) {
 	                dialog.cancel();
 	                file.delete();
-	                photos.remove(imageView);
+	                photos.remove(picture);
 	                self.showPictures(photos);
 	            }
 	        })
