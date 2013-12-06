@@ -631,7 +631,7 @@ public class FormActivity extends Activity implements LocationListener {
 		
 		// LinearLayOut Setup
 		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.layout_pictures);
-		//linearLayout.removeAllViews();
+		linearLayout.removeAllViews();
 		
 		for (Photo picture : pictures) {
 			try {
