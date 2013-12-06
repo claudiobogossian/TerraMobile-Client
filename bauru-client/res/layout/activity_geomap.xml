@@ -13,4 +13,5 @@
         android:id="@+id/mapview"
         ></org.osmdroid.views.MapView>
 
+>>>>>>> branch 'master' of http://svn.funcate.org.br/git/bauru-digital.git
 </LinearLayout>
