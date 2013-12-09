@@ -192,8 +192,7 @@ public class GeoMap extends Activity implements LocationListener {
 
 		// GeoPoint geoPoint = new GeoPoint(-22.318567, -49.060907);
 
-		ExtendedOverlayItem poiMarker = new ExtendedOverlayItem(
-				"Dados do Terreno", feature.toString(), geoPoint, this);
+		ExtendedOverlayItem poiMarker = new ExtendedOverlayItem("Dados do Terreno", feature.toString(), geoPoint, this);
 		Drawable marker = null;
 
 		if (feature.isDone()) {
