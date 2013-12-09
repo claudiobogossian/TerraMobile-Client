@@ -63,7 +63,7 @@ public class FormActivity extends Activity implements LocationListener {
 	private AutoCompleteTextView address;
 
 	private EditText 
-		edtNeighborhood, 
+		edtNeighborhood,
 		edtPostalCode, 
 		edtNumber, 
 		edtOtherNumbers;
@@ -98,7 +98,6 @@ public class FormActivity extends Activity implements LocationListener {
 	private List<Photo> photos;
 
 	private ProgressDialog dialog;
-
 
 	/**
 	 * 
@@ -164,7 +163,28 @@ public class FormActivity extends Activity implements LocationListener {
 		});
 	}
 	
-
+	@Override
+	public void onBackPressed() {
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FormActivity.this);
+	    alertDialogBuilder.setTitle("Atenção");
+	    alertDialogBuilder.setMessage("Deseja realmente sair?").setCancelable(false).setPositiveButton("Sim",
+	        new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int id) {
+	                dialog.cancel();
+	                finish();
+	            }
+	        })
+	        .setNegativeButton("Não",
+	        new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int id) {
+	                dialog.cancel();
+	            }
+	        });
+	 
+	    AlertDialog alertDialog = alertDialogBuilder.create();
+	    alertDialog.show();
+	}
+	
 	/**
 	 * 
 	 * 
