@@ -495,8 +495,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:enabled="true"
-                android:hint="@string/tv_other_batch_numbering" />
+                android:enabled="true" />
         </TableRow>
 
         <TableRow
