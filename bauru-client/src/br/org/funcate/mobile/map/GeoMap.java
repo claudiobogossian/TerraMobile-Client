@@ -9,6 +9,7 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MyLocationOverlay;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import android.app.Activity;
 import android.content.Context;
@@ -72,6 +73,9 @@ public class GeoMap extends Activity implements LocationListener {
 				if (location != null) {
 					location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 					controller.setCenter(new GeoPoint(location.getLatitude(), location.getLongitude()));
+					MyLocationNewOverlay myLocationOverlay = new MyLocationNewOverlay(getApplicationContext(), mapView);
+					mapView.getOverlays().add(myLocationOverlay);
+				    myLocationOverlay.enableMyLocation();
 				}
 			}
 		});
@@ -98,11 +102,9 @@ public class GeoMap extends Activity implements LocationListener {
 			controller.setCenter(new GeoPoint(location.getLatitude(), location.getLongitude()));
 			// habilita botão
 			// mostra landmark da posição atual.
-			MyLocationOverlay myLocationOverlay = new MyLocationOverlay(getApplicationContext(), mapView);
+			MyLocationNewOverlay myLocationOverlay = new MyLocationNewOverlay(getApplicationContext(), mapView);
 			mapView.getOverlays().add(myLocationOverlay);
-		    //myLocationOverlay.enableCompass();
 		    myLocationOverlay.enableMyLocation();
-		    //myLocationOverlay.enableFollowLocation();
 		} else {
 			controller.setZoom(12);
 			controller.setCenter(new GeoPoint(-22.317773, -49.059534));
