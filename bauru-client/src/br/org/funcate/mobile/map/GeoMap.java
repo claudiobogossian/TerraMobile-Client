@@ -8,7 +8,6 @@ import org.osmdroid.bonuspack.overlays.ItemizedOverlayWithBubble;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.MyLocationOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import android.app.Activity;
@@ -122,19 +121,19 @@ public class GeoMap extends Activity implements LocationListener {
 	}
 
 	public void openGeoform() {
-		Intent i = new Intent(self, FormActivity.class);
-		startActivityForResult(i, GEOFORM);
-	}
-
-	public void openTaskScreen() {
 		long count = TaskDao.getCountOfTasks();
 		
 		if(count == 0) {
 			Utility.showToast("Você não tem nenhum registro salvo, sincronize seu aplicativo.", Toast.LENGTH_LONG, GeoMap.this);
 		} else {
-			Intent taskIntent = new Intent(self, TaskActivity.class);
-			startActivityForResult(taskIntent, TASK);
+			Intent i = new Intent(self, FormActivity.class);
+			startActivityForResult(i, GEOFORM);
 		}
+	}
+
+	public void openTaskScreen() {
+		Intent taskIntent = new Intent(self, TaskActivity.class);
+		startActivityForResult(taskIntent, TASK);
 	}
 
 	public void finishThisScreen() {
