@@ -74,7 +74,28 @@ public class GeoMap extends Activity implements LocationListener {
 			public void onClick(View v) {
 				if (location != null) {
 					location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-					controller.setCenter(new GeoPoint(location.getLatitude(), location.getLongitude()));
+					GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+					
+					OverlayItem myLocationOverlayItem = new OverlayItem("", "", geoPoint);
+			        Drawable myCurrentLocationMarker =  getResources().getDrawable(R.drawable.person);
+			        myLocationOverlayItem.setMarker(myCurrentLocationMarker);
+
+			        final ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+			        items.add(myLocationOverlayItem);
+			        ResourceProxy resourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
+			        ItemizedIconOverlay<OverlayItem> currentLocationOverlay = new ItemizedIconOverlay<OverlayItem>(items,
+			                new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+			                    public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+			                        return true;
+			                    }
+			                    public boolean onItemLongPress(final int index, final OverlayItem item) {
+			                        return true;
+			                    }
+			                }, resourceProxy);
+			        
+			        mapView.getOverlays().add(currentLocationOverlay);
+					
+					controller.setCenter(geoPoint);
 					
 				}
 			}
