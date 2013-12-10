@@ -43,6 +43,6 @@ public class POIInfoWindow extends DefaultInfoWindow {
 		ExtendedOverlayItem eItem = (ExtendedOverlayItem)item;
 		task = (Task) eItem.getRelatedObject();
 		super.onOpen(item);
-		mView.findViewById(R.id.bubble_moreinfo).setVisibility(View.VISIBLE);	
+		mView.findViewById(R.id.bubble_moreinfo).setVisibility(View.VISIBLE);
 	}
 }
