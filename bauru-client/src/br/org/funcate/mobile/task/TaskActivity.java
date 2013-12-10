@@ -1,8 +1,18 @@
 package br.org.funcate.mobile.task;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -15,6 +25,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -23,7 +34,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
-import br.org.funcate.mobile.map.ServiceBaseMap;
 import br.org.funcate.mobile.photo.Photo;
 import br.org.funcate.mobile.photo.PhotoDao;
 import br.org.funcate.mobile.user.SessionManager;
@@ -106,10 +116,8 @@ public class TaskActivity extends Activity {
 			public void onClick(View v) {
 				if (Utility.isNetworkAvailable(self)) {
 					try {
-						self.showLoadingMask();
-						self.getTiles();
+						self.getRemoteZipBaseMap();
 					} catch (Exception e) {
-						self.hideLoadMask();
 						e.printStackTrace();
 					}
 				} else {
@@ -129,14 +137,6 @@ public class TaskActivity extends Activity {
 
 		// Set the request factory IMPORTANT: This section I had to add for POST request. Not needed for GET
 		this.restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-	}
-
-	/**
-	 * This function is responsible to request do ServiceBaseMap to get cached tiles zip file from server
-	 */
-	public void getTiles()
-	{
-		new ServiceBaseMap().getRemoteZipBaseMap();
 	}
 
 	/**
@@ -363,7 +363,6 @@ public class TaskActivity extends Activity {
 			return response;
 		}
 
-
 		@Override
 		protected void onPreExecute() {
 		}
@@ -376,7 +375,13 @@ public class TaskActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(List<Photo> result) {
-			//self.hideLoadMask();
+			//TODO: mudar mensagem de feedback
+			
+			if(result != null) {
+				PhotoDao.deletePhotos(result);
+			}
+			
+			self.hideLoadMask();
 		}	
 	}
 
@@ -397,5 +402,135 @@ public class TaskActivity extends Activity {
 		dialog.cancel();
 		this.updateCountLabels();
 	}
+	
+	/******************************************************************************************************************
+	 * This function is responsible to request do ServiceBaseMap to get cached tiles zip file from server
+	 ******************************************************************************************************************/
+	public void getRemoteZipBaseMap(){
+		String url = "http://200.144.100.34:8080/bauru-server/rest/tiles/zip";
+		new DownloadZipAsync().execute(url);
+	}
 
+	class DownloadZipAsync extends AsyncTask<String, Integer, String> {
+		private ProgressDialog mProgressDialog;
+
+		@Override
+		protected String doInBackground(String... aurl) {
+			int count;
+			String path = null;
+
+			try {
+
+				URL url = new URL(aurl[0]);
+				URLConnection conexion = url.openConnection();
+				conexion.connect();
+
+				int lenghtOfFile = conexion.getContentLength();
+				Log.d("ANDRO_ASYNC", "Lenght of file: " + lenghtOfFile);
+
+				InputStream input = new BufferedInputStream(url.openStream());
+				File externalStorageDir = Environment.getExternalStorageDirectory();		
+				path = externalStorageDir + "/osmdroid/tiles/";
+				String filePath = path + "base_map.zip";
+				OutputStream output = new FileOutputStream(filePath);
+
+				byte data[] = new byte[1024];
+				long total = 0;
+
+				while ((count = input.read(data)) != -1) {
+					total += count;
+					publishProgress((int) ((total * 100) / lenghtOfFile));
+					output.write(data, 0, count);
+				}
+
+				output.flush();
+				output.close();
+				input.close();
+				
+				dialog.dismiss();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return path;
+		}
+
+		/**
+		 * Unzip files.
+		 * 
+		 * @param zipfile
+		 *            The path of the zip file
+		 * @param location
+		 *            The new Location that you want to unzip the file
+		 */
+		private void unzip(String zipFile, String location) {
+			try {
+				FileInputStream fin = new FileInputStream(zipFile);
+				ZipInputStream zin = new ZipInputStream(fin);
+				ZipEntry ze = null;
+
+				long fileSize = fin.getChannel().size();
+				
+				while ((ze = zin.getNextEntry()) != null) {
+					Log.v("Decompress", "Unzipping " + ze.getName());
+
+					if (ze.isDirectory()) {
+						Utility.dirChecker(location + ze.getName());
+					} else {
+						FileOutputStream fout = new FileOutputStream(location+ ze.getName());
+						long total = 0;
+
+						for (int c = zin.read(); c != -1; c = zin.read()) {
+							total += c;
+							publishProgress((int) ((total * 100) / fileSize)); // update status dialog.
+							
+							fout.write(c);
+						}
+						zin.closeEntry();
+						fout.close();
+					}
+				}
+				zin.close();
+			} catch (Exception e) {
+				Log.e("Decompress", "unzip", e);
+			}
+		}
+		
+		void showDialog(String message) {
+			mProgressDialog = new ProgressDialog(self);
+			mProgressDialog.setMessage(message);
+			mProgressDialog.setIndeterminate(false);
+			mProgressDialog.setMax(100);
+			mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			mProgressDialog.setCancelable(true);
+			mProgressDialog.show();
+		}
+		
+		void hideDialog() {
+			mProgressDialog.dismiss();
+		}	
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			showDialog("Baixando mapa de base...");
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... progress) {
+			super.onProgressUpdate(progress);
+			mProgressDialog.setProgress(progress[0]);
+		}
+
+		@Override
+		protected void onPostExecute(String path) {			
+			if(path != null) {
+				unzip(path + "base_map.zip", path);
+			} else {
+				Utility.showToast("Ocorreu um erro ao baixar o arquivo.", Toast.LENGTH_LONG, self);
+			}
+			
+			this.hideDialog();
+		}		
+	}
 }

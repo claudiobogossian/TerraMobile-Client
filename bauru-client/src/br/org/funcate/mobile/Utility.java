@@ -353,7 +353,7 @@ public class Utility {
 				} else { 
 					FileOutputStream fout = new FileOutputStream(location + ze.getName()); 
 					for (int c = zin.read(); c != -1; c = zin.read()) { 
-						fout.write(c); 
+						fout.write(c);
 					} 
 					zin.closeEntry(); 
 					fout.close(); 

@@ -9,7 +9,6 @@ import org.osmdroid.bonuspack.overlays.ItemizedOverlayWithBubble;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -132,11 +131,6 @@ public class GeoMap extends Activity implements LocationListener {
 	}
 
 	public void openGeoform() {
-		Intent i = new Intent(self, FormActivity.class);
-		startActivityForResult(i, GEOFORM);
-	}
-
-	public void openTaskScreen() {
 		long count = TaskDao.getCountOfTasks();
 
 		if (count == 0) {
@@ -144,9 +138,14 @@ public class GeoMap extends Activity implements LocationListener {
 					"Você não tem nenhum registro salvo, sincronize seu aplicativo.",
 					Toast.LENGTH_LONG, GeoMap.this);
 		} else {
-			Intent taskIntent = new Intent(self, TaskActivity.class);
-			startActivityForResult(taskIntent, TASK);
+			Intent i = new Intent(self, FormActivity.class);
+			startActivityForResult(i, GEOFORM);
 		}
+	}
+
+	public void openTaskScreen() {
+		Intent taskIntent = new Intent(self, TaskActivity.class);
+		startActivityForResult(taskIntent, TASK);
 	}
 
 	public void finishThisScreen() {
@@ -205,8 +204,7 @@ public class GeoMap extends Activity implements LocationListener {
 
 		// GeoPoint geoPoint = new GeoPoint(-22.318567, -49.060907);
 
-		ExtendedOverlayItem poiMarker = new ExtendedOverlayItem(
-				"Dados do Terreno", feature.toString(), geoPoint, this);
+		ExtendedOverlayItem poiMarker = new ExtendedOverlayItem("Dados do Terreno", feature.toString(), geoPoint, this);
 		Drawable marker = null;
 
 		if (feature.isDone()) {
