@@ -463,6 +463,9 @@ public class FormActivity extends Activity implements LocationListener {
 					task = TaskDao.getTaskByAddressId((int) addressId);
 					
 					if(task != null) {
+					        photos = PhotoDao.getPhotosByForm(task.getForm());
+					        self.showPictures(photos);
+					        
 						self.setFieldsWithTaskProperties(task);
 						self.setFieldsWithLastTask();
 					}
