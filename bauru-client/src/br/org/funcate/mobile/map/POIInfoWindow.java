@@ -7,7 +7,6 @@ import org.osmdroid.views.MapView;
 
 import android.content.Intent;
 import android.view.View;
-import android.widget.Button;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.form.FormActivity;
 import br.org.funcate.mobile.task.Task;
@@ -34,13 +33,14 @@ public class POIInfoWindow extends DefaultInfoWindow {
 			public void onClick(View view) {
 				Intent intent = new Intent(view.getContext(), FormActivity.class);
 				intent.putExtra("task", task);
-				
 				view.getContext().startActivity(intent);
+				close();
 			}
 		});
 	}
 
-	@Override public void onOpen(Object item){
+	@Override 
+	public void onOpen(Object item){
 		ExtendedOverlayItem eItem = (ExtendedOverlayItem)item;
 		task = (Task) eItem.getRelatedObject();
 		super.onOpen(item);
