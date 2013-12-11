@@ -7,7 +7,6 @@ import org.osmdroid.views.MapView;
 
 import android.content.Intent;
 import android.view.View;
-import android.widget.Button;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.form.FormActivity;
 import br.org.funcate.mobile.task.Task;
