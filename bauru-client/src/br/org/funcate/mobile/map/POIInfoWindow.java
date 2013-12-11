@@ -33,13 +33,14 @@ public class POIInfoWindow extends DefaultInfoWindow {
 			public void onClick(View view) {
 				Intent intent = new Intent(view.getContext(), FormActivity.class);
 				intent.putExtra("task", task);
-				
 				view.getContext().startActivity(intent);
+				close();
 			}
 		});
 	}
 
-	@Override public void onOpen(Object item){
+	@Override 
+	public void onOpen(Object item){
 		ExtendedOverlayItem eItem = (ExtendedOverlayItem)item;
 		task = (Task) eItem.getRelatedObject();
 		super.onOpen(item);
