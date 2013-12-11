@@ -25,6 +25,7 @@ import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.photo.Photo;
 import br.org.funcate.mobile.photo.PhotoDao;
+import br.org.funcate.mobile.photo.UploadPhotos;
 import br.org.funcate.mobile.user.SessionManager;
 
 /**
@@ -38,7 +39,7 @@ import br.org.funcate.mobile.user.SessionManager;
  */
 public class TaskActivity extends Activity {
 
-	private final String LOG_TAG = "#" + getClass().getSimpleName();
+	public final String LOG_TAG = "#" + getClass().getSimpleName();
 	private final String hostUrl = "http://200.144.100.34:8080/";
 
 	private TextView txtIncompleteTasks;
@@ -47,7 +48,7 @@ public class TaskActivity extends Activity {
 	private ProgressDialog dialog;
 	private TaskActivity self = this;
 
-	private RestTemplate restTemplate;
+	public RestTemplate restTemplate;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -202,7 +203,7 @@ public class TaskActivity extends Activity {
 
 		if(photos != null && !photos.isEmpty()) {
 			String url = hostUrl + "bauru-server/rest/photos?user={user_hash}";
-			UploadPhotos remote = new UploadPhotos(photos, userHash);
+			UploadPhotos remote = new UploadPhotos(photos, userHash, this);
 			remote.execute(new String[] { url });
 		}
 	}
@@ -313,66 +314,6 @@ public class TaskActivity extends Activity {
 	}
 
 
-	/**
-	 * Async object implementation to Post Photos to server
-	 * 
-	 * @param String... urls
-	 *            URL's that will called.
-	 * @author Paulo Luan 
-	 */
-	private class UploadPhotos extends AsyncTask<String, String, List<Photo>> {
-
-		private List<Photo> photos;
-		private String userHash;
-
-		public UploadPhotos(List<Photo> photos, String userHash) {
-			this.photos = photos;
-			this.userHash = userHash;
-		}
-
-		@Override
-		protected List<Photo> doInBackground(String... urls) {
-			List<Photo> response = null;
-
-			for (String url : urls) {
-				try {
-					publishProgress("Fazendo Upload das fotos...");
-					Photo[] responsePhotos = restTemplate.postForObject(url, this.photos, Photo[].class, userHash);
-					response = new ArrayList<Photo>(Arrays.asList(responsePhotos));
-
-					if(response != null) {
-						publishProgress("Verificando se existem imagens não utilizadas no aparelho...");
-						PhotoDao.deletePhotos(response);
-					}
-				} catch (HttpClientErrorException e) {
-					String error = e.getResponseBodyAsString();
-					e.printStackTrace();
-				}
-			}
-			return response;
-		}
-
-		@Override
-		protected void onPreExecute() {
-		}
-
-		@Override
-		protected void onProgressUpdate(String... values) {
-			setLoadMaskMessage(values[0]);
-			Log.i(self.LOG_TAG, " Progress: " + values);
-		}
-
-		@Override
-		protected void onPostExecute(List<Photo> result) {
-			//TODO: mudar mensagem de feedback
-			
-			if(result != null) {
-				PhotoDao.deletePhotos(result);
-			}
-			
-			self.hideLoadMask();
-		}	
-	}
 
 	public void showLoadingMask() {
 		dialog = ProgressDialog.show(TaskActivity.this, "", "Carregando, aguarde...", true);
