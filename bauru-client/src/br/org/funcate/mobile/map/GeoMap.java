@@ -3,12 +3,15 @@ package br.org.funcate.mobile.map;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.osmdroid.DefaultResourceProxyImpl;
+import org.osmdroid.ResourceProxy;
 import org.osmdroid.bonuspack.overlays.ExtendedOverlayItem;
 import org.osmdroid.bonuspack.overlays.ItemizedOverlayWithBubble;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.OverlayItem;
 
 import android.app.Activity;
 import android.content.Context;
@@ -48,9 +51,9 @@ public class GeoMap extends Activity implements LocationListener {
 	private static final int TASK = 103;
 
 	ItemizedOverlayWithBubble<ExtendedOverlayItem> poiMarkers;
-
+	
 	private GeoMap self = this;
-
+	
 	private LayoutInflater inflater;
 
 	@Override
@@ -59,7 +62,7 @@ public class GeoMap extends Activity implements LocationListener {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_geomap);
-
+		
 		inflater = LayoutInflater.from(getBaseContext());
 		View viewControl = inflater.inflate(R.layout.geomap_gps, null);
 		LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
@@ -71,10 +74,29 @@ public class GeoMap extends Activity implements LocationListener {
 			public void onClick(View v) {
 				if (location != null) {
 					location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-					controller.setCenter(new GeoPoint(location.getLatitude(), location.getLongitude()));
-					MyLocationNewOverlay myLocationOverlay = new MyLocationNewOverlay(getApplicationContext(), mapView);
-					mapView.getOverlays().add(myLocationOverlay);
-				    myLocationOverlay.enableMyLocation();
+					GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+					
+					OverlayItem myLocationOverlayItem = new OverlayItem("", "", geoPoint);
+			        Drawable myCurrentLocationMarker =  getResources().getDrawable(R.drawable.person);
+			        myLocationOverlayItem.setMarker(myCurrentLocationMarker);
+
+			        final ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+			        items.add(myLocationOverlayItem);
+			        ResourceProxy resourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
+			        ItemizedIconOverlay<OverlayItem> currentLocationOverlay = new ItemizedIconOverlay<OverlayItem>(items,
+			                new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+			                    public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+			                        return true;
+			                    }
+			                    public boolean onItemLongPress(final int index, final OverlayItem item) {
+			                        return true;
+			                    }
+			                }, resourceProxy);
+			        
+			        mapView.getOverlays().add(currentLocationOverlay);
+					
+					controller.setCenter(geoPoint);
+					
 				}
 			}
 		});
@@ -90,20 +112,43 @@ public class GeoMap extends Activity implements LocationListener {
 		// loading online tiles using network connection.
 		// mapView.setUseDataConnection(true);
 
+		final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
+		poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this,
+				poiItems, mapView, new POIInfoWindow(mapView));
+		
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0, this);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 		location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
 		controller = (MapController) mapView.getController();
 
 		if (location != null) {
 			controller.setZoom(16);
-			controller.setCenter(new GeoPoint(location.getLatitude(), location.getLongitude()));
+			GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+			
+			OverlayItem myLocationOverlayItem = new OverlayItem("", "", geoPoint);
+	        Drawable myCurrentLocationMarker = this.getResources().getDrawable(R.drawable.person);
+	        myLocationOverlayItem.setMarker(myCurrentLocationMarker);
+
+	        final ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+	        items.add(myLocationOverlayItem);
+	        ResourceProxy resourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
+	        ItemizedIconOverlay<OverlayItem> currentLocationOverlay = new ItemizedIconOverlay<OverlayItem>(items,
+	                new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+	                    public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+	                        return true;
+	                    }
+	                    public boolean onItemLongPress(final int index, final OverlayItem item) {
+	                        return true;
+	                    }
+	                }, resourceProxy);
+	        
+	        mapView.getOverlays().add(currentLocationOverlay);
+			
 			// habilita botão
 			// mostra landmark da posição atual.
-			MyLocationNewOverlay myLocationOverlay = new MyLocationNewOverlay(getApplicationContext(), mapView);
-			mapView.getOverlays().add(myLocationOverlay);
-		    myLocationOverlay.enableMyLocation();
+			controller.setCenter(geoPoint);
+			
 		} else {
 			controller.setZoom(12);
 			controller.setCenter(new GeoPoint(-22.317773, -49.059534));
@@ -113,8 +158,7 @@ public class GeoMap extends Activity implements LocationListener {
 		// new GeoPoint(-23.157221, -45.792443) // SJC
 
 		// POI markers:
-		final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
-		poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, poiItems, mapView, new POIInfoWindow(mapView));
+		
 		// poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this,
 		// poiItems, mapView);
 		mapView.getOverlays().add(poiMarkers);
@@ -122,9 +166,11 @@ public class GeoMap extends Activity implements LocationListener {
 
 	public void openGeoform() {
 		long count = TaskDao.getCountOfTasks();
-		
-		if(count == 0) {
-			Utility.showToast("Você não tem nenhum registro salvo, sincronize seu aplicativo.", Toast.LENGTH_LONG, GeoMap.this);
+
+		if (count == 0) {
+			Utility.showToast(
+					"Você não tem nenhum registro salvo, sincronize seu aplicativo.",
+					Toast.LENGTH_LONG, GeoMap.this);
 		} else {
 			Intent i = new Intent(self, FormActivity.class);
 			startActivityForResult(i, GEOFORM);
@@ -145,7 +191,7 @@ public class GeoMap extends Activity implements LocationListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// self.showLandmarks();
+		 self.showLandmarks();
 	}
 
 	@Override
@@ -208,7 +254,7 @@ public class GeoMap extends Activity implements LocationListener {
 		// performances.
 		poiMarker.setRelatedObject(feature);
 
-		controller.setCenter(geoPoint);
+//		controller.setCenter(geoPoint);
 
 		return poiMarker;
 	}
