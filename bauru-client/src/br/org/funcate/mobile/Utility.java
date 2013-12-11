@@ -372,7 +372,7 @@ public class Utility {
 	 *            The path of the folder.
 	 */
 	public static void dirChecker(String location) { 
-		File f = new File(location); 
+		File f = new File(location);
 
 		if(!f.isDirectory()) { 
 			f.mkdirs(); 

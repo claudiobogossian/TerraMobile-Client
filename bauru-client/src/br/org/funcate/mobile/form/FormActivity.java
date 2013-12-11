@@ -389,20 +389,25 @@ public class FormActivity extends Activity implements LocationListener {
 	 * @author Paulo Luan
 	 * */
 	public void setFieldsWithLastTask() {
-		if(lastTask != null && task != null) {
-			if(lastTask.getAddress().getName().equals(task.getAddress().getName()) 
-					|| lastTask.getAddress().getPostalCode().equals(task.getAddress().getPostalCode())) {
-				try {
-					// Only infrastructure spinners.
-					spnPavimentation.setSelection(((ArrayAdapter<String>) spnPavimentation.getAdapter()).getPosition(lastTask.getForm().getPavimentation())); 
-					spnAsphaltGuide.setSelection(((ArrayAdapter<String>) spnAsphaltGuide.getAdapter()).getPosition(lastTask.getForm().getAsphaltGuide())); 
-					spnPublicIlumination.setSelection(((ArrayAdapter<String>) spnPublicIlumination.getAdapter()).getPosition(lastTask.getForm().getPublicIlumination())); 
-					spnEnergy.setSelection(((ArrayAdapter<String>) spnEnergy.getAdapter()).getPosition(lastTask.getForm().getEnergy())); 
-					spnPluvialGallery.setSelection(((ArrayAdapter<String>) spnPluvialGallery.getAdapter()).getPosition(lastTask.getForm().getPluvialGallery()));	
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		if(    (lastTask != null && task != null) &&
+			   (lastTask.getAddress().getName().equals(task.getAddress().getName()) 
+			|| lastTask.getAddress().getPostalCode().equals(task.getAddress().getPostalCode()))) {
+			try {
+				/*
+				// Only infrastructure spinners.
+				spnPavimentation.setSelection(((ArrayAdapter<String>) spnPavimentation.getAdapter()).getPosition(lastTask.getForm().getPavimentation())); 
+				spnAsphaltGuide.setSelection(((ArrayAdapter<String>) spnAsphaltGuide.getAdapter()).getPosition(lastTask.getForm().getAsphaltGuide())); 
+				spnPublicIlumination.setSelection(((ArrayAdapter<String>) spnPublicIlumination.getAdapter()).getPosition(lastTask.getForm().getPublicIlumination())); 
+				spnEnergy.setSelection(((ArrayAdapter<String>) spnEnergy.getAdapter()).getPosition(lastTask.getForm().getEnergy())); 
+				spnPluvialGallery.setSelection(((ArrayAdapter<String>) spnPluvialGallery.getAdapter()).getPosition(lastTask.getForm().getPluvialGallery()));
+				*/
+				
+				findViewById(R.id.formInfra).setVisibility(View.GONE);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+		} else {
+			findViewById(R.id.formInfra).setVisibility(View.VISIBLE);
 		}
 	}
 
