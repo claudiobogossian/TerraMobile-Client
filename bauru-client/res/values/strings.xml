@@ -24,6 +24,7 @@
     <string name="tv_address">Endereço: </string>
     <string name="tv_log">Logradouro</string>
     <string name="other_informations">Outras Informações</string>
+    <string name="tv_infra">Infraestrutura</string>
     <string name="tv_neighborhood">Bairro: </string>
     <string name="tv_postal_code">CEP: </string>
     <string name="tv_number">Número: </string>
