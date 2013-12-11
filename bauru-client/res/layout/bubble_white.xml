@@ -3,6 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/bonuspack_bubble_white"
+    android:clickable="true"
     android:orientation="horizontal"
     android:paddingLeft="10dp"
     android:paddingRight="10dp" >
@@ -16,6 +17,7 @@
         android:visibility="gone" />
 
     <LinearLayout
+        android:id="@+id/linearLayoutBubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical" >

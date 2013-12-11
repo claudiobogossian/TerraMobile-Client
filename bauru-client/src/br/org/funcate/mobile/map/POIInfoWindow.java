@@ -7,7 +7,6 @@ import org.osmdroid.views.MapView;
 
 import android.content.Intent;
 import android.view.View;
-import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.form.FormActivity;
@@ -28,9 +27,10 @@ public class POIInfoWindow extends DefaultInfoWindow {
 	
 	public POIInfoWindow(MapView mapView) {
 		super(R.layout.bubble_white, mapView);
-		Button btn = (Button)(mView.findViewById(R.id.bubble_moreinfo));
+		
+		View view = getView().findViewById(R.id.linearLayoutBubble);
 			//bonuspack_bubble layouts already contain a "more info" button. 
-		btn.setOnClickListener(new View.OnClickListener() {
+		view.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				Intent intent = new Intent(view.getContext(), FormActivity.class);
 				intent.putExtra("task", task);
@@ -44,6 +44,5 @@ public class POIInfoWindow extends DefaultInfoWindow {
 		ExtendedOverlayItem eItem = (ExtendedOverlayItem)item;
 		task = (Task) eItem.getRelatedObject();
 		super.onOpen(item);
-		mView.findViewById(R.id.bubble_moreinfo).setVisibility(View.VISIBLE);
 	}
 }
