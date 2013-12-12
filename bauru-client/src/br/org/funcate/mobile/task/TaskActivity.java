@@ -40,7 +40,7 @@ public class TaskActivity extends Activity {
     private TextView       txtIncompleteTasks;
     private TextView       txtNotSyncRegisters;
 
-    private ProgressDialog dialog;
+    private ProgressDialog mProgressDialog;
     private TaskActivity   self    = this;
 
     public RestTemplate    restTemplate;
@@ -67,11 +67,10 @@ public class TaskActivity extends Activity {
             public void onClick(View v) {
                 if (Utility.isNetworkAvailable(self)) {
                     try {
-                        self.showLoadingMask();
                         self.saveTasksOnServer();
                         self.savePhotosOnServer();
                     } catch (Exception e) {
-                        self.hideLoadMask();
+                        self.hideLoadingMask();
                         e.printStackTrace();
                     }
                 }
@@ -206,22 +205,41 @@ public class TaskActivity extends Activity {
         }
     }
 
-    public void showLoadingMask() {
-        dialog = ProgressDialog.show(TaskActivity.this, "", "Carregando, aguarde...", true);
+    public void showLoadingMask(String message) {
+        mProgressDialog = new ProgressDialog(TaskActivity.this);
+        mProgressDialog.setMessage(message);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
     }
 
-    public void showLoadingMask(String message) {
-        dialog = ProgressDialog.show(TaskActivity.this, "", message, true);
+    public void hideLoadingMask() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
     }
 
     public void setLoadMaskMessage(String message) {
-        this.dialog.setMessage(message);
+        this.mProgressDialog.setMessage(message);
     }
+    
+    public void onProgressUpdate(String... progress) {
+        mProgressDialog.setMessage(progress[0]);
 
-    public void hideLoadMask() {
-        dialog.hide();
-        dialog.cancel();
-        this.updateCountLabels();
+        if(progress.length == 2) {
+            mProgressDialog.setProgress(Integer.parseInt(progress[1]));
+        }       
+        
+        if (progress.length == 3) {
+            this.hideLoadingMask();
+            
+            mProgressDialog = new ProgressDialog(TaskActivity.this);
+            mProgressDialog.setMessage(progress[0]);
+            mProgressDialog.setIndeterminate(false);
+            mProgressDialog.setMax(Integer.parseInt(progress[2]));
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
+        }
     }
 
     /******************************************************************************************************************

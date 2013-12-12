@@ -7,7 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 
 import android.os.AsyncTask;
-import android.util.Log;
+import android.widget.Toast;
+import br.org.funcate.mobile.Utility;
 
 /**
  * Async class implementation to get tasks from server.
@@ -30,33 +31,50 @@ public class DownloadTasks extends AsyncTask<String, String, ArrayList<Task>> {
 
     @Override
     protected ArrayList<Task> doInBackground(String... urls) {
-        ArrayList<Task> list = null;
+        ArrayList<Task> tasks = null;
 
         for (String url : urls) {
             try {
                 publishProgress("Fazendo Download das tarefas...");
                 ResponseEntity<Task[]> response = taskActivity.restTemplate.getForEntity(url, Task[].class, userHash);
-                Task[] tasks = response.getBody();
-                list = new ArrayList<Task>(Arrays.asList(tasks));
+                Task[] responseTasks = response.getBody();
+                tasks = new ArrayList<Task>(Arrays.asList(responseTasks));
 
-                publishProgress("Salvando tarefas no banco de dados local...");
-                taskActivity.saveTasksIntoLocalSqlite(list);
+                publishProgress("Salvando tarefas no banco de dados local...", "0", "" + tasks.size()); // set Max Length of progress dialog
+
+                int progress = 0;
+
+                for (Task task : tasks) {
+                    TaskDao.saveTask(task);
+                    progress++;
+                    publishProgress("Salvando tarefas no banco de dados local...", "" + progress);
+                }
+
+                taskActivity.saveTasksIntoLocalSqlite(tasks);
             } catch (HttpClientErrorException e) {
+                Utility.showToast("Ocorreu um erro ao baixar as atividades.", Toast.LENGTH_LONG, taskActivity);
                 String error = e.getResponseBodyAsString();
                 e.printStackTrace();
             }
         }
 
-        return list;
+        return tasks;
     }
 
     @Override
-    protected void onProgressUpdate(String... values) {
-        taskActivity.setLoadMaskMessage(values[0]);
+    protected void onPreExecute() {
+        taskActivity.showLoadingMask("Carregando, aguarde...");
     }
 
-    protected void onPostExecute(ArrayList<Task> tasks) {
-        taskActivity.hideLoadMask();
-        Log.i("#TASKSERVICE", "DoPostExecute!");
+    @Override
+    protected void onProgressUpdate(String... progress) {
+        taskActivity.onProgressUpdate(progress);
     }
+
+    @Override
+    protected void onPostExecute(ArrayList<Task> result) {
+        taskActivity.updateCountLabels();
+        taskActivity.hideLoadingMask();
+    }
+
 }
