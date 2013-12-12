@@ -108,6 +108,29 @@ public class PhotoDao {
     }
 
     /**
+     * 
+     * Delete photo from local database.
+     * 
+     * @author Paulo Luan
+     * @return Boolean result
+     */
+    public static Integer deletePhoto(Photo photo) {
+        Dao<Photo, Integer> dao = db.getPhotoDao();
+        Integer result = 0;
+
+        try {
+            File file = new File(photo.getPath());
+            file.delete();
+            result = dao.delete(photo);
+        } catch (SQLException e) {
+            Log.e(LOG_TAG, e.getMessage());
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    /**
      * Save a list of photos into local database.
      * 
      * @author Paulo Luan
@@ -122,7 +145,9 @@ public class PhotoDao {
 
             try {
                 for (Photo photo : photos) {
-                    photoDao.create(photo);
+                    if(photo.getId() == null) {
+                        photoDao.create(photo);
+                    }
                 }
 
                 isSaved = true;
