@@ -2,7 +2,9 @@ package br.org.funcate.baurudigital.server.task;
 
 import java.io.Serializable;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,7 +17,7 @@ import br.org.funcate.baurudigital.server.form.Form;
 import br.org.funcate.baurudigital.server.user.User;
 
 @Entity
-@Table(name = "\"task\"")
+@Table(name = "task")
 public class Task implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -32,7 +34,8 @@ public class Task implements Serializable {
 	
 	@OneToOne(cascade=CascadeType.ALL, targetEntity=Form.class)
 	private Form form;
-	
+	@Basic
+	@Column(name = "done", columnDefinition = "BIT", length = 1)
 	private boolean done; // sincronizado com o servidor?
 
 	public Task() {
