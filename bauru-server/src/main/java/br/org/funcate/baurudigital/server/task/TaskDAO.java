@@ -36,7 +36,7 @@ public class TaskDAO {
 		session.beginTransaction();
 
 		for (Task task : tasks) {
-			session.save(task);
+			session.saveOrUpdate(task);
 		}
 		session.getTransaction().commit();
 		session.close();

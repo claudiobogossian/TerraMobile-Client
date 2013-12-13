@@ -51,11 +51,9 @@ public class UserDAO {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		for (User user : users) {
-			String passwordHash = Util.generateHashMD5(user.getPassword());
-			user.setPassword(passwordHash);
-			String userHash = Util.generateHashMD5(user.getLogin()+user.getPassword());
-			user.setHash(userHash);
-			session.save(user);	
+/*			String passwordHash = Util.generateHashMD5(user.getPassword());
+			user.setPassword(passwordHash);*/
+			session.saveOrUpdate(user);	
 		}
 		session.getTransaction().commit();
 		session.close();
