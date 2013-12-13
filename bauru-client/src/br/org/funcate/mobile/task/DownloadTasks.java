@@ -73,12 +73,12 @@ public class DownloadTasks extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String message) {
-        if (message == null) {
-            Utility.showToast("Ocorreu um erro ao baixar as atividades.", Toast.LENGTH_LONG, taskActivity);
-        }
-
         taskActivity.updateCountLabels();
         taskActivity.hideLoadingMask();
+        
+        if (message != null) {
+            Utility.showToast("Ocorreu um erro ao baixar as atividades.", Toast.LENGTH_LONG, taskActivity);
+        }
     }
 
 }

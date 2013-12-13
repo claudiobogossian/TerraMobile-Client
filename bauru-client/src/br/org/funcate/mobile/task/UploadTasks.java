@@ -66,6 +66,8 @@ public class UploadTasks extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String message) {
+        taskActivity.hideLoadingMask();
+        
         if (message != null) {
             Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
         }
