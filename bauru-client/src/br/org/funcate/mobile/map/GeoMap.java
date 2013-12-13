@@ -100,7 +100,7 @@ public class GeoMap extends Activity implements LocationListener {
 					currentLocationOverlay.removeAllItems();
 
 					controller.setCenter(geoPoint);
-
+					controller.setZoom(16);
 				}
 			}
 		});
