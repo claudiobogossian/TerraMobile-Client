@@ -19,7 +19,7 @@ import br.org.funcate.mobile.Utility;
  *            ... urls
  *            URL's that will called.
  */
-public class DownloadTasks extends AsyncTask<String, String, ArrayList<Task>> {
+public class DownloadTasks extends AsyncTask<String, String, String> {
 
     private String       userHash = "";
     private TaskActivity taskActivity;
@@ -30,15 +30,15 @@ public class DownloadTasks extends AsyncTask<String, String, ArrayList<Task>> {
     }
 
     @Override
-    protected ArrayList<Task> doInBackground(String... urls) {
-        ArrayList<Task> tasks = null;
+    protected String doInBackground(String... urls) {
+         String message = null;
 
         for (String url : urls) {
             try {
                 publishProgress("Fazendo Download das tarefas...");
                 ResponseEntity<Task[]> response = taskActivity.restTemplate.getForEntity(url, Task[].class, userHash);
                 Task[] responseTasks = response.getBody();
-                tasks = new ArrayList<Task>(Arrays.asList(responseTasks));
+                ArrayList<Task> tasks = new ArrayList<Task>(Arrays.asList(responseTasks));
 
                 publishProgress("Salvando tarefas no banco de dados local...", "0", "" + tasks.size()); // set Max Length of progress dialog
 
@@ -52,13 +52,13 @@ public class DownloadTasks extends AsyncTask<String, String, ArrayList<Task>> {
 
                 taskActivity.saveTasksIntoLocalSqlite(tasks);
             } catch (HttpClientErrorException e) {
-                Utility.showToast("Ocorreu um erro ao baixar as atividades.", Toast.LENGTH_LONG, taskActivity);
-                String error = e.getResponseBodyAsString();
+                message = "Ocorreu um erro ao fazer o download das tarefas.";
+                //String error = e.getResponseBodyAsString();
                 e.printStackTrace();
             }
         }
 
-        return tasks;
+        return message;
     }
 
     @Override
@@ -72,7 +72,11 @@ public class DownloadTasks extends AsyncTask<String, String, ArrayList<Task>> {
     }
 
     @Override
-    protected void onPostExecute(ArrayList<Task> result) {
+    protected void onPostExecute(String message) {
+        if (message == null) {
+            Utility.showToast("Ocorreu um erro ao baixar as atividades.", Toast.LENGTH_LONG, taskActivity);
+        }
+
         taskActivity.updateCountLabels();
         taskActivity.hideLoadingMask();
     }

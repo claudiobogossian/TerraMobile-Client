@@ -30,6 +30,7 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... urls) {
+        String message = null;
 
         try {
             path = Environment.getExternalStorageDirectory() + "/osmdroid/tiles/";
@@ -41,18 +42,18 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
                 this.getRemoteBaseMap(urls[0]);
             }
         } catch (Exception e) {
-            Utility.showToast("Ocorreu um erro ao baixar o arquivo.", Toast.LENGTH_LONG, taskActivity);
+            message = "Ocorreu um erro ao baixar o arquivo.";
             e.printStackTrace();
         }
 
         try {
             this.unzip(filePath, path);
         } catch (IOException e) {
-            Utility.showToast("Ocorreu um erro ao descompactar o arquivo.", Toast.LENGTH_LONG, taskActivity);
+            message = "Ocorreu um erro ao descompactar o arquivo.";
             e.printStackTrace();
         }
 
-        return path;
+        return message;
     }
 
     /**
@@ -142,7 +143,11 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
     }
 
     @Override
-    protected void onPostExecute(String path) {
+    protected void onPostExecute(String message) {
+        if (message != null) {
+            Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
+        }
+
         taskActivity.hideLoadingMask();
     }
 }

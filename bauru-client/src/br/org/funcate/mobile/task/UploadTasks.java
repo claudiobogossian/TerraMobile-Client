@@ -8,6 +8,8 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
+import br.org.funcate.mobile.Utility;
 
 /**
  * Async object implementation to PostTasks to server
@@ -17,7 +19,7 @@ import android.util.Log;
  *            URL's that will called.
  * @author Paulo Luan
  */
-public class UploadTasks extends AsyncTask<String, String, List<Task>> {
+public class UploadTasks extends AsyncTask<String, String, String> {
 
     private List<Task>   tasks;
     private String       userHash;
@@ -30,25 +32,26 @@ public class UploadTasks extends AsyncTask<String, String, List<Task>> {
     }
 
     @Override
-    protected List<Task> doInBackground(String... urls) {
-        List<Task> response = null;
+    protected String doInBackground(String... urls) {
+        String message = null;
 
         for (String url : urls) {
             try {
                 publishProgress("Enviando o seu trabalho para o servidor...");
                 Task[] responseTasks = taskActivity.restTemplate.postForObject(url, this.tasks, Task[].class, userHash);
-                response = new ArrayList<Task>(Arrays.asList(responseTasks));
+                List<Task> response = new ArrayList<Task>(Arrays.asList(responseTasks));
                 if (response != null) {
                     publishProgress("Excluindo tarefas concluídas...");
                     TaskDao.deleteTasks(tasks);
                 }
             } catch (HttpClientErrorException e) {
-                String error = e.getResponseBodyAsString();
+                message = "Erro ao enviar as fotos.";
+                //String error = e.getResponseBodyAsString();
                 e.printStackTrace();
             }
         }
 
-        return response;
+        return message;
     }
 
     @Override
@@ -62,7 +65,11 @@ public class UploadTasks extends AsyncTask<String, String, List<Task>> {
     }
 
     @Override
-    protected void onPostExecute(List<Task> result) {
+    protected void onPostExecute(String message) {
+        if (message != null) {
+            Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
+        }
+
         taskActivity.getRemoteTasks();
     }
 }

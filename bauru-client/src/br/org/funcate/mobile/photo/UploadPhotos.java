@@ -19,7 +19,7 @@ import br.org.funcate.mobile.task.TaskActivity;
  *            URL's that will called.
  * @author Paulo Luan
  */
-public class UploadPhotos extends AsyncTask<String, String, List<Photo>> {
+public class UploadPhotos extends AsyncTask<String, String, String> {
 
     private List<Photo>  photos;
     private String       userHash;
@@ -32,13 +32,13 @@ public class UploadPhotos extends AsyncTask<String, String, List<Photo>> {
     }
 
     @Override
-    protected List<Photo> doInBackground(String... urls) {
-        List<Photo> photos = null;
+    protected String doInBackground(String... urls) {
+        String message = null;
 
         for (String url : urls) {
             try {
                 Photo[] responsePhotos = taskActivity.restTemplate.postForObject(url, this.photos, Photo[].class, userHash);
-                photos = new ArrayList<Photo>(Arrays.asList(responsePhotos));
+                List<Photo>photos = new ArrayList<Photo>(Arrays.asList(responsePhotos));
 
                 if (photos != null) {
                     publishProgress("Verificando se existem imagens não utilizadas no aparelho...", "0", "" + photos.size());
@@ -52,12 +52,12 @@ public class UploadPhotos extends AsyncTask<String, String, List<Photo>> {
                     }
                 }
             } catch (HttpClientErrorException e) {
-                Utility.showToast("Ocorreu um erro ao enviar as imagens.", Toast.LENGTH_LONG, taskActivity);
-                String error = e.getResponseBodyAsString();
+                message = "Ocorreu um erro ao enviar as imagens.";
+                //String error = e.getResponseBodyAsString();
                 e.printStackTrace();
             }
         }
-        return photos;
+        return message;
     }
 
     @Override
@@ -73,7 +73,11 @@ public class UploadPhotos extends AsyncTask<String, String, List<Photo>> {
     }
 
     @Override
-    protected void onPostExecute(List<Photo> result) {
+    protected void onPostExecute(String message) {
+        if(message != null) {
+            Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
+        }
+        
         taskActivity.hideLoadingMask();
     }
 
