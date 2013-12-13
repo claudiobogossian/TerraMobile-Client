@@ -1,19 +1,14 @@
 package br.org.funcate.mobile.user;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,20 +26,20 @@ import com.j256.ormlite.dao.Dao;
 
 public class LoginActivity extends Activity {
     // tag used to debug
-    private final String          LOG_TAG = "#" + getClass().getSimpleName();
+    private final String   LOG_TAG = "#" + getClass().getSimpleName();
 
     // widgets
-    private Button                bt_begin, bt_exit;
+    private Button         bt_begin, bt_exit;
 
     // this instance
-    private LoginActivity         self    = this;
+    private LoginActivity  self    = this;
 
     // session Manager
-    private SessionManager        session;
+    private SessionManager session;
 
-    private static ProgressDialog dialog;
+    public RestTemplate    restTemplate;
 
-    private RestTemplate          restTemplate;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +58,6 @@ public class LoginActivity extends Activity {
         bt_begin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                self.showLoadingMask();
                 self.getRemoteUsers();
             }
         });
@@ -103,11 +97,11 @@ public class LoginActivity extends Activity {
             }
             else {
                 String message = "";
-                
-                if(Utility.isNetworkAvailable(this)) {
+
+                if (!Utility.isNetworkAvailable(this)) {
                     message = "Verifique sua conexão com a internet - ";
                 }
-                
+
                 Toast.makeText(getApplicationContext(), message + "Usuário ou senha inválidos", Toast.LENGTH_LONG).show();
             }
         }
@@ -120,8 +114,6 @@ public class LoginActivity extends Activity {
         else {
             Toast.makeText(getApplicationContext(), "Preencha Nome de usuário e Senhas!", Toast.LENGTH_SHORT).show();
         }
-        self.hideLoadMask();
-
     }
 
     /**
@@ -160,8 +152,8 @@ public class LoginActivity extends Activity {
      */
     public void getRemoteUsers() {
         if (Utility.isNetworkAvailable(this)) {
-            String url = Utility.hostUrl + "/bauru-server/rest/users";
-            DownloadUsers remote = new DownloadUsers();
+            String url = Utility.hostUrl + "bauru-server/rest/users";
+            DownloadUsers remote = new DownloadUsers(this);
             remote.execute(new String[] { url });
         }
         else {
@@ -195,50 +187,20 @@ public class LoginActivity extends Activity {
         }
     }
 
-    /**
-     * Async class implementation to get users from server.
-     * 
-     * @author Paulo Luan
-     * 
-     * @param String
-     *            ... urls
-     *            URL's that will called.
-     */
-    private class DownloadUsers extends AsyncTask<String, Void, ArrayList<User>> {
-
-        @Override
-        protected ArrayList<User> doInBackground(String... urls) {
-            ArrayList<User> list = null;
-
-            for (String url : urls) {
-                try {
-                    ResponseEntity<User[]> response = restTemplate.getForEntity(url, User[].class);
-                    User[] users = response.getBody();
-                    list = new ArrayList<User>(Arrays.asList(users));
-                    self.saveUsersIntoLocalSqlite(list);
-                } catch (HttpClientErrorException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            return list;
-        }
-
-        protected void onPostExecute(ArrayList<User> users) {
-            self.login();
-        }
-    }
-
-    public void showLoadingMask() {
-        dialog = ProgressDialog.show(this, "", "Carregando, aguarde...", true);
-    }
-
     public void showLoadingMask(String message) {
-        dialog = ProgressDialog.show(this, "", message, true);
+        mProgressDialog = new ProgressDialog(LoginActivity.this);
+        mProgressDialog.setMessage(message);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
     }
 
-    public void hideLoadMask() {
-        dialog.hide();
-        dialog.cancel();
+    public void hideLoadingMask() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    public void onProgressUpdate(String... progress) {
+        mProgressDialog.setMessage(progress[0]);
     }
 }
