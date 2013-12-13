@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
 
 import android.os.AsyncTask;
-import android.util.Log;
+import android.widget.Toast;
+import br.org.funcate.mobile.Utility;
 
 /**
  * Async class implementation to get tasks from server.
@@ -18,7 +18,7 @@ import android.util.Log;
  *            ... urls
  *            URL's that will called.
  */
-public class DownloadTasks extends AsyncTask<String, String, ArrayList<Task>> {
+public class DownloadTasks extends AsyncTask<String, String, String> {
 
     private String       userHash = "";
     private TaskActivity taskActivity;
@@ -29,34 +29,55 @@ public class DownloadTasks extends AsyncTask<String, String, ArrayList<Task>> {
     }
 
     @Override
-    protected ArrayList<Task> doInBackground(String... urls) {
-        ArrayList<Task> list = null;
+    protected String doInBackground(String... urls) {
+         String message = null;
 
         for (String url : urls) {
             try {
                 publishProgress("Fazendo Download das tarefas...");
                 ResponseEntity<Task[]> response = taskActivity.restTemplate.getForEntity(url, Task[].class, userHash);
-                Task[] tasks = response.getBody();
-                list = new ArrayList<Task>(Arrays.asList(tasks));
+                Task[] responseTasks = response.getBody();
+                ArrayList<Task> tasks = new ArrayList<Task>(Arrays.asList(responseTasks));
 
-                publishProgress("Salvando tarefas no banco de dados local...");
-                taskActivity.saveTasksIntoLocalSqlite(list);
-            } catch (HttpClientErrorException e) {
-                String error = e.getResponseBodyAsString();
+                publishProgress("Salvando tarefas no banco de dados local...", "0", "" + tasks.size()); // set Max Length of progress dialog
+
+                int progress = 0;
+
+                for (Task task : tasks) {
+                    TaskDao.saveTask(task);
+                    progress++;
+                    publishProgress("Salvando tarefas no banco de dados local...", "" + progress);
+                }
+
+                taskActivity.saveTasksIntoLocalSqlite(tasks);
+            } catch (Exception e) {
+                message = "Ocorreu um erro ao fazer o download das tarefas.";
+                //String error = e.getResponseBodyAsString();
                 e.printStackTrace();
             }
         }
 
-        return list;
+        return message;
     }
 
     @Override
-    protected void onProgressUpdate(String... values) {
-        taskActivity.setLoadMaskMessage(values[0]);
+    protected void onPreExecute() {
+        taskActivity.showLoadingMask("Carregando, aguarde...");
     }
 
-    protected void onPostExecute(ArrayList<Task> tasks) {
-        taskActivity.hideLoadMask();
-        Log.i("#TASKSERVICE", "DoPostExecute!");
+    @Override
+    protected void onProgressUpdate(String... progress) {
+        taskActivity.onProgressUpdate(progress);
     }
+
+    @Override
+    protected void onPostExecute(String message) {
+        taskActivity.updateCountLabels();
+        taskActivity.hideLoadingMask();
+        
+        if (message != null) {
+            Utility.showToast("Ocorreu um erro ao baixar as atividades.", Toast.LENGTH_LONG, taskActivity);
+        }
+    }
+
 }

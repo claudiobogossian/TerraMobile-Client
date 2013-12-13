@@ -13,18 +13,16 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.widget.Toast;
 import br.org.funcate.mobile.Utility;
 
 public class DownloadZipAsync extends AsyncTask<String, String, String> {
-    private ProgressDialog mProgressDialog;
-    String                 path     = null;
-    String                 filePath = null;
+    String               path     = null;
+    String               filePath = null;
 
-    private TaskActivity   taskActivity;
+    private TaskActivity taskActivity;
 
     public DownloadZipAsync(TaskActivity taskActivity) {
         this.taskActivity = taskActivity;
@@ -32,6 +30,7 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... urls) {
+        String message = null;
 
         try {
             path = Environment.getExternalStorageDirectory() + "/osmdroid/tiles/";
@@ -43,18 +42,18 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
                 this.getRemoteBaseMap(urls[0]);
             }
         } catch (Exception e) {
-            Utility.showToast("Ocorreu um erro ao baixar o arquivo.", Toast.LENGTH_LONG, taskActivity);
+            message = "Ocorreu um erro ao baixar o arquivo.";
             e.printStackTrace();
         }
 
         try {
             this.unzip(filePath, path);
-        } catch (IOException e) {
-            Utility.showToast("Ocorreu um erro ao descompactar o arquivo.", Toast.LENGTH_LONG, taskActivity);
+        } catch (Exception e) {
+            message = "Ocorreu um erro ao descompactar o arquivo.";
             e.printStackTrace();
         }
 
-        return path;
+        return message;
     }
 
     /**
@@ -131,42 +130,24 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
         zin.close();
     }
 
-    void showDialog(String message) {
-        mProgressDialog = new ProgressDialog(taskActivity);
-        mProgressDialog.setMessage(message);
-        mProgressDialog.setIndeterminate(false);
-        mProgressDialog.setMax(100);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.show();
-    }
-
-    void hideDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
-    }
-
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        showDialog("Carregando, aguarde...");
+        taskActivity.showLoadingMask("Carregando, aguarde...");
     }
 
     @Override
     protected void onProgressUpdate(String... progress) {
         super.onProgressUpdate(progress);
-
-        if (progress.length == 3) {
-            mProgressDialog.setMax(Integer.parseInt(progress[2]));
-        }
-
-        mProgressDialog.setMessage(progress[0]);
-        mProgressDialog.setProgress(Integer.parseInt(progress[1]));
+        taskActivity.onProgressUpdate(progress);
     }
 
     @Override
-    protected void onPostExecute(String path) {
-        this.hideDialog();
+    protected void onPostExecute(String message) {
+        taskActivity.hideLoadingMask();
+        
+        if (message != null) {
+            Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
+        }
     }
 }

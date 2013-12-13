@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.web.client.HttpClientErrorException;
-
 import android.os.AsyncTask;
-import android.util.Log;
+import android.widget.Toast;
+import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.task.TaskActivity;
 
 /**
@@ -18,7 +17,7 @@ import br.org.funcate.mobile.task.TaskActivity;
  *            URL's that will called.
  * @author Paulo Luan
  */
-public class UploadPhotos extends AsyncTask<String, String, List<Photo>> {
+public class UploadPhotos extends AsyncTask<String, String, String> {
 
     private List<Photo>  photos;
     private String       userHash;
@@ -31,45 +30,53 @@ public class UploadPhotos extends AsyncTask<String, String, List<Photo>> {
     }
 
     @Override
-    protected List<Photo> doInBackground(String... urls) {
-        List<Photo> response = null;
+    protected String doInBackground(String... urls) {
+        String message = null;
 
         for (String url : urls) {
             try {
-                publishProgress("Fazendo Upload das fotos...");
                 Photo[] responsePhotos = taskActivity.restTemplate.postForObject(url, this.photos, Photo[].class, userHash);
-                response = new ArrayList<Photo>(Arrays.asList(responsePhotos));
+                List<Photo>photos = new ArrayList<Photo>(Arrays.asList(responsePhotos));
 
-                if (response != null) {
-                    publishProgress("Verificando se existem imagens não utilizadas no aparelho...");
-                    PhotoDao.deletePhotos(response);
+                if (photos != null) {
+                    publishProgress("Verificando se existem imagens não utilizadas no aparelho...", "0", "" + photos.size());
+
+                    int progress = 0;
+
+                    for (Photo photo : photos) {
+                        PhotoDao.deletePhoto(photo);
+                        progress++;
+                        publishProgress("Verificando se existem imagens não utilizadas no aparelho...", "" + progress);
+                    }
                 }
-            } catch (HttpClientErrorException e) {
-                String error = e.getResponseBodyAsString();
+            } catch (Exception e) {
+                message = "Ocorreu um erro ao enviar as imagens.";
+                //String error = e.getResponseBodyAsString();
                 e.printStackTrace();
             }
         }
-        return response;
+        return message;
     }
 
     @Override
     protected void onPreExecute() {
+        super.onPreExecute();
+        taskActivity.showLoadingMask("Enviando Fotos, aguarde...");
     }
 
     @Override
-    protected void onProgressUpdate(String... values) {
-        taskActivity.setLoadMaskMessage(values[0]);
-        Log.i(taskActivity.LOG_TAG, " Progress: " + values);
+    protected void onProgressUpdate(String... progress) {
+        super.onProgressUpdate(progress);
+        taskActivity.onProgressUpdate(progress);
     }
 
     @Override
-    protected void onPostExecute(List<Photo> result) {
-        //TODO: mudar mensagem de feedback
-
-        if (result != null) {
-            PhotoDao.deletePhotos(result);
+    protected void onPostExecute(String message) {
+        taskActivity.hideLoadingMask();
+        
+        if(message != null) {
+            Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
         }
-
-        taskActivity.hideLoadMask();
     }
+
 }

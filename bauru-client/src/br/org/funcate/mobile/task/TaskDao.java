@@ -17,291 +17,291 @@ import com.j256.ormlite.stmt.QueryBuilder;
 
 public class TaskDao {
 
-	private static final String LOG_TAG = "#TASKDAO";
-	private static DatabaseAdapter db = DatabaseHelper.getDatabase();
+    private static final String          LOG_TAG    = "#TASKDAO";
+    private static DatabaseAdapter       db         = DatabaseHelper.getDatabase();
 
-	private static Dao<Task, Integer> taskDao = db.getTaskDao();
-	private static Dao<Form, Integer> formDao = db.getFormDao();
-	private static Dao<User, Integer> userDao = db.getUserDao();
-	private static Dao<Address, Integer> addressDao = db.getAddressDao();
+    private static Dao<Task, Integer>    taskDao    = db.getTaskDao();
+    private static Dao<Form, Integer>    formDao    = db.getFormDao();
+    private static Dao<User, Integer>    userDao    = db.getUserDao();
+    private static Dao<Address, Integer> addressDao = db.getAddressDao();
 
-	/**
-	 * 
-	 * This function return the local data, persisted in SQLite Database.
-	 * 
-	 * @author Paulo Luan
-	 * @return List<Task>
-	 */
-	public static List<Task> getLocalTasks() {
-		List<Task> list = null;
-		try {
-			// query for all of the data objects in the database
-			list = taskDao.queryForAll();
-		} catch (SQLException e) {
-			Log.e(LOG_TAG, "Database exception", e);
-		}
-		return list;
-	}
+    /**
+     * 
+     * This function return the local data, persisted in SQLite Database.
+     * 
+     * @author Paulo Luan
+     * @return List<Task>
+     */
+    public static List<Task> getLocalTasks() {
+        List<Task> list = null;
+        try {
+            // query for all of the data objects in the database
+            list = taskDao.queryForAll();
+        } catch (SQLException e) {
+            Log.e(LOG_TAG, "Database exception", e);
+        }
+        return list;
+    }
 
-	/**
-	 * 
-	 * Delete the rows where is syncronized with the server.
-	 * 
-	 * @author Paulo Luan
-	 * @return Boolean result
-	 */
-	public static Integer deleteSincronizedTasks() {
-		DeleteBuilder<Task, Integer> deleteBuilder = taskDao.deleteBuilder();
-		Integer result = 0;
+    /**
+     * 
+     * Delete the rows where is syncronized with the server.
+     * 
+     * @author Paulo Luan
+     * @return Boolean result
+     */
+    public static Integer deleteSincronizedTasks() {
+        DeleteBuilder<Task, Integer> deleteBuilder = taskDao.deleteBuilder();
+        Integer result = 0;
 
-		try {
-			// only delete the rows where syncronized is true
-			deleteBuilder.where().eq("done", Boolean.TRUE);
-			result = deleteBuilder.delete();
-		} catch (SQLException e) {
+        try {
+            // only delete the rows where syncronized is true
+            deleteBuilder.where().eq("done", Boolean.TRUE);
+            result = deleteBuilder.delete();
+        } catch (SQLException e) {
 
-		}
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	/**
-	 * 
-	 * Delete a collection of Tasks from local database.
-	 * 
-	 * @author Paulo Luan
-	 * @return Boolean result
-	 */
-	public static Integer deleteTasks(List<Task> tasks) {
-		Integer result = 0;
+    /**
+     * 
+     * Delete a collection of Tasks from local database.
+     * 
+     * @author Paulo Luan
+     * @return Boolean result
+     */
+    public static Integer deleteTasks(List<Task> tasks) {
+        Integer result = 0;
 
-		try {
-			result = taskDao.delete(tasks);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+        try {
+            result = taskDao.delete(tasks);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public static List<Task> getFinishedTasks() {
-		List<Task> tasks = null;
+    public static List<Task> getFinishedTasks() {
+        List<Task> tasks = null;
 
-		QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
-		QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+        QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+        QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
 
-		try {
-			String userHash = SessionManager.getUserHash();
-			
-			userQueryBuilder.where().eq("hash", userHash);
-			taskQueryBuilder.where().eq("done", Boolean.TRUE);
-			taskQueryBuilder.join(userQueryBuilder);
+        try {
+            String userHash = SessionManager.getUserHash();
 
-			tasks = taskQueryBuilder.query();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+            userQueryBuilder.where().eq("hash", userHash);
+            taskQueryBuilder.where().eq("done", Boolean.TRUE);
+            taskQueryBuilder.join(userQueryBuilder);
 
-		return tasks;
-	}
+            tasks = taskQueryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-	public static List<Task> getNotFinishedTasks() {
-		List<Task> tasks = null;
-		
-		QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
-		QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+        return tasks;
+    }
 
-		try {
-			String userHash = SessionManager.getUserHash();
-			
-			userQueryBuilder.where().eq("hash", userHash);
-			taskQueryBuilder.where().eq("done", Boolean.FALSE);
-			taskQueryBuilder.join(userQueryBuilder);
+    public static List<Task> getNotFinishedTasks() {
+        List<Task> tasks = null;
 
-			tasks = taskQueryBuilder.query();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+        QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+        QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
 
-		return tasks;
-	}
+        try {
+            String userHash = SessionManager.getUserHash();
 
-	/**
-	 * Save a list of tasks into local database.
-	 * 
-	 * @author Paulo Luan
-	 * @param List
-	 *            <Task> Tasks that will be saved into database.
-	 */
-	public static boolean saveTasks(List<Task> tasks) {
-		boolean isSaved = false;
+            userQueryBuilder.where().eq("hash", userHash);
+            taskQueryBuilder.where().eq("done", Boolean.FALSE);
+            taskQueryBuilder.join(userQueryBuilder);
 
-		if (tasks != null) {
-			for (Task task : tasks) {
-				isSaved = saveTask(task);
-			}
-		}
+            tasks = taskQueryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-		return isSaved;
-	}
+        return tasks;
+    }
 
-	/**
-	 * Get Count of incompleted tasks.
-	 * 
-	 * @author Paulo Luan
-	 */
-	public static long getCountOfIncompletedTasks() {
-		long count = 0;
-		
-		QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
-		QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
-		
-		try {
-			String userHash = SessionManager.getUserHash();
-			
-			userQueryBuilder.where().eq("hash", userHash);
-			taskQueryBuilder.join(userQueryBuilder);
-			taskQueryBuilder.where().eq("done", Boolean.FALSE);
+    /**
+     * Save a list of tasks into local database.
+     * 
+     * @author Paulo Luan
+     * @param List
+     *            <Task> Tasks that will be saved into database.
+     */
+    public static boolean saveTasks(List<Task> tasks) {
+        boolean isSaved = false;
 
-			count = taskQueryBuilder.countOf();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+        if (tasks != null) {
+            for (Task task : tasks) {
+                isSaved = saveTask(task);
+            }
+        }
 
-		return count;
-	}
+        return isSaved;
+    }
 
-	/**
-	 * Get Count of completed tasks.
-	 * 
-	 * @author Paulo Luan
-	 */
-	public static long getCountOfCompletedTasks() {
-		long count = 0;
-		
-		QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
-		QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+    /**
+     * Get Count of incompleted tasks.
+     * 
+     * @author Paulo Luan
+     */
+    public static long getCountOfIncompletedTasks() {
+        long count = 0;
 
-		try {
-			String userHash = SessionManager.getUserHash();
-			
-			userQueryBuilder.where().eq("hash", userHash);
-			taskQueryBuilder.where().eq("done", Boolean.TRUE);
-			taskQueryBuilder.join(userQueryBuilder);
-			
-			count = taskQueryBuilder.countOf();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+        QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+        QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
 
-		return count;
-	}
+        try {
+            String userHash = SessionManager.getUserHash();
 
-	/**
-	 * Get Count of completed tasks.
-	 * 
-	 * @author Paulo Luan
-	 */
-	public static long getCountOfTasks() {
-		long count = 0;
-		
-		QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
-		QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+            userQueryBuilder.where().eq("hash", userHash);
+            taskQueryBuilder.join(userQueryBuilder);
+            taskQueryBuilder.where().eq("done", Boolean.FALSE);
 
-		try {
-			String userHash = SessionManager.getUserHash();
-			userQueryBuilder.where().eq("hash", userHash);
-			taskQueryBuilder.join(userQueryBuilder);
-			
-			count = taskQueryBuilder.countOf();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+            count = taskQueryBuilder.countOf();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-		return count;
-	}
+        return count;
+    }
 
-	/**
-	 * Save a task into local database.
-	 * 
-	 * @author Paulo Luan
-	 * @param List
-	 *            <Task> Tasks that will be saved into database.
-	 */
-	public static boolean saveTask(Task task) {
-		boolean isSaved = false;
-		Task persistedTask = null;
-		
-		if (task != null) {
-			
-			try {
-				persistedTask = getTaskById(task.getId());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+    /**
+     * Get Count of completed tasks.
+     * 
+     * @author Paulo Luan
+     */
+    public static long getCountOfCompletedTasks() {
+        long count = 0;
 
-			try {
-				if (persistedTask == null) {
-					formDao.create(task.getForm());
-					addressDao.create(task.getAddress());
-					taskDao.create(task);
-				}
+        QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+        QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
 
-				isSaved = true;
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+        try {
+            String userHash = SessionManager.getUserHash();
 
-		return isSaved;
-	}
+            userQueryBuilder.where().eq("hash", userHash);
+            taskQueryBuilder.where().eq("done", Boolean.TRUE);
+            taskQueryBuilder.join(userQueryBuilder);
 
-	/**
-	 * Update an existing task into local database.
-	 * 
-	 * @author Paulo Luan
-	 * @param List
-	 *            <Task> Tasks that will be saved into database.
-	 */
-	public static boolean updateTask(Task task) {
-		boolean isSaved = false;
+            count = taskQueryBuilder.countOf();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-		if (task != null) {
+        return count;
+    }
 
-			try {
-				formDao.update(task.getForm());
-				addressDao.update(task.getAddress());
-				taskDao.update(task);
+    /**
+     * Get Count of completed tasks.
+     * 
+     * @author Paulo Luan
+     */
+    public static long getCountOfTasks() {
+        long count = 0;
 
-				isSaved = true;
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+        QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+        QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
 
-		return isSaved;
-	}
+        try {
+            String userHash = SessionManager.getUserHash();
+            userQueryBuilder.where().eq("hash", userHash);
+            taskQueryBuilder.join(userQueryBuilder);
 
-	public static Task getTaskById(int id) {
-		Task task = null;
-		try {
-			task = taskDao.queryForId(id);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return task;
-	}
+            count = taskQueryBuilder.countOf();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-	public static Task getTaskByAddressId(int addressId) {
-		Task task = null;
-		
-		try {
-			task = taskDao.queryBuilder().where()
-					.eq("address_id", addressId)
-					.queryForFirst();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return task;
-	}
+        return count;
+    }
+
+    /**
+     * Save a task into local database.
+     * 
+     * @author Paulo Luan
+     * @param List
+     *            <Task> Tasks that will be saved into database.
+     */
+    public static boolean saveTask(Task task) {
+        boolean isSaved = false;
+        Task persistedTask = null;
+
+        if (task != null) {
+
+            try {
+                persistedTask = getTaskById(task.getId());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (persistedTask == null) {
+                    formDao.create(task.getForm());
+                    addressDao.create(task.getAddress());
+                    taskDao.create(task);
+                }
+
+                isSaved = true;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return isSaved;
+    }
+
+    /**
+     * Update an existing task into local database.
+     * 
+     * @author Paulo Luan
+     * @param List
+     *            <Task> Tasks that will be saved into database.
+     */
+    public static boolean updateTask(Task task) {
+        boolean isSaved = false;
+
+        if (task != null) {
+
+            try {
+                formDao.update(task.getForm());
+                addressDao.update(task.getAddress());
+                taskDao.update(task);
+
+                isSaved = true;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return isSaved;
+    }
+
+    public static Task getTaskById(int id) {
+        Task task = null;
+        try {
+            task = taskDao.queryForId(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return task;
+    }
+
+    public static Task getTaskByAddressId(int addressId) {
+        Task task = null;
+
+        try {
+            task = taskDao.queryBuilder().where()
+                    .eq("address_id", addressId)
+                    .queryForFirst();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return task;
+    }
 }
