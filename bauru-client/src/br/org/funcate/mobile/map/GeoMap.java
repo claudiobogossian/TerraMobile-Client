@@ -16,6 +16,7 @@ import org.osmdroid.views.overlay.OverlayItem;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -24,9 +25,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 import br.org.funcate.mobile.R;
@@ -115,6 +118,9 @@ public class GeoMap extends Activity implements LocationListener {
 		// mapView.setUseDataConnection(false); // keeps the mapView from
 		// loading online tiles using network connection.
 		// mapView.setUseDataConnection(true);
+		
+		MapOverlay movl = new MapOverlay(this);
+        mapView.getOverlays().add(movl);
 
 		poiInfoWindow = new POIInfoWindow(mapView);
 		
@@ -339,4 +345,20 @@ public class GeoMap extends Activity implements LocationListener {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public class MapOverlay extends org.osmdroid.views.overlay.Overlay {
+
+        public MapOverlay(Context ctx) {super(ctx);}
+
+        @Override
+        protected void draw(Canvas c, MapView osmv, boolean shadow) { }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent e, MapView mapView) {
+            if(e.getAction() == MotionEvent.ACTION_DOWN)
+            	if(poiInfoWindow.isOpen())
+            		poiInfoWindow.close();
+            return false;
+        }
+    }
 }
