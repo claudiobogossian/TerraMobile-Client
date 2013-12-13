@@ -221,17 +221,17 @@ public class TaskActivity extends Activity {
     public void setLoadMaskMessage(String message) {
         this.mProgressDialog.setMessage(message);
     }
-    
+
     public void onProgressUpdate(String... progress) {
         mProgressDialog.setMessage(progress[0]);
 
-        if(progress.length == 2) {
+        if (progress.length == 2) {
             mProgressDialog.setProgress(Integer.parseInt(progress[1]));
-        }       
-        
+        }
+
         if (progress.length == 3) {
             this.hideLoadingMask();
-            
+
             mProgressDialog = new ProgressDialog(TaskActivity.this);
             mProgressDialog.setMessage(progress[0]);
             mProgressDialog.setIndeterminate(false);

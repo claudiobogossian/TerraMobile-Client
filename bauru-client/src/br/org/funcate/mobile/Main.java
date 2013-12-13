@@ -17,11 +17,11 @@ import br.org.funcate.mobile.user.SessionManager;
 
 public class Main extends Activity {
 
-    private Main               self    = this;
-    public static final String TAG     = "#MAIN";
+    private Main               self   = this;
+    public static final String TAG    = "#MAIN";
 
     // other activities
-    private static final int   GEOMAP  = 100;
+    private static final int   GEOMAP = 100;
 
     // Session Manager Class
     SessionManager             session;

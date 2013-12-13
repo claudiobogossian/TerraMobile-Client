@@ -48,7 +48,7 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
 
         try {
             this.unzip(filePath, path);
-        } catch (IOException e) {
+        } catch (Exception e) {
             message = "Ocorreu um erro ao descompactar o arquivo.";
             e.printStackTrace();
         }
