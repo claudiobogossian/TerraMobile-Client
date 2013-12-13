@@ -35,7 +35,8 @@ import br.org.funcate.mobile.user.SessionManager;
 public class TaskActivity extends Activity {
 
     public final String    LOG_TAG = "#" + getClass().getSimpleName();
-    private final String   hostUrl = "http://200.144.100.34:8080/";
+    //private final String   hostUrl = "http://200.144.100.34:8080/";
+    private final String   hostUrl = "http://192.168.4.100:8080/";
 
     private TextView       txtIncompleteTasks;
     private TextView       txtNotSyncRegisters;

@@ -149,6 +149,7 @@ public class FormActivity extends Activity implements LocationListener {
         buttonClearAddressFields.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                self.clearSpinnerFields();
                 self.clearAddressFields();
             }
         });
