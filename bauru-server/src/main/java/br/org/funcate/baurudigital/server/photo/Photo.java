@@ -3,9 +3,11 @@ package br.org.funcate.baurudigital.server.photo;
 import java.io.Serializable;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -16,7 +18,7 @@ public class Photo implements Serializable {
 	@Id
 	@GeneratedValue
 	private Integer id;
-	
+	@Lob
 	private String blob;
 	
 	private String path;

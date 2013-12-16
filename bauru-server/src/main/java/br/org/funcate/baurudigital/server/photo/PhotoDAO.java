@@ -18,9 +18,8 @@ public class PhotoDAO {
 		SessionFactory sessionFactory = HibernateFactory.getSessionFactory();
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-
 		for (Photo photo: photos) {
-			session.saveOrUpdate(photo);
+			session.save(photo);
 		}
 		session.getTransaction().commit();
 		session.close();
