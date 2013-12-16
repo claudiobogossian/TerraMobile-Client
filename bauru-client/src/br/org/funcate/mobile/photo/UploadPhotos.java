@@ -77,6 +77,8 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
         if(message != null) {
             Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
         }
+        
+        taskActivity.getRemoteTasks();
     }
 
 }

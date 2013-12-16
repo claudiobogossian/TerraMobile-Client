@@ -36,10 +36,8 @@ public class PhotoDao {
         try {
             String userHash = SessionManager.getUserHash();
             userQueryBuilder.where().eq("hash", userHash);
-
-            taskQueryBuilder.where().eq("done", Boolean.TRUE);
+            
             taskQueryBuilder.join(userQueryBuilder);
-
             formQueryBuilder.join(taskQueryBuilder);
 
             photoQueryBuilder.join(formQueryBuilder);

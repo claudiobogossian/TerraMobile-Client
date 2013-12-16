@@ -48,11 +48,8 @@ public class DownloadTasks extends AsyncTask<String, String, String> {
                     progress++;
                     publishProgress("Salvando tarefas no banco de dados local...", "" + progress);
                 }
-
-                taskActivity.saveTasksIntoLocalSqlite(tasks);
             } catch (Exception e) {
                 message = "Ocorreu um erro ao fazer o download das tarefas.";
-                //String error = e.getResponseBodyAsString();
                 e.printStackTrace();
             }
         }
