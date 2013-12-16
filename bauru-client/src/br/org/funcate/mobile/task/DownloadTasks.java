@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -51,7 +50,7 @@ public class DownloadTasks extends AsyncTask<String, String, String> {
                 }
 
                 taskActivity.saveTasksIntoLocalSqlite(tasks);
-            } catch (HttpClientErrorException e) {
+            } catch (Exception e) {
                 message = "Ocorreu um erro ao fazer o download das tarefas.";
                 //String error = e.getResponseBodyAsString();
                 e.printStackTrace();
@@ -73,12 +72,12 @@ public class DownloadTasks extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String message) {
-        if (message == null) {
-            Utility.showToast("Ocorreu um erro ao baixar as atividades.", Toast.LENGTH_LONG, taskActivity);
-        }
-
         taskActivity.updateCountLabels();
         taskActivity.hideLoadingMask();
+        
+        if (message != null) {
+            Utility.showToast("Ocorreu um erro ao baixar as atividades.", Toast.LENGTH_LONG, taskActivity);
+        }
     }
 
 }

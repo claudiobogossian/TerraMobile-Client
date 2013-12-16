@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.web.client.HttpClientErrorException;
-
 import android.os.AsyncTask;
 import android.widget.Toast;
 import br.org.funcate.mobile.Utility;
@@ -38,7 +36,7 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
         for (String url : urls) {
             try {
                 Photo[] responsePhotos = taskActivity.restTemplate.postForObject(url, this.photos, Photo[].class, userHash);
-                List<Photo>photos = new ArrayList<Photo>(Arrays.asList(responsePhotos));
+                List<Photo> photos = new ArrayList<Photo>(Arrays.asList(responsePhotos));
 
                 if (photos != null) {
                     publishProgress("Verificando se existem imagens não utilizadas no aparelho...", "0", "" + photos.size());
@@ -51,7 +49,7 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                         publishProgress("Verificando se existem imagens não utilizadas no aparelho...", "" + progress);
                     }
                 }
-            } catch (HttpClientErrorException e) {
+            } catch (Exception e) {
                 message = "Ocorreu um erro ao enviar as imagens.";
                 //String error = e.getResponseBodyAsString();
                 e.printStackTrace();
@@ -74,11 +72,11 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String message) {
+        taskActivity.hideLoadingMask();
+        
         if(message != null) {
             Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
         }
-        
-        taskActivity.hideLoadingMask();
     }
 
 }

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.web.client.HttpClientErrorException;
-
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -44,7 +42,7 @@ public class UploadTasks extends AsyncTask<String, String, String> {
                     publishProgress("Excluindo tarefas concluídas...");
                     TaskDao.deleteTasks(tasks);
                 }
-            } catch (HttpClientErrorException e) {
+            } catch (Exception e) {
                 message = "Erro ao enviar as fotos.";
                 //String error = e.getResponseBodyAsString();
                 e.printStackTrace();
@@ -66,6 +64,8 @@ public class UploadTasks extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String message) {
+        taskActivity.hideLoadingMask();
+
         if (message != null) {
             Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
         }

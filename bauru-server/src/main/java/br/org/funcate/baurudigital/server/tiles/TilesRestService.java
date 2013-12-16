@@ -1,10 +1,14 @@
 package br.org.funcate.baurudigital.server.tiles;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
@@ -23,17 +27,19 @@ public class TilesRestService
 	@GET
 	@Path("/zip")
 	@Produces("application/zip")
-	public Response getTiles() throws ConfigException, TilesException {
+	public Response getTiles() throws ConfigException, TilesException, URISyntaxException {
 	
 		String tilesZipPath = PropertiesReader.getProperty("tiles.file.path");
-		File tilesZip = new File(tilesZipPath);
-		if(!tilesZip.exists())
-		{
-			throw new TilesException("Não foi possível localizar arquivo compactado com os tiles. Verifique as configurações.");
-		}
-        ResponseBuilder response = Response.ok((Object) tilesZip);
+		URL fileURL = this.getClass().getResource(tilesZipPath);
+		File file = new File(fileURL.toURI());
+		
+		
+		
+        ResponseBuilder response = Response.ok(file);
         response.header("Content-Disposition", "attachment; filename=\"tiles.zip\"");
-		return response.build();
+        response.header("Content-Length", file.length());
+        
+        return response.build();
 
 	}
 	

@@ -36,10 +36,18 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
             path = Environment.getExternalStorageDirectory() + "/osmdroid/tiles/";
             filePath = path + "base_map.zip";
 
-            File baseMapZip = new File(path);
+            File baseMapZip = new File(filePath);
 
             if (!baseMapZip.exists()) {
                 this.getRemoteBaseMap(urls[0]);
+            }
+            else {
+                long localFileSize = baseMapZip.length();
+                boolean isSameSize = this.compareSizeOfRemoteFile(urls[0], localFileSize);
+
+                if (!isSameSize) {
+                    this.getRemoteBaseMap(urls[0]);
+                }
             }
         } catch (Exception e) {
             message = "Ocorreu um erro ao baixar o arquivo.";
@@ -48,12 +56,28 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
 
         try {
             this.unzip(filePath, path);
-        } catch (IOException e) {
+        } catch (Exception e) {
             message = "Ocorreu um erro ao descompactar o arquivo.";
             e.printStackTrace();
         }
 
         return message;
+    }
+
+    public boolean compareSizeOfRemoteFile(String remoteUrl, long localFileSize) throws IOException {
+        boolean isSameSize = false;
+
+        URL url = new URL(remoteUrl);
+        URLConnection conexion = url.openConnection();
+        conexion.connect();
+
+        long remoteFileSize = conexion.getContentLength();
+
+        if (localFileSize == remoteFileSize) {
+            isSameSize = true;
+        }
+
+        return isSameSize;
     }
 
     /**
@@ -144,10 +168,10 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String message) {
+        taskActivity.hideLoadingMask();
+
         if (message != null) {
             Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
         }
-
-        taskActivity.hideLoadingMask();
     }
 }

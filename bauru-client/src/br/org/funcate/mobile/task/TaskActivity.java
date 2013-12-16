@@ -36,7 +36,6 @@ public class TaskActivity extends Activity {
 
     public final String    LOG_TAG = "#" + getClass().getSimpleName();
     //private final String   hostUrl = "http://200.144.100.34:8080/";
-    private final String   hostUrl = "http://192.168.4.100:8080/";
 
     private TextView       txtIncompleteTasks;
     private TextView       txtNotSyncRegisters;
@@ -149,7 +148,7 @@ public class TaskActivity extends Activity {
      */
     public void getRemoteTasks() {
         String userHash = SessionManager.getUserHash();
-        String url = hostUrl + "bauru-server/rest/tasks?user={user_hash}";
+        String url = Utility.hostUrl + "bauru-server/rest/tasks?user={user_hash}";
         DownloadTasks remote = new DownloadTasks(userHash, this);
         remote.execute(new String[] { url });
     }
@@ -180,7 +179,7 @@ public class TaskActivity extends Activity {
 
         if (tasks != null && !tasks.isEmpty()) {
             //String url = "http://200.144.100.34:8080/bauru-server/rest/tasks?user={user_hash}";
-            String url = hostUrl + "bauru-server/rest/tasks?user={user_hash}";
+            String url = Utility.hostUrl + "bauru-server/rest/tasks?user={user_hash}";
             UploadTasks remote = new UploadTasks(tasks, userHash, this);
             remote.execute(new String[] { url });
         }
@@ -200,7 +199,7 @@ public class TaskActivity extends Activity {
         List<Photo> photos = PhotoDao.getNotSyncPhotos();
 
         if (photos != null && !photos.isEmpty()) {
-            String url = hostUrl + "bauru-server/rest/photos?user={user_hash}";
+            String url = Utility.hostUrl + "bauru-server/rest/photos?user={user_hash}";
             UploadPhotos remote = new UploadPhotos(photos, userHash, this);
             remote.execute(new String[] { url });
         }
@@ -222,17 +221,17 @@ public class TaskActivity extends Activity {
     public void setLoadMaskMessage(String message) {
         this.mProgressDialog.setMessage(message);
     }
-    
+
     public void onProgressUpdate(String... progress) {
         mProgressDialog.setMessage(progress[0]);
 
-        if(progress.length == 2) {
+        if (progress.length == 2) {
             mProgressDialog.setProgress(Integer.parseInt(progress[1]));
-        }       
-        
+        }
+
         if (progress.length == 3) {
             this.hideLoadingMask();
-            
+
             mProgressDialog = new ProgressDialog(TaskActivity.this);
             mProgressDialog.setMessage(progress[0]);
             mProgressDialog.setIndeterminate(false);
@@ -248,7 +247,8 @@ public class TaskActivity extends Activity {
      * tiles zip file from server
      ******************************************************************************************************************/
     public void getRemoteZipBaseMap() {
-        String url = "http://200.144.100.34:8080/bauru-server/rest/tiles/zip";
+        String url = Utility.hostUrl + "bauru-server/rest/tiles/zip";
+        //String url = "http://200.144.100.34:8080/bauru-server/rest/tiles/zip";
         new DownloadZipAsync(this).execute(url);
     }
 }

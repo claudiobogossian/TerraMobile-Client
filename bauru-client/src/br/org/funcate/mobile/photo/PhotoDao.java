@@ -145,7 +145,7 @@ public class PhotoDao {
 
             try {
                 for (Photo photo : photos) {
-                    if(photo.getId() == null) {
+                    if (photo.getId() == null) {
                         photoDao.create(photo);
                     }
                 }

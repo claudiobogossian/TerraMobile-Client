@@ -20,7 +20,7 @@ public class PhotoDAO {
 		session.beginTransaction();
 
 		for (Photo photo: photos) {
-			session.save(photo);
+			session.saveOrUpdate(photo);
 		}
 		session.getTransaction().commit();
 		session.close();

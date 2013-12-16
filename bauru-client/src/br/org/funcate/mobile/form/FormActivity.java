@@ -348,9 +348,6 @@ public class FormActivity extends Activity implements LocationListener {
      * */
     public void setFieldsWithTaskProperties(Task taskParam) {
         if (taskParam != null) {
-            lat.setText("" + taskParam.getAddress().getCoordx());
-            lon.setText("" + taskParam.getAddress().getCoordy());
-
             address.setText(taskParam.getAddress().getName());
             edtNeighborhood.setText(taskParam.getAddress().getNeighborhood());
             edtPostalCode.setText(taskParam.getAddress().getPostalCode());
@@ -402,6 +399,8 @@ public class FormActivity extends Activity implements LocationListener {
                 */
 
                 findViewById(R.id.formInfra).setVisibility(View.GONE);
+
+                //TODO: modificar para collapse form.
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -419,8 +418,8 @@ public class FormActivity extends Activity implements LocationListener {
     public void setFormPropertiesWithFields(Task taskParam) {
         Form form = taskParam.getForm();
 
-        taskParam.getAddress().setCoordx(Double.valueOf(lat.getText().toString()));
-        taskParam.getAddress().setCoordy(Double.valueOf(lon.getText().toString()));
+        form.setCoordx(Double.valueOf(lat.getText().toString()));
+        form.setCoordy(Double.valueOf(lon.getText().toString()));
 
         form.setDate(new Date());
         form.setOtherNumbers(edtOtherNumbers.getText().toString());
