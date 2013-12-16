@@ -27,7 +27,7 @@ public class UserRestService
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<User> getAllUsers() {
+	public List<User> getAllUsers() throws UtilException {
 
 		List<User> users = UserService.getUsers();		
 		return users;
