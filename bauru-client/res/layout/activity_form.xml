@@ -231,6 +231,7 @@
                 android:paddingTop="20dp" >
 
                 <TextView
+                    android:id="@+id/txt_infra_title"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:layout_gravity="center|center_vertical"

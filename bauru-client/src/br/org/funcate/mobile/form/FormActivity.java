@@ -20,6 +20,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -414,13 +415,17 @@ public class FormActivity extends Activity implements LocationListener {
      */
     public void toggleInfrastructureFields(View v) {
         View formInfra = findViewById(R.id.formInfra);
+        TextView txtTitle = (TextView) findViewById(R.id.txt_infra_title);
+        String title = "Infraestrutura";
 
         if (formInfra.isShown()) {
             //this.slideUp(this, formInfra);
             formInfra.setVisibility(View.GONE);
+            txtTitle.setText(" +  " + title);
         }
         else {
             formInfra.setVisibility(View.VISIBLE);
+            txtTitle.setText(" -  " + title);
             //this.slideDown(this, formInfra);
         }
     }
@@ -494,8 +499,8 @@ public class FormActivity extends Activity implements LocationListener {
                 FormActivity.this,
                 R.layout.item_list,
                 cursor,
-                new String[] { "name", "edtPostalCode", "edtNumber", "edtNeighborhood" },
-                new int[] { R.id.item_log, R.id.item_cep, R.id.item_neighborhood }
+                new String[] { "name", "number", "lote" },
+                new int[] { R.id.item_log, R.id.item_number, R.id.item_lote }
                 );
 
         address.setAdapter(addressAdapter);
@@ -511,7 +516,10 @@ public class FormActivity extends Activity implements LocationListener {
 
                     if (task != null) {
                         photos = PhotoDao.getPhotosByForm(task.getForm());
-                        self.showPictures(photos);
+
+                        if (photos != null && !photos.isEmpty()) {
+                            self.showPictures(photos);
+                        }
 
                         self.setFieldsWithTaskProperties(task);
                         self.setFieldsWithLastTask();
@@ -638,15 +646,17 @@ public class FormActivity extends Activity implements LocationListener {
                 photo.setBlob(blob);
                 photo.setForm(task.getForm());
 
-                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                // Get the location manager
+                LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                String bestProvider = locationManager.getBestProvider(new Criteria(), false);
+                Location location = locationManager.getLastKnownLocation(bestProvider);
 
                 if (location != null) {
                     lat.setText("" + location.getLatitude());
                     lon.setText("" + location.getLongitude());
                 }
                 else {
+                    Utility.showToast("Seu GPS está desabilitado, ligue-o para capturar sua posição.", Toast.LENGTH_LONG, this);
                     lat.setText("0.0");
                     lon.setText("0.0");
                 }
