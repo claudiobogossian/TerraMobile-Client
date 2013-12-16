@@ -30,6 +30,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -389,24 +391,71 @@ public class FormActivity extends Activity implements LocationListener {
                 (lastTask.getAddress().getName().equals(task.getAddress().getName())
                 || lastTask.getAddress().getPostalCode().equals(task.getAddress().getPostalCode()))) {
             try {
-                /*
                 // Only infrastructure spinners.
-                spnPavimentation.setSelection(((ArrayAdapter<String>) spnPavimentation.getAdapter()).getPosition(lastTask.getForm().getPavimentation())); 
-                spnAsphaltGuide.setSelection(((ArrayAdapter<String>) spnAsphaltGuide.getAdapter()).getPosition(lastTask.getForm().getAsphaltGuide())); 
-                spnPublicIlumination.setSelection(((ArrayAdapter<String>) spnPublicIlumination.getAdapter()).getPosition(lastTask.getForm().getPublicIlumination())); 
-                spnEnergy.setSelection(((ArrayAdapter<String>) spnEnergy.getAdapter()).getPosition(lastTask.getForm().getEnergy())); 
+                spnPavimentation.setSelection(((ArrayAdapter<String>) spnPavimentation.getAdapter()).getPosition(lastTask.getForm().getPavimentation()));
+                spnAsphaltGuide.setSelection(((ArrayAdapter<String>) spnAsphaltGuide.getAdapter()).getPosition(lastTask.getForm().getAsphaltGuide()));
+                spnPublicIlumination.setSelection(((ArrayAdapter<String>) spnPublicIlumination.getAdapter()).getPosition(lastTask.getForm().getPublicIlumination()));
+                spnEnergy.setSelection(((ArrayAdapter<String>) spnEnergy.getAdapter()).getPosition(lastTask.getForm().getEnergy()));
                 spnPluvialGallery.setSelection(((ArrayAdapter<String>) spnPluvialGallery.getAdapter()).getPosition(lastTask.getForm().getPluvialGallery()));
-                */
 
-                findViewById(R.id.formInfra).setVisibility(View.GONE);
-
-                //TODO: modificar para collapse form.
+                View formInfra = findViewById(R.id.formInfra);
+                formInfra.setVisibility(View.GONE);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         else {
             findViewById(R.id.formInfra).setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * onClick handler
+     */
+    public void toggleInfrastructureFields(View v) {
+        View formInfra = findViewById(R.id.formInfra);
+
+        if (formInfra.isShown()) {
+            //this.slideUp(this, formInfra);
+            formInfra.setVisibility(View.GONE);
+        }
+        else {
+            formInfra.setVisibility(View.VISIBLE);
+            //this.slideDown(this, formInfra);
+        }
+    }
+
+    /**
+     * 
+     * @param ctx
+     * @param v
+     */
+    public static void slideDown(Context ctx, View v) {
+        Animation a = AnimationUtils.loadAnimation(ctx, R.anim.slide_down);
+
+        if (a != null) {
+            a.reset();
+            if (v != null) {
+                v.clearAnimation();
+                v.startAnimation(a);
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param ctx
+     * @param v
+     */
+    public static void slideUp(Context ctx, View v) {
+        Animation a = AnimationUtils.loadAnimation(ctx, R.anim.slide_up);
+
+        if (a != null) {
+            a.reset();
+            if (v != null) {
+                v.clearAnimation();
+                v.startAnimation(a);
+            }
         }
     }
 

@@ -222,7 +222,6 @@
         </TableLayout>
 
         <TableLayout
-            android:id="@+id/formInfra"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
@@ -235,9 +234,17 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:layout_gravity="center|center_vertical"
+                    android:clickable="true"
+                    android:onClick="toggleInfrastructureFields"
                     android:text="@string/tv_infra"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
             </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:id="@+id/formInfra"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
             <TableRow
                 android:layout_width="match_parent"
@@ -573,11 +580,12 @@
             android:layout_height="wrap_content" >
 
             <TableRow>
+
                 <Button
                     android:id="@+id/button_clear_spinners"
+                    android:layout_width="250dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_width="250dp"
                     android:drawableTop="@drawable/ico_clear"
                     android:text="@string/btn_clear" />
 
