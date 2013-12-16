@@ -42,321 +42,330 @@ import br.org.funcate.mobile.user.SessionManager;
 
 public class GeoMap extends Activity implements LocationListener {
 
-	private MapView mapView;
-	private MapController controller;
+    private MapView                                mapView;
+    private MapController                          controller;
 
-	private LocationManager locationManager;
-	private Location location;
+    private LocationManager                        locationManager;
+    private Location                               location;
 
-	private POIInfoWindow poiInfoWindow;
+    private POIInfoWindow                          poiInfoWindow;
 
-	// other activities
-	private static final int GEOFORM = 101;
-	private static final int TASK = 103;
+    // other activities
+    private static final int                       GEOFORM = 101;
+    private static final int                       TASK    = 103;
 
-	ItemizedOverlayWithBubble<ExtendedOverlayItem> poiMarkers;
+    ItemizedOverlayWithBubble<ExtendedOverlayItem> poiMarkers;
 
-	private GeoMap self = this;
+    private GeoMap                                 self    = this;
 
-	private LayoutInflater inflater;
+    private LayoutInflater                         inflater;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
 
-		super.onCreate(savedInstanceState);
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_geomap);
+        super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_geomap);
 
-		inflater = LayoutInflater.from(getBaseContext());
-		View viewControl = inflater.inflate(R.layout.geomap_gps, null);
-		LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-		this.addContentView(viewControl, layoutParamsControl);
-		ImageButton imageButton = (ImageButton) findViewById(R.id.btn_update_location);
-		imageButton.setOnClickListener(new View.OnClickListener() {
+        inflater = LayoutInflater.from(getBaseContext());
+        View viewControl = inflater.inflate(R.layout.geomap_gps, null);
+        LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+        this.addContentView(viewControl, layoutParamsControl);
+        ImageButton imageButton = (ImageButton) findViewById(R.id.btn_update_location);
+        imageButton.setOnClickListener(new View.OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				if (location != null) {
-					poiInfoWindow.close();
-					location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-					GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+            @Override
+            public void onClick(View v) {
+                if (location != null) {
+                    poiInfoWindow.close();
+                    location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
 
-					OverlayItem myLocationOverlayItem = new OverlayItem("", "", geoPoint);
-					Drawable myCurrentLocationMarker =  getResources().getDrawable(R.drawable.person);
-					myLocationOverlayItem.setMarker(myCurrentLocationMarker);
+                    OverlayItem myLocationOverlayItem = new OverlayItem("", "", geoPoint);
+                    Drawable myCurrentLocationMarker = getResources().getDrawable(R.drawable.person);
+                    myLocationOverlayItem.setMarker(myCurrentLocationMarker);
 
-					final ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
-					items.add(myLocationOverlayItem);
-					ResourceProxy resourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
-					ItemizedIconOverlay<OverlayItem> currentLocationOverlay = new ItemizedIconOverlay<OverlayItem>(items, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-						public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-							return true;
-						}
-						public boolean onItemLongPress(final int index, final OverlayItem item) {
-							return true;
-						}
-					}, resourceProxy);
+                    final ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+                    items.add(myLocationOverlayItem);
+                    ResourceProxy resourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
+                    ItemizedIconOverlay<OverlayItem> currentLocationOverlay = new ItemizedIconOverlay<OverlayItem>(items, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                        public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                            return true;
+                        }
 
-					mapView.getOverlays().add(currentLocationOverlay);
+                        public boolean onItemLongPress(final int index, final OverlayItem item) {
+                            return true;
+                        }
+                    }, resourceProxy);
 
-					currentLocationOverlay.removeAllItems();
+                    mapView.getOverlays().add(currentLocationOverlay);
 
-					controller.setCenter(geoPoint);
-					controller.setZoom(16);
-				}
-			}
-		});
+                    currentLocationOverlay.removeAllItems();
 
-		self.createMapView();
-	}
+                    controller.setCenter(geoPoint);
+                    controller.setZoom(16);
+                }
+            }
+        });
 
-	public void createMapView() {
-		mapView = (MapView) findViewById(R.id.mapview);
-		mapView.setBuiltInZoomControls(true);
-		mapView.setMultiTouchControls(true);
-		// mapView.setUseDataConnection(false); // keeps the mapView from
-		// loading online tiles using network connection.
-		// mapView.setUseDataConnection(true);
-		
-		MapOverlay movl = new MapOverlay(this);
+        self.createMapView();
+    }
+
+    public void createMapView() {
+        mapView = (MapView) findViewById(R.id.mapview);
+        mapView.setBuiltInZoomControls(true);
+        mapView.setMultiTouchControls(true);
+        // mapView.setUseDataConnection(false); // keeps the mapView from
+        // loading online tiles using network connection.
+        // mapView.setUseDataConnection(true);
+
+        MapOverlay movl = new MapOverlay(this);
         mapView.getOverlays().add(movl);
 
-		poiInfoWindow = new POIInfoWindow(mapView);
-		
-		final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
-		poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, poiItems, mapView, poiInfoWindow);
+        poiInfoWindow = new POIInfoWindow(mapView);
 
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-		location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
+        poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, poiItems, mapView, poiInfoWindow);
 
-		controller = (MapController) mapView.getController();
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-		if (location != null) {
-			controller.setZoom(16);
-			GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+        controller = (MapController) mapView.getController();
 
-			OverlayItem myLocationOverlayItem = new OverlayItem("", "", geoPoint);
-			Drawable myCurrentLocationMarker = this.getResources().getDrawable(R.drawable.person);
-			myLocationOverlayItem.setMarker(myCurrentLocationMarker);
+        if (location != null) {
+            controller.setZoom(16);
+            GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
 
-			final ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
-			items.add(myLocationOverlayItem);
-			ResourceProxy resourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
-			ItemizedIconOverlay<OverlayItem> currentLocationOverlay = new ItemizedIconOverlay<OverlayItem>(items, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-				public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-					return true;
-				}
-				public boolean onItemLongPress(final int index, final OverlayItem item) {
-					return true;
-				}
-			}, resourceProxy);
+            OverlayItem myLocationOverlayItem = new OverlayItem("", "", geoPoint);
+            Drawable myCurrentLocationMarker = this.getResources().getDrawable(R.drawable.person);
+            myLocationOverlayItem.setMarker(myCurrentLocationMarker);
 
-			mapView.getOverlays().add(currentLocationOverlay);
+            final ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+            items.add(myLocationOverlayItem);
+            ResourceProxy resourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
+            ItemizedIconOverlay<OverlayItem> currentLocationOverlay = new ItemizedIconOverlay<OverlayItem>(items, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                    return true;
+                }
 
-			controller.setCenter(geoPoint);
-		} else {
-			controller.setZoom(12);
-			controller.setCenter(new GeoPoint(-22.317773, -49.059534));
-		}
+                public boolean onItemLongPress(final int index, final OverlayItem item) {
+                    return true;
+                }
+            }, resourceProxy);
 
-		// new GeoPoint(-22.317773, -49.059534) // Bauru
-		// new GeoPoint(-23.157221, -45.792443) // SJC
+            mapView.getOverlays().add(currentLocationOverlay);
 
-		// POI markers:
+            controller.setCenter(geoPoint);
+        }
+        else {
+            controller.setZoom(12);
+            controller.setCenter(new GeoPoint(-22.317773, -49.059534));
+        }
 
-		// poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this,
-		// poiItems, mapView);
-		mapView.getOverlays().add(poiMarkers);
-	}
+        // new GeoPoint(-22.317773, -49.059534) // Bauru
+        // new GeoPoint(-23.157221, -45.792443) // SJC
 
-	public void openGeoform() {
-		long count = TaskDao.getCountOfTasks();
+        // POI markers:
 
-		if (count == 0) {
-			Utility.showToast(
-					"Você não tem nenhum registro salvo, sincronize seu aplicativo.",
-					Toast.LENGTH_LONG, GeoMap.this);
-		} else {
-			Intent i = new Intent(self, FormActivity.class);
-			startActivityForResult(i, GEOFORM);
-		}
-	}
+        // poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this,
+        // poiItems, mapView);
+        mapView.getOverlays().add(poiMarkers);
+    }
 
-	public void openTaskScreen() {
-		Intent taskIntent = new Intent(self, TaskActivity.class);
-		startActivityForResult(taskIntent, TASK);
-	}
+    public void openGeoform() {
+        long count = TaskDao.getCountOfTasks();
 
-	public void finishThisScreen() {
-		SessionManager.logoutUser();
-		setResult(RESULT_CANCELED, new Intent());
-		finish();
-	}
+        if (count == 0) {
+            Utility.showToast(
+                    "Você não tem nenhum registro salvo, sincronize seu aplicativo.",
+                    Toast.LENGTH_LONG, GeoMap.this);
+        }
+        else {
+            Intent i = new Intent(self, FormActivity.class);
+            startActivityForResult(i, GEOFORM);
+        }
+    }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		self.showLandmarks();
-	}
+    public void openTaskScreen() {
+        Intent taskIntent = new Intent(self, TaskActivity.class);
+        startActivityForResult(taskIntent, TASK);
+    }
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
+    public void finishThisScreen() {
+        SessionManager.logoutUser();
+        setResult(RESULT_CANCELED, new Intent());
+        finish();
+    }
 
-	/**
-	 * Update all landmarks from the map.
-	 * 
-	 * @author Paulo Luan
-	 * @param tasks
-	 */
-	public void updateLandmarks(List<Task> tasks) {
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        self.showLandmarks();
+    }
 
-	public void showLandmarks() {
-		List<Task> features = TaskDao.getNotFinishedTasks();
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 
-		for (Task feature : features) {
+    /**
+     * Update all landmarks from the map.
+     * 
+     * @author Paulo Luan
+     * @param tasks
+     */
+    public void updateLandmarks(List<Task> tasks) {
+    }
 
-			Double lat, lon;
+    public void showLandmarks() {
+        List<Task> features = TaskDao.getNotFinishedTasks();
 
-			lat = feature.getAddress().getCoordx();
-			lon = feature.getAddress().getCoordy();
+        for (Task feature : features) {
 
-			if (lat != null && lon != null) {
-				ExtendedOverlayItem poiMarker = createOverlayItem(feature);
-				poiMarkers.addItem(poiMarker);
-			}
-		}
-	}
+            Double lat, lon;
 
-	/**
-	 * Creates an overlay item.
-	 * 
-	 * @return
-	 */
-	public ExtendedOverlayItem createOverlayItem(Task feature) {
-		Address address = feature.getAddress();
-		Double latitude = address.getCoordx();
-		Double longitude = address.getCoordy();
-		GeoPoint geoPoint = new GeoPoint(latitude, longitude);
+            lat = feature.getAddress().getCoordx();
+            lon = feature.getAddress().getCoordy();
 
-		// GeoPoint geoPoint = new GeoPoint(-22.318567, -49.060907);
+            if (lat != null && lon != null) {
+                ExtendedOverlayItem poiMarker = createOverlayItem(feature);
+                poiMarkers.addItem(poiMarker);
+            }
+        }
+    }
 
-		ExtendedOverlayItem poiMarker = new ExtendedOverlayItem("Dados do Terreno", feature.toString(), geoPoint, this);
-		Drawable marker = null;
+    /**
+     * Creates an overlay item.
+     * 
+     * @return
+     */
+    public ExtendedOverlayItem createOverlayItem(Task feature) {
+        Address address = feature.getAddress();
+        Double latitude = address.getCoordx();
+        Double longitude = address.getCoordy();
+        GeoPoint geoPoint = new GeoPoint(latitude, longitude);
 
-		if (feature.isDone()) {
-			marker = getResources().getDrawable(R.drawable.ic_landmark_green);
-		} else {
-			marker = getResources().getDrawable(R.drawable.ic_landmark_red);
-		}
+        // GeoPoint geoPoint = new GeoPoint(-22.318567, -49.060907);
 
-		poiMarker.setMarker(marker);
-		// poiMarker.setMarkerHotspot(poiMarker.HotspotPlace.CENTER);
+        ExtendedOverlayItem poiMarker = new ExtendedOverlayItem("Dados do Terreno", feature.toString(), geoPoint, this);
+        Drawable marker = null;
 
-		// thumbnail loading moved in POIInfoWindow.onOpen for better
-		// performances.
-		poiMarker.setRelatedObject(feature);
+        if (feature.isDone()) {
+            marker = getResources().getDrawable(R.drawable.ic_landmark_green);
+        }
+        else {
+            marker = getResources().getDrawable(R.drawable.ic_landmark_red);
+        }
 
-		//		controller.setCenter(geoPoint);
+        poiMarker.setMarker(marker);
+        // poiMarker.setMarkerHotspot(poiMarker.HotspotPlace.CENTER);
 
-		return poiMarker;
-	}
+        // thumbnail loading moved in POIInfoWindow.onOpen for better
+        // performances.
+        poiMarker.setRelatedObject(feature);
 
-	// TODO: listar todos os tasks e fazer landmarks disto, abrindo a tela de
-	// formulário baseado no objeto clicado.
+        //		controller.setCenter(geoPoint);
 
-	/*
-	 * 
-	 * Menu de contexto, ao clicar no botão de opções, automaticamente o menu
-	 * "geomap.xml" é exibido ao usuário.
-	 */
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.geomap, menu);
-		return true;
-	}
+        return poiMarker;
+    }
 
-	/*
-	 * Esta função é executada ao ser clicado em qualquer um dos itens do menu
-	 * de contexto desta tela.
-	 */
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.btnContextExit:
-			self.finishThisScreen();
-			return true;
-		case R.id.btnContextGetTasks:
-			self.openTaskScreen();
-			return true;
-		case R.id.btnContextNewForm:
-			self.openGeoform();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+    // TODO: listar todos os tasks e fazer landmarks disto, abrindo a tela de
+    // formulário baseado no objeto clicado.
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    /*
+     * 
+     * Menu de contexto, ao clicar no botão de opções, automaticamente o menu
+     * "geomap.xml" é exibido ao usuário.
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.geomap, menu);
+        return true;
+    }
 
-		if (resultCode == 999) {
-			finish();
-		}
+    /*
+     * Esta função é executada ao ser clicado em qualquer um dos itens do menu
+     * de contexto desta tela.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.btnContextExit:
+                self.finishThisScreen();
+                return true;
+            case R.id.btnContextGetTasks:
+                self.openTaskScreen();
+                return true;
+            case R.id.btnContextNewForm:
+                self.openGeoform();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
-		if (requestCode == GEOFORM) {
-			if (resultCode == RESULT_OK) {
-				String result = data.getExtras().getString("RESULT");
-				Utility.showToast(result, Toast.LENGTH_LONG, GeoMap.this);
-			} else if (resultCode == RESULT_CANCELED) {
-			}
-		}
-		if (requestCode == TASK) {
-			if (resultCode == RESULT_OK) {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-			}
-		}
-	}
+        if (resultCode == 999) {
+            finish();
+        }
 
-	@Override
-	public void onLocationChanged(Location arg0) {
-		// TODO Auto-generated method stub
+        if (requestCode == GEOFORM) {
+            if (resultCode == RESULT_OK) {
+                String result = data.getExtras().getString("RESULT");
+                Utility.showToast(result, Toast.LENGTH_LONG, GeoMap.this);
+            }
+            else if (resultCode == RESULT_CANCELED) {
+            }
+        }
+        if (requestCode == TASK) {
+            if (resultCode == RESULT_OK) {
 
-	}
+            }
+        }
+    }
 
-	@Override
-	public void onProviderDisabled(String arg0) {
-		// TODO Auto-generated method stub
+    @Override
+    public void onLocationChanged(Location arg0) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void onProviderEnabled(String arg0) {
-		// TODO Auto-generated method stub
+    @Override
+    public void onProviderDisabled(String arg0) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-		// TODO Auto-generated method stub
+    @Override
+    public void onProviderEnabled(String arg0) {
+        // TODO Auto-generated method stub
 
-	}
-	
-	public class MapOverlay extends org.osmdroid.views.overlay.Overlay {
+    }
 
-        public MapOverlay(Context ctx) {super(ctx);}
+    @Override
+    public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public class MapOverlay extends org.osmdroid.views.overlay.Overlay {
+
+        public MapOverlay(Context ctx) {
+            super(ctx);
+        }
 
         @Override
-        protected void draw(Canvas c, MapView osmv, boolean shadow) { }
+        protected void draw(Canvas c, MapView osmv, boolean shadow) {
+        }
 
         @Override
         public boolean onTouchEvent(MotionEvent e, MapView mapView) {
-            if(e.getAction() == MotionEvent.ACTION_DOWN)
-            	if(poiInfoWindow.isOpen())
-            		poiInfoWindow.close();
+            if (e.getAction() == MotionEvent.ACTION_DOWN)
+                if (poiInfoWindow.isOpen())
+                    poiInfoWindow.close();
             return false;
         }
     }

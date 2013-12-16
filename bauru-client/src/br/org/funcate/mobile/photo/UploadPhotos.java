@@ -36,7 +36,7 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
         for (String url : urls) {
             try {
                 Photo[] responsePhotos = taskActivity.restTemplate.postForObject(url, this.photos, Photo[].class, userHash);
-                List<Photo>photos = new ArrayList<Photo>(Arrays.asList(responsePhotos));
+                List<Photo> photos = new ArrayList<Photo>(Arrays.asList(responsePhotos));
 
                 if (photos != null) {
                     publishProgress("Verificando se existem imagens não utilizadas no aparelho...", "0", "" + photos.size());
