@@ -18,6 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
+import br.org.funcate.mobile.photo.Photo;
+import br.org.funcate.mobile.photo.PhotoDao;
+import br.org.funcate.mobile.photo.UploadPhotos;
 import br.org.funcate.mobile.user.SessionManager;
 
 /**
@@ -157,12 +160,11 @@ public class TaskActivity extends Activity {
      */
     public void syncronizeWithServer() {
         String userHash = SessionManager.getUserHash();
-        List<Task> tasks = TaskDao.getFinishedTasks();
+        List<Photo> photos = PhotoDao.getNotSyncPhotos();
 
-        if (tasks != null && !tasks.isEmpty()) {
-            //String url = "http://200.144.100.34:8080/bauru-server/rest/tasks?user={user_hash}";
-            String url = Utility.hostUrl + "bauru-server/rest/tasks?user={user_hash}";
-            UploadTasks remote = new UploadTasks(tasks, userHash, this);
+        if (photos != null && !photos.isEmpty()) {
+            String url = Utility.hostUrl + "bauru-server/rest/photos?user={user_hash}";
+            UploadPhotos remote = new UploadPhotos(photos, userHash, this);
             remote.execute(new String[] { url });
         }
         else {

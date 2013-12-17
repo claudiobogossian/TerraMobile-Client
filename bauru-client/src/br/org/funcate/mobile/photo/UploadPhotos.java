@@ -7,7 +7,10 @@ import java.util.List;
 import android.os.AsyncTask;
 import android.widget.Toast;
 import br.org.funcate.mobile.Utility;
+import br.org.funcate.mobile.task.Task;
 import br.org.funcate.mobile.task.TaskActivity;
+import br.org.funcate.mobile.task.TaskDao;
+import br.org.funcate.mobile.task.UploadTasks;
 
 /**
  * Async object implementation to Post Photos to server
@@ -58,6 +61,13 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
         return message;
     }
 
+    public void uploadTasks() {
+        List<Task> tasks = TaskDao.getFinishedTasks();
+        String url = Utility.hostUrl + "bauru-server/rest/tasks?user={user_hash}";
+        UploadTasks remote = new UploadTasks(tasks, userHash, taskActivity);
+        remote.execute(new String[] { url });
+    }
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -73,12 +83,13 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String message) {
         taskActivity.hideLoadingMask();
-        
-        if(message != null) {
+
+        if (message != null) {
             Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
         }
-        
-        taskActivity.getRemoteTasks();
+        else {
+            this.uploadTasks();
+        }
     }
 
 }
