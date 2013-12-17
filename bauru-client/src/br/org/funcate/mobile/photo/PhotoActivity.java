@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import android.app.Activity;
@@ -17,7 +18,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
-import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -43,7 +43,6 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
     private File               pathfullapp;
     private String             photo_name;
     protected LocationManager  locationManager;
-    private Location           lastLocation;
 
     boolean                    previewing      = false;
     LayoutInflater             controlInflater = null;
@@ -205,11 +204,21 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
     public void surfaceCreated(SurfaceHolder holder) {
         try {
             mCamera = Camera.open();
-            Parameters pr = mCamera.getParameters();
-            pr.setPictureSize(640, 480);
-            pr.setPictureFormat(PixelFormat.JPEG);
-            pr.set("jpeg-quality", 100);
-            mCamera.setParameters(pr);
+            Parameters cameraParameters = mCamera.getParameters();
+
+            List<Camera.Size> mList = cameraParameters.getSupportedPictureSizes();
+            Camera.Size maxPictureSize = mList.get(mList.size() - 1);
+
+            if (maxPictureSize.width <= 2048 && maxPictureSize.height <= 1536) {
+                cameraParameters.setPictureSize(maxPictureSize.width, maxPictureSize.height);
+            }
+            else {
+                cameraParameters.setPictureSize(2048, 1536);
+            }
+
+            cameraParameters.setPictureFormat(PixelFormat.JPEG);
+            cameraParameters.set("jpeg-quality", 100);
+            mCamera.setParameters(cameraParameters);
             mCamera.setPreviewDisplay(holder);
             mCamera.startPreview();
         } catch (IOException e) {
