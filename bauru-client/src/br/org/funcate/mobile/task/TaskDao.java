@@ -72,11 +72,32 @@ public class TaskDao {
      * @author Paulo Luan
      * @return Boolean result
      */
-    public static Integer deleteTasks(List<Task> tasks) {
-        Integer result = 0;
+    public static boolean deleteTasks(List<Task> tasks) {
+        boolean result = false;
+
+        for (Task task : tasks) {
+            result = deleteTask(task);
+        }
+
+        return result;
+    }
+
+    /**
+     * 
+     * Delete a Task from local database.
+     * 
+     * @author Paulo Luan
+     * @return Boolean result
+     */
+    public static boolean deleteTask(Task task) {
+        boolean result = false;
 
         try {
-            result = taskDao.delete(tasks);
+            addressDao.delete(task.getAddress());
+            formDao.delete(task.getForm());
+            taskDao.delete(task);
+
+            result = true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
