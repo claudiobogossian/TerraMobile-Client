@@ -18,9 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
-import br.org.funcate.mobile.photo.Photo;
-import br.org.funcate.mobile.photo.PhotoDao;
-import br.org.funcate.mobile.photo.UploadPhotos;
 import br.org.funcate.mobile.user.SessionManager;
 
 /**
@@ -67,8 +64,7 @@ public class TaskActivity extends Activity {
             public void onClick(View v) {
                 if (Utility.isNetworkAvailable(self)) {
                     try {
-                        self.saveTasksOnServer();
-                        self.savePhotosOnServer();
+                        self.syncronizeWithServer();
                     } catch (Exception e) {
                         self.hideLoadingMask();
                         e.printStackTrace();
@@ -154,26 +150,12 @@ public class TaskActivity extends Activity {
     }
 
     /**
-     * Save a list of tasks into local database.
-     * 
-     * @author Paulo Luan
-     * 
-     * @param List
-     *            <Task> Tasks that will be saved into database.
-     */
-    public void saveTasksIntoLocalSqlite(List<Task> tasks) {
-        if (tasks != null) {
-            TaskDao.saveTasks(tasks);
-        }
-    }
-
-    /**
      * Save a list of Tasks, creating an object that send a post request to
      * server.
      * 
      * @author Paulo Luan
      */
-    public void saveTasksOnServer() {
+    public void syncronizeWithServer() {
         String userHash = SessionManager.getUserHash();
         List<Task> tasks = TaskDao.getFinishedTasks();
 
@@ -185,23 +167,6 @@ public class TaskActivity extends Activity {
         }
         else {
             self.getRemoteTasks();
-        }
-    }
-
-    /**
-     * Save a list of Tasks, creating an object that send a post request to
-     * server.
-     * 
-     * @author Paulo Luan
-     */
-    public void savePhotosOnServer() {
-        String userHash = SessionManager.getUserHash();
-        List<Photo> photos = PhotoDao.getNotSyncPhotos();
-
-        if (photos != null && !photos.isEmpty()) {
-            String url = Utility.hostUrl + "bauru-server/rest/photos?user={user_hash}";
-            UploadPhotos remote = new UploadPhotos(photos, userHash, this);
-            remote.execute(new String[] { url });
         }
     }
 
@@ -219,7 +184,9 @@ public class TaskActivity extends Activity {
     }
 
     public void setLoadMaskMessage(String message) {
-        this.mProgressDialog.setMessage(message);
+        if (mProgressDialog == null || !mProgressDialog.isShowing()) {
+            this.showLoadingMask(message);
+        }
     }
 
     public void onProgressUpdate(String... progress) {

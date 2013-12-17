@@ -20,6 +20,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -30,6 +31,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -389,24 +392,75 @@ public class FormActivity extends Activity implements LocationListener {
                 (lastTask.getAddress().getName().equals(task.getAddress().getName())
                 || lastTask.getAddress().getPostalCode().equals(task.getAddress().getPostalCode()))) {
             try {
-                /*
                 // Only infrastructure spinners.
-                spnPavimentation.setSelection(((ArrayAdapter<String>) spnPavimentation.getAdapter()).getPosition(lastTask.getForm().getPavimentation())); 
-                spnAsphaltGuide.setSelection(((ArrayAdapter<String>) spnAsphaltGuide.getAdapter()).getPosition(lastTask.getForm().getAsphaltGuide())); 
-                spnPublicIlumination.setSelection(((ArrayAdapter<String>) spnPublicIlumination.getAdapter()).getPosition(lastTask.getForm().getPublicIlumination())); 
-                spnEnergy.setSelection(((ArrayAdapter<String>) spnEnergy.getAdapter()).getPosition(lastTask.getForm().getEnergy())); 
+                spnPavimentation.setSelection(((ArrayAdapter<String>) spnPavimentation.getAdapter()).getPosition(lastTask.getForm().getPavimentation()));
+                spnAsphaltGuide.setSelection(((ArrayAdapter<String>) spnAsphaltGuide.getAdapter()).getPosition(lastTask.getForm().getAsphaltGuide()));
+                spnPublicIlumination.setSelection(((ArrayAdapter<String>) spnPublicIlumination.getAdapter()).getPosition(lastTask.getForm().getPublicIlumination()));
+                spnEnergy.setSelection(((ArrayAdapter<String>) spnEnergy.getAdapter()).getPosition(lastTask.getForm().getEnergy()));
                 spnPluvialGallery.setSelection(((ArrayAdapter<String>) spnPluvialGallery.getAdapter()).getPosition(lastTask.getForm().getPluvialGallery()));
-                */
 
-                findViewById(R.id.formInfra).setVisibility(View.GONE);
-
-                //TODO: modificar para collapse form.
+                View formInfra = findViewById(R.id.formInfra);
+                formInfra.setVisibility(View.GONE);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         else {
             findViewById(R.id.formInfra).setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * onClick handler
+     */
+    public void toggleInfrastructureFields(View v) {
+        View formInfra = findViewById(R.id.formInfra);
+        TextView txtTitle = (TextView) findViewById(R.id.txt_infra_title);
+        String title = "Infraestrutura";
+
+        if (formInfra.isShown()) {
+            //this.slideUp(this, formInfra);
+            formInfra.setVisibility(View.GONE);
+            txtTitle.setText(" +  " + title);
+        }
+        else {
+            formInfra.setVisibility(View.VISIBLE);
+            txtTitle.setText(" -  " + title);
+            //this.slideDown(this, formInfra);
+        }
+    }
+
+    /**
+     * 
+     * @param ctx
+     * @param v
+     */
+    public static void slideDown(Context ctx, View v) {
+        Animation a = AnimationUtils.loadAnimation(ctx, R.anim.slide_down);
+
+        if (a != null) {
+            a.reset();
+            if (v != null) {
+                v.clearAnimation();
+                v.startAnimation(a);
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param ctx
+     * @param v
+     */
+    public static void slideUp(Context ctx, View v) {
+        Animation a = AnimationUtils.loadAnimation(ctx, R.anim.slide_up);
+
+        if (a != null) {
+            a.reset();
+            if (v != null) {
+                v.clearAnimation();
+                v.startAnimation(a);
+            }
         }
     }
 
@@ -445,8 +499,8 @@ public class FormActivity extends Activity implements LocationListener {
                 FormActivity.this,
                 R.layout.item_list,
                 cursor,
-                new String[] { "name", "edtPostalCode", "edtNumber", "edtNeighborhood" },
-                new int[] { R.id.item_log, R.id.item_cep, R.id.item_neighborhood }
+                new String[] { "name", "number", "lote" },
+                new int[] { R.id.item_log, R.id.item_number, R.id.item_lote }
                 );
 
         address.setAdapter(addressAdapter);
@@ -462,7 +516,10 @@ public class FormActivity extends Activity implements LocationListener {
 
                     if (task != null) {
                         photos = PhotoDao.getPhotosByForm(task.getForm());
-                        self.showPictures(photos);
+
+                        if (photos != null && !photos.isEmpty()) {
+                            self.showPictures(photos);
+                        }
 
                         self.setFieldsWithTaskProperties(task);
                         self.setFieldsWithLastTask();
@@ -589,15 +646,17 @@ public class FormActivity extends Activity implements LocationListener {
                 photo.setBlob(blob);
                 photo.setForm(task.getForm());
 
-                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                // Get the location manager
+                LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                String bestProvider = locationManager.getBestProvider(new Criteria(), false);
+                Location location = locationManager.getLastKnownLocation(bestProvider);
 
                 if (location != null) {
                     lat.setText("" + location.getLatitude());
                     lon.setText("" + location.getLongitude());
                 }
                 else {
+                    Utility.showToast("Seu GPS está desabilitado, ligue-o para capturar sua posição.", Toast.LENGTH_LONG, this);
                     lat.setText("0.0");
                     lon.setText("0.0");
                 }

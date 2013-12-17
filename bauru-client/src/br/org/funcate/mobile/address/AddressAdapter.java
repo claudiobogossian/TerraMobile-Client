@@ -45,17 +45,14 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
 
     @Override
     public void bindView(View v, Context ctx, Cursor c) {
-        TextView name_text1 = (TextView) v.findViewById(R.id.item_log);
-        name_text1.setText(c.getString(c.getColumnIndex("name")));
-
-        TextView name_text2 = (TextView) v.findViewById(R.id.item_cep);
-        name_text2.setText("CEP: " + Utility.correctNull(c.getString(c.getColumnIndex("postalCode"))));
+        TextView txt_logradouro = (TextView) v.findViewById(R.id.item_log);
+        txt_logradouro.setText("\n" + c.getString(c.getColumnIndex("name")));
 
         TextView txt_number = (TextView) v.findViewById(R.id.item_number);
         txt_number.setText("Número: " + c.getString(c.getColumnIndex("number")));
 
-        TextView txt_neighborhood = (TextView) v.findViewById(R.id.item_neighborhood);
-        txt_neighborhood.setText("Bairro: " + c.getString(c.getColumnIndex("neighborhood")));
+        TextView txt_lote = (TextView) v.findViewById(R.id.item_lote);
+        txt_lote.setText("Lote: " + Utility.correctNull(c.getString(c.getColumnIndex("featureId"))) + "\n");
     }
 
     @SuppressLint("DefaultLocale")
@@ -95,6 +92,7 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
             addressQueryBuilder.where()
                     .like("name", propertieFilter).or()
                     .like("number", propertieFilter).or()
+                    .like("featureId", propertieFilter).or()
                     .like("postalCode", propertieFilter);
 
             addressQueryBuilder.join(taskQueryBuilder);

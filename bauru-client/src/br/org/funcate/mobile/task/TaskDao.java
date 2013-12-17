@@ -127,25 +127,6 @@ public class TaskDao {
     }
 
     /**
-     * Save a list of tasks into local database.
-     * 
-     * @author Paulo Luan
-     * @param List
-     *            <Task> Tasks that will be saved into database.
-     */
-    public static boolean saveTasks(List<Task> tasks) {
-        boolean isSaved = false;
-
-        if (tasks != null) {
-            for (Task task : tasks) {
-                isSaved = saveTask(task);
-            }
-        }
-
-        return isSaved;
-    }
-
-    /**
      * Get Count of incompleted tasks.
      * 
      * @author Paulo Luan
