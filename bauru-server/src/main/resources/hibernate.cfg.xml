@@ -6,7 +6,7 @@
     <session-factory>
         <property name="hibernate.connection.driver_class">net.sourceforge.jtds.jdbc.Driver</property>
         <property name="hibernate.connection.password">S4geo</property>
-        <property name="hibernate.connection.url">jdbc:jtds:sqlserver://geodb4;instance=sql2012;DatabaseName=bauru_digital</property>
+        <property name="hibernate.connection.url">jdbc:jtds:sqlserver://192.168.4.115;instance=sql2012;DatabaseName=bauru_digital</property>
         <property name="hibernate.connection.username">sa</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</property>

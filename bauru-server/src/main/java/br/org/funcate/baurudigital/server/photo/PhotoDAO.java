@@ -15,15 +15,14 @@ import br.org.funcate.baurudigital.server.common.JPA.HibernateFactory;
 public class PhotoDAO {
 
 	public void save(List<Photo> photos) {
-		SessionFactory sessionFactory = HibernateFactory.getSessionFactory();
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
-
 		for (Photo photo: photos) {
-			session.saveOrUpdate(photo);
+			SessionFactory sessionFactory = HibernateFactory.getSessionFactory();
+			Session session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.save(photo);
+			session.getTransaction().commit();
+			session.close();
 		}
-		session.getTransaction().commit();
-		session.close();
 	}
 	public Photo retrieve(int id) throws PhotoException {
 		SessionFactory sessionFactory = HibernateFactory.getSessionFactory();

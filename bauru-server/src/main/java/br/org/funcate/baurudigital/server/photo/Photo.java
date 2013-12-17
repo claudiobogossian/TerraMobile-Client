@@ -6,8 +6,12 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import br.org.funcate.baurudigital.server.form.Form;
 @Entity
@@ -16,8 +20,11 @@ public class Photo implements Serializable {
 	@Id
 	@GeneratedValue
 	private Integer id;
-	
-	private String blob;
+	@Transient
+	private String base64;
+	@JsonIgnore
+	@Lob
+	private byte[] blob;
 	
 	private String path;
 	@ManyToOne(cascade=CascadeType.ALL, targetEntity=Form.class)
@@ -27,12 +34,13 @@ public class Photo implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Photo(Integer id, String blob, String path, Form form) {
+	public Photo(Integer id, String base64, byte[] blob, String path, Form form) {
 		super();
 		this.id = id;
-		this.blob = blob;
 		this.path = path;
 		this.form = form;
+		this.blob = blob;
+		this.base64 = base64;
 	}
 
 	public Integer getId() {
@@ -43,13 +51,6 @@ public class Photo implements Serializable {
 		this.id = id;
 	}
 
-	public String getBlob() {
-		return blob;
-	}
-
-	public void setBlob(String blob) {
-		this.blob = blob;
-	}
 
 	public String getPath() {
 		return path;
@@ -65,6 +66,22 @@ public class Photo implements Serializable {
 
 	public void setForm(Form form) {
 		this.form = form;
+	}
+
+	public String getBase64() {
+		return base64;
+	}
+
+	public void setBase64(String base64) {
+		this.base64 = base64;
+	}
+
+	public byte[] getBlob() {
+		return blob;
+	}
+
+	public void setBlob(byte[] blob) {
+		this.blob = blob;
 	}
 
 }
