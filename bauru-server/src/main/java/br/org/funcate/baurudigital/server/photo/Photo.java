@@ -11,18 +11,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import br.org.funcate.baurudigital.server.form.Form;
 @Entity
 @Table(name = "\"photo\"")
+@JsonIgnoreProperties({"blob"})
 public class Photo implements Serializable {
 	@Id
 	@GeneratedValue
 	private Integer id;
 	@Transient
 	private String base64;
-	@JsonIgnore
 	@Lob
 	private byte[] blob;
 	
