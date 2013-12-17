@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.List;
 
+import sun.misc.BASE64Decoder;
 import br.org.funcate.baurudigital.server.form.FormException;
 import br.org.funcate.baurudigital.server.form.FormService;
 import br.org.funcate.baurudigital.server.user.User;
@@ -22,6 +23,19 @@ public class PhotoService {
 					"Não foi possível obter as task solicitadas pois o usuário solicitado não existe.",
 					e);
 		}
+		for (Photo photo : photos) {
+			if(photo.getBase64()!=null)
+			{
+				BASE64Decoder decoder = new BASE64Decoder();
+				try {
+					photo.setBlob(decoder.decodeBuffer(photo.getBase64()));
+				} catch (IOException e) {
+					throw new PhotoException(
+							"Não foi possível decodificar a imagem enviada.",
+							e);
+				}
+			}
+		}
 		new PhotoDAO().save(photos);
 	}
 	
@@ -34,7 +48,7 @@ public class PhotoService {
 		byte[] b = new byte[(int)f.length()];
 		f.read(b);
 		Photo photo = new Photo();
-		photo.setBlob(b.toString()); //TODO: verificar se o toString é valido.
+		photo.setBlob(b); //TODO: verificar se o toString é valido.
 		photo.setPath(filePath);
 		photo.setForm(FormService.getForm(54));
 		
