@@ -38,8 +38,9 @@ public class Utility {
 
     private static final int    TWO_MINUTES = 1000 * 60 * 2;
 
-    //public static final String  hostUrl     = "http://192.168.5.60:8080/";
-    public static final String  hostUrl     = "http://200.144.100.34:8080/";
+    public static final String  hostUrl     = "http://192.168.5.102:8080/";
+
+    //public static final String  hostUrl     = "http://200.144.100.34:8080/";
 
     /**
      * Determines whether one Location reading is better than the current

@@ -139,8 +139,8 @@ public class TaskDao {
 
         try {
             String userHash = SessionManager.getUserHash();
-
             userQueryBuilder.where().eq("hash", userHash);
+
             taskQueryBuilder.join(userQueryBuilder);
             taskQueryBuilder.where().eq("done", Boolean.FALSE);
 
@@ -165,8 +165,8 @@ public class TaskDao {
 
         try {
             String userHash = SessionManager.getUserHash();
-
             userQueryBuilder.where().eq("hash", userHash);
+
             taskQueryBuilder.where().eq("done", Boolean.TRUE);
             taskQueryBuilder.join(userQueryBuilder);
 

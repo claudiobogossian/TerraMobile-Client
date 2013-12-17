@@ -10,7 +10,7 @@ public class Photo implements Serializable {
     @DatabaseField(generatedId = true, columnName = "id")
     private Integer id;
     @DatabaseField
-    private String  blob; // BASE64
+    private String  base64; // BASE64
     @DatabaseField
     private String  path;
     @DatabaseField(canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
@@ -19,10 +19,10 @@ public class Photo implements Serializable {
     public Photo() {
     }
 
-    public Photo(Integer id, String blob, String path, Form form) {
+    public Photo(Integer id, String base64, String path, Form form) {
         super();
         this.id = id;
-        this.blob = blob;
+        this.base64 = base64;
         this.path = path;
         this.form = form;
     }
@@ -35,12 +35,12 @@ public class Photo implements Serializable {
         this.id = id;
     }
 
-    public String getBlob() {
-        return blob;
+    public String getBase64() {
+        return base64;
     }
 
-    public void setBlob(String blob) {
-        this.blob = blob;
+    public void setBase64(String base64) {
+        this.base64 = base64;
     }
 
     public String getPath() {

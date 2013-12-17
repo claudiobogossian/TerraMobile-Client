@@ -8,10 +8,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 import br.org.funcate.mobile.Utility;
-import br.org.funcate.mobile.photo.Photo;
-import br.org.funcate.mobile.photo.PhotoDao;
-import br.org.funcate.mobile.photo.UploadPhotos;
-import br.org.funcate.mobile.user.SessionManager;
 
 /**
  * Async object implementation to PostTasks to server
@@ -55,23 +51,6 @@ public class UploadTasks extends AsyncTask<String, String, String> {
 
         return message;
     }
-    
-    /**
-     * Save a list of Tasks, creating an object that send a post request to
-     * server.
-     * 
-     * @author Paulo Luan
-     */
-    public void savePhotosOnServer() {
-        String userHash = SessionManager.getUserHash();
-        List<Photo> photos = PhotoDao.getNotSyncPhotos();
-
-        if (photos != null && !photos.isEmpty()) {
-            String url = Utility.hostUrl + "bauru-server/rest/photos?user={user_hash}";
-            UploadPhotos remote = new UploadPhotos(photos, userHash, taskActivity);
-            remote.execute(new String[] { url });
-        }
-    }
 
     @Override
     protected void onPreExecute() {
@@ -91,6 +70,6 @@ public class UploadTasks extends AsyncTask<String, String, String> {
             Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
         }
         
-        this.savePhotosOnServer();
+        taskActivity.getRemoteTasks();
     }
 }

@@ -643,7 +643,7 @@ public class FormActivity extends Activity implements LocationListener {
                 String blob = self.getBytesFromImage(photoPath);
 
                 photo.setPath(photoPath);
-                photo.setBlob(blob);
+                photo.setBase64(blob);
                 photo.setForm(task.getForm());
 
                 // Get the location manager

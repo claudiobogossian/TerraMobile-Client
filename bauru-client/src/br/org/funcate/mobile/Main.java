@@ -1,15 +1,8 @@
 package br.org.funcate.mobile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import br.org.funcate.mobile.map.GeoMap;
 import br.org.funcate.mobile.user.LoginActivity;
@@ -31,7 +24,6 @@ public class Main extends Activity {
         session = new SessionManager(getApplicationContext());
         this.checkLogin();
         super.onCreate(savedInstanceState);
-        config();
     }
 
     /**
@@ -60,27 +52,6 @@ public class Main extends Activity {
         // Staring Login Activity
         this.startActivity(intent);
         finish();
-    }
-
-    @SuppressLint("SdCardPath")
-    private void config() {
-        try {
-            InputStream is = getAssets().open("address.db");
-            File archive = new File("/data/data/" + getPackageName() + "/files/databases/");
-            archive.mkdirs();
-            File outputFile = new File(archive, "address.db");
-            @SuppressWarnings("resource")
-            FileOutputStream fos = new FileOutputStream(outputFile);
-
-            byte[] buffer = new byte[1024];
-            int len1 = 0;
-            while ((len1 = is.read(buffer)) != -1) {
-                fos.write(buffer, 0, len1);
-            }
-        } catch (IOException ex) {
-            Log.e(TAG, "Erro de configura��o de endere�o: " + ex);
-        }
-
     }
 
     @Override
