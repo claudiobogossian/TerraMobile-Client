@@ -18,7 +18,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -42,7 +41,6 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
     private ImageButton        bt_fotografar;
     private File               pathfullapp;
     private String             photo_name;
-    protected LocationManager  locationManager;
 
     boolean                    previewing      = false;
     LayoutInflater             controlInflater = null;

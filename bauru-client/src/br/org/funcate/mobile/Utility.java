@@ -43,14 +43,14 @@ public class Utility {
     //public static final String  hostUrl     = "http://200.144.100.34:8080/";
 
     /**
-     * Determines whether one LocationProvider reading is better than the
+     * Determines whether one Location reading is better than the
      * current
-     * LocationProvider fix
+     * Location fix
      * 
      * @param location
-     *            The new LocationProvider that you want to evaluate
+     *            The new Location that you want to evaluate
      * @param currentBestLocation
-     *            The current LocationProvider fix, to which you want to compare
+     *            The current Location fix, to which you want to compare
      *            the new
      *            one
      */

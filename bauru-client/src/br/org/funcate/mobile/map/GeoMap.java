@@ -19,7 +19,6 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,7 +39,7 @@ import br.org.funcate.mobile.task.TaskActivity;
 import br.org.funcate.mobile.task.TaskDao;
 import br.org.funcate.mobile.user.SessionManager;
 
-public class GeoMap extends Activity implements LocationListener {
+public class GeoMap extends Activity {
 
     private MapView                                mapView;
     private MapController                          controller;
@@ -314,30 +313,6 @@ public class GeoMap extends Activity implements LocationListener {
 
             }
         }
-    }
-
-    @Override
-    public void onLocationChanged(Location arg0) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onProviderDisabled(String arg0) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onProviderEnabled(String arg0) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-        // TODO Auto-generated method stub
-
     }
 
     public class MapOverlay extends org.osmdroid.views.overlay.Overlay {

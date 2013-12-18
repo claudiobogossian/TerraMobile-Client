@@ -20,10 +20,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
@@ -48,13 +45,14 @@ import android.widget.Toast;
 import br.org.funcate.mobile.R;
 import br.org.funcate.mobile.Utility;
 import br.org.funcate.mobile.address.AddressAdapter;
+import br.org.funcate.mobile.location.LocationProvider;
 import br.org.funcate.mobile.photo.Photo;
 import br.org.funcate.mobile.photo.PhotoActivity;
 import br.org.funcate.mobile.photo.PhotoDao;
 import br.org.funcate.mobile.task.Task;
 import br.org.funcate.mobile.task.TaskDao;
 
-public class FormActivity extends Activity implements LocationListener {
+public class FormActivity extends Activity {
 
     // tag used to debug
     private final String         LOG_TAG = "#" + getClass().getSimpleName();
@@ -90,8 +88,6 @@ public class FormActivity extends Activity implements LocationListener {
                                  buttonOk,
                                  buttonPhoto,
                                  buttonClearSpinners;
-
-    private LocationManager      locationManager;
 
     private FormActivity         self    = this;
 
@@ -646,10 +642,7 @@ public class FormActivity extends Activity implements LocationListener {
                 photo.setBase64(blob);
                 photo.setForm(task.getForm());
 
-                // Get the location manager
-                LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-                String bestProvider = locationManager.getBestProvider(new Criteria(), false);
-                Location location = locationManager.getLastKnownLocation(bestProvider);
+                Location location = LocationProvider.getBestLocation();
 
                 if (location != null) {
                     lat.setText("" + location.getLatitude());
@@ -780,22 +773,6 @@ public class FormActivity extends Activity implements LocationListener {
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-    }
-
-    @Override
-    public void onLocationChanged(Location arg0) {
-    }
-
-    @Override
-    public void onProviderDisabled(String arg0) {
-    }
-
-    @Override
-    public void onProviderEnabled(String arg0) {
-    }
-
-    @Override
-    public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
     }
 
     public void showLoadingMask() {
