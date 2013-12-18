@@ -32,17 +32,17 @@ public class PhotoDao {
         QueryBuilder<Form, Integer> formQueryBuilder = formDao.queryBuilder();
         QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
         QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
-        
+
         try {
             String userHash = SessionManager.getUserHash();
             userQueryBuilder.where().eq("hash", userHash);
-            
+
             taskQueryBuilder.join(userQueryBuilder);
             formQueryBuilder.join(taskQueryBuilder);
 
             photoQueryBuilder.join(formQueryBuilder);
 
-            photos = photoQueryBuilder.query();            
+            photos = photoQueryBuilder.query();
         } catch (SQLException e) {
             e.printStackTrace();
         }

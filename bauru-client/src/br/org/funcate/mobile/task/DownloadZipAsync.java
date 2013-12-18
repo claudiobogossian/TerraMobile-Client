@@ -121,7 +121,7 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
      * @param zipfile
      *            The path of the zip file
      * @param location
-     *            The new Location that you want to unzip the file
+     *            The new LocationProvider that you want to unzip the file
      * @throws IOException
      */
     private void unzip(String zipFile, String outputFolder) throws IOException {

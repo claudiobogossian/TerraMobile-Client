@@ -43,17 +43,18 @@ public class Utility {
     //public static final String  hostUrl     = "http://200.144.100.34:8080/";
 
     /**
-     * Determines whether one Location reading is better than the current
-     * Location fix
+     * Determines whether one LocationProvider reading is better than the
+     * current
+     * LocationProvider fix
      * 
      * @param location
-     *            The new Location that you want to evaluate
+     *            The new LocationProvider that you want to evaluate
      * @param currentBestLocation
-     *            The current Location fix, to which you want to compare the new
+     *            The current LocationProvider fix, to which you want to compare
+     *            the new
      *            one
      */
-    public static boolean isBetterLocation(Location location,
-            Location currentBestLocation) {
+    public static boolean isBetterLocation(Location location, Location currentBestLocation) {
         if (currentBestLocation == null)
             // A new location is always better than no location
             return true;
@@ -341,7 +342,7 @@ public class Utility {
      * @param zipfile
      *            The path of the zip file
      * @param location
-     *            The new Location that you want to unzip the file
+     *            The new LocationProvider that you want to unzip the file
      */
     public static void unzip(String zipFile, String location) {
         try {
