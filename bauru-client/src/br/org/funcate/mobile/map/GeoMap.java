@@ -122,7 +122,7 @@ public class GeoMap extends Activity {
 
     public void createMyLocationItem() {
         location = LocationProvider.getInstance(this).getLocation();
-        
+
         if (location != null) {
             poiInfoWindow.close();
 
@@ -134,6 +134,10 @@ public class GeoMap extends Activity {
 
             final ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
             items.add(myLocationOverlayItem);
+
+            if (currentLocationOverlay != null) {
+                currentLocationOverlay.removeAllItems();
+            }
 
             ResourceProxy resourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
             currentLocationOverlay = new ItemizedIconOverlay<OverlayItem>(items, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
@@ -148,10 +152,7 @@ public class GeoMap extends Activity {
 
             mapView.getOverlays().add(currentLocationOverlay);
 
-            //currentLocationOverlay.removeAllItems();
-
             controller.setCenter(geoPoint);
-            controller.setZoom(16);
         }
     }
 
