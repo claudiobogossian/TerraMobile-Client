@@ -642,7 +642,7 @@ public class FormActivity extends Activity {
                 photo.setBase64(blob);
                 photo.setForm(task.getForm());
 
-                Location location = LocationProvider.getBestLocation();
+                Location location = LocationProvider.getInstance(this).getLocation();
 
                 if (location != null) {
                     lat.setText("" + location.getLatitude());

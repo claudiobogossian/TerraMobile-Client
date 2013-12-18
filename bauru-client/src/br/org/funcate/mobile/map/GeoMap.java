@@ -99,8 +99,7 @@ public class GeoMap extends Activity {
         final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
         poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, poiItems, mapView, poiInfoWindow);
 
-        location = LocationProvider.getBestLocation();
-
+        location = LocationProvider.getInstance(this).getLocation();
         controller = (MapController) mapView.getController();
 
         if (location != null) {
@@ -122,8 +121,8 @@ public class GeoMap extends Activity {
     }
 
     public void createMyLocationItem() {
-        location = LocationProvider.getBestLocation();
-
+        location = LocationProvider.getInstance(this).getLocation();
+        
         if (location != null) {
             poiInfoWindow.close();
 

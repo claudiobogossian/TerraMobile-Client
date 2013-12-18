@@ -1,52 +1,63 @@
 package br.org.funcate.mobile.location;
 
-import android.app.Activity;
-import android.location.Criteria;
+import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
-public class LocationProvider extends Activity implements LocationListener {
+public class LocationProvider implements LocationListener {
 
-    private static LocationProvider instance        = null;
-    private static LocationManager  locationManager = null;
-    private static String           bestProvider    = null;
+    private static LocationProvider instance = null;
 
-    private LocationProvider() {
-        if (instance != null) {
-            instance = new LocationProvider();
-            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            bestProvider = locationManager.getBestProvider(new Criteria(), false);
+    private static LocationManager  mLocationManager;
+    private static Location         myLocation;
+
+    private LocationProvider(Context context) {
+        mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        myLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        if (myLocation != null) {
+            // Do something with the recent location fix otherwise wait for the update below
+        }
+        else {
+            this.updateLocation();
         }
     }
 
-    private Location getLocation() {
-        return locationManager.getLastKnownLocation(bestProvider);
+    public static LocationProvider getInstance(Context context) {
+        if (instance == null) {
+            instance = new LocationProvider(context);
+        }
+
+        return instance;
     }
 
-    public static Location getBestLocation() {
-        return new LocationProvider().getLocation();
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            //Log.v("Location Changed", location.getLatitude() + " and " + location.getLongitude());
+            myLocation = location;
+            mLocationManager.removeUpdates(this);
+        }
     }
 
-    @Override
-    public void onLocationChanged(android.location.Location arg0) {
-        // TODO Auto-generated method stub
+    public Location getLocation() {
+        this.updateLocation();
+        return myLocation;
     }
 
-    @Override
+    private void updateLocation() {
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+    }
+
+    // Required functions    
     public void onProviderDisabled(String arg0) {
-        // TODO Auto-generated method stub
     }
 
-    @Override
     public void onProviderEnabled(String arg0) {
-        // TODO Auto-generated method stub
     }
 
-    @Override
     public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-        // TODO Auto-generated method stub
     }
 
 }
