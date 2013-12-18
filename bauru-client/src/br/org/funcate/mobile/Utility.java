@@ -38,7 +38,7 @@ public class Utility {
 
     private static final int    TWO_MINUTES = 1000 * 60 * 2;
 
-    public static final String  hostUrl     = "http://192.168.5.102:8080/";
+    public static final String  hostUrl     = "http://192.168.4.2:8080/";
 
     //public static final String  hostUrl     = "http://200.144.100.34:8080/";
 

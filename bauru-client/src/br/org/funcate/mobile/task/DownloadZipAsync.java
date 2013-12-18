@@ -142,12 +142,20 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
                 progress++;
                 publishProgress("Descompactando mapa de base...", "" + progress);
 
-                FileOutputStream fout = new FileOutputStream(outputFolder + ze.getName());
-                for (int c = zin.read(); c != -1; c = zin.read()) {
-                    fout.write(c);
+                FileOutputStream fout = null;
+                try {
+                    fout = new FileOutputStream(outputFolder + ze.getName());
+                    for (int c = zin.read(); c != -1; c = zin.read()) {
+                        fout.write(c);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    zin.closeEntry();
+                    if (fout != null) {
+                        fout.close();
+                    }
                 }
-                zin.closeEntry();
-                fout.close();
             }
         }
 
