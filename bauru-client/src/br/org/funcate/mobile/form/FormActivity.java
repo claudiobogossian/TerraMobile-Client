@@ -64,30 +64,30 @@ public class FormActivity extends Activity {
     private AutoCompleteTextView address;
 
     private EditText
-                                 edtNeighborhood,
-                                 edtPostalCode,
-                                 edtNumber,
-                                 edtOtherNumbers;
+    edtNeighborhood,
+    edtPostalCode,
+    edtNumber,
+    edtOtherNumbers;
 
     private Spinner
-                                 spnNumberConfirmation,
-                                 spnVariance,
-                                 spnPrimaryUse,
-                                 spnSecondaryUse,
-                                 spnPavimentation,
-                                 spnAsphaltGuide,
-                                 spnPublicIlumination,
-                                 spnEnergy,
-                                 spnPluvialGallery;
+    spnNumberConfirmation,
+    spnVariance,
+    spnPrimaryUse,
+    spnSecondaryUse,
+    spnPavimentation,
+    spnAsphaltGuide,
+    spnPublicIlumination,
+    spnEnergy,
+    spnPluvialGallery;
 
     private TextView             lat, lon;
     private Button               buttonClearAddressFields;
 
     private Button
-                                 buttonCancel,
-                                 buttonOk,
-                                 buttonPhoto,
-                                 buttonClearSpinners;
+    buttonCancel,
+    buttonOk,
+    buttonPhoto,
+    buttonClearSpinners;
 
     private FormActivity         self    = this;
 
@@ -170,17 +170,17 @@ public class FormActivity extends Activity {
         alertDialogBuilder.setTitle("Atenção");
         alertDialogBuilder.setMessage("Deseja realmente sair?").setCancelable(false).setPositiveButton("Sim",
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        finish();
-                    }
-                })
-                .setNegativeButton("Não",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+                finish();
+            }
+        })
+        .setNegativeButton("Não",
+                new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
@@ -386,7 +386,7 @@ public class FormActivity extends Activity {
     public void setFieldsWithLastTask() {
         if ((lastTask != null && task != null) &&
                 (lastTask.getAddress().getName().equals(task.getAddress().getName())
-                || lastTask.getAddress().getPostalCode().equals(task.getAddress().getPostalCode()))) {
+                        || lastTask.getAddress().getPostalCode().equals(task.getAddress().getPostalCode()))) {
             try {
                 // Only infrastructure spinners.
                 spnPavimentation.setSelection(((ArrayAdapter<String>) spnPavimentation.getAdapter()).getPosition(lastTask.getForm().getPavimentation()));
@@ -672,17 +672,17 @@ public class FormActivity extends Activity {
             alertDialogBuilder.setTitle("Atenção");
             alertDialogBuilder.setMessage("Deseja salvar?").setCancelable(false).setPositiveButton("Sim",
                     new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                            self.saveTaskIntoLocalDatabase();
-                        }
-                    })
-                    .setNegativeButton("Não",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                    self.saveTaskIntoLocalDatabase();
+                }
+            })
+            .setNegativeButton("Não",
+                    new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
 
             AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
@@ -730,11 +730,35 @@ public class FormActivity extends Activity {
         }
     }
 
+    //decodes image and scales it to reduce memory consumption
+    private Bitmap decodeFile(File f) {
+        try {
+            //Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(new FileInputStream(f), null, o);
+
+            //The new size we want to scale to
+            final int REQUIRED_SIZE = 70;
+
+            //Find the correct scale value. It should be the power of 2.
+            int scale = 1;
+            while (o.outWidth / scale / 2 >= REQUIRED_SIZE && o.outHeight / scale / 2 >= REQUIRED_SIZE) scale *= 2;
+
+            //Decode with inSampleSize
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            return BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
+        } catch (FileNotFoundException e) {
+        }
+        return null;
+    }
+
     public ImageView generateImageFromFilePath(final Photo picture) {
         final File imgFile = new File(picture.getPath());
         final ImageView imageView = new ImageView(this);
 
-        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+        Bitmap myBitmap = this.decodeFile(imgFile);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
         layoutParams.setMargins(5, 5, 5, 5);
@@ -757,19 +781,19 @@ public class FormActivity extends Activity {
         alertDialogBuilder.setTitle("Atenção");
         alertDialogBuilder.setMessage("Deseja Excluir esta foto?").setCancelable(false).setPositiveButton("Sim",
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        PhotoDao.deletePhoto(picture);
-                        photos.remove(picture);
-                        self.showPictures(photos);
-                    }
-                })
-                .setNegativeButton("Não",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+                PhotoDao.deletePhoto(picture);
+                photos.remove(picture);
+                self.showPictures(photos);
+            }
+        })
+        .setNegativeButton("Não",
+                new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
