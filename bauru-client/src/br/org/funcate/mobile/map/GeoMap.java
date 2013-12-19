@@ -85,11 +85,10 @@ public class GeoMap extends Activity {
 
     public void createMapView() {
         mapView = (MapView) findViewById(R.id.mapview);
+        mapView.setMaxZoomLevel(20);
         mapView.setBuiltInZoomControls(true);
         mapView.setMultiTouchControls(true);
-        // mapView.setUseDataConnection(false); // keeps the mapView from
-        // loading online tiles using network connection.
-        // mapView.setUseDataConnection(true);
+        // mapView.setUseDataConnection(false); // keeps the mapView from loading online tiles using network connection.
 
         MapOverlay movl = new MapOverlay(this);
         mapView.getOverlays().add(movl);
@@ -137,7 +136,8 @@ public class GeoMap extends Activity {
 
             if (currentLocationOverlay != null) {
                 currentLocationOverlay.removeAllItems();
-            } else { // (creation) first time set the zoom.
+            }
+            else { // (creation) first time set the zoom.
                 controller.setZoom(16);
             }
 
