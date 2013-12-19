@@ -137,6 +137,8 @@ public class GeoMap extends Activity {
 
             if (currentLocationOverlay != null) {
                 currentLocationOverlay.removeAllItems();
+            } else { // (creation) first time set the zoom.
+                controller.setZoom(16);
             }
 
             ResourceProxy resourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
