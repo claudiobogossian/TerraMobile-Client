@@ -204,7 +204,7 @@ public class GeoMap extends Activity {
     }
 
     public void showLandmarks() {
-        List<Task> features = TaskDao.getNotFinishedTasks();
+        List<Task> features = TaskDao.getAllTasks();
 
         for (Task feature : features) {
 

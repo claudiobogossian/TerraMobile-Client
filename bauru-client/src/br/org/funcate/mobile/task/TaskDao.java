@@ -148,6 +148,33 @@ public class TaskDao {
     }
 
     /**
+     * Get all tasks based of the current user.
+     * 
+     * @retun
+     *        List<Task> all tasks of the user.
+     * @author Paulo Luan
+     */
+    public static List<Task> getAllTasks() {
+        List<Task> tasks = null;
+
+        QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+        QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+
+        try {
+            String userHash = SessionManager.getUserHash();
+
+            userQueryBuilder.where().eq("hash", userHash);
+            taskQueryBuilder.join(userQueryBuilder);
+
+            tasks = taskQueryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tasks;
+    }
+
+    /**
      * Get Count of incompleted tasks.
      * 
      * @author Paulo Luan
