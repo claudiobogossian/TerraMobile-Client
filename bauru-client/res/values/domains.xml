@@ -13,10 +13,12 @@
         <item>Desmembrado</item>
         <item>Anexado</item>
         <item>Desconforme</item>
+        <item>Não Detectada</item>
     </string-array>
     
     <string-array name="primary_use">
         <item></item>
+        <item>Nenhum</item>
         <item>Residencial</item>
         <item>Comercial</item>
         <item>Serviços</item>
@@ -32,13 +34,6 @@
         <item>Paralelepípedo</item>
         <item>Lajota intertravada</item>
         <item>Sem pavimentação</item>
-    </string-array>
-    
-    <string-array name="yes_no_parcial">
-        <item></item>
-        <item>Sim</item>
-        <item>Não</item>
-        <item>Parcial</item>
     </string-array>
     
     <string-array name="yes_no">
