@@ -274,9 +274,12 @@ public class TaskDao {
                     formDao.create(task.getForm());
                     addressDao.create(task.getAddress());
                     taskDao.create(task);
-                }
 
-                isSaved = true;
+                    isSaved = true;
+                }
+                else {
+                    isSaved = updateTask(task);
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
