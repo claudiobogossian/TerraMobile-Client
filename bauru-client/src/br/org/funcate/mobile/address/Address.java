@@ -14,9 +14,9 @@ public class Address implements Serializable {
     @DatabaseField
     private String  extra;       // complemento
     @DatabaseField
-    private Double  coordx;
+    private Double  coordx; //Longitude
     @DatabaseField
-    private Double  coordy;
+    private Double  coordy; //Latitude
     @DatabaseField
     private String  postalCode;
     @DatabaseField

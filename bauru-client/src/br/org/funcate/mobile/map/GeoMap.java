@@ -210,8 +210,8 @@ public class GeoMap extends Activity {
 
             Double lat, lon;
 
-            lat = feature.getAddress().getCoordx();
-            lon = feature.getAddress().getCoordy();
+            lat = feature.getAddress().getCoordy();
+            lon = feature.getAddress().getCoordx();
 
             if (lat != null && lon != null) {
                 ExtendedOverlayItem poiMarker = createOverlayItem(feature);
@@ -227,8 +227,8 @@ public class GeoMap extends Activity {
      */
     public ExtendedOverlayItem createOverlayItem(Task feature) {
         Address address = feature.getAddress();
-        Double latitude = address.getCoordx();
-        Double longitude = address.getCoordy();
+        Double latitude = address.getCoordy();
+        Double longitude = address.getCoordx();
         GeoPoint geoPoint = new GeoPoint(latitude, longitude);
 
         // GeoPoint geoPoint = new GeoPoint(-22.318567, -49.060907);
