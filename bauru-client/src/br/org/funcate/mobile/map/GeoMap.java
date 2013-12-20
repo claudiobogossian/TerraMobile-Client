@@ -205,6 +205,10 @@ public class GeoMap extends Activity {
 
     public void showLandmarks() {
         List<Task> features = TaskDao.getAllTasks();
+        
+        if(poiMarkers != null) {
+            poiMarkers.removeAllItems();
+        }
 
         for (Task feature : features) {
 

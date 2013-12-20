@@ -151,24 +151,24 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
     }
 
     Camera.PictureCallback jpegCallback = new Camera.PictureCallback() {
-                                            @Override
-                                            public void onPictureTaken(byte[] _data, Camera _camera) {
-                                                if (_data != null) {
-                                                    if (StoreByteImage(PhotoActivity.this, _data, 90)) {
-                                                        setResult(RESULT_OK);
-                                                        confirmPicture();
-                                                    }
-                                                    else {
-                                                        setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro ao salvar foto!"));
-                                                        finish();
-                                                    }
-                                                }
-                                                else {
-                                                    setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro na obtenção da foto!"));
-                                                    finish();
-                                                }
-                                            }
-                                        };
+        @Override
+        public void onPictureTaken(byte[] _data, Camera _camera) {
+            if (_data != null) {
+                if (StoreByteImage(PhotoActivity.this, _data, 90)) {
+                    setResult(RESULT_OK);
+                    confirmPicture();
+                }
+                else {
+                    setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro ao salvar foto!"));
+                    finish();
+                }
+            }
+            else {
+                setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro na obtenção da foto!"));
+                finish();
+            }
+        }
+    };
 
     private void confirmPicture() {
         lay3.setVisibility(View.INVISIBLE);
