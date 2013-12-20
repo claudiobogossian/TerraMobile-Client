@@ -349,10 +349,6 @@ public class FormActivity extends Activity {
         String message = "Você esqueceu de preencher os campos: \n";
         boolean isNull = false;
 
-        if (edtOtherNumbers.getText().toString().equals("")) {
-            message += "\nOutros números";
-            isNull = true;
-        }
         if (spnNumberConfirmation.getSelectedItem().toString().equals("")) {
             message += "\nConfirmação de número";
             isNull = true;
