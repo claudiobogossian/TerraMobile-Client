@@ -345,6 +345,63 @@ public class FormActivity extends Activity {
      * 
      * @author Paulo Luan
      * */
+    private String checkNull() {
+        String message = "Você esqueceu de preencher os campos: \n";
+        boolean isNull = false;
+
+        if (edtOtherNumbers.getText().toString().equals("")) {
+            message += "\nOutros números";
+            isNull = true;
+        }
+        if (spnNumberConfirmation.getSelectedItem().toString().equals("")) {
+            message += "\nConfirmação de número";
+            isNull = true;
+        }
+        if (spnVariance.getSelectedItem().toString().equals("")) {
+            message += "\nDesconformidade";
+            isNull = true;
+        }
+        if (spnPrimaryUse.getSelectedItem().toString().equals("")) {
+            message += "\nUso primário";
+            isNull = true;
+        }
+        if (spnSecondaryUse.getSelectedItem().toString().equals("")) {
+            message += "\nUso secundário";
+            isNull = true;
+        }
+        if (spnPavimentation.getSelectedItem().toString().equals("")) {
+            message += "\nPavimentação";
+            isNull = true;
+        }
+        if (spnAsphaltGuide.getSelectedItem().toString().equals("")) {
+            message += "\nGuias";
+            isNull = true;
+        }
+        if (spnPublicIlumination.getSelectedItem().toString().equals("")) {
+            message += "\nIluminação pública.";
+            isNull = true;
+        }
+        if (spnEnergy.getSelectedItem().toString().equals("")) {
+            message += "\nEnergia";
+            isNull = true;
+        }
+        if (spnPluvialGallery.getSelectedItem().toString().equals("")) {
+            message += "\nGaleria Pluvial";
+            isNull = true;
+        }
+
+        if (!isNull) {
+            message = null;
+        }
+
+        return message;
+    }
+
+    /**
+     * 
+     * 
+     * @author Paulo Luan
+     * */
     public void setFieldsWithTaskProperties(Task taskParam) {
         if (taskParam != null) {
             address.setText(taskParam.getAddress().getName());
@@ -668,24 +725,32 @@ public class FormActivity extends Activity {
             Utility.showToast("Você precisa tirar ao menos uma foto.", Toast.LENGTH_LONG, FormActivity.this);
         }
         else {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FormActivity.this);
-            alertDialogBuilder.setTitle("Atenção");
-            alertDialogBuilder.setMessage("Deseja salvar?").setCancelable(false).setPositiveButton("Sim",
-                    new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.cancel();
-                    self.saveTaskIntoLocalDatabase();
-                }
-            })
-            .setNegativeButton("Não",
-                    new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.cancel();
-                }
-            });
+            
+            String message = self.checkNull();
 
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
+            if (message != null) {
+                Utility.showToast(message, Toast.LENGTH_LONG, self);
+            }
+            else {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FormActivity.this);
+                alertDialogBuilder.setTitle("Atenção");
+                alertDialogBuilder.setMessage("Deseja salvar?").setCancelable(false).setPositiveButton("Sim",
+                        new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        self.saveTaskIntoLocalDatabase();
+                    }
+                })
+                .setNegativeButton("Não",
+                        new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
         }
     }
 
