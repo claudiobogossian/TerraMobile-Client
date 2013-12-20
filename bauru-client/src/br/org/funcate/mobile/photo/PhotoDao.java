@@ -112,14 +112,19 @@ public class PhotoDao {
      * @author Paulo Luan
      * @return Boolean result
      */
-    public static Integer deletePhoto(Photo photo) {
+    public static boolean deletePhoto(Photo photo) {
         Dao<Photo, Integer> dao = db.getPhotoDao();
-        Integer result = 0;
+        boolean result = false;
 
         try {
             File file = new File(photo.getPath());
             file.delete();
-            result = dao.delete(photo);
+
+            if (photo.getId() != null) {
+                dao.delete(photo);
+            }
+
+            result = true;
         } catch (SQLException e) {
             Log.e(LOG_TAG, e.getMessage());
             e.printStackTrace();
