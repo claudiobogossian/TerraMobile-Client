@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project-modules id="moduleCoreId" project-version="2.0">
-  <wb-module deploy-name="bauru-server">
-    <property name="context-root" value="bauru-server"/>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+  <wb-module deploy-name="terramobile-server">
     <wb-resource deploy-path="/" source-path="src/main/webapp"/>
     <property name="java-output-path" value="/target/classes"/>
+        <property name="context-root" value="terramobile-server"/>
     <dependent-module archiveName="resteasy-jaxrs-2.3.2.Final.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/jboss/resteasy/resteasy-jaxrs/2.3.2.Final/resteasy-jaxrs-2.3.2.Final.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
