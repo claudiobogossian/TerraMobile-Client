@@ -152,7 +152,7 @@ public class LoginActivity extends Activity {
      */
     public void getRemoteUsers() {
         if (Utility.isNetworkAvailable(this)) {
-            String url = Utility.hostUrl + "bauru-server/rest/users";
+            String url = Utility.hostUrl + "rest/users";
             DownloadUsers remote = new DownloadUsers(this);
             remote.execute(new String[] { url });
         }

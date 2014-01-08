@@ -147,7 +147,7 @@ public class TaskActivity extends Activity {
      */
     public void getRemoteTasks() {
         String userHash = SessionManager.getUserHash();
-        String url = Utility.hostUrl + "bauru-server/rest/tasks?user={user_hash}";
+        String url = Utility.hostUrl + "rest/tasks?user={user_hash}";
         DownloadTasks remote = new DownloadTasks(userHash, this);
         remote.execute(new String[] { url });
     }
@@ -163,7 +163,7 @@ public class TaskActivity extends Activity {
         List<Photo> photos = PhotoDao.getNotSyncPhotos();
 
         if (photos != null && !photos.isEmpty()) {
-            String url = Utility.hostUrl + "bauru-server/rest/photos?user={user_hash}";
+            String url = Utility.hostUrl + "rest/photos?user={user_hash}";
             UploadPhotos remote = new UploadPhotos(photos, userHash, this);
             remote.execute(new String[] { url });
         }
@@ -216,8 +216,8 @@ public class TaskActivity extends Activity {
      * tiles zip file from server
      ******************************************************************************************************************/
     public void getRemoteZipBaseMap() {
-        String url = Utility.hostUrl + "bauru-server/rest/tiles/zip";
-        //String url = "http://200.144.100.34:8080/bauru-server/rest/tiles/zip";
+        String url = Utility.hostUrl + "rest/tiles/zip";
+        //String url = "http://200.144.100.34:8080/rest/tiles/zip";
         new DownloadZipAsync(this).execute(url);
     }
 }

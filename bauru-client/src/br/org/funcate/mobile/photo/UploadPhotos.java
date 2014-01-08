@@ -63,7 +63,7 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
 
     public void uploadTasks() {
         List<Task> tasks = TaskDao.getFinishedTasks();
-        String url = Utility.hostUrl + "bauru-server/rest/tasks?user={user_hash}";
+        String url = Utility.hostUrl + "rest/tasks?user={user_hash}";
         UploadTasks remote = new UploadTasks(tasks, userHash, taskActivity);
         remote.execute(new String[] { url });
     }
