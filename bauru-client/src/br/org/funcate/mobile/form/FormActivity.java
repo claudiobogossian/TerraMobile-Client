@@ -158,6 +158,7 @@ public class FormActivity extends Activity {
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+            	self.removeImageIfWasNotPersisted();
                 setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "CANCEL"));
                 finish();
             }
@@ -775,8 +776,12 @@ public class FormActivity extends Activity {
         finish();
     }
 
-    //TODO: Fazer com que a imagem seja removida caso ela tenha sido retirada e posteriormente o botão cancelar foi ativado, criar verificação para que a foto seja excluída do FileSystem.
-    public void removeImageWhenCancelled(){
+    /**
+     * 
+     * Verify if the photo was persisted, and remove it if the user was cancelled the operation.
+     * 
+     * */
+    public void removeImageIfWasNotPersisted(){
         for (Photo photo : photos) {
         	if(photo.getId() == null) { // remove file if it not persisted on database (exists only on filesystem).
         		File file = new File(photo.getPath());
@@ -784,8 +789,6 @@ public class FormActivity extends Activity {
         		photos.remove(photo);
         	}
         }
-        
-        self.showPictures(photos);
     }
     
     
