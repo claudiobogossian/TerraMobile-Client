@@ -775,6 +775,20 @@ public class FormActivity extends Activity {
         finish();
     }
 
+    //TODO: Fazer com que a imagem seja removida caso ela tenha sido retirada e posteriormente o botão cancelar foi ativado, criar verificação para que a foto seja excluída do FileSystem.
+    public void removeImageWhenCancelled(){
+        for (Photo photo : photos) {
+        	if(photo.getId() == null) { // remove file if it not persisted on database (exists only on filesystem).
+        		File file = new File(photo.getPath());
+                file.delete();
+        		photos.remove(photo);
+        	}
+        }
+        
+        self.showPictures(photos);
+    }
+    
+    
     public void showPictures(List<Photo> pictures) {
 
         // LinearLayOut Setup
