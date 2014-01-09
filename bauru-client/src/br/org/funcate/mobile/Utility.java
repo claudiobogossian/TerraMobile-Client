@@ -38,7 +38,7 @@ public class Utility {
 
     private static final int    TWO_MINUTES = 1000 * 60 * 2;
 
-    //public static final String  hostUrl     = "http://192.168.0.187:8080/terramobile-server/";
+    //public static final String  hostUrl     = "http://192.168.0.181:8000/terramobile-server/";
     public static final String  hostUrl     = "http://institutosoma.dyndns.org:8000/terramobile-server/";
 
     //public static final String  hostUrl     = "http://200.144.100.34:8080/";
