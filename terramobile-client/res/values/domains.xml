@@ -8,8 +8,7 @@
         <item>Não Confere</item>
     </string-array>
     
-    <string-array name="variance"> 
-        <item></item>
+    <string-array name="variance">
         <item>Não Detectada</item>
         <item>Vago</item>
         <item>Desmembrado</item>
