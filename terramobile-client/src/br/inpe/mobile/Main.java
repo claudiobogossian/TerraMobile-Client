@@ -21,7 +21,7 @@ public class Main extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        session = new SessionManager(getApplicationContext());
+        session = SessionManager.getInstance(getApplicationContext());
         this.checkLogin();
         super.onCreate(savedInstanceState);
     }
