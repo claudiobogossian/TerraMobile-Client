@@ -24,7 +24,7 @@
     <string name="tv_address">Endereço: </string>
     <string name="tv_log">Logradouro</string>
     <string name="other_informations">Outras Informações</string>
-    <string name="tv_infra">Infraestrutura</string>
+    <string name="tv_infra">+ Infraestrutura</string>
     <string name="tv_neighborhood">Bairro: </string>
     <string name="tv_postal_code">CEP: </string>
     <string name="tv_number">Número: </string>
@@ -35,7 +35,7 @@
     <string name="tv_info2">Info 2: </string>
     <string name="tv_number_confirmation">Confirmação do número</string>
     <string name="tv_variance">Desconformidade</string>
-    <string name="tv_numbers_found">Números encontrados</string>
+    <string name="tv_numbers_found">Números Adicionais</string>
     <string name="tv_other_batch_numbering">Demais numerações do lote</string>
     <string name="tv_primary_use">Uso principal</string>
     <string name="tv_secondary_use">Uso secundário</string>

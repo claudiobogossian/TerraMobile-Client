@@ -10,14 +10,25 @@
     
     <string-array name="variance">
         <item>Não Detectada</item>
+        <item>Desconforme</item>
         <item>Vago</item>
         <item>Desmembrado</item>
         <item>Unificado</item>
-        <item>Desconforme</item>
     </string-array>
     
     <string-array name="primary_use">
         <item></item>
+        <item>Nenhum</item>
+        <item>Residencial</item>
+        <item>Comercial</item>
+        <item>Serviços</item>
+        <item>Industrial</item>
+        <item>Religioso</item>
+        <item>Em construção</item>
+        <item>Indefinido</item>
+    </string-array>
+    
+    <string-array name="secondary_use">
         <item>Nenhum</item>
         <item>Residencial</item>
         <item>Comercial</item>
