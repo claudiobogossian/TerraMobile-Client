@@ -52,7 +52,7 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
     
     private SurfaceHolder      mSurfaceHolder;
     
-    private Integer            zoom            = 0;
+    private static Integer     zoom            = 0;
     
     private SessionManager     session;
     
@@ -177,10 +177,11 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
         
         zooming.setOnZoomInClickListener(new OnClickListener() {
             public void onClick(View v) {
-                zoom += 1;
                 
-                if (zoom > maxZoom) {
-                    zoom -= 1;
+                if (zoom > maxZoom) zoom = maxZoom;
+                
+                if (zoom < maxZoom) {
+                    zoom++;
                 }
                 
                 setZoom(zoom);
@@ -189,10 +190,11 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
         
         zooming.setOnZoomOutClickListener(new OnClickListener() {
             public void onClick(View v) {
-                zoom -= 1;
                 
-                if (zoom > maxZoom) {
-                    zoom += 1;
+                if (zoom < 0) zoom = 0;
+                
+                if (zoom != 0) {
+                    zoom--;
                 }
                 
                 setZoom(zoom);
@@ -204,8 +206,12 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
         Camera.Parameters p = mCamera.getParameters();
         
         if (p.isZoomSupported()) {
-            p.setZoom(zoom);
-            session.saveKeyAndValue("zoom", "" + zoom);
+            int maxZoom = p.getMaxZoom();
+            
+            if (zoom <= maxZoom && zoom >= 0) {
+                p.setZoom(zoom);
+                session.saveKeyAndValue("zoom", "" + zoom);
+            }
         }
         
         mCamera.setParameters(p);
