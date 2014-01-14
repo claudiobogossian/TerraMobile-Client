@@ -314,6 +314,8 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
             mCamera = Camera.open();
             Parameters cameraParameters = mCamera.getParameters();
             
+            cameraParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO); // set auto-focus
+            
             List<Camera.Size> mList = cameraParameters.getSupportedPictureSizes();
             Camera.Size maxPictureSize = mList.get(mList.size() - 1);
             
