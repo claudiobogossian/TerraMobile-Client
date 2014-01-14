@@ -21,6 +21,7 @@ import android.hardware.Camera.Parameters;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -40,16 +41,23 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
     public static final String TAG             = "#FOTO";
     
     private Camera             mCamera;
+    
     private LinearLayout       lay3, lay4;
+    
     private ImageButton        bt_fotografar;
+    
     private File               pathfullapp;
+    
     private String             photo_name;
+    
     private SurfaceHolder      mSurfaceHolder;
+    
     private Integer            zoom            = 0;
     
     private SessionManager     session;
     
     boolean                    previewing      = false;
+    
     LayoutInflater             controlInflater = null;
     
     @Override
@@ -217,15 +225,18 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
     
     Camera.PictureCallback jpegCallback = new Camera.PictureCallback() {
         @Override
-        public void onPictureTaken(
-                byte[] _data, Camera _camera) {
+        public void
+        onPictureTaken(
+                byte[] _data,
+                Camera _camera) {
             if (_data != null) {
                 if (StoreByteImage(
                         PhotoActivity.this,
                         _data, 90)) {
                     setResult(RESULT_OK);
                     confirmPicture();
-                } else {
+                }
+                else {
                     setResult(
                             RESULT_CANCELED,
                             new Intent()
@@ -234,7 +245,8 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
                                     "Erro ao salvar foto!"));
                     finish();
                 }
-            } else {
+            }
+            else {
                 setResult(
                         RESULT_CANCELED,
                         new Intent()
@@ -268,9 +280,11 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
             myImage.compress(CompressFormat.JPEG, quality, bos);
             bos.flush();
             bos.close();
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             return false;
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             return false;
         }
         setPhotoActivityName(name_file);
@@ -278,26 +292,15 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
     }
     
     /**
-     * 
      * Map the camera button and take the picture when that button was clicked..
-     * 
-     * */
-    /*@Override
+     */
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // OnKey is fire twice: the first time for key down, and the second time
-        // for key up, so this filter is used to call the function only one
-        // time.
-        int action = event.getAction();
-        
-        if (action != KeyEvent.ACTION_UP)
-            return true;
-        
-        if (keyCode == 80 || keyCode == KeyEvent.KEYCODE_CAMERA) { // 80 27
-            // this.takePicture();
-            String a = "";
+        if (keyCode == KeyEvent.KEYCODE_CAMERA) {
+            this.takePicture();
         }
         return super.onKeyDown(keyCode, event);
-    }*/
+    }
     
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
@@ -305,14 +308,14 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
             mCamera = Camera.open();
             Parameters cameraParameters = mCamera.getParameters();
             
-            List<Camera.Size> mList = cameraParameters
-                    .getSupportedPictureSizes();
+            List<Camera.Size> mList = cameraParameters.getSupportedPictureSizes();
             Camera.Size maxPictureSize = mList.get(mList.size() - 1);
             
             if (maxPictureSize.width <= 2048 && maxPictureSize.height <= 1536) {
                 cameraParameters.setPictureSize(maxPictureSize.width,
                         maxPictureSize.height);
-            } else {
+            }
+            else {
                 cameraParameters.setPictureSize(2048, 1536);
             }
             
@@ -323,7 +326,8 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
             mCamera.startPreview();
             
             setZoomListener();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
