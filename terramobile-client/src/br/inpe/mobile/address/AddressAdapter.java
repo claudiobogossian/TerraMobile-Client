@@ -11,12 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filterable;
 import android.widget.TextView;
+import br.inpe.mobile.R;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.database.DatabaseHelper;
 import br.inpe.mobile.task.Task;
 import br.inpe.mobile.user.SessionManager;
 import br.inpe.mobile.user.User;
-import br.inpe.mobile.R;
 
 import com.j256.ormlite.android.AndroidDatabaseResults;
 import com.j256.ormlite.dao.CloseableIterator;

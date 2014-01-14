@@ -16,11 +16,11 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import br.inpe.mobile.R;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.database.DatabaseAdapter;
 import br.inpe.mobile.database.DatabaseHelper;
 import br.inpe.mobile.map.GeoMap;
-import br.inpe.mobile.R;
 
 import com.j256.ormlite.dao.Dao;
 

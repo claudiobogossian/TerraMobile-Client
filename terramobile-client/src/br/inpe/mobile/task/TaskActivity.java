@@ -16,12 +16,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import br.inpe.mobile.R;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.photo.Photo;
 import br.inpe.mobile.photo.PhotoDao;
 import br.inpe.mobile.photo.UploadPhotos;
 import br.inpe.mobile.user.SessionManager;
-import br.inpe.mobile.R;
 
 /**
  * Activity for loading layout resources

@@ -11,6 +11,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,8 +29,6 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -43,6 +42,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import br.inpe.mobile.R;
+import br.inpe.mobile.R.string;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.address.AddressAdapter;
 import br.inpe.mobile.location.LocationProvider;
@@ -64,21 +64,25 @@ public class FormActivity extends Activity {
     private AutoCompleteTextView address;
     
     private EditText             edtNeighborhood, edtPostalCode, edtNumber,
-    edtOtherNumbers;
+                                 edtOtherNumbers;
     
     private Spinner              spnNumberConfirmation, spnVariance,
-    spnPrimaryUse, spnSecondaryUse, spnPavimentation, spnAsphaltGuide,
-    spnPublicIlumination, spnEnergy, spnPluvialGallery;
+                                 spnPrimaryUse, spnSecondaryUse,
+                                 spnPavimentation, spnAsphaltGuide,
+                                 spnPublicIlumination, spnEnergy,
+                                 spnPluvialGallery;
     
     private TextView             lat, lon;
+    
     private Button               buttonClearAddressFields;
     
     private Button               buttonCancel, buttonOk, buttonPhoto,
-    buttonClearSpinners;
+                                 buttonClearSpinners;
     
     private FormActivity         self    = this;
     
-    private static Task          task;
+    private static Task          currentTask;
+    
     public static Task           lastTask;
     
     private List<Photo>          photos;
@@ -99,11 +103,12 @@ public class FormActivity extends Activity {
         self.mapFieldsToObjects();
         
         photos = new ArrayList<Photo>();
-        task = (Task) getIntent().getSerializableExtra("task");
+        currentTask = (Task) getIntent().getSerializableExtra("task");
         
-        if (task != null) {
-            this.setFieldsWithTaskProperties(task);
-        } else {
+        if (currentTask != null) {
+            this.setFieldsWithTaskProperties(currentTask);
+        }
+        else {
             buttonPhoto.setEnabled(false);
             buttonOk.setEnabled(false);
         }
@@ -145,8 +150,7 @@ public class FormActivity extends Activity {
             @Override
             public void onClick(View v) {
                 self.removeImageIfWasNotPersisted();
-                setResult(RESULT_CANCELED,
-                        new Intent().putExtra("RESULT", "CANCEL"));
+                setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "CANCEL"));
                 finish();
             }
         });
@@ -154,21 +158,14 @@ public class FormActivity extends Activity {
     
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                FormActivity.this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FormActivity.this);
         alertDialogBuilder.setTitle("Atenção");
-        alertDialogBuilder
-        .setMessage("Deseja realmente sair?")
-        .setCancelable(false)
-        .setPositiveButton("Sim",
-                new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setMessage("Deseja realmente sair?").setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
                 finish();
             }
-        })
-        .setNegativeButton("Não",
-                new DialogInterface.OnClickListener() {
+        }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
             }
@@ -198,12 +195,12 @@ public class FormActivity extends Activity {
                      * startActivityForResult(cameraIntent, PHOTO);
                      */
                     
-                    Intent i = new Intent(FormActivity.this,
-                            PhotoActivity.class);
+                    Intent i = new Intent(FormActivity.this, PhotoActivity.class);
                     startActivityForResult(i, PHOTO);
                 }
             });
-        } else {
+        }
+        else {
             // no Camera
             buttonPhoto.setEnabled(false);
             Log.i("camera", "This device has no camera!");
@@ -222,7 +219,8 @@ public class FormActivity extends Activity {
             public void onClick(View v) {
                 if (address.getText().toString().compareTo("") == 0) {
                     address.requestFocus();
-                } else {
+                }
+                else {
                     self.validateFields();
                 }
             }
@@ -259,9 +257,9 @@ public class FormActivity extends Activity {
                 try {
                     cursor = AddressAdapter.getAddressCursor(null);
                     self.setAutoCompleteAdapterPropertiers(cursor);
-                } catch (SQLException e) {
-                    Log.e(self.LOG_TAG,
-                            "ERRO AO CRIAR CURSOR!" + e.getMessage());
+                }
+                catch (SQLException e) {
+                    Log.e(self.LOG_TAG, "ERRO AO CRIAR CURSOR!" + e.getMessage());
                     e.printStackTrace();
                 }
             }
@@ -339,7 +337,8 @@ public class FormActivity extends Activity {
     }
     
     /**
-     * 
+     * Checks if the data filled in the form is null. This function don't check
+     * the infrastructure fields.
      * 
      * @author Paulo Luan
      * */
@@ -364,20 +363,6 @@ public class FormActivity extends Activity {
             isNull = true;
         }
         
-        // Infra
-        /*
-         * if (spnPavimentation.getSelectedItem().toString().equals("")) {
-         * message += "\nPavimentação"; isNull = true; } if
-         * (spnAsphaltGuide.getSelectedItem().toString().equals("")) { message
-         * += "\nGuias"; isNull = true; } if
-         * (spnPublicIlumination.getSelectedItem().toString().equals("")) {
-         * message += "\nIluminação pública."; isNull = true; } if
-         * (spnEnergy.getSelectedItem().toString().equals("")) { message +=
-         * "\nEnergia"; isNull = true; } if
-         * (spnPluvialGallery.getSelectedItem().toString().equals("")) { message
-         * += "\nGaleria Pluvial"; isNull = true; }
-         */
-        
         if (!isNull) {
             message = null;
         }
@@ -386,7 +371,63 @@ public class FormActivity extends Activity {
     }
     
     /**
+     * Checks if the data filled in the infrastructure form is null.
      * 
+     * @author Paulo Luan
+     * */
+    public boolean checkInfrastructureFieldsIsNull() {
+        boolean isNull = false;
+        
+        // Infra
+        if (spnPavimentation.getSelectedItem().toString().equals("")) {
+            // message += "\nPavimentação";
+            isNull = true;
+        }
+        if (spnAsphaltGuide.getSelectedItem().toString().equals("")) {
+            // message += "\nGuias";
+            isNull = true;
+        }
+        if (spnPublicIlumination.getSelectedItem().toString().equals("")) {
+            // message += "\nIluminação pública.";
+            isNull = true;
+        }
+        if (spnEnergy.getSelectedItem().toString().equals("")) {
+            // message += "\nEnergia";
+            isNull = true;
+        }
+        if (spnPluvialGallery.getSelectedItem().toString().equals("")) {
+            // message += "\nGaleria Pluvial";
+            isNull = true;
+        }
+        
+        return isNull;
+    }
+    
+    /**
+     * Checks if the data of the last filled Task is null.
+     * 
+     * @author Paulo Luan
+     * */
+    public boolean checkLastTaskInfrastructureFieldsIsNull(Task lastTask) {
+        boolean isNull = false;
+        
+        Form form = lastTask.getForm();
+        
+        if (form.getPavimentation().equals("") ||
+                form.getAsphaltGuide().equals("") ||
+                form.getPublicIlumination().equals("") ||
+                form.getEnergy().equals("") ||
+                form.getPluvialGallery().equals("")) {
+            
+            isNull = true;
+        }
+        
+        return isNull;
+    }
+    
+    /**
+     * 
+     * Sets all the form fields with the data of task param.
      * 
      * @author Paulo Luan
      * */
@@ -399,41 +440,17 @@ public class FormActivity extends Activity {
             edtOtherNumbers.setText(taskParam.getForm().getOtherNumbers());
             
             try {
-                spnNumberConfirmation
-                .setSelection(((ArrayAdapter<String>) spnNumberConfirmation
-                        .getAdapter()).getPosition(taskParam.getForm()
-                                .getNumberConfirmation()));
-                spnVariance.setSelection(((ArrayAdapter<String>) spnVariance
-                        .getAdapter()).getPosition(taskParam.getForm()
-                                .getVariance()));
-                spnPrimaryUse
-                .setSelection(((ArrayAdapter<String>) spnPrimaryUse
-                        .getAdapter()).getPosition(taskParam.getForm()
-                                .getPrimaryUse()));
-                spnSecondaryUse
-                .setSelection(((ArrayAdapter<String>) spnSecondaryUse
-                        .getAdapter()).getPosition(taskParam.getForm()
-                                .getSecondaryUse()));
-                spnPavimentation
-                .setSelection(((ArrayAdapter<String>) spnPavimentation
-                        .getAdapter()).getPosition(taskParam.getForm()
-                                .getPavimentation()));
-                spnAsphaltGuide
-                .setSelection(((ArrayAdapter<String>) spnAsphaltGuide
-                        .getAdapter()).getPosition(taskParam.getForm()
-                                .getAsphaltGuide()));
-                spnPublicIlumination
-                .setSelection(((ArrayAdapter<String>) spnPublicIlumination
-                        .getAdapter()).getPosition(taskParam.getForm()
-                                .getPublicIlumination()));
-                spnEnergy.setSelection(((ArrayAdapter<String>) spnEnergy
-                        .getAdapter()).getPosition(taskParam.getForm()
-                                .getEnergy()));
-                spnPluvialGallery
-                .setSelection(((ArrayAdapter<String>) spnPluvialGallery
-                        .getAdapter()).getPosition(taskParam.getForm()
-                                .getPluvialGallery()));
-            } catch (Exception e) {
+                spnNumberConfirmation.setSelection(((ArrayAdapter<String>) spnNumberConfirmation.getAdapter()).getPosition(taskParam.getForm().getNumberConfirmation()));
+                spnVariance.setSelection(((ArrayAdapter<String>) spnVariance.getAdapter()).getPosition(taskParam.getForm().getVariance()));
+                spnPrimaryUse.setSelection(((ArrayAdapter<String>) spnPrimaryUse.getAdapter()).getPosition(taskParam.getForm().getPrimaryUse()));
+                spnSecondaryUse.setSelection(((ArrayAdapter<String>) spnSecondaryUse.getAdapter()).getPosition(taskParam.getForm().getSecondaryUse()));
+                spnPavimentation.setSelection(((ArrayAdapter<String>) spnPavimentation.getAdapter()).getPosition(taskParam.getForm().getPavimentation()));
+                spnAsphaltGuide.setSelection(((ArrayAdapter<String>) spnAsphaltGuide.getAdapter()).getPosition(taskParam.getForm().getAsphaltGuide()));
+                spnPublicIlumination.setSelection(((ArrayAdapter<String>) spnPublicIlumination.getAdapter()).getPosition(taskParam.getForm().getPublicIlumination()));
+                spnEnergy.setSelection(((ArrayAdapter<String>) spnEnergy.getAdapter()).getPosition(taskParam.getForm().getEnergy()));
+                spnPluvialGallery.setSelection(((ArrayAdapter<String>) spnPluvialGallery.getAdapter()).getPosition(taskParam.getForm().getPluvialGallery()));
+            }
+            catch (Exception e) {
                 e.printStackTrace();
             }
             
@@ -442,6 +459,8 @@ public class FormActivity extends Activity {
                 edtPostalCode.setEnabled(false);
                 buttonPhoto.setEnabled(true);
                 buttonOk.setEnabled(true);
+                
+                this.loadPictures(taskParam);
             }
             
             self.clearAddressFocus();
@@ -449,44 +468,99 @@ public class FormActivity extends Activity {
     }
     
     /**
+     * Sets the form fields with a Task object properties.
      * 
+     * @param Task
+     *            the task that the data will be obtained and placed on the
+     *            form.
      * 
      * @author Paulo Luan
      * */
-    public void setFieldsWithLastTask() {
-        if ((lastTask != null && task != null)
-                && (lastTask.getAddress().getName()
-                        .equals(task.getAddress().getName()) || lastTask
-                        .getAddress().getPostalCode()
-                        .equals(task.getAddress().getPostalCode()))) {
-            try {
-                // Only infrastructure spinners.
-                spnPavimentation
-                .setSelection(((ArrayAdapter<String>) spnPavimentation
-                        .getAdapter()).getPosition(lastTask.getForm()
-                                .getPavimentation()));
-                spnAsphaltGuide
-                .setSelection(((ArrayAdapter<String>) spnAsphaltGuide
-                        .getAdapter()).getPosition(lastTask.getForm()
-                                .getAsphaltGuide()));
-                spnPublicIlumination
-                .setSelection(((ArrayAdapter<String>) spnPublicIlumination
-                        .getAdapter()).getPosition(lastTask.getForm()
-                                .getPublicIlumination()));
-                spnEnergy.setSelection(((ArrayAdapter<String>) spnEnergy
-                        .getAdapter()).getPosition(lastTask.getForm()
-                                .getEnergy()));
-                spnPluvialGallery
-                .setSelection(((ArrayAdapter<String>) spnPluvialGallery
-                        .getAdapter()).getPosition(lastTask.getForm()
-                                .getPluvialGallery()));
+    public void setInfrastructureFieldsWithTask(Task task) {
+        try {
+            // Only infrastructure spinners.
+            spnPavimentation.setSelection(((ArrayAdapter<String>) spnPavimentation.getAdapter()).getPosition(task.getForm().getPavimentation()));
+            spnAsphaltGuide.setSelection(((ArrayAdapter<String>) spnAsphaltGuide.getAdapter()).getPosition(task.getForm().getAsphaltGuide()));
+            spnPublicIlumination.setSelection(((ArrayAdapter<String>) spnPublicIlumination.getAdapter()).getPosition(task.getForm().getPublicIlumination()));
+            spnEnergy.setSelection(((ArrayAdapter<String>) spnEnergy.getAdapter()).getPosition(task.getForm().getEnergy()));
+            spnPluvialGallery.setSelection(((ArrayAdapter<String>) spnPluvialGallery.getAdapter()).getPosition(task.getForm().getPluvialGallery()));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * 
+     * Compare if the sector and block between two tasks are the same.
+     * 
+     * @param lastTask
+     * @param currentTask
+     * @author PauloLuan
+     * */
+    public boolean isSameAddress(Task lastTask, Task currentTask) {
+        boolean isSame = false;
+        
+        String lastFeatureId = null;
+        String currentFeatureId = null;
+        
+        // gets the sector and block to the verification (0, 8).
+        try {
+            lastFeatureId = lastTask.getAddress().getFeatureId().substring(0, 8);
+            currentFeatureId = currentTask.getAddress().getFeatureId().substring(0, 8);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        if (lastFeatureId != null &&
+                currentFeatureId != null &&
+                lastFeatureId.equals(currentFeatureId)) {
+            
+            isSame = true;
+        }
+        
+        return isSame;
+    }
+    
+    /**
+     * Checks if the last address is the same and verifies if the infrastructure
+     * fields are filled at the last Task fill.
+     * 
+     * @author Paulo Luan
+     * */
+    public void checkInfrastructureFill() {
+        View formInfra = findViewById(R.id.formInfra);
+        TextView txtInfraTitle = (TextView) findViewById(R.id.txt_infra_title);
+        
+        if (lastTask != null && currentTask != null) {
+            boolean isSameAddress = self.isSameAddress(lastTask, currentTask);
+            
+            if (isSameAddress) {
                 
-                // findViewById(R.id.formInfra).setVisibility(View.GONE);
-            } catch (Exception e) {
-                e.printStackTrace();
+                this.setInfrastructureFieldsWithTask(lastTask); // sets only infrastructure
+                
+                txtInfraTitle.setText(string.tv_plus_infra);
+                formInfra.setVisibility(View.GONE);
             }
-        } else {
-            // findViewById(R.id.formInfra).setVisibility(View.VISIBLE);
+            
+            // Location (Address) is changed.
+            else {
+                if (this.checkLastTaskInfrastructureFieldsIsNull(lastTask)) { // if user has filled the last infrastructure don't do anything.
+                    this.setFieldsWithTaskProperties(lastTask); // sets all properties to fill the form again of the last task.
+                    
+                    Builder alert = new AlertDialog.Builder(FormActivity.this);
+                    alert.setTitle(string.caution);
+                    alert.setMessage(string.infra_message);
+                    alert.setPositiveButton(string.btn_ok, null);
+                    alert.show();
+                    
+                    txtInfraTitle.setText(string.tv_minus_infra);
+                    
+                    formInfra.setVisibility(View.VISIBLE);
+                    formInfra.requestFocus();
+                }
+            }
         }
     }
     
@@ -502,7 +576,8 @@ public class FormActivity extends Activity {
             // this.slideUp(this, formInfra);
             formInfra.setVisibility(View.GONE);
             txtTitle.setText(" +  " + title);
-        } else {
+        }
+        else {
             formInfra.setVisibility(View.VISIBLE);
             txtTitle.setText(" -  " + title);
             // this.slideDown(this, formInfra);
@@ -511,41 +586,10 @@ public class FormActivity extends Activity {
     
     /**
      * 
-     * @param ctx
-     * @param v
-     */
-    public static void slideDown(Context ctx, View v) {
-        Animation a = AnimationUtils.loadAnimation(ctx, R.anim.slide_down);
-        
-        if (a != null) {
-            a.reset();
-            if (v != null) {
-                v.clearAnimation();
-                v.startAnimation(a);
-            }
-        }
-    }
-    
-    /**
+     * Gets all the informations filled on the fields and put into the form
+     * Object that will be saved in local database.
      * 
-     * @param ctx
-     * @param v
-     */
-    public static void slideUp(Context ctx, View v) {
-        Animation a = AnimationUtils.loadAnimation(ctx, R.anim.slide_up);
-        
-        if (a != null) {
-            a.reset();
-            if (v != null) {
-                v.clearAnimation();
-                v.startAnimation(a);
-            }
-        }
-    }
-    
-    /**
-     * 
-     * 
+     * @param Task
      * @author Paulo Luan
      * */
     public void setFormPropertiesWithFields(Task taskParam) {
@@ -556,15 +600,13 @@ public class FormActivity extends Activity {
         
         form.setDate(new Date());
         form.setOtherNumbers(edtOtherNumbers.getText().toString());
-        form.setNumberConfirmation(spnNumberConfirmation.getSelectedItem()
-                .toString());
+        form.setNumberConfirmation(spnNumberConfirmation.getSelectedItem().toString());
         form.setVariance(spnVariance.getSelectedItem().toString());
         form.setPrimaryUse(spnPrimaryUse.getSelectedItem().toString());
         form.setSecondaryUse(spnSecondaryUse.getSelectedItem().toString());
         form.setPavimentation(spnPavimentation.getSelectedItem().toString());
         form.setAsphaltGuide(spnAsphaltGuide.getSelectedItem().toString());
-        form.setPublicIlumination(spnPublicIlumination.getSelectedItem()
-                .toString());
+        form.setPublicIlumination(spnPublicIlumination.getSelectedItem().toString());
         form.setEnergy(spnEnergy.getSelectedItem().toString());
         form.setPluvialGallery(spnPluvialGallery.getSelectedItem().toString());
     }
@@ -576,41 +618,55 @@ public class FormActivity extends Activity {
      * */
     public void setAutoCompleteAdapterPropertiers(Cursor cursor) {
         
-        AddressAdapter addressAdapter = new AddressAdapter(FormActivity.this,
-                R.layout.item_list, cursor, new String[] { "name", "number",
-        "lote" }, new int[] { R.id.item_log, R.id.item_number,
+        AddressAdapter addressAdapter = new AddressAdapter(FormActivity.this, R.layout.item_list, cursor, new String[] { "name",
+                "number",
+                "lote" }, new int[] { R.id.item_log,
+                R.id.item_number,
                 R.id.item_lote });
         
         address.setAdapter(addressAdapter);
         address.setHint("pesquisar...");
         address.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapter, View view,
-                    int position, long addressId) {
+            public void onItemClick(
+                    AdapterView<?> adapter,
+                    View view,
+                    int position,
+                    long addressId) {
                 try {
                     InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     mgr.hideSoftInputFromWindow(address.getWindowToken(), 0);
                     
-                    task = TaskDao.getTaskByAddressId((int) addressId);
+                    currentTask = TaskDao.getTaskByAddressId((int) addressId);
                     
-                    if (task != null) {
-                        photos = PhotoDao.getPhotosByForm(task.getForm());
-                        
-                        if (photos != null && !photos.isEmpty()) {
-                            self.showPictures(photos);
-                        }
-                        
-                        self.setFieldsWithTaskProperties(task);
-                        self.setFieldsWithLastTask();
+                    if (currentTask != null) {
+                        self.setFieldsWithTaskProperties(currentTask);
+                        self.checkInfrastructureFill();
                     }
                     
                     self.clearAddressFocus();
-                    
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     Log.e(LOG_TAG, "Exception onItemClick: " + ex);
                 }
             }
         });
+    }
+    
+    /**
+     * 
+     * Load pictures metadata from sqlite database and put these images into the
+     * ImageView.
+     * 
+     * @param Task
+     * @author Paulo Luan
+     * */
+    public void loadPictures(Task task) {
+        photos = PhotoDao.getPhotosByForm(task.getForm());
+        
+        if (photos != null && !photos.isEmpty()) {
+            self.showPictures(photos);
+        }
     }
     
     /**
@@ -665,15 +721,6 @@ public class FormActivity extends Activity {
     
     /**
      * 
-     * Populates the fields based on the last completed form.
-     * 
-     * */
-    public void setFieldsWithLastForm() {
-        
-    }
-    
-    /**
-     * 
      * Returns Base64 String from filePath of a photo.
      * 
      * @param String
@@ -688,7 +735,8 @@ public class FormActivity extends Activity {
         
         try {
             fis = new FileInputStream(imagefile);
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         
@@ -726,38 +774,35 @@ public class FormActivity extends Activity {
                 
                 photo.setPath(photoPath);
                 photo.setBase64(blob);
-                photo.setForm(task.getForm());
+                photo.setForm(currentTask.getForm());
                 
-                Location location = LocationProvider.getInstance(this)
-                        .getLocation();
+                Location location = LocationProvider.getInstance(this).getLocation();
                 
                 if (location != null) {
                     lat.setText("" + location.getLatitude());
                     lon.setText("" + location.getLongitude());
-                } else {
-                    Utility.showToast(
-                            "Seu GPS está desabilitado, ligue-o para capturar sua posição.",
-                            Toast.LENGTH_LONG, this);
+                }
+                else {
+                    Utility.showToast("Seu GPS está desabilitado, ligue-o para capturar sua posição.", Toast.LENGTH_LONG, this);
                     lat.setText("0.0");
                     lon.setText("0.0");
                 }
                 
                 photos.add(photo);
                 showPictures(photos);
-            } else if (resultCode == RESULT_CANCELED) {
             }
+            else if (resultCode == RESULT_CANCELED) {}
         }
     }
     
     public void validateFields() {
         if (photos.isEmpty()) {
-            Utility.showToast("Você precisa tirar ao menos uma foto.",
-                    Toast.LENGTH_LONG, FormActivity.this);
-        } else {
+            Utility.showToast("Você precisa tirar ao menos uma foto.", Toast.LENGTH_LONG, FormActivity.this);
+        }
+        else {
             String message = null;
             
-            if (!spnVariance.getSelectedItem().toString()
-                    .equals("Não Detectada")) {
+            if (!spnVariance.getSelectedItem().toString().equals("Não Detectada")) {
                 // Quando não é detectado nenhuma desconformidade, então não é
                 // obrigatório o preenchimento das informações.
                 message = self.checkNull();
@@ -765,25 +810,17 @@ public class FormActivity extends Activity {
             
             if (message != null) {
                 Utility.showToast(message, Toast.LENGTH_LONG, self);
-            } else {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                        FormActivity.this);
+            }
+            else {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FormActivity.this);
                 alertDialogBuilder.setTitle("Atenção");
-                alertDialogBuilder
-                .setMessage("Deseja salvar?")
-                .setCancelable(false)
-                .setPositiveButton("Sim",
-                        new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,
-                            int id) {
+                alertDialogBuilder.setMessage("Deseja salvar?").setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                         self.saveTaskIntoLocalDatabase();
                     }
-                })
-                .setNegativeButton("Não",
-                        new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,
-                            int id) {
+                }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
                 });
@@ -798,18 +835,24 @@ public class FormActivity extends Activity {
         boolean isSaved = false;
         
         self.showLoadingMask();
-        self.setFormPropertiesWithFields(task);
-        task.setDone(true);
+        self.setFormPropertiesWithFields(currentTask);
+        currentTask.setDone(true);
         
-        isSaved = TaskDao.updateTask(task);
+        isSaved = TaskDao.updateTask(currentTask);
+        
+        if (!this.checkInfrastructureFieldsIsNull()) {
+            TaskDao.updateInfrastructureDataFromAllForms(currentTask);
+        }
+        
         isSaved = PhotoDao.savePhotos(photos);
         
         Intent data = new Intent();
         
         if (isSaved) {
-            FormActivity.lastTask = task;
+            FormActivity.lastTask = currentTask;
             data.putExtra("RESULT", "Registro salvo!");
-        } else {
+        }
+        else {
             data.putExtra("RESULT", "Registro não foi salvo!");
         }
         
@@ -844,10 +887,10 @@ public class FormActivity extends Activity {
         
         for (Photo picture : pictures) {
             try {
-                final ImageView imageView = self
-                        .generateImageFromFilePath(picture);
+                final ImageView imageView = self.generateImageFromFilePath(picture);
                 linearLayout.addView(imageView);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -866,16 +909,16 @@ public class FormActivity extends Activity {
             
             // Find the correct scale value. It should be the power of 2.
             int scale = 1;
-            while (o.outWidth / scale / 2 >= REQUIRED_SIZE
-                    && o.outHeight / scale / 2 >= REQUIRED_SIZE)
+            while (o.outWidth / scale / 2 >= REQUIRED_SIZE && o.outHeight / scale
+                    / 2 >= REQUIRED_SIZE)
                 scale *= 2;
             
             // Decode with inSampleSize
             BitmapFactory.Options o2 = new BitmapFactory.Options();
             o2.inSampleSize = scale;
             return BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
-        } catch (FileNotFoundException e) {
         }
+        catch (FileNotFoundException e) {}
         return null;
     }
     
@@ -885,8 +928,7 @@ public class FormActivity extends Activity {
         
         Bitmap myBitmap = this.decodeFile(imgFile);
         
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                100, 100);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
         layoutParams.setMargins(5, 5, 5, 5);
         
         imageView.setLayoutParams(layoutParams);
@@ -902,25 +944,19 @@ public class FormActivity extends Activity {
         return imageView;
     }
     
-    public void showConfirmDeleteImageDialog(final Photo picture,
+    public void showConfirmDeleteImageDialog(
+            final Photo picture,
             final File file) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                FormActivity.this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FormActivity.this);
         alertDialogBuilder.setTitle("Atenção");
-        alertDialogBuilder
-        .setMessage("Deseja Excluir esta foto?")
-        .setCancelable(false)
-        .setPositiveButton("Sim",
-                new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setMessage("Deseja Excluir esta foto?").setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
                 PhotoDao.deletePhoto(picture);
                 photos.remove(picture);
                 self.showPictures(photos);
             }
-        })
-        .setNegativeButton("Não",
-                new DialogInterface.OnClickListener() {
+        }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
             }
@@ -931,8 +967,7 @@ public class FormActivity extends Activity {
     }
     
     public void showLoadingMask() {
-        dialog = ProgressDialog.show(FormActivity.this, "",
-                "Salvando, aguarde...", true);
+        dialog = ProgressDialog.show(FormActivity.this, "", "Salvando, aguarde...", true);
     }
     
     public void showLoadingMask(String message) {

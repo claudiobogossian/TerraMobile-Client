@@ -29,6 +29,7 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
+import br.inpe.mobile.R;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.address.Address;
 import br.inpe.mobile.form.FormActivity;
@@ -37,7 +38,6 @@ import br.inpe.mobile.task.Task;
 import br.inpe.mobile.task.TaskActivity;
 import br.inpe.mobile.task.TaskDao;
 import br.inpe.mobile.user.SessionManager;
-import br.inpe.mobile.R;
 
 public class GeoMap extends Activity {
 

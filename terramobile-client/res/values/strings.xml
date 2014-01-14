@@ -24,7 +24,8 @@
     <string name="tv_address">Endereço: </string>
     <string name="tv_log">Logradouro</string>
     <string name="other_informations">Outras Informações</string>
-    <string name="tv_infra">+ Infraestrutura</string>
+    <string name="tv_plus_infra">+ Infraestrutura</string>
+    <string name="tv_minus_infra">- Infraestrutura</string>
     <string name="tv_neighborhood">Bairro: </string>
     <string name="tv_postal_code">CEP: </string>
     <string name="tv_number">Número: </string>
@@ -49,6 +50,8 @@
     <string name="btn_ok">OK</string>
     <string name="btn_clear">Limpar</string>
     <string name="btn_clear_address">Limpar Endereço</string>
+    <string name="caution">Atenção</string>
+    <string name="infra_message">Você mudou de trecho mas ainda não preencheu as informações de infraestrutura. \n\nO formulário anterior foi carregado para que você preencha estas informações.</string>
     
     <!-- Task Screen -->
     <string name="btn_sync_tasks">Sincronizar com o servidor</string>
