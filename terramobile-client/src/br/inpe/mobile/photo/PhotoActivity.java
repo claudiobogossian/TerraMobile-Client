@@ -131,7 +131,6 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
         bt_fotografar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bt_fotografar.setEnabled(false);
                 takePicture();
             }
         });
@@ -226,7 +225,10 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
     }
     
     private void takePicture() {
-        mCamera.takePicture(null, null, jpegCallback);
+        if(bt_fotografar.isEnabled()) {
+            bt_fotografar.setEnabled(false);
+            mCamera.takePicture(null, null, jpegCallback);
+        }
     }
     
     Camera.PictureCallback jpegCallback = new Camera.PictureCallback() {
