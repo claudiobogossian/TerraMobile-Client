@@ -12,6 +12,7 @@ import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -64,20 +65,20 @@ public class FormActivity extends Activity {
     private AutoCompleteTextView address;
     
     private EditText             edtNeighborhood, edtPostalCode, edtNumber,
-                                 edtOtherNumbers;
+    edtOtherNumbers;
     
     private Spinner              spnNumberConfirmation, spnVariance,
-                                 spnPrimaryUse, spnSecondaryUse,
-                                 spnPavimentation, spnAsphaltGuide,
-                                 spnPublicIlumination, spnEnergy,
-                                 spnPluvialGallery;
+    spnPrimaryUse, spnSecondaryUse,
+    spnPavimentation, spnAsphaltGuide,
+    spnPublicIlumination, spnEnergy,
+    spnPluvialGallery;
     
     private TextView             lat, lon;
     
     private Button               buttonClearAddressFields;
     
     private Button               buttonCancel, buttonOk, buttonPhoto,
-                                 buttonClearSpinners;
+    buttonClearSpinners;
     
     private FormActivity         self    = this;
     
@@ -620,7 +621,7 @@ public class FormActivity extends Activity {
         
         AddressAdapter addressAdapter = new AddressAdapter(FormActivity.this, R.layout.item_list, cursor, new String[] { "name",
                 "number",
-                "lote" }, new int[] { R.id.item_log,
+        "lote" }, new int[] { R.id.item_log,
                 R.id.item_number,
                 R.id.item_lote });
         
@@ -896,22 +897,26 @@ public class FormActivity extends Activity {
         }
     }
     
-    // decodes image and scales it to reduce memory consumption
-    private Bitmap decodeFile(File f) {
+    /**
+     * Decodes image and scales it to reduce memory consumption
+     * 
+     * @param File
+     *            the picture file
+     * @param Size
+     *            The new size we want to scale to
+     * 
+     * @author Paulo Luan
+     * */
+    private Bitmap decodeFile(File f, int scaleSize) {
         try {
             // Decode image size
             BitmapFactory.Options o = new BitmapFactory.Options();
             o.inJustDecodeBounds = true;
             BitmapFactory.decodeStream(new FileInputStream(f), null, o);
             
-            // The new size we want to scale to
-            final int REQUIRED_SIZE = 70;
-            
             // Find the correct scale value. It should be the power of 2.
             int scale = 1;
-            while (o.outWidth / scale / 2 >= REQUIRED_SIZE && o.outHeight / scale
-                    / 2 >= REQUIRED_SIZE)
-                scale *= 2;
+            while (o.outWidth / scale / 2 >= scaleSize && o.outHeight / scale / 2 >= scaleSize) scale *= 2;
             
             // Decode with inSampleSize
             BitmapFactory.Options o2 = new BitmapFactory.Options();
@@ -926,7 +931,7 @@ public class FormActivity extends Activity {
         final File imgFile = new File(picture.getPath());
         final ImageView imageView = new ImageView(this);
         
-        Bitmap myBitmap = this.decodeFile(imgFile);
+        Bitmap myBitmap = this.decodeFile(imgFile, 70);
         
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
         layoutParams.setMargins(5, 5, 5, 5);
@@ -947,23 +952,43 @@ public class FormActivity extends Activity {
     public void showConfirmDeleteImageDialog(
             final Photo picture,
             final File file) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FormActivity.this);
-        alertDialogBuilder.setTitle("Atenção");
-        alertDialogBuilder.setMessage("Deseja Excluir esta foto?").setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-                PhotoDao.deletePhoto(picture);
-                photos.remove(picture);
-                self.showPictures(photos);
-            }
-        }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
+        
+        final Dialog imageDialog = new Dialog(this);
+        
+        final ImageView image = new ImageView(this);
+        final File imgFile = new File(picture.getPath());
+        Bitmap myBitmap = this.decodeFile(imgFile, 700);
+        image.setImageBitmap(myBitmap);
+        
+        imageDialog.setContentView(image);
+        imageDialog.setCancelable(true);
+        imageDialog.setCanceledOnTouchOutside(true);
+        imageDialog.show();
+        
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FormActivity.this);
+                alertDialogBuilder.setTitle("Atenção");
+                alertDialogBuilder.setMessage("Deseja Excluir esta foto?").setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        PhotoDao.deletePhoto(picture);
+                        photos.remove(picture);
+                        self.showPictures(photos);
+                        
+                        imageDialog.dismiss();
+                    }
+                }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+                
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
             }
         });
-        
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
     }
     
     public void showLoadingMask() {
