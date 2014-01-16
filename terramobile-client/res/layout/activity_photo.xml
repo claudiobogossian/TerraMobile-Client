@@ -3,7 +3,7 @@
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="vertical" android:id="@+id/foto_lay0">
 	<SurfaceView android:layout_weight="10" 
-	android:layout_height="fill_parent" android:layout_width="fill_parent" 
+	android:layout_height="0dp" android:layout_width="fill_parent" 
 	android:id="@+id/foto_surface1"></SurfaceView>
 
 </LinearLayout>
