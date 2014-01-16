@@ -116,6 +116,16 @@ public class FormActivity extends Activity {
         
         self.createThreadToCursorAdapter();
         self.setButtonsListeners();
+        
+        self.initializeInfraTest();
+    }
+    
+    public void initializeInfraTest() {
+        spnPavimentation.setSelection(((ArrayAdapter<String>) spnPavimentation.getAdapter()).getPosition(""));
+        spnAsphaltGuide.setSelection(((ArrayAdapter<String>) spnAsphaltGuide.getAdapter()).getPosition(""));
+        spnPublicIlumination.setSelection(((ArrayAdapter<String>) spnPublicIlumination.getAdapter()).getPosition(""));
+        spnEnergy.setSelection(((ArrayAdapter<String>) spnEnergy.getAdapter()).getPosition(""));
+        spnPluvialGallery.setSelection(((ArrayAdapter<String>) spnPluvialGallery.getAdapter()).getPosition(""));
     }
     
     /**
@@ -587,31 +597,60 @@ public class FormActivity extends Activity {
     
     /**
      * 
-     * Gets all the informations filled on the fields and put into the form
-     * Object that will be saved in local database.
+     * Map all fields to a Form object.
      * 
-     * @param Task
+     * @return Form the form object with all filled informations in the fields.
+     * 
      * @author Paulo Luan
      * */
-    public void setFormPropertiesWithFields(Task taskParam) {
-        Form form = taskParam.getForm();
+    public Form makeFormInformationsToObject() {
+        Form form = new Form();
         
         form.setCoordx(Double.valueOf(lat.getText().toString()));
         form.setCoordy(Double.valueOf(lon.getText().toString()));
         
         form.setDate(new Date());
         form.setOtherNumbers(edtOtherNumbers.getText().toString());
-        form.setNumberConfirmation(spnNumberConfirmation.getSelectedItem().toString());
-        form.setVariance(spnVariance.getSelectedItem().toString());
-        form.setPrimaryUse(spnPrimaryUse.getSelectedItem().toString());
-        form.setSecondaryUse(spnSecondaryUse.getSelectedItem().toString());
-        form.setPavimentation(spnPavimentation.getSelectedItem().toString());
-        form.setAsphaltGuide(spnAsphaltGuide.getSelectedItem().toString());
-        form.setPublicIlumination(spnPublicIlumination.getSelectedItem().toString());
-        form.setEnergy(spnEnergy.getSelectedItem().toString());
-        form.setPluvialGallery(spnPluvialGallery.getSelectedItem().toString());
+        
+        Object spnNumberConfirmationItem = spnNumberConfirmation.getSelectedItem(); 
+        String spnNumberConfirmationString = (spnNumberConfirmationItem == null) ? "" : spnNumberConfirmationItem.toString();
+        form.setNumberConfirmation(spnNumberConfirmationString);
+        
+        Object spnVarianceItem = spnVariance.getSelectedItem(); 
+        String spnVarianceString = (spnVarianceItem == null) ? "" : spnVarianceItem.toString();
+        form.setVariance(spnVarianceString);
+        
+        Object spnPrimaryUseItem = spnPrimaryUse.getSelectedItem(); 
+        String spnPrimaryUseString = (spnPrimaryUseItem == null) ? "" : spnPrimaryUseItem.toString();
+        form.setPrimaryUse(spnPrimaryUseString);
+        
+        Object spnSecondaryUseItem = spnSecondaryUse.getSelectedItem(); 
+        String spnSecondaryUseString = (spnSecondaryUseItem == null) ? "" : spnSecondaryUseItem.toString();
+        form.setSecondaryUse(spnSecondaryUseString);
+        
+        Object spnPavimentationItem = spnPavimentation.getSelectedItem(); 
+        String spnPavimentationString = (spnPavimentationItem == null) ? "" : spnPavimentationItem.toString();
+        form.setPavimentation(spnPavimentationString);
+        
+        Object spnAsphaltGuideItem = spnAsphaltGuide.getSelectedItem(); 
+        String spnAsphaltGuideString = (spnAsphaltGuideItem == null) ? "" : spnAsphaltGuideItem.toString();
+        form.setAsphaltGuide(spnAsphaltGuideString);
+        
+        Object spnPublicIluminationItem = spnPublicIlumination.getSelectedItem(); 
+        String spnPublicIluminationString = (spnPublicIluminationItem == null) ? "" : spnPublicIluminationItem.toString();
+        form.setPublicIlumination(spnPublicIluminationString);
+        
+        Object spnEnergyItem = spnEnergy.getSelectedItem(); 
+        String spnEnergyString = (spnEnergyItem == null) ? "" : spnEnergyItem.toString();
+        form.setEnergy(spnEnergyString);
+        
+        Object spnPluvialGalleryItem = spnPluvialGallery.getSelectedItem();
+        String spnPluvialGalleryString = (spnPluvialGalleryItem == null) ? "" : spnPluvialGalleryItem.toString();
+        form.setPluvialGallery(spnPluvialGalleryString);
+        
+        return form;
     }
-    
+ 
     /**
      * 
      * 
@@ -836,7 +875,10 @@ public class FormActivity extends Activity {
         boolean isSaved = false;
         
         self.showLoadingMask();
-        self.setFormPropertiesWithFields(currentTask);
+        
+        Form filledForm = self.makeFormInformationsToObject();
+        currentTask.setForm(filledForm);
+        
         currentTask.setDone(true);
         
         isSaved = TaskDao.updateTask(currentTask);
