@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.map.GeoMap;
 import br.inpe.mobile.user.LoginActivity;
 import br.inpe.mobile.user.SessionManager;
@@ -21,9 +22,11 @@ public class Main extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+        
         session = SessionManager.getInstance(getApplicationContext());
         this.checkLogin();
-        super.onCreate(savedInstanceState);
     }
 
     /**

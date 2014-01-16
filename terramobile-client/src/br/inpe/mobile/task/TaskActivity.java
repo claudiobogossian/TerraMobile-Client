@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.inpe.mobile.R;
 import br.inpe.mobile.Utility;
+import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.photo.Photo;
 import br.inpe.mobile.photo.PhotoDao;
 import br.inpe.mobile.photo.UploadPhotos;
@@ -48,6 +49,7 @@ public class TaskActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_task);

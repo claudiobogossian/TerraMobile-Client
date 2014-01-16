@@ -34,6 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ZoomControls;
 import br.inpe.mobile.R;
+import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.user.SessionManager;
 
 public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
@@ -63,6 +64,8 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+        
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_photo);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);

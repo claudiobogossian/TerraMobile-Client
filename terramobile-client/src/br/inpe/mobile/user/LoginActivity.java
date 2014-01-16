@@ -20,6 +20,7 @@ import br.inpe.mobile.R;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.database.DatabaseAdapter;
 import br.inpe.mobile.database.DatabaseHelper;
+import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.map.GeoMap;
 
 import com.j256.ormlite.dao.Dao;
@@ -43,8 +44,8 @@ public class LoginActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         session = SessionManager.getInstance(getApplicationContext());
 

@@ -46,6 +46,7 @@ import br.inpe.mobile.R;
 import br.inpe.mobile.R.string;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.address.AddressAdapter;
+import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.location.LocationProvider;
 import br.inpe.mobile.photo.Photo;
 import br.inpe.mobile.photo.PhotoActivity;
@@ -98,6 +99,8 @@ public class FormActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+        
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_form);
         
