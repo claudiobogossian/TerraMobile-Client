@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import br.inpe.mobile.Main;
 
-public class SessionManager {
+public class SessionManager {    
     // Shared Preferences
     private static SharedPreferences pref;
     
@@ -42,12 +42,19 @@ public class SessionManager {
         editor = pref.edit();
     }
     
-    public static SessionManager getInstance(Context context) {
+    public static SessionManager getInstance() {  
+        return self;
+    }
+    
+    /**
+     * Application Memory class creates this Object.
+     * */
+    public static SessionManager createSession(Context applicationContext) {
         if (self == null) {
-            self = new SessionManager(context);
+            self = new SessionManager(applicationContext);
         }
         
-        return self;
+        return getInstance();
     }
     
     /**
@@ -104,7 +111,7 @@ public class SessionManager {
     /**
      * Get user name
      * */
-    public static String getUserName() {
+    public String getUserName() {
         String name = pref.getString(KEY_NAME, null);
         return name;
     }
@@ -112,7 +119,7 @@ public class SessionManager {
     /**
      * Get user hash
      * */
-    public static String getUserHash() {
+    public String getUserHash() {
         String hash = pref.getString(KEY_HASH, null);
         return hash;
     }
@@ -145,6 +152,5 @@ public class SessionManager {
     public boolean isLoggedIn() {
         Boolean isLogged = pref.getBoolean(IS_LOGIN, false);
         return isLogged;
-    }
-    
+    }    
 }

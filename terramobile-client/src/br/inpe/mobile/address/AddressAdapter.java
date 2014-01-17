@@ -64,7 +64,7 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
         Cursor cursor = null;
 
         try {
-            cursor = AddressAdapter.getAddressCursor("%" + filter + "%");
+            cursor = this.getAddressCursor("%" + filter + "%");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -81,7 +81,7 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
         QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
         QueryBuilder<Address, Integer> addressQueryBuilder = addressDao.queryBuilder();
 
-        String userHash = SessionManager.getUserHash();
+        String userHash = SessionManager.getInstance().getUserHash();
         userQueryBuilder.where()
                 .eq("hash", userHash);
 

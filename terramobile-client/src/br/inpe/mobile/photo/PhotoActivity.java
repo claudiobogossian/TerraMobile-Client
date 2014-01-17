@@ -161,7 +161,7 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
             }
         });
         
-        session = SessionManager.getInstance(getApplicationContext());
+        session = SessionManager.getInstance();
     }
     
     public void setZoomListener() {

@@ -29,6 +29,8 @@ public class TaskDao {
     
     private static Dao<Address, Integer> addressDao = db.getAddressDao();
     
+    private static SessionManager session = SessionManager.getInstance();
+    
     /**
      * 
      * This function return the local data, persisted in SQLite Database.
@@ -119,7 +121,7 @@ public class TaskDao {
         QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
         
         try {
-            String userHash = SessionManager.getUserHash();
+            String userHash = session.getUserHash();
             
             userQueryBuilder.where().eq("hash", userHash);
             taskQueryBuilder.where().eq("done", Boolean.TRUE);
@@ -141,7 +143,7 @@ public class TaskDao {
         QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
         
         try {
-            String userHash = SessionManager.getUserHash();
+            String userHash = session.getUserHash();
             
             userQueryBuilder.where().eq("hash", userHash);
             taskQueryBuilder.where().eq("done", Boolean.FALSE);
@@ -169,7 +171,7 @@ public class TaskDao {
         QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
         
         try {
-            String userHash = SessionManager.getUserHash();
+            String userHash = session.getUserHash();
             
             userQueryBuilder.where().eq("hash", userHash);
             taskQueryBuilder.join(userQueryBuilder);
@@ -195,7 +197,7 @@ public class TaskDao {
         QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
         
         try {
-            String userHash = SessionManager.getUserHash();
+            String userHash = session.getUserHash();
             userQueryBuilder.where().eq("hash", userHash);
             
             taskQueryBuilder.join(userQueryBuilder);
@@ -222,7 +224,7 @@ public class TaskDao {
         QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
         
         try {
-            String userHash = SessionManager.getUserHash();
+            String userHash = session.getUserHash();
             userQueryBuilder.where().eq("hash", userHash);
             
             taskQueryBuilder.where().eq("done", Boolean.TRUE);
@@ -249,7 +251,7 @@ public class TaskDao {
         QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
         
         try {
-            String userHash = SessionManager.getUserHash();
+            String userHash = session.getUserHash();
             userQueryBuilder.where().eq("hash", userHash);
             taskQueryBuilder.join(userQueryBuilder);
             
@@ -371,7 +373,7 @@ public class TaskDao {
         QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
         
         try {
-            String userHash = SessionManager.getUserHash();
+            String userHash = session.getUserHash();
             userQueryBuilder.where().eq("hash", userHash);
             taskQueryBuilder.join(userQueryBuilder);
             

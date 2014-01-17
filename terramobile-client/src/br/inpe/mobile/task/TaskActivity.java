@@ -45,6 +45,8 @@ public class TaskActivity extends Activity {
     private TaskActivity   self    = this;
 
     public RestTemplate    restTemplate;
+    
+    private SessionManager session;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,8 @@ public class TaskActivity extends Activity {
         this.setButtonsListeners();
         this.initializeRestTemplate();
         this.updateCountLabels();
+        
+        session = SessionManager.getInstance();
     }
 
     public void setButtonsListeners() {
@@ -82,7 +86,7 @@ public class TaskActivity extends Activity {
             }
         });
 
-        String name = SessionManager.getUserName();
+        String name = session.getUserName();
         Button btnLogout = (Button) findViewById(R.id.btnLogout);
         btnLogout.setText(Html.fromHtml("Sair <b>" + name + "</b>"));
         btnLogout.setOnClickListener(new View.OnClickListener() {
@@ -148,7 +152,7 @@ public class TaskActivity extends Activity {
      * @return List<Task>
      */
     public void getRemoteTasks() {
-        String userHash = SessionManager.getUserHash();
+        String userHash = session.getUserHash();
         String url = Utility.hostUrl + "rest/tasks?user={user_hash}";
         DownloadTasks remote = new DownloadTasks(userHash, this);
         remote.execute(new String[] { url });
@@ -161,7 +165,7 @@ public class TaskActivity extends Activity {
      * @author Paulo Luan
      */
     public void syncronizeWithServer() {
-        String userHash = SessionManager.getUserHash();
+        String userHash = session.getUserHash();
         List<Photo> photos = PhotoDao.getNotSyncPhotos();
 
         if (photos != null && !photos.isEmpty()) {

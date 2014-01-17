@@ -35,7 +35,7 @@ public class PhotoDao {
         QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
 
         try {
-            String userHash = SessionManager.getUserHash();
+            String userHash = SessionManager.getInstance().getUserHash();
             userQueryBuilder.where().eq("hash", userHash);
 
             taskQueryBuilder.join(userQueryBuilder);
@@ -61,7 +61,7 @@ public class PhotoDao {
         QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
 
         try {
-            String userHash = SessionManager.getUserHash();
+            String userHash = SessionManager.getInstance().getUserHash();
             userQueryBuilder.where().eq("hash", userHash);
 
             taskQueryBuilder.join(userQueryBuilder);

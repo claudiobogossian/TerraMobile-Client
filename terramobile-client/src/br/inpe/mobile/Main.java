@@ -25,7 +25,7 @@ public class Main extends Activity {
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         
-        session = SessionManager.getInstance(getApplicationContext());
+        session = SessionManager.getInstance();
         this.checkLogin();
     }
 
