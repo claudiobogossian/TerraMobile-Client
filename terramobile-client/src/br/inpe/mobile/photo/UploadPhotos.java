@@ -35,6 +35,8 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
     @Override
     protected String doInBackground(String... urls) {
         String message = null;
+        
+        PhotoDao.verifyIntegrityOfPictures();
 
         for (String url : urls) {
             try {
@@ -71,7 +73,7 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        taskActivity.showLoadingMask("Enviando Fotos, aguarde...");
+        taskActivity.showLoadingMask("Enviando as Fotos, aguarde...");
     }
 
     @Override

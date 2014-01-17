@@ -203,12 +203,6 @@ public class FormActivity extends Activity {
             buttonPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /*
-                     * //Native Intent cameraIntent = new
-                     * Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                     * startActivityForResult(cameraIntent, PHOTO);
-                     */
-                    
                     Intent i = new Intent(FormActivity.this, PhotoActivity.class);
                     startActivityForResult(i, PHOTO);
                 }
@@ -251,7 +245,7 @@ public class FormActivity extends Activity {
             @Override
             public void onClick(View v) {
                 self.clearSpinnerFields();
-                self.clearAddressFocus();
+                //self.clearAddressFocus();
             }
         });
     }
@@ -301,12 +295,13 @@ public class FormActivity extends Activity {
         edtPostalCode.setEnabled(false);
         edtNeighborhood.setEnabled(false);
         edtNumber.setEnabled(false);
-        
-        address.setInputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS);
+                
         address.setEnabled(true);
         address.setFocusable(true);
         address.setFocusableInTouchMode(true);
         address.requestFocus();
+        address.setInputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS);
+        self.showKeyboard(address);
         
         buttonPhoto.setEnabled(false);
         buttonOk.setEnabled(false);
@@ -334,7 +329,7 @@ public class FormActivity extends Activity {
         // Spinners
         spnNumberConfirmation = (Spinner) findViewById(R.id.spnNumberConfirmation);
         spnVariance = (Spinner) findViewById(R.id.spnVariance);
-        spnPrimaryUse = (Spinner) findViewById(R.id.spnPrimaryUse);
+        spnPrimaryUse = (Spinner) findViewById(R.id.spnPrimaryUse);        
         spnSecondaryUse = (Spinner) findViewById(R.id.spnSecundaryUse);
         spnPavimentation = (Spinner) findViewById(R.id.spnPavimentation);
         spnAsphaltGuide = (Spinner) findViewById(R.id.spnAsphaltGuides);
@@ -477,7 +472,7 @@ public class FormActivity extends Activity {
                 this.loadPictures(taskParam);
             }
             
-            self.clearAddressFocus();
+            //self.clearAddressFocus();
         }
     }
     
@@ -602,12 +597,12 @@ public class FormActivity extends Activity {
      * 
      * Map all fields to a Form object.
      * 
+     * @param from 
      * @return Form the form object with all filled informations in the fields.
      * 
      * @author Paulo Luan
      * */
-    public Form makeFormInformationsToObject() {
-        Form form = new Form();
+    public Form makeFormInformationsToObject(Form form) {
         
         form.setCoordx(Double.valueOf(lat.getText().toString()));
         form.setCoordy(Double.valueOf(lon.getText().toString()));
@@ -687,7 +682,7 @@ public class FormActivity extends Activity {
                         self.checkInfrastructureFill();
                     }
                     
-                    self.clearAddressFocus();
+                    //self.clearAddressFocus();
                 }
                 catch (Exception ex) {
                     Log.e(LOG_TAG, "Exception onItemClick: " + ex);
@@ -716,8 +711,10 @@ public class FormActivity extends Activity {
      * 
      * 
      * @author Paulo Luan
-     * */
+     * *
     public void clearAddressFocus() {
+        self.hideKeyboard();
+        
         edtPostalCode.clearFocus();
         edtNeighborhood.clearFocus();
         edtNumber.clearFocus();
@@ -730,10 +727,10 @@ public class FormActivity extends Activity {
         edtOtherNumbers.setFocusable(false);
         address.setFocusable(false);
         
-        // TODO: workaround.
         edtOtherNumbers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                self.showKeyboard(edtOtherNumbers);
                 edtOtherNumbers.setFocusable(true);
                 edtOtherNumbers.setFocusableInTouchMode(true);
                 edtOtherNumbers.requestFocus();
@@ -879,7 +876,7 @@ public class FormActivity extends Activity {
         
         self.showLoadingMask();
         
-        Form filledForm = self.makeFormInformationsToObject();
+        Form filledForm = self.makeFormInformationsToObject(currentTask.getForm());
         currentTask.setForm(filledForm);
         
         currentTask.setDone(true);
@@ -933,8 +930,15 @@ public class FormActivity extends Activity {
         
         for (Photo picture : pictures) {
             try {
-                final ImageView imageView = self.generateImageFromFilePath(picture);
-                linearLayout.addView(imageView);
+                
+                File pic = new File(picture.getPath());
+                
+                if(!pic.exists()) {
+                    self.deletePicture(picture);
+                } else {
+                    final ImageView imageView = self.generateImageFromFilePath(picture);
+                    linearLayout.addView(imageView);
+                }
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -973,7 +977,8 @@ public class FormActivity extends Activity {
     }
     
     public ImageView generateImageFromFilePath(final Photo picture) {
-        final File imgFile = new File(picture.getPath());
+        final File imgFile = new File(picture.getPath());       
+        
         final ImageView imageView = new ImageView(this);
         
         Bitmap myBitmap = this.decodeFile(imgFile, 70);
@@ -1018,10 +1023,7 @@ public class FormActivity extends Activity {
                 alertDialogBuilder.setMessage("Deseja Excluir esta foto?").setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        PhotoDao.deletePhoto(picture);
-                        photos.remove(picture);
-                        self.showPictures(photos);
-                        
+                        self.deletePicture(picture);
                         imageDialog.dismiss();
                     }
                 }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
@@ -1036,6 +1038,19 @@ public class FormActivity extends Activity {
         });
     }
     
+    /**
+     *
+     * Delete a photo from database and filesystem.
+     * 
+     * @param Photo the picture that will be removed.
+     * @author Paulo Luan
+     */
+    public void deletePicture(Photo picture) {
+        PhotoDao.deletePhoto(picture);
+        photos.remove(picture);
+        self.showPictures(photos);
+    }
+    
     public void showLoadingMask() {
         dialog = ProgressDialog.show(FormActivity.this, "", "Salvando, aguarde...", true);
     }
@@ -1047,5 +1062,17 @@ public class FormActivity extends Activity {
     public void hideLoadMask() {
         dialog.hide();
         dialog.cancel();
+    }
+    
+    private void hideKeyboard() {        
+        getCurrentFocus().clearFocus();
+        
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+    }
+    
+    private void showKeyboard(EditText editText) {
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.showSoftInput(editText, 0);
     }
 }

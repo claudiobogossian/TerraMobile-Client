@@ -25,7 +25,34 @@ public class PhotoDao {
     private static Dao<User, Integer>  userDao  = db.getUserDao();
     private static Dao<Photo, Integer> photoDao = db.getPhotoDao();
 
+    //TODO: pegar apenas fotos que estão com status "done" 
     public static List<Photo> getNotSyncPhotos() {
+        List<Photo> photos = null;
+
+        QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+        QueryBuilder<Form, Integer> formQueryBuilder = formDao.queryBuilder();
+        QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
+        QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+
+        try {
+            String userHash = SessionManager.getUserHash();
+            userQueryBuilder.where().eq("hash", userHash);
+
+            taskQueryBuilder.join(userQueryBuilder);
+            formQueryBuilder.join(taskQueryBuilder);
+
+            photoQueryBuilder.join(formQueryBuilder);
+
+            photos = photoQueryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return photos;
+    }
+    
+
+    public static List<Photo> getAllPhotos() {
         List<Photo> photos = null;
 
         QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
@@ -131,6 +158,23 @@ public class PhotoDao {
         }
 
         return result;
+    }
+    
+    /**
+     * Verify all pictures and delete from database if it not exists on File system.
+     * 
+     * @author Paulo Luan
+     * */
+    public static void verifyIntegrityOfPictures() {
+        List<Photo> photos = PhotoDao.getAllPhotos();
+        
+        for (Photo picture : photos) {
+            File file = new File(picture.getPath());
+            
+            if(!file.exists()) {
+                PhotoDao.deletePhoto(picture);
+            }
+        }
     }
 
     /**
