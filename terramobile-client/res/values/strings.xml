@@ -11,11 +11,11 @@
     <string name="btn_exit">Sair</string>
     <string name="lbl_exit">Sair</string>
     <string name="title_activity_main">Bauru Digital</string>
-    
-    <!--  GeoMap Screen -->
+
+    <!-- GeoMap Screen -->
     <string name="lbl_new_form">Novo formulárío</string>
     <string name="lbl_get_task">Atualizar trechos</string>
-    
+
     <!-- Form Screen -->
     <string name="tv_insertData">Inserir dados</string>
     <string name="btn_get_photo">Obter Foto</string>
@@ -36,7 +36,7 @@
     <string name="tv_info2">Info 2: </string>
     <string name="tv_number_confirmation">Confirmação do número</string>
     <string name="tv_variance">Desconformidade</string>
-    <string name="tv_numbers_found">Números Adicionais</string>
+    <string name="tv_numbers_founded">Números Adicionais</string>
     <string name="tv_other_batch_numbering">Demais numerações do lote</string>
     <string name="tv_primary_use">Uso principal</string>
     <string name="tv_secondary_use">Uso secundário</string>
@@ -52,14 +52,38 @@
     <string name="btn_clear_address">Limpar Endereço</string>
     <string name="caution">Atenção</string>
     <string name="infra_message">Você mudou de trecho mas ainda não preencheu as informações de infraestrutura. \n\nO formulário anterior foi carregado para que você preencha estas informações.</string>
-    
+
     <!-- Task Screen -->
     <string name="btn_sync_tasks">Sincronizar com o servidor</string>
     <string name="info_send_tasks">Enviando informaçãoes ao servidor</string>
     <string name="btn_clear_tasks">Apagar trechos</string>
     <string name="userName">Nome</string>
     <string name="btn_logout">Sair</string>
-    
+
+    <!-- Domains Arrays items -->
+    <string name="ok">OK</string>
+    <string name="non_existent">Inexistente</string>
+    <string name="not_confer">Não Confere</string>
+    <string name="not_detected">Não Detectada</string>
+    <string name="inconsistent">Desconforme</string>
+    <string name="free">Vago</string>
+    <string name="dismembered">Desmembrado</string>
+    <string name="unified">Unificado</string>
+    <string name="none">Nenhum</string>
+    <string name="residential">Residencial</string>
+    <string name="commercial">Comercial</string>
+    <string name="services">Serviços</string>
+    <string name="industrial">Industrial</string>
+    <string name="religious">Religioso</string>
+    <string name="under_construction">Em construção</string>
+    <string name="undefined">Indefinido</string>
+    <string name="asphalt">Asfalto</string>
+    <string name="parallelepiped">Paralelepípedo</string>
+    <string name="interlocked_tile">Lajota intertravada</string>
+    <string name="without_paviment">Sem pavimentação</string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
+
     <!-- Colors -->
     <color name="background_cor1">#FFFFFF</color>
     <color name="background_cor2">#000000</color>
@@ -69,7 +93,7 @@
     <color name="background_cor6">#CCCCCC</color>
     <color name="background_cor7">#104E8B</color>
     <color name="background_cor8">#C11B17</color>
-    
+
     <string name="btn_sync_tiles">Baixar mapa de base</string>
     <string name="txt_general_informations">Informações Gerais</string>
     <string name="txt_count_incompleted_tasks">Tarefas Incompletas:</string>

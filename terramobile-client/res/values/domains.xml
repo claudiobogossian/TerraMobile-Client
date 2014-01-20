@@ -3,55 +3,54 @@
 
     <string-array name="number_confirmation">
         <item></item>
-        <item name="ok">Ok</item>
-        <item name="non_existent">Inexistente</item>
-        <item name="not_confer">Não Confere</item>
+        <item>@string/ok</item>
+        <item>@string/non_existent</item>
+        <item>@string/not_confer</item>
     </string-array>
     
     <string-array name="variance">
-        <item name="not_detected">Não Detectada</item>
-        <item name="inconsistent">Desconforme</item>
-        <item name="free">Vago</item>
-        <item name="dismembered">Desmembrado</item>
-        <item name="unified">Unificado</item>
+        <item>@string/not_detected</item>
+        <item>@string/inconsistent</item>
+        <item>@string/free</item>
+        <item>@string/dismembered</item>
+        <item>@string/unified</item>
     </string-array>
     
     <string-array name="primary_use">
         <item></item>
-        <item name="none">Nenhum</item>
-        <item name="residential">Residencial</item>
-        <item name="commercial">Comercial</item>
-        <item name="services">Serviços</item>
-        <item name="industrial">Industrial</item>
-        <item name="religious">Religioso</item>
-        <item name="under_construction">Em construção</item>
-        <item name="undefined">Indefinido</item>
+        <item>@string/none</item>
+        <item>@string/residential</item>
+        <item>@string/commercial</item>
+        <item>@string/services</item>
+        <item>@string/industrial</item>
+        <item>@string/religious</item>
+        <item>@string/under_construction</item>
+        <item>@string/undefined</item>
     </string-array>
     
     <string-array name="secondary_use">
-        <item></item>
-        <item name="none">Nenhum</item>
-        <item name="residential">Residencial</item>
-        <item name="commercial">Comercial</item>
-        <item name="services">Serviços</item>
-        <item name="industrial">Industrial</item>
-        <item name="religious">Religioso</item>
-        <item name="under_construction">Em construção</item>
-        <item name="undefined">Indefinido</item>
+        <item>@string/none</item>
+        <item>@string/residential</item>
+        <item>@string/commercial</item>
+        <item>@string/services</item>
+        <item>@string/industrial</item>
+        <item>@string/religious</item>
+        <item>@string/under_construction</item>
+        <item>@string/undefined</item>
     </string-array>
     
     <string-array name="pavement">
         <item></item>
-        <item name="asphalt">Asfalto</item>
-        <item name="parallelepiped">Paralelepípedo</item>
-        <item name="interlocked tile">Lajota intertravada</item>
-        <item name="without_paviment">Sem pavimentação</item>
+        <item>@string/asphalt</item>
+        <item>@string/parallelepiped</item>
+        <item>@string/interlocked_tile</item>
+        <item>@string/without_paviment</item>
     </string-array>
     
     <string-array name="yes_no">
         <item></item>
-        <item name="yes">Sim</item>
-        <item name="no">Não</item>
+        <item>@string/yes</item>
+        <item>@string/no</item>
     </string-array>
 
 </resources>
