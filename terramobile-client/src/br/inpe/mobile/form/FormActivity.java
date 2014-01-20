@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -33,6 +34,7 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -57,31 +59,31 @@ import br.inpe.mobile.task.TaskDao;
 public class FormActivity extends Activity {
     
     // tag used to debug
-    private final String         LOG_TAG = "#" + getClass().getSimpleName();
+    private final String         LOG_TAG   = "#" + getClass().getSimpleName();
     
     // other activities
-    private static final int     PHOTO   = 102;
+    private static final int     PHOTO     = 102;
     
     // widgets
     private AutoCompleteTextView address;
     
     private EditText             edtNeighborhood, edtPostalCode, edtNumber,
-    edtOtherNumbers;
+                                 edtOtherNumbers;
     
     private Spinner              spnNumberConfirmation, spnVariance,
-    spnPrimaryUse, spnSecondaryUse,
-    spnPavimentation, spnAsphaltGuide,
-    spnPublicIlumination, spnEnergy,
-    spnPluvialGallery;
+                                 spnPrimaryUse, spnSecondaryUse,
+                                 spnPavimentation, spnAsphaltGuide,
+                                 spnPublicIlumination, spnEnergy,
+                                 spnPluvialGallery;
     
     private TextView             lat, lon;
     
     private Button               buttonClearAddressFields;
     
     private Button               buttonCancel, buttonOk, buttonPhoto,
-    buttonClearSpinners;
+                                 buttonClearSpinners;
     
-    private FormActivity         self    = this;
+    private FormActivity         self      = this;
     
     private static Task          currentTask;
     
@@ -90,6 +92,8 @@ public class FormActivity extends Activity {
     private List<Photo>          photos;
     
     private ProgressDialog       dialog;
+    
+    private Resources            resources;
     
     /**
      * 
@@ -100,6 +104,8 @@ public class FormActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+        
+        resources = getResources();
         
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_form);
@@ -119,16 +125,38 @@ public class FormActivity extends Activity {
         
         self.createThreadToCursorAdapter();
         self.setButtonsListeners();
-        
-        self.initializeInfraTest();
+        self.setSpinnerListeners();
     }
     
-    public void initializeInfraTest() {
-        spnPavimentation.setSelection(((ArrayAdapter<String>) spnPavimentation.getAdapter()).getPosition(""));
-        spnAsphaltGuide.setSelection(((ArrayAdapter<String>) spnAsphaltGuide.getAdapter()).getPosition(""));
-        spnPublicIlumination.setSelection(((ArrayAdapter<String>) spnPublicIlumination.getAdapter()).getPosition(""));
-        spnEnergy.setSelection(((ArrayAdapter<String>) spnEnergy.getAdapter()).getPosition(""));
-        spnPluvialGallery.setSelection(((ArrayAdapter<String>) spnPluvialGallery.getAdapter()).getPosition(""));
+    private void setSpinnerListeners() {
+        setSpinnerNumberConfirmation();
+    }
+    
+    /**
+     * Maps the selection listener of NumbersConfirmation Spinner and change the
+     * visibiity of the Edit Text "numbers confirmation".
+     * 
+     * @author Paulo Luan
+     * 
+     */
+    private void setSpinnerNumberConfirmation() {
+        spnNumberConfirmation.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                Object spnNumberConfirmationItem = spnNumberConfirmation.getSelectedItem(); 
+                String spnNumberConfirmationString = (spnNumberConfirmationItem == null) ? "" : spnNumberConfirmationItem.toString();
+                String notConfer = resources.getString(string.not_confer);
+                
+                if(spnNumberConfirmationString == notConfer) {
+                    findViewById(R.id.numbers_founded_layout).setVisibility(View.VISIBLE);
+                } else {
+                    findViewById(R.id.numbers_founded_layout).setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {}
+        });
     }
     
     /**
@@ -295,7 +323,7 @@ public class FormActivity extends Activity {
         edtPostalCode.setEnabled(false);
         edtNeighborhood.setEnabled(false);
         edtNumber.setEnabled(false);
-                
+        
         address.setEnabled(true);
         address.setFocusable(true);
         address.setFocusableInTouchMode(true);
@@ -329,7 +357,7 @@ public class FormActivity extends Activity {
         // Spinners
         spnNumberConfirmation = (Spinner) findViewById(R.id.spnNumberConfirmation);
         spnVariance = (Spinner) findViewById(R.id.spnVariance);
-        spnPrimaryUse = (Spinner) findViewById(R.id.spnPrimaryUse);        
+        spnPrimaryUse = (Spinner) findViewById(R.id.spnPrimaryUse);
         spnSecondaryUse = (Spinner) findViewById(R.id.spnSecundaryUse);
         spnPavimentation = (Spinner) findViewById(R.id.spnPavimentation);
         spnAsphaltGuide = (Spinner) findViewById(R.id.spnAsphaltGuides);
@@ -597,7 +625,7 @@ public class FormActivity extends Activity {
      * 
      * Map all fields to a Form object.
      * 
-     * @param from 
+     * @param from
      * @return Form the form object with all filled informations in the fields.
      * 
      * @author Paulo Luan
@@ -610,45 +638,54 @@ public class FormActivity extends Activity {
         form.setDate(new Date());
         form.setOtherNumbers(edtOtherNumbers.getText().toString());
         
-        Object spnNumberConfirmationItem = spnNumberConfirmation.getSelectedItem(); 
-        String spnNumberConfirmationString = (spnNumberConfirmationItem == null) ? "" : spnNumberConfirmationItem.toString();
+        Object spnNumberConfirmationItem = spnNumberConfirmation.getSelectedItem();
+        String spnNumberConfirmationString = (spnNumberConfirmationItem == null) ? ""
+                : spnNumberConfirmationItem.toString();
         form.setNumberConfirmation(spnNumberConfirmationString);
         
-        Object spnVarianceItem = spnVariance.getSelectedItem(); 
-        String spnVarianceString = (spnVarianceItem == null) ? "" : spnVarianceItem.toString();
+        Object spnVarianceItem = spnVariance.getSelectedItem();
+        String spnVarianceString = (spnVarianceItem == null) ? ""
+                : spnVarianceItem.toString();
         form.setVariance(spnVarianceString);
         
-        Object spnPrimaryUseItem = spnPrimaryUse.getSelectedItem(); 
-        String spnPrimaryUseString = (spnPrimaryUseItem == null) ? "" : spnPrimaryUseItem.toString();
+        Object spnPrimaryUseItem = spnPrimaryUse.getSelectedItem();
+        String spnPrimaryUseString = (spnPrimaryUseItem == null) ? ""
+                : spnPrimaryUseItem.toString();
         form.setPrimaryUse(spnPrimaryUseString);
         
-        Object spnSecondaryUseItem = spnSecondaryUse.getSelectedItem(); 
-        String spnSecondaryUseString = (spnSecondaryUseItem == null) ? "" : spnSecondaryUseItem.toString();
+        Object spnSecondaryUseItem = spnSecondaryUse.getSelectedItem();
+        String spnSecondaryUseString = (spnSecondaryUseItem == null) ? ""
+                : spnSecondaryUseItem.toString();
         form.setSecondaryUse(spnSecondaryUseString);
         
-        Object spnPavimentationItem = spnPavimentation.getSelectedItem(); 
-        String spnPavimentationString = (spnPavimentationItem == null) ? "" : spnPavimentationItem.toString();
+        Object spnPavimentationItem = spnPavimentation.getSelectedItem();
+        String spnPavimentationString = (spnPavimentationItem == null) ? ""
+                : spnPavimentationItem.toString();
         form.setPavimentation(spnPavimentationString);
         
-        Object spnAsphaltGuideItem = spnAsphaltGuide.getSelectedItem(); 
-        String spnAsphaltGuideString = (spnAsphaltGuideItem == null) ? "" : spnAsphaltGuideItem.toString();
+        Object spnAsphaltGuideItem = spnAsphaltGuide.getSelectedItem();
+        String spnAsphaltGuideString = (spnAsphaltGuideItem == null) ? ""
+                : spnAsphaltGuideItem.toString();
         form.setAsphaltGuide(spnAsphaltGuideString);
         
-        Object spnPublicIluminationItem = spnPublicIlumination.getSelectedItem(); 
-        String spnPublicIluminationString = (spnPublicIluminationItem == null) ? "" : spnPublicIluminationItem.toString();
+        Object spnPublicIluminationItem = spnPublicIlumination.getSelectedItem();
+        String spnPublicIluminationString = (spnPublicIluminationItem == null) ? ""
+                : spnPublicIluminationItem.toString();
         form.setPublicIlumination(spnPublicIluminationString);
         
-        Object spnEnergyItem = spnEnergy.getSelectedItem(); 
-        String spnEnergyString = (spnEnergyItem == null) ? "" : spnEnergyItem.toString();
+        Object spnEnergyItem = spnEnergy.getSelectedItem();
+        String spnEnergyString = (spnEnergyItem == null) ? ""
+                : spnEnergyItem.toString();
         form.setEnergy(spnEnergyString);
         
         Object spnPluvialGalleryItem = spnPluvialGallery.getSelectedItem();
-        String spnPluvialGalleryString = (spnPluvialGalleryItem == null) ? "" : spnPluvialGalleryItem.toString();
+        String spnPluvialGalleryString = (spnPluvialGalleryItem == null) ? ""
+                : spnPluvialGalleryItem.toString();
         form.setPluvialGallery(spnPluvialGalleryString);
         
         return form;
     }
- 
+    
     /**
      * 
      * 
@@ -658,7 +695,7 @@ public class FormActivity extends Activity {
         
         AddressAdapter addressAdapter = new AddressAdapter(FormActivity.this, R.layout.item_list, cursor, new String[] { "name",
                 "number",
-        "lote" }, new int[] { R.id.item_log,
+                "lote" }, new int[] { R.id.item_log,
                 R.id.item_number,
                 R.id.item_lote });
         
@@ -710,37 +747,28 @@ public class FormActivity extends Activity {
     /**
      * 
      * 
-     * @author Paulo Luan
-     * *
-    public void clearAddressFocus() {
-        self.hideKeyboard();
-        
-        edtPostalCode.clearFocus();
-        edtNeighborhood.clearFocus();
-        edtNumber.clearFocus();
-        edtOtherNumbers.clearFocus();
-        address.clearFocus();
-        
-        edtPostalCode.setFocusable(false);
-        edtNeighborhood.setFocusable(false);
-        edtNumber.setFocusable(false);
-        edtOtherNumbers.setFocusable(false);
-        address.setFocusable(false);
-        
-        edtOtherNumbers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                self.showKeyboard(edtOtherNumbers);
-                edtOtherNumbers.setFocusable(true);
-                edtOtherNumbers.setFocusableInTouchMode(true);
-                edtOtherNumbers.requestFocus();
-            }
-        });
-    }
-    
-    /**
+     * @author Paulo Luan * public void clearAddressFocus() {
+     *         self.hideKeyboard();
      * 
-     * Cleat all fields, and select the null fields of Spinners.
+     *         edtPostalCode.clearFocus(); edtNeighborhood.clearFocus();
+     *         edtNumber.clearFocus(); edtOtherNumbers.clearFocus();
+     *         address.clearFocus();
+     * 
+     *         edtPostalCode.setFocusable(false);
+     *         edtNeighborhood.setFocusable(false);
+     *         edtNumber.setFocusable(false);
+     *         edtOtherNumbers.setFocusable(false); address.setFocusable(false);
+     * 
+     *         edtOtherNumbers.setOnClickListener(new View.OnClickListener() {
+     * @Override public void onClick(View v) {
+     *           self.showKeyboard(edtOtherNumbers);
+     *           edtOtherNumbers.setFocusable(true);
+     *           edtOtherNumbers.setFocusableInTouchMode(true);
+     *           edtOtherNumbers.requestFocus(); } }); }
+     * 
+     *           /**
+     * 
+     *           Cleat all fields, and select the null fields of Spinners.
      * 
      * @param String
      *            filePath The path of the image that you want to get the base.
@@ -933,9 +961,10 @@ public class FormActivity extends Activity {
                 
                 File pic = new File(picture.getPath());
                 
-                if(!pic.exists()) {
+                if (!pic.exists()) {
                     self.deletePicture(picture);
-                } else {
+                }
+                else {
                     final ImageView imageView = self.generateImageFromFilePath(picture);
                     linearLayout.addView(imageView);
                 }
@@ -965,7 +994,9 @@ public class FormActivity extends Activity {
             
             // Find the correct scale value. It should be the power of 2.
             int scale = 1;
-            while (o.outWidth / scale / 2 >= scaleSize && o.outHeight / scale / 2 >= scaleSize) scale *= 2;
+            while (o.outWidth / scale / 2 >= scaleSize && o.outHeight / scale
+                    / 2 >= scaleSize)
+                scale *= 2;
             
             // Decode with inSampleSize
             BitmapFactory.Options o2 = new BitmapFactory.Options();
@@ -977,7 +1008,7 @@ public class FormActivity extends Activity {
     }
     
     public ImageView generateImageFromFilePath(final Photo picture) {
-        final File imgFile = new File(picture.getPath());       
+        final File imgFile = new File(picture.getPath());
         
         final ImageView imageView = new ImageView(this);
         
@@ -1039,10 +1070,11 @@ public class FormActivity extends Activity {
     }
     
     /**
-     *
+     * 
      * Delete a photo from database and filesystem.
      * 
-     * @param Photo the picture that will be removed.
+     * @param Photo
+     *            the picture that will be removed.
      * @author Paulo Luan
      */
     public void deletePicture(Photo picture) {
@@ -1064,7 +1096,7 @@ public class FormActivity extends Activity {
         dialog.cancel();
     }
     
-    private void hideKeyboard() {        
+    private void hideKeyboard() {
         getCurrentFocus().clearFocus();
         
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
