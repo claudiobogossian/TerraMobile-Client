@@ -276,7 +276,7 @@ public class FormActivity extends Activity {
             @Override
             public void onClick(View v) {
                 self.clearSpinnerFields();
-                //self.clearAddressFocus();
+                self.clearAddressFocus();
             }
         });
     }
@@ -421,7 +421,6 @@ public class FormActivity extends Activity {
         
         Object spnPavimentationItem = spnPavimentation.getSelectedItem();
         String spnPavimentationString = (spnPavimentationItem == null) ? "" : spnPavimentationItem.toString();
-        
         Object spnAsphaltGuideItem = spnAsphaltGuide.getSelectedItem();
         String spnAsphaltGuideString = (spnAsphaltGuideItem == null) ? "" : spnAsphaltGuideItem.toString();
         
@@ -514,7 +513,7 @@ public class FormActivity extends Activity {
                 this.loadPictures(taskParam);
             }
             
-            //self.clearAddressFocus();
+            self.clearAddressFocus();
         }
     }
     
@@ -718,7 +717,7 @@ public class FormActivity extends Activity {
                         self.checkInfrastructureFill();
                     }
                     
-                    //self.clearAddressFocus();
+                    self.clearAddressFocus();
                 }
                 catch (Exception ex) {
                     Log.e(LOG_TAG, "Exception onItemClick: " + ex);
@@ -746,28 +745,37 @@ public class FormActivity extends Activity {
     /**
      * 
      * 
-     * @author Paulo Luan * public void clearAddressFocus() {
-     *         self.hideKeyboard();
+     @author Paulo Luan
+     */
+    public void clearAddressFocus() {
+        self.hideKeyboard();
+        
+        edtPostalCode.clearFocus();
+        edtNeighborhood.clearFocus();
+        edtNumber.clearFocus();
+        edtOtherNumbers.clearFocus();
+        address.clearFocus();
+        
+        edtPostalCode.setFocusable(false);
+        edtNeighborhood.setFocusable(false);
+        edtNumber.setFocusable(false);
+        edtOtherNumbers.setFocusable(false);
+        address.setFocusable(false);
+        
+        edtOtherNumbers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                self.showKeyboard(edtOtherNumbers);
+                edtOtherNumbers.setFocusable(true);
+                edtOtherNumbers.setFocusableInTouchMode(true);
+                edtOtherNumbers.requestFocus();
+            }
+        });
+    }
+    
+    /**
      * 
-     *         edtPostalCode.clearFocus(); edtNeighborhood.clearFocus();
-     *         edtNumber.clearFocus(); edtOtherNumbers.clearFocus();
-     *         address.clearFocus();
-     * 
-     *         edtPostalCode.setFocusable(false);
-     *         edtNeighborhood.setFocusable(false);
-     *         edtNumber.setFocusable(false);
-     *         edtOtherNumbers.setFocusable(false); address.setFocusable(false);
-     * 
-     *         edtOtherNumbers.setOnClickListener(new View.OnClickListener() {
-     * @Override public void onClick(View v) {
-     *           self.showKeyboard(edtOtherNumbers);
-     *           edtOtherNumbers.setFocusable(true);
-     *           edtOtherNumbers.setFocusableInTouchMode(true);
-     *           edtOtherNumbers.requestFocus(); } }); }
-     * 
-     *           /**
-     * 
-     *           Cleat all fields, and select the null fields of Spinners.
+     * Clear all fields, and select the null fields of Spinners.
      * 
      * @param String
      *            filePath The path of the image that you want to get the base.
@@ -868,8 +876,10 @@ public class FormActivity extends Activity {
         }
         else {
             String message = null;
+            String notDetected = resources.getString(R.string.not_detected);
+            String spnVarianceString = spnVariance.getSelectedItem().toString();
             
-            if (!spnVariance.getSelectedItem().toString().equals("Não Detectada")) {
+            if (!spnVarianceString.equals(notDetected)) {
                 // Quando não é detectado nenhuma desconformidade, então não é obrigatório o preenchimento das informações.
                 message = self.checkNull();
             }
