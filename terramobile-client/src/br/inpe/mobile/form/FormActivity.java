@@ -59,31 +59,29 @@ import br.inpe.mobile.task.TaskDao;
 public class FormActivity extends Activity {
     
     // tag used to debug
-    private final String         LOG_TAG   = "#" + getClass().getSimpleName();
+    private final String         LOG_TAG = "#" + getClass().getSimpleName();
     
     // other activities
-    private static final int     PHOTO     = 102;
+    private static final int     PHOTO   = 102;
     
     // widgets
     private AutoCompleteTextView address;
     
     private EditText             edtNeighborhood, edtPostalCode, edtNumber,
-                                 edtOtherNumbers;
+    edtOtherNumbers;
     
     private Spinner              spnNumberConfirmation, spnVariance,
-                                 spnPrimaryUse, spnSecondaryUse,
-                                 spnPavimentation, spnAsphaltGuide,
-                                 spnPublicIlumination, spnEnergy,
-                                 spnPluvialGallery;
+    spnPrimaryUse, spnSecondaryUse, spnPavimentation, spnAsphaltGuide,
+    spnPublicIlumination, spnEnergy, spnPluvialGallery;
     
     private TextView             lat, lon;
     
     private Button               buttonClearAddressFields;
     
     private Button               buttonCancel, buttonOk, buttonPhoto,
-                                 buttonClearSpinners;
+    buttonClearSpinners;
     
-    private FormActivity         self      = this;
+    private FormActivity         self    = this;
     
     private static Task          currentTask;
     
@@ -142,18 +140,23 @@ public class FormActivity extends Activity {
     private void setSpinnerNumberConfirmation() {
         spnNumberConfirmation.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                Object spnNumberConfirmationItem = spnNumberConfirmation.getSelectedItem(); 
+            public void onItemSelected(
+                                       AdapterView<?> parentView,
+                                       View selectedItemView,
+                                       int position,
+                                       long id) {
+                Object spnNumberConfirmationItem = spnNumberConfirmation.getSelectedItem();
                 String spnNumberConfirmationString = (spnNumberConfirmationItem == null) ? "" : spnNumberConfirmationItem.toString();
                 String notConfer = resources.getString(string.not_confer);
                 
-                if(spnNumberConfirmationString == notConfer) {
+                if (spnNumberConfirmationString == notConfer) {
                     findViewById(R.id.numbers_founded_layout).setVisibility(View.VISIBLE);
-                } else {
+                }
+                else {
                     findViewById(R.id.numbers_founded_layout).setVisibility(View.GONE);
                 }
             }
-
+            
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {}
         });
@@ -410,29 +413,44 @@ public class FormActivity extends Activity {
     /**
      * Checks if the data filled in the infrastructure form is null.
      * 
+     * @return boolean
      * @author Paulo Luan
      * */
     public boolean checkInfrastructureFieldsIsNull() {
         boolean isNull = false;
         
-        // Infra
-        if (spnPavimentation.getSelectedItem().toString().equals("")) {
+        Object spnPavimentationItem = spnPavimentation.getSelectedItem();
+        String spnPavimentationString = (spnPavimentationItem == null) ? "" : spnPavimentationItem.toString();
+        
+        Object spnAsphaltGuideItem = spnAsphaltGuide.getSelectedItem();
+        String spnAsphaltGuideString = (spnAsphaltGuideItem == null) ? "" : spnAsphaltGuideItem.toString();
+        
+        Object spnPublicIluminationItem = spnPublicIlumination.getSelectedItem();
+        String spnPublicIluminationString = (spnPublicIluminationItem == null) ? "" : spnPublicIluminationItem.toString();
+        
+        Object spnEnergyItem = spnEnergy.getSelectedItem();
+        String spnEnergyString = (spnEnergyItem == null) ? "" : spnEnergyItem.toString();
+        
+        Object spnPluvialGalleryItem = spnPluvialGallery.getSelectedItem();
+        String spnPluvialGalleryString = (spnPluvialGalleryItem == null) ? "" : spnPluvialGalleryItem.toString();
+        
+        if (spnPavimentationString.equals("")) {
             // message += "\nPavimentação";
             isNull = true;
         }
-        if (spnAsphaltGuide.getSelectedItem().toString().equals("")) {
+        if (spnAsphaltGuideString.equals("")) {
             // message += "\nGuias";
             isNull = true;
         }
-        if (spnPublicIlumination.getSelectedItem().toString().equals("")) {
+        if (spnPublicIluminationString.equals("")) {
             // message += "\nIluminação pública.";
             isNull = true;
         }
-        if (spnEnergy.getSelectedItem().toString().equals("")) {
+        if (spnEnergyString.equals("")) {
             // message += "\nEnergia";
             isNull = true;
         }
-        if (spnPluvialGallery.getSelectedItem().toString().equals("")) {
+        if (spnPluvialGalleryString.equals("")) {
             // message += "\nGaleria Pluvial";
             isNull = true;
         }
@@ -450,11 +468,7 @@ public class FormActivity extends Activity {
         
         Form form = lastTask.getForm();
         
-        if (form.getPavimentation().equals("") ||
-                form.getAsphaltGuide().equals("") ||
-                form.getPublicIlumination().equals("") ||
-                form.getEnergy().equals("") ||
-                form.getPluvialGallery().equals("")) {
+        if (form.getPavimentation().equals("") || form.getAsphaltGuide().equals("") || form.getPublicIlumination().equals("") || form.getEnergy().equals("") || form.getPluvialGallery().equals("")) {
             
             isNull = true;
         }
@@ -550,9 +564,7 @@ public class FormActivity extends Activity {
             e.printStackTrace();
         }
         
-        if (lastFeatureId != null &&
-                currentFeatureId != null &&
-                lastFeatureId.equals(currentFeatureId)) {
+        if (lastFeatureId != null && currentFeatureId != null && lastFeatureId.equals(currentFeatureId)) {
             
             isSame = true;
         }
@@ -639,48 +651,39 @@ public class FormActivity extends Activity {
         form.setOtherNumbers(edtOtherNumbers.getText().toString());
         
         Object spnNumberConfirmationItem = spnNumberConfirmation.getSelectedItem();
-        String spnNumberConfirmationString = (spnNumberConfirmationItem == null) ? ""
-                : spnNumberConfirmationItem.toString();
+        String spnNumberConfirmationString = (spnNumberConfirmationItem == null) ? "" : spnNumberConfirmationItem.toString();
         form.setNumberConfirmation(spnNumberConfirmationString);
         
         Object spnVarianceItem = spnVariance.getSelectedItem();
-        String spnVarianceString = (spnVarianceItem == null) ? ""
-                : spnVarianceItem.toString();
+        String spnVarianceString = (spnVarianceItem == null) ? "" : spnVarianceItem.toString();
         form.setVariance(spnVarianceString);
         
         Object spnPrimaryUseItem = spnPrimaryUse.getSelectedItem();
-        String spnPrimaryUseString = (spnPrimaryUseItem == null) ? ""
-                : spnPrimaryUseItem.toString();
+        String spnPrimaryUseString = (spnPrimaryUseItem == null) ? "" : spnPrimaryUseItem.toString();
         form.setPrimaryUse(spnPrimaryUseString);
         
         Object spnSecondaryUseItem = spnSecondaryUse.getSelectedItem();
-        String spnSecondaryUseString = (spnSecondaryUseItem == null) ? ""
-                : spnSecondaryUseItem.toString();
+        String spnSecondaryUseString = (spnSecondaryUseItem == null) ? "" : spnSecondaryUseItem.toString();
         form.setSecondaryUse(spnSecondaryUseString);
         
         Object spnPavimentationItem = spnPavimentation.getSelectedItem();
-        String spnPavimentationString = (spnPavimentationItem == null) ? ""
-                : spnPavimentationItem.toString();
+        String spnPavimentationString = (spnPavimentationItem == null) ? "" : spnPavimentationItem.toString();
         form.setPavimentation(spnPavimentationString);
         
         Object spnAsphaltGuideItem = spnAsphaltGuide.getSelectedItem();
-        String spnAsphaltGuideString = (spnAsphaltGuideItem == null) ? ""
-                : spnAsphaltGuideItem.toString();
+        String spnAsphaltGuideString = (spnAsphaltGuideItem == null) ? "" : spnAsphaltGuideItem.toString();
         form.setAsphaltGuide(spnAsphaltGuideString);
         
         Object spnPublicIluminationItem = spnPublicIlumination.getSelectedItem();
-        String spnPublicIluminationString = (spnPublicIluminationItem == null) ? ""
-                : spnPublicIluminationItem.toString();
+        String spnPublicIluminationString = (spnPublicIluminationItem == null) ? "" : spnPublicIluminationItem.toString();
         form.setPublicIlumination(spnPublicIluminationString);
         
         Object spnEnergyItem = spnEnergy.getSelectedItem();
-        String spnEnergyString = (spnEnergyItem == null) ? ""
-                : spnEnergyItem.toString();
+        String spnEnergyString = (spnEnergyItem == null) ? "" : spnEnergyItem.toString();
         form.setEnergy(spnEnergyString);
         
         Object spnPluvialGalleryItem = spnPluvialGallery.getSelectedItem();
-        String spnPluvialGalleryString = (spnPluvialGalleryItem == null) ? ""
-                : spnPluvialGalleryItem.toString();
+        String spnPluvialGalleryString = (spnPluvialGalleryItem == null) ? "" : spnPluvialGalleryItem.toString();
         form.setPluvialGallery(spnPluvialGalleryString);
         
         return form;
@@ -693,21 +696,17 @@ public class FormActivity extends Activity {
      * */
     public void setAutoCompleteAdapterPropertiers(Cursor cursor) {
         
-        AddressAdapter addressAdapter = new AddressAdapter(FormActivity.this, R.layout.item_list, cursor, new String[] { "name",
-                "number",
-                "lote" }, new int[] { R.id.item_log,
-                R.id.item_number,
-                R.id.item_lote });
+        AddressAdapter addressAdapter = new AddressAdapter(FormActivity.this, R.layout.item_list, cursor, new String[] { "name", "number", "lote" }, new int[] { R.id.item_log, R.id.item_number, R.id.item_lote });
         
         address.setAdapter(addressAdapter);
         address.setHint("pesquisar...");
         address.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(
-                    AdapterView<?> adapter,
-                    View view,
-                    int position,
-                    long addressId) {
+                                    AdapterView<?> adapter,
+                                    View view,
+                                    int position,
+                                    long addressId) {
                 try {
                     InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     mgr.hideSoftInputFromWindow(address.getWindowToken(), 0);
@@ -871,8 +870,7 @@ public class FormActivity extends Activity {
             String message = null;
             
             if (!spnVariance.getSelectedItem().toString().equals("Não Detectada")) {
-                // Quando não é detectado nenhuma desconformidade, então não é
-                // obrigatório o preenchimento das informações.
+                // Quando não é detectado nenhuma desconformidade, então não é obrigatório o preenchimento das informações.
                 message = self.checkNull();
             }
             
@@ -998,7 +996,8 @@ public class FormActivity extends Activity {
             
             // Find the correct scale value. It should be the power of 2.
             int scale = 1;
-            while (options.outWidth / scale / 2 >= scaleSize && options.outHeight / scale / 2 >= scaleSize) scale *= 2;
+            while (options.outWidth / scale / 2 >= scaleSize && options.outHeight / scale / 2 >= scaleSize)
+                scale *= 2;
             
             // Decode with inSampleSize
             BitmapFactory.Options o2 = new BitmapFactory.Options();
@@ -1033,8 +1032,8 @@ public class FormActivity extends Activity {
     }
     
     public void showConfirmDeleteImageDialog(
-            final Photo picture,
-            final File file) {
+                                             final Photo picture,
+                                             final File file) {
         
         final Dialog imageDialog = new Dialog(this);
         
