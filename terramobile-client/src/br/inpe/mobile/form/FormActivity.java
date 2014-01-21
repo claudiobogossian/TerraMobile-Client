@@ -994,6 +994,8 @@ public class FormActivity extends Activity {
      * @author Paulo Luan
      * */
     private Bitmap decodeFile(File f, int scaleSize) {
+        Bitmap bitmapImage = null;
+        
         try {
             // Decode image size
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -1006,16 +1008,19 @@ public class FormActivity extends Activity {
             
             // Find the correct scale value. It should be the power of 2.
             int scale = 1;
-            while (options.outWidth / scale / 2 >= scaleSize && options.outHeight / scale / 2 >= scaleSize)
-                scale *= 2;
+            while (options.outWidth / scale / 2 >= scaleSize && options.outHeight / scale / 2 >= scaleSize) scale *= 2;
             
             // Decode with inSampleSize
             BitmapFactory.Options o2 = new BitmapFactory.Options();
             o2.inSampleSize = scale;
-            return BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
+            
+            bitmapImage = BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
         }
-        catch (FileNotFoundException e) {}
-        return null;
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return bitmapImage;
     }
     
     public ImageView generateImageFromFilePath(final Photo picture) {
