@@ -12,12 +12,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
+import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.Parameters;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -27,6 +30,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -57,8 +61,6 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
     
     private SessionManager     session;
     
-    boolean                    previewing      = false;
-    
     LayoutInflater             controlInflater = null;
     
     @Override
@@ -70,14 +72,11 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
         setContentView(R.layout.activity_photo);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         getWindow().setFormat(PixelFormat.UNKNOWN);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
         controlInflater = LayoutInflater.from(getBaseContext());
-        View viewControl = controlInflater
-                .inflate(R.layout.photo_control, null);
-        LayoutParams layoutParamsControl = new LayoutParams(
-                LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+        View viewControl = controlInflater.inflate(R.layout.photo_control, null);
+        LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
         this.addContentView(viewControl, layoutParamsControl);
         
         // widgets and layouts
@@ -90,26 +89,7 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
         ImageButton bt_cancel = (ImageButton) findViewById(R.id.foto_control_bt_cancel);
         ImageButton bt_ok = (ImageButton) findViewById(R.id.foto_control_bt_ok);
         
-        // obtain the path for stored photos
-        // String pathapp = "/";
-        // Cursor c = getContentResolver().query(Provider.Info.CONTENT_URI,
-        // new String[] { Provider.Info.PATH }, Provider.Info.CFG1 + "=1",
-        // null, null);
-        // if (c.moveToFirst()) {
-        // pathapp = c.getString(c.getColumnIndex(Provider.Info.PATH));
-        // c.close();
-        // c = null;
-        // } else {
-        // setResult(RESULT_CANCELED, new Intent().putExtra("RESULT",
-        // "Erro de configuração no aplicativo!"));
-        // finish();
-        // }
-        // pathfullapp = new File(Environment.getExternalStorageDirectory()
-        // + pathapp + getString(R.string.path_app_dados)
-        // + getString(R.string.path_app_fotos));
-        
-        pathfullapp = new File(Environment.getExternalStorageDirectory()
-                + "/funcate/" + "/dados" + "/fotos/");
+        pathfullapp = new File(Environment.getExternalStorageDirectory() + "/inpe/" + "/dados" + "/fotos/");
         
         if (!pathfullapp.exists()) {
             pathfullapp.mkdirs();
@@ -138,6 +118,20 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
             }
         });
         
+        // AutoFocus when long click
+        bt_fotografar.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View arg0) {
+                mCamera.autoFocus(new AutoFocusCallback() {
+                    @Override
+                    public void onAutoFocus(boolean arg0, Camera arg1) {
+                        //takePicture();
+                    }
+                });
+                return true;
+            }
+        });
+        
         bt_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,10 +147,7 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
         bt_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setResult(
-                        RESULT_OK,
-                        new Intent().putExtra("RESULT", pathfullapp + "/"
-                                + getPhotoActivityName()));
+                setResult(RESULT_OK, new Intent().putExtra("RESULT", pathfullapp + "/" + getPhotoActivityName()));
                 finish();
             }
         });
@@ -228,7 +219,7 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
     }
     
     private void takePicture() {
-        if(bt_fotografar.isEnabled()) {
+        if (bt_fotografar.isEnabled()) {
             bt_fotografar.setEnabled(false);
             mCamera.takePicture(null, null, jpegCallback);
         }
@@ -236,34 +227,24 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
     
     Camera.PictureCallback jpegCallback = new Camera.PictureCallback() {
         @Override
-        public void
-        onPictureTaken(
-                byte[] _data,
-                Camera _camera) {
+        public void onPictureTaken(
+                                   byte[] _data,
+                                   Camera _camera) {
             if (_data != null) {
-                if (StoreByteImage(
-                        PhotoActivity.this,
-                        _data, 90)) {
+                
+                boolean isStored = storeByteImage(PhotoActivity.this, _data, 90);
+                
+                if (isStored) {
                     setResult(RESULT_OK);
                     confirmPicture();
                 }
                 else {
-                    setResult(
-                            RESULT_CANCELED,
-                            new Intent()
-                            .putExtra(
-                                    "RESULT",
-                                    "Erro ao salvar foto!"));
+                    setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro ao salvar foto!"));
                     finish();
                 }
             }
             else {
-                setResult(
-                        RESULT_CANCELED,
-                        new Intent()
-                        .putExtra(
-                                "RESULT",
-                                "Erro na obtenção da foto!"));
+                setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro na obtenção da foto!"));
                 finish();
             }
         }
@@ -274,39 +255,75 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
         lay4.setVisibility(View.VISIBLE);
     }
     
-    private boolean StoreByteImage(Context mContext, byte[] imageData,
-            int quality) {
-        String name_file = null;
+    // https://developer.android.com/training/displaying-bitmaps/index.html
+    private boolean storeByteImage(
+                                   Context mContext,
+                                   byte[] imageData,
+                                   int quality) {
+        String fileName = null;
+        boolean isStored = false;
+        
         try {
-            name_file = UUID.randomUUID().toString() + ".jpg";
             BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 1;
-            Bitmap myImage = BitmapFactory.decodeByteArray(imageData, 0,
-                    imageData.length, options);
-            File fotofile = new File(pathfullapp, name_file);
-            FileOutputStream fileOutputStream = new FileOutputStream(fotofile,
-                    false);
-            BufferedOutputStream bos = new BufferedOutputStream(
-                    fileOutputStream);
-            myImage.compress(CompressFormat.JPEG, quality, bos);
-            bos.flush();
-            bos.close();
+            
+            fileName = UUID.randomUUID().toString() + ".jpg";
+            File photoFile = new File(pathfullapp, fileName);
+            FileOutputStream fileOutputStream = new FileOutputStream(photoFile, false);
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+            
+            Bitmap bitmapImage = BitmapFactory.decodeByteArray(imageData, 0, imageData.length, options);
+            bitmapImage.compress(CompressFormat.JPEG, quality, bufferedOutputStream);
+            
+            bufferedOutputStream.flush();
+            bufferedOutputStream.close();
+            
+            setPhotoActivityName(fileName);
+            
+            isStored = true;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return isStored;
+    }
+    
+    // Read bitmap 
+    public Bitmap readBitmap(Uri selectedImage) {
+        Bitmap bm = null;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 5;
+        AssetFileDescriptor fileDescriptor = null;
+        try {
+            fileDescriptor = this.getContentResolver().openAssetFileDescriptor(selectedImage, "r");
         }
         catch (FileNotFoundException e) {
-            return false;
+            e.printStackTrace();
         }
-        catch (IOException e) {
-            return false;
+        finally {
+            try {
+                bm = BitmapFactory.decodeFileDescriptor(fileDescriptor.getFileDescriptor(), null, options);
+                fileDescriptor.close();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        setPhotoActivityName(name_file);
-        return true;
+        return bm;
+    }
+    
+    // Clear bitmap 
+    public static void clearBitmap(Bitmap bm) {
+        bm.recycle();
+        System.gc();
     }
     
     /**
-     * Map the camera button and take the picture when that button was clicked..
+     * Maps the camera button and take the picture when that button was
+     * clicked..
      */
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_CAMERA) {
             this.takePicture();
         }
@@ -325,8 +342,7 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
             Camera.Size maxPictureSize = mList.get(mList.size() - 1);
             
             if (maxPictureSize.width <= 2048 && maxPictureSize.height <= 1536) {
-                cameraParameters.setPictureSize(maxPictureSize.width,
-                        maxPictureSize.height);
+                cameraParameters.setPictureSize(maxPictureSize.width, maxPictureSize.height);
             }
             else {
                 cameraParameters.setPictureSize(2048, 1536);
@@ -353,8 +369,11 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
     }
     
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width,
-            int height) {
+    public void surfaceChanged(
+                               SurfaceHolder holder,
+                               int format,
+                               int width,
+                               int height) {
         Log.i(TAG, format + " --- " + width + " --- " + height);
     }
     

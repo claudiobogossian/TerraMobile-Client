@@ -988,15 +988,17 @@ public class FormActivity extends Activity {
     private Bitmap decodeFile(File f, int scaleSize) {
         try {
             // Decode image size
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
-            BitmapFactory.decodeStream(new FileInputStream(f), null, o);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            options.inSampleSize = 5;
+            options.inPurgeable = true;
+            options.inInputShareable = true;
+            
+            BitmapFactory.decodeStream(new FileInputStream(f), null, options);
             
             // Find the correct scale value. It should be the power of 2.
             int scale = 1;
-            while (o.outWidth / scale / 2 >= scaleSize && o.outHeight / scale
-                    / 2 >= scaleSize)
-                scale *= 2;
+            while (options.outWidth / scale / 2 >= scaleSize && options.outHeight / scale / 2 >= scaleSize) scale *= 2;
             
             // Decode with inSampleSize
             BitmapFactory.Options o2 = new BitmapFactory.Options();

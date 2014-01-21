@@ -75,7 +75,7 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
      * 
      * */
     public void saveLogFile(String text) {
-        File path = new File(Environment.getExternalStorageDirectory() + "/funcate/" + "/dados" + "/log/");
+        File path = new File(Environment.getExternalStorageDirectory() + "/inpe/" + "/dados" + "/log/");
         
         if (!path.exists()) {
             path.mkdirs();
