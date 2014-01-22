@@ -83,6 +83,7 @@
     <string name="without_paviment">Sem pavimentação</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
+    <string name="partial">Parcial</string>
 
     <!-- Colors -->
     <color name="background_cor1">#FFFFFF</color>

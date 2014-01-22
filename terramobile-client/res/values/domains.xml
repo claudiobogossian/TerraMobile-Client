@@ -45,12 +45,14 @@
         <item>@string/parallelepiped</item>
         <item>@string/interlocked_tile</item>
         <item>@string/without_paviment</item>
+        <item>@string/partial</item>
     </string-array>
     
     <string-array name="yes_no">
         <item></item>
         <item>@string/yes</item>
         <item>@string/no</item>
+        <item>@string/partial</item>
     </string-array>
 
 </resources>
