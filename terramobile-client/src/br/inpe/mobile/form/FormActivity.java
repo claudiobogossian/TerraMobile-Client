@@ -115,6 +115,7 @@ public class FormActivity extends Activity {
         
         if (currentTask != null) {
             this.setFieldsWithTaskProperties(currentTask);
+            self.checkInfrastructureFill();
         }
         else {
             buttonPhoto.setEnabled(false);
