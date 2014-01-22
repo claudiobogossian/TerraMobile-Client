@@ -56,6 +56,8 @@ public class TaskActivity extends Activity {
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         
+        session = SessionManager.getInstance();
+        
         //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_task);
         
@@ -65,8 +67,6 @@ public class TaskActivity extends Activity {
         this.setButtonsListeners();
         this.initializeRestTemplate();
         this.updateCountLabels();
-        
-        session = SessionManager.getInstance();
     }
     
     public void setButtonsListeners() {

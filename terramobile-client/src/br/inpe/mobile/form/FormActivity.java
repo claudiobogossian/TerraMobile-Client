@@ -748,8 +748,6 @@ public class FormActivity extends Activity {
      @author Paulo Luan
      */
     public void clearAddressFocus() {
-        self.hideKeyboard();
-        
         edtPostalCode.clearFocus();
         edtNeighborhood.clearFocus();
         edtNumber.clearFocus();
@@ -851,14 +849,18 @@ public class FormActivity extends Activity {
                 photo.setBase64(blob);
                 photo.setForm(currentTask.getForm());
                 
-                Location location = LocationProvider.getInstance(this).getLocation();
+                LocationProvider locationProvider = LocationProvider.getInstance(this);
+                Location location = locationProvider.getLocation();
                 
                 if (location != null) {
                     lat.setText("" + location.getLatitude());
                     lon.setText("" + location.getLongitude());
                 }
                 else {
-                    Utility.showToast("Seu GPS está desabilitado, ligue-o para capturar sua posição.", Toast.LENGTH_LONG, this);
+                    if(!locationProvider.isGpsEnabled()) {
+                        Utility.showToast("Seu GPS está desabilitado, ligue-o para capturar sua posição.", Toast.LENGTH_LONG, this);
+                    }
+                  
                     lat.setText("0.0");
                     lon.setText("0.0");
                 }
@@ -1068,13 +1070,6 @@ public class FormActivity extends Activity {
     public void hideLoadMask() {
         dialog.hide();
         dialog.cancel();
-    }
-    
-    private void hideKeyboard() {
-        getCurrentFocus().clearFocus();
-        
-        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
     }
     
     private void showKeyboard(EditText editText) {

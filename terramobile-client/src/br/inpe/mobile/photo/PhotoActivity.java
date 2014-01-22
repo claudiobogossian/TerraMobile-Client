@@ -65,6 +65,8 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         
+        session = SessionManager.getInstance();
+        
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_photo);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -148,8 +150,6 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
                 finish();
             }
         });
-        
-        session = SessionManager.getInstance();
     }
     
     public void setZoomListener() {

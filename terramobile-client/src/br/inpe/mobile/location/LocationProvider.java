@@ -51,6 +51,16 @@ public class LocationProvider implements LocationListener {
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
     }
     
+    public boolean isGpsEnabled() {
+        boolean isEnabled = false;
+        
+        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            isEnabled = true;
+        }
+        
+        return isEnabled;
+    }
+    
     // Required functions    
     public void onProviderDisabled(String arg0) {}
     
