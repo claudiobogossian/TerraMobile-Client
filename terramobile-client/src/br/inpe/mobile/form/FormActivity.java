@@ -643,9 +643,27 @@ public class FormActivity extends Activity {
      * @author Paulo Luan
      * */
     public Form makeFormInformationsToObject(Form form) {
+        Double latitude = 0.0;
+        Double longitude = 0.0;
         
-        form.setCoordx(Double.valueOf(lat.getText().toString()));
-        form.setCoordy(Double.valueOf(lon.getText().toString()));
+        try {
+            String stringLat = lat.getText().toString();
+            latitude = Double.valueOf(stringLat);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        try {
+            String stringLong = lon.getText().toString();
+            longitude = Double.valueOf(stringLong);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        form.setCoordx(latitude);
+        form.setCoordy(longitude);
         
         form.setDate(new Date());
         form.setOtherNumbers(edtOtherNumbers.getText().toString());
@@ -858,10 +876,10 @@ public class FormActivity extends Activity {
                     lon.setText("" + location.getLongitude());
                 }
                 else {
-                    if(!locationProvider.isGpsEnabled()) {
+                    if (!locationProvider.isGpsEnabled()) {
                         Utility.showToast("Seu GPS está desabilitado, ligue-o para capturar sua posição.", Toast.LENGTH_LONG, this);
                     }
-                  
+                    
                     lat.setText("0.0");
                     lon.setText("0.0");
                 }
