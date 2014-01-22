@@ -29,7 +29,7 @@ public class TaskDao {
     
     private static Dao<Address, Integer> addressDao = db.getAddressDao();
     
-    private static SessionManager session = SessionManager.getInstance();
+    private static SessionManager        session    = SessionManager.getInstance();
     
     /**
      * 
@@ -346,9 +346,7 @@ public class TaskDao {
         Task task = null;
         
         try {
-            task = taskDao.queryBuilder().where()
-                    .eq("address_id", addressId)
-                    .queryForFirst();
+            task = taskDao.queryBuilder().where().eq("address_id", addressId).queryForFirst();
         }
         catch (SQLException e) {
             e.printStackTrace();

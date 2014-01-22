@@ -434,7 +434,6 @@ public class Utility {
         System.gc();
     }
     
-    
     /**
      * Create directory if he doesn't exists.
      * 

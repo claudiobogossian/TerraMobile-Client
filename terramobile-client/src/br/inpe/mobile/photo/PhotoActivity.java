@@ -2,7 +2,6 @@ package br.inpe.mobile.photo;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -12,7 +11,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
@@ -20,7 +18,6 @@ import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.Parameters;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -226,29 +223,29 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
     }
     
     Camera.PictureCallback jpegCallback = new Camera.PictureCallback() {
-        @Override
-        public void onPictureTaken(
-                                   byte[] _data,
-                                   Camera _camera) {
-            if (_data != null) {
-                
-                boolean isStored = storeByteImage(PhotoActivity.this, _data, 90);
-                
-                if (isStored) {
-                    setResult(RESULT_OK);
-                    confirmPicture();
-                }
-                else {
-                    setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro ao salvar foto!"));
-                    finish();
-                }
-            }
-            else {
-                setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro na obtenção da foto!"));
-                finish();
-            }
-        }
-    };
+                                            @Override
+                                            public void onPictureTaken(
+                                                                       byte[] _data,
+                                                                       Camera _camera) {
+                                                if (_data != null) {
+                                                    
+                                                    boolean isStored = storeByteImage(PhotoActivity.this, _data, 90);
+                                                    
+                                                    if (isStored) {
+                                                        setResult(RESULT_OK);
+                                                        confirmPicture();
+                                                    }
+                                                    else {
+                                                        setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro ao salvar foto!"));
+                                                        finish();
+                                                    }
+                                                }
+                                                else {
+                                                    setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro na obtenção da foto!"));
+                                                    finish();
+                                                }
+                                            }
+                                        };
     
     private void confirmPicture() {
         lay3.setVisibility(View.INVISIBLE);

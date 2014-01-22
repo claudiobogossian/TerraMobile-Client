@@ -12,22 +12,21 @@ import br.inpe.mobile.form.FormActivity;
 import br.inpe.mobile.task.Task;
 
 /**
- * A customized InfoWindow handling POIs.
- * We inherit from DefaultInfoWindow as it already provides most of what we
- * want.
- * And we just add support for a "more info" button.
+ * A customized InfoWindow handling POIs. We inherit from DefaultInfoWindow as
+ * it already provides most of what we want. And we just add support for a
+ * "more info" button.
  * 
  * @author M.Kergall
  */
 public class POIInfoWindow extends DefaultInfoWindow {
-
+    
     private Task         task;
-
+    
     NominatimPOIProvider poiProvider = new NominatimPOIProvider();
-
+    
     public POIInfoWindow(MapView mapView) {
         super(R.layout.bubble_white, mapView);
-
+        
         View view = getView().findViewById(R.id.linearLayoutBubble);
         //bonuspack_bubble layouts already contain a "more info" button. 
         view.setOnClickListener(new View.OnClickListener() {
@@ -39,7 +38,7 @@ public class POIInfoWindow extends DefaultInfoWindow {
             }
         });
     }
-
+    
     @Override
     public void onOpen(Object item) {
         ExtendedOverlayItem eItem = (ExtendedOverlayItem) item;

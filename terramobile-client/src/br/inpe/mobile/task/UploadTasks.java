@@ -13,26 +13,30 @@ import br.inpe.mobile.Utility;
  * Async object implementation to PostTasks to server
  * 
  * @param String
- *            ... urls
- *            URL's that will called.
+ *            ... urls URL's that will called.
  * @author Paulo Luan
  */
 public class UploadTasks extends AsyncTask<String, String, String> {
-
+    
     private List<Task>   tasks;
+    
     private String       userHash;
+    
     private TaskActivity taskActivity;
-
-    public UploadTasks(List<Task> tasks, String userHash, TaskActivity taskActivity) {
+    
+    public UploadTasks(
+                       List<Task> tasks,
+                       String userHash,
+                       TaskActivity taskActivity) {
         this.tasks = tasks;
         this.userHash = userHash;
         this.taskActivity = taskActivity;
     }
-
+    
     @Override
     protected String doInBackground(String... urls) {
         String message = null;
-
+        
         for (String url : urls) {
             try {
                 publishProgress("Enviando o seu trabalho para o servidor...");
@@ -42,34 +46,34 @@ public class UploadTasks extends AsyncTask<String, String, String> {
                     publishProgress("Excluindo tarefas concluídas...");
                     TaskDao.deleteTasks(tasks);
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 message = "Erro ao enviar as fotos.";
                 //String error = e.getResponseBodyAsString();
                 e.printStackTrace();
             }
         }
-
+        
         return message;
     }
-
+    
     @Override
-    protected void onPreExecute() {
-    }
-
+    protected void onPreExecute() {}
+    
     @Override
     protected void onProgressUpdate(String... values) {
         taskActivity.setLoadMaskMessage(values[0]);
         Log.i(taskActivity.LOG_TAG, " Progress: " + values);
     }
-
+    
     @Override
     protected void onPostExecute(String message) {
         taskActivity.hideLoadingMask();
-
+        
         if (message != null) {
             Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
         }
-
+        
         taskActivity.getRemoteTasks();
     }
 }

@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import br.inpe.mobile.Main;
 
-public class SessionManager {    
+public class SessionManager {
     // Shared Preferences
     private static SharedPreferences pref;
     
@@ -42,7 +42,7 @@ public class SessionManager {
         editor = pref.edit();
     }
     
-    public static SessionManager getInstance() {  
+    public static SessionManager getInstance() {
         return self;
     }
     
@@ -152,5 +152,5 @@ public class SessionManager {
     public boolean isLoggedIn() {
         Boolean isLogged = pref.getBoolean(IS_LOGIN, false);
         return isLogged;
-    }    
+    }
 }

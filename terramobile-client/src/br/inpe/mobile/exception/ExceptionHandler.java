@@ -70,7 +70,8 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
     /**
      * Creates a log file with the current date and time.
      * 
-     * @param text - the text that will be saved on the log file.
+     * @param text
+     *            - the text that will be saved on the log file.
      * @author Paulo Luan
      * 
      * */
@@ -84,16 +85,16 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
         String fileName = "log_" + new Date().toString() + ".txt";
         File logFile = new File(path, fileName);
         
-        if (!logFile.exists()){
-            try{
+        if (!logFile.exists()) {
+            try {
                 logFile.createNewFile();
-            } 
+            }
             catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        try{
-            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true)); 
+        try {
+            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
             buf.append(text);
             buf.newLine();
             buf.close();
