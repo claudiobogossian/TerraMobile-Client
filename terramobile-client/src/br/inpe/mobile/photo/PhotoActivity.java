@@ -288,36 +288,6 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
         return isStored;
     }
     
-    // Read bitmap 
-    public Bitmap readBitmap(Uri selectedImage) {
-        Bitmap bm = null;
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 5;
-        AssetFileDescriptor fileDescriptor = null;
-        try {
-            fileDescriptor = this.getContentResolver().openAssetFileDescriptor(selectedImage, "r");
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        finally {
-            try {
-                bm = BitmapFactory.decodeFileDescriptor(fileDescriptor.getFileDescriptor(), null, options);
-                fileDescriptor.close();
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return bm;
-    }
-    
-    // Clear bitmap 
-    public static void clearBitmap(Bitmap bm) {
-        bm.recycle();
-        System.gc();
-    }
-    
     /**
      * Maps the camera button and take the picture when that button was
      * clicked..

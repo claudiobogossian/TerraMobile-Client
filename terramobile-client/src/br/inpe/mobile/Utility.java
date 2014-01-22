@@ -33,71 +33,64 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class Utility {
-
+    
     private final static String TAG         = "#UTILITY";
-
+    
     private static final int    TWO_MINUTES = 1000 * 60 * 2;
-
+    
     //public static final String  hostUrl     = "http://192.168.0.181:8000/terramobile-server/";
     public static final String  hostUrl     = "http://institutosoma.dyndns.org:8000/terramobile-server/";
-
+    
     //public static final String  hostUrl     = "http://200.144.100.34:8080/";
-
+    
     /**
-     * Determines whether one Location reading is better than the
-     * current
+     * Determines whether one Location reading is better than the current
      * Location fix
      * 
      * @param location
      *            The new Location that you want to evaluate
      * @param currentBestLocation
-     *            The current Location fix, to which you want to compare
-     *            the new
+     *            The current Location fix, to which you want to compare the new
      *            one
      */
-    public static boolean isBetterLocation(Location location, Location currentBestLocation) {
+    public static boolean isBetterLocation(
+                                           Location location,
+                                           Location currentBestLocation) {
         if (currentBestLocation == null)
-            // A new location is always better than no location
-            return true;
-
+        // A new location is always better than no location
+        return true;
+        
         // Check whether the new location fix is newer or older
         long timeDelta = location.getTime() - currentBestLocation.getTime();
         boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
         boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
         boolean isNewer = timeDelta > 0;
-
+        
         // If it's been more than two minutes since the current location, use
         // the new location
         // because the user has likely moved
-        if (isSignificantlyNewer)
-            return true;
+        if (isSignificantlyNewer) return true;
         // If the new location is more than two minutes older, it must be
         // worse
-        else if (isSignificantlyOlder)
-            return false;
-
+        else if (isSignificantlyOlder) return false;
+        
         // Check whether the new location fix is more or less accurate
-        int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation
-                .getAccuracy());
+        int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
         boolean isLessAccurate = accuracyDelta > 0;
         boolean isMoreAccurate = accuracyDelta < 0;
         boolean isSignificantlyLessAccurate = accuracyDelta > 200;
-
+        
         // Check if the old and new location are from the same provider
-        boolean isFromSameProvider = isSameProvider(location.getProvider(),
-                currentBestLocation.getProvider());
-
+        boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());
+        
         // Determine location quality using a combination of timeliness and
         // accuracy
-        if (isMoreAccurate)
-            return true;
-        else if (isNewer && !isLessAccurate)
-            return true;
-        else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider)
-            return true;
+        if (isMoreAccurate) return true;
+        else if (isNewer && !isLessAccurate) return true;
+        else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) return true;
         return false;
     }
-
+    
     /**
      * Checks whether two providers are the same
      * 
@@ -107,11 +100,10 @@ public class Utility {
      *            second provider comparison
      */
     private static boolean isSameProvider(String provider1, String provider2) {
-        if (provider1 == null)
-            return provider2 == null;
+        if (provider1 == null) return provider2 == null;
         return provider1.equals(provider2);
     }
-
+    
     /**
      * Determines whether the Network is available
      * 
@@ -121,11 +113,10 @@ public class Utility {
     public static boolean isNetworkAvailable(Context context) {
         Boolean isAvailable = false;
         ConnectivityManager connect_mng = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connect_mng.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED || connect_mng.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED)
-            isAvailable = true;
+        if (connect_mng.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED || connect_mng.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED) isAvailable = true;
         return isAvailable;
     }
-
+    
     /**
      * Determines if the sdcard is available for reading and writing
      * 
@@ -133,12 +124,11 @@ public class Utility {
      */
     public static boolean isSdcardAvaliable() {
         String state = Environment.getExternalStorageState();
-
-        if (Environment.MEDIA_MOUNTED.equals(state))
-            return true;
+        
+        if (Environment.MEDIA_MOUNTED.equals(state)) return true;
         return false;
     }
-
+    
     /**
      * Message displays on the screen
      * 
@@ -149,11 +139,14 @@ public class Utility {
      * @param context
      *            context of the implementation
      */
-    public static void showToast(CharSequence text, int duration, Context context) {
+    public static void showToast(
+                                 CharSequence text,
+                                 int duration,
+                                 Context context) {
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
     }
-
+    
     /**
      * Calling Network Configuration
      * 
@@ -161,13 +154,11 @@ public class Utility {
      *            context of application
      */
     public static void enableNETWORK(Context context) {
-        Intent wifiOptionsIntent = new Intent(
-                android.provider.Settings.ACTION_WIRELESS_SETTINGS);
-        Utility.showToast("Pressione [back] para voltar", Toast.LENGTH_SHORT,
-                context);
+        Intent wifiOptionsIntent = new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS);
+        Utility.showToast("Pressione [back] para voltar", Toast.LENGTH_SHORT, context);
         context.startActivity(wifiOptionsIntent);
     }
-
+    
     /**
      * Calling Storage Configuration
      * 
@@ -175,13 +166,11 @@ public class Utility {
      *            context of application
      */
     public static void enableSDCARD(Context context) {
-        Intent sdcardOptionsIntent = new Intent(
-                android.provider.Settings.ACTION_MEMORY_CARD_SETTINGS);
-        Utility.showToast("Pressione [back] para voltar", Toast.LENGTH_SHORT,
-                context);
+        Intent sdcardOptionsIntent = new Intent(android.provider.Settings.ACTION_MEMORY_CARD_SETTINGS);
+        Utility.showToast("Pressione [back] para voltar", Toast.LENGTH_SHORT, context);
         context.startActivity(sdcardOptionsIntent);
     }
-
+    
     /**
      * Calling GPS Configuration
      * 
@@ -189,13 +178,11 @@ public class Utility {
      *            context of application
      */
     public static void enableGPS(Context context) {
-        Intent gpsOptionsIntent = new Intent(
-                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        Utility.showToast("Pressione [back] para voltar", Toast.LENGTH_SHORT,
-                context);
+        Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        Utility.showToast("Pressione [back] para voltar", Toast.LENGTH_SHORT, context);
         context.startActivity(gpsOptionsIntent);
     }
-
+    
     /**
      * Formats the date in the form of inclusion in database
      * 
@@ -206,7 +193,7 @@ public class Utility {
     public static String formatDate(Date date) {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
     }
-
+    
     /**
      * Create one GeoPoint for location
      * 
@@ -219,7 +206,7 @@ public class Utility {
         int lng = (int) (loc.getLongitude() * 1E6);
         return new GeoPoint(lat, lng);
     }
-
+    
     /**
      * Count characters in a string
      * 
@@ -233,11 +220,10 @@ public class Utility {
      */
     public static int countCharacterString(String str, String cha, int idx) {
         int idxfound = str.indexOf(cha, idx);
-        if (idxfound != -1)
-            return 1 + countCharacterString(str, cha, idxfound + 1);
+        if (idxfound != -1) return 1 + countCharacterString(str, cha, idxfound + 1);
         return 0;
     }
-
+    
     /**
      * 
      * 
@@ -247,20 +233,20 @@ public class Utility {
     public static Bitmap downloadRemoteImage(String imgUrl) {
         try {
             URL myFileUrl = new URL(imgUrl);
-
-            HttpURLConnection conn = (HttpURLConnection) myFileUrl
-                    .openConnection();
+            
+            HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
             conn.setDoInput(true);
             conn.connect();
             InputStream is = conn.getInputStream();
             return BitmapFactory.decodeStream(is);
-
-        } catch (Exception ex) {
+            
+        }
+        catch (Exception ex) {
             Log.e(TAG, "Error downloadRemoteFile: " + ex);
         }
         return null;
     }
-
+    
     /**
      * 
      * 
@@ -268,13 +254,11 @@ public class Utility {
      * @return
      */
     public static String formatCep(String cepvalue) {
-        if (cepvalue == null || cepvalue.compareTo("") == 0)
-            return cepvalue;
-        else if (cepvalue.length() == 8)
-            return cepvalue.substring(0, 5) + "-" + cepvalue.substring(5, 8);
+        if (cepvalue == null || cepvalue.compareTo("") == 0) return cepvalue;
+        else if (cepvalue.length() == 8) return cepvalue.substring(0, 5) + "-" + cepvalue.substring(5, 8);
         return cepvalue;
     }
-
+    
     /**
      * 
      * 
@@ -287,7 +271,7 @@ public class Utility {
         }
         return correct;
     }
-
+    
     /**
      * 
      * 
@@ -296,13 +280,13 @@ public class Utility {
      * @return
      * @throws IOException
      */
-    public static List<Address> findGeocode(String searchAddress,
-            Context context) throws IOException {
-        List<Address> findGeocode = new Geocoder(context).getFromLocationName(
-                searchAddress, 1);
+    public static List<Address> findGeocode(
+                                            String searchAddress,
+                                            Context context) throws IOException {
+        List<Address> findGeocode = new Geocoder(context).getFromLocationName(searchAddress, 1);
         return findGeocode;
     }
-
+    
     /**
      * 
      * Generate MD5 hash of a string.
@@ -319,24 +303,24 @@ public class Utility {
             md.update(text.getBytes());
             byte[] hashMd5 = md.digest();
             result = stringHexa(hashMd5);
-        } catch (NoSuchAlgorithmException e) {
+        }
+        catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         return result;
     }
-
+    
     private static String stringHexa(byte[] bytes) {
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < bytes.length; i++) {
             int parteAlta = ((bytes[i] >> 4) & 0xf) << 4;
             int parteBaixa = bytes[i] & 0xf;
-            if (parteAlta == 0)
-                s.append('0');
+            if (parteAlta == 0) s.append('0');
             s.append(Integer.toHexString(parteAlta | parteBaixa));
         }
         return s.toString();
     }
-
+    
     /**
      * Unzip files.
      * 
@@ -352,7 +336,7 @@ public class Utility {
             ZipEntry ze = null;
             while ((ze = zin.getNextEntry()) != null) {
                 Log.v("Decompress", "Unzipping " + ze.getName());
-
+                
                 if (ze.isDirectory()) {
                     Utility.dirChecker(location + ze.getName());
                 }
@@ -366,26 +350,105 @@ public class Utility {
                 }
             }
             zin.close();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Log.e("Decompress", "unzip", e);
         }
     }
-
+    
+    /**
+     * Decodes image and scales it to reduce memory consumption
+     * 
+     * @param File
+     *            the picture file
+     * 
+     * @author Paulo Luan
+     * */
+    public static Bitmap decodeSampledBitmapFromFile(
+                                                     File file,
+                                                     int reqWidth,
+                                                     int reqHeight) {
+        Bitmap bitmapImage = null;
+        
+        try {
+            // First decode with inJustDecodeBounds=true to check dimensions
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(new FileInputStream(file), null, options);
+            
+            // Calculate inSampleSize
+            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+            
+            // Decode bitmap with inSampleSize set
+            options.inJustDecodeBounds = false;
+            bitmapImage = BitmapFactory.decodeStream(new FileInputStream(file), null, options);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return bitmapImage;
+    }
+    
+    /**
+     * Calculates the sample size based on the resolution of the param.
+     * 
+     * @param BitmapFactory
+     *            .Options the options of the bitmap file
+     * @param reqWidth
+     *            the width of the output bitmap.
+     * @param reqHeigth
+     *            the heigth of the output bitmap.
+     * @author Paulo Luan
+     * */
+    public static int calculateInSampleSize(
+                                            BitmapFactory.Options options,
+                                            int reqWidth,
+                                            int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+        
+        if (height > reqHeight || width > reqWidth) {
+            
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+            
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        
+        return inSampleSize;
+    }
+    
+    /**
+     * Clear Bitmap image from memory and calls the Garbage Collector.
+     * 
+     * */
+    public static void clearBitmap(Bitmap bm) {
+        bm.recycle();
+        System.gc();
+    }
+    
+    
     /**
      * Create directory if he doesn't exists.
      * 
      * @param String
-     *            location
-     *            The path of the folder.
+     *            location The path of the folder.
      */
     public static void dirChecker(String location) {
         File f = new File(location);
-
+        
         if (!f.isDirectory()) {
             f.mkdirs();
         }
     }
-
+    
     /**
      * 
      * 
@@ -394,7 +457,7 @@ public class Utility {
      */
     public static String formatScore(int scorevalue) {
         String result = "" + scorevalue;
-
+        
         if (scorevalue > 9999) {
             result = "0" + scorevalue;
         }
@@ -410,18 +473,17 @@ public class Utility {
         else if (scorevalue <= 9) {
             result = "00000" + scorevalue;
         }
-
+        
         return result;
     }
-
+    
     /**
      * 
      * @return
      */
-
+    
     public static String getDeviceId(Context ctx) {
-        TelephonyManager tManager = (TelephonyManager) ctx
-                .getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager tManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
         return tManager.getDeviceId();
     }
 }

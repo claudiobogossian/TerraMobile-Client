@@ -68,18 +68,18 @@ public class FormActivity extends Activity {
     private AutoCompleteTextView address;
     
     private EditText             edtNeighborhood, edtPostalCode, edtNumber,
-    edtOtherNumbers;
+            edtOtherNumbers;
     
     private Spinner              spnNumberConfirmation, spnVariance,
-    spnPrimaryUse, spnSecondaryUse, spnPavimentation, spnAsphaltGuide,
-    spnPublicIlumination, spnEnergy, spnPluvialGallery;
+            spnPrimaryUse, spnSecondaryUse, spnPavimentation, spnAsphaltGuide,
+            spnPublicIlumination, spnEnergy, spnPluvialGallery;
     
     private TextView             lat, lon;
     
     private Button               buttonClearAddressFields;
     
     private Button               buttonCancel, buttonOk, buttonPhoto,
-    buttonClearSpinners;
+            buttonClearSpinners;
     
     private FormActivity         self    = this;
     
@@ -983,52 +983,11 @@ public class FormActivity extends Activity {
         }
     }
     
-    /**
-     * Decodes image and scales it to reduce memory consumption
-     * 
-     * @param File
-     *            the picture file
-     * @param Size
-     *            The new size we want to scale to
-     * 
-     * @author Paulo Luan
-     * */
-    private Bitmap decodeFile(File f, int scaleSize) {
-        Bitmap bitmapImage = null;
-        
-        try {
-            // Decode image size
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            options.inSampleSize = 5;
-            options.inPurgeable = true;
-            options.inInputShareable = true;
-            
-            BitmapFactory.decodeStream(new FileInputStream(f), null, options);
-            
-            // Find the correct scale value. It should be the power of 2.
-            int scale = 1;
-            while (options.outWidth / scale / 2 >= scaleSize && options.outHeight / scale / 2 >= scaleSize) scale *= 2;
-            
-            // Decode with inSampleSize
-            BitmapFactory.Options o2 = new BitmapFactory.Options();
-            o2.inSampleSize = scale;
-            
-            bitmapImage = BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        return bitmapImage;
-    }
-    
     public ImageView generateImageFromFilePath(final Photo picture) {
         final File imgFile = new File(picture.getPath());
-        
         final ImageView imageView = new ImageView(this);
         
-        Bitmap myBitmap = this.decodeFile(imgFile, 70);
+        Bitmap myBitmap = Utility.decodeSampledBitmapFromFile(imgFile, 100, 100);
         
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
         layoutParams.setMargins(5, 5, 5, 5);
@@ -1049,12 +1008,11 @@ public class FormActivity extends Activity {
     public void showConfirmDeleteImageDialog(
                                              final Photo picture,
                                              final File file) {
-        
         final Dialog imageDialog = new Dialog(this);
         
         final ImageView image = new ImageView(this);
         final File imgFile = new File(picture.getPath());
-        Bitmap myBitmap = this.decodeFile(imgFile, 700);
+        Bitmap myBitmap = Utility.decodeSampledBitmapFromFile(imgFile, 640, 480);
         image.setImageBitmap(myBitmap);
         
         imageDialog.setContentView(image);
