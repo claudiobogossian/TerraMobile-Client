@@ -139,7 +139,7 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
         
         while ((ze = zin.getNextEntry()) != null) {
             if (ze.isDirectory()) {
-                Utility.dirChecker(ze.getName());
+                Utility.dirChecker(outputFolder + ze.getName());
             }
             else {
                 progress++;
