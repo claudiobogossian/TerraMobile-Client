@@ -19,9 +19,9 @@
         <android.version>4.0.1.2</android.version>
     </properties>
     <scm>
-        <connection>scm:git:git://github.com/PauloLuan/terramobile.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/PauloLuan/terramobile.git</developerConnection>
-        <url>https://github.com/PauloLuan/terramobile</url>
+        <connection>scm:git:git://github.com/PauloLuan/TerraMobile-Client.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/PauloLuan/TerraMobile-Client.git</developerConnection>
+        <url>https://github.com/PauloLuan/TerraMobile-Client</url>
     </scm>
     <build>
         <pluginManagement>

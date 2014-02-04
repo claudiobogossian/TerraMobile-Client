@@ -1,6 +1,6 @@
 This repository contains the source code for the TerraMobile Android app.
 
-Please see the [issues](https://github.com/PauloLuan/terramobile/issues) section to
+Please see the [issues](https://github.com/PauloLuan/TerraMobile-Client/issues) section to
 report any bugs or feature requests and to see the list of known issues.
 
 ## License
@@ -39,7 +39,7 @@ After satisfying those requirements, the build is pretty simple:
   the integration tests, this requires a connected Android device or running
   emulator
 
-See [here](https://github.com/PauloLuan/terramobile/wiki/Building-From-Eclipse) for
+See [here](https://github.com/PauloLuan/TerraMobile-Client/wiki/Building-From-Eclipse) for
 instructions on building from [Eclipse](http://eclipse.org).
 
 ## Acknowledgements
@@ -57,12 +57,12 @@ It also uses many other open source libraries such as:
 * [ViewPagerIndicator](https://github.com/JakeWharton/Android-ViewPagerIndicator)
 
 These are just a few of the major dependencies, the entire list of dependencies
-is listed in the [app's POM file](https://github.com/PauloLuan/terramobile/blob/master/app/pom.xml).
+is listed in the [app's POM file](https://github.com/PauloLuan/TerraMobile-Client/blob/master/app/pom.xml).
 
 ## Contributing
 
 Please fork this repository and contribute back using
-[pull requests](https://github.com/PauloLuan/terramobile/pulls).
+[pull requests](https://github.com/PauloLuan/TerraMobile-Client/pulls).
 
 Any contributions, large or small, major features, bug fixes, additional
 language translations, unit/integration tests are welcomed and appreciated
