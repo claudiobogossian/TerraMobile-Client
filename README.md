@@ -24,9 +24,9 @@ export ANDROID_HOME=/opt/tools/android-sdk
 
 ## Include OSMBonusPack Into Maven Local Repository 
 
-The OSMBonusPack Library doesn’t exist in the Maven center repository. To include manually into local repository, go to the folder 'app/dependencies'
+The OSMBonusPack Library doesn’t exist in the Maven center repository. To include manually into local repository, go to the folder 'app/libs'
 
-	cd app/dependencies
+	cd app/libs
 
 Then type the following command: 
 
