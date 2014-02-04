@@ -11,4 +11,5 @@ before_install:
   - tar -zxf android-sdk_r21.1-linux.tgz
   - export ANDROID_HOME=$PWD/android-sdk-linux
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+  - sh -c 'cd app/libs' && mvn install:install-file -Dfile=osmbonuspack_v4.1.jar -DgroupId=org.osmbonuspack -DartifactId=osmbonuspack -Dversion=4.1 -Dpackaging=jar
   - android update sdk --filter platform-tools,android-16 --no-ui --force > /dev/null
