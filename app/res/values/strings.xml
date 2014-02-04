@@ -13,8 +13,8 @@
     <string name="title_activity_main">Bauru Digital</string>
 
     <!-- GeoMap Screen -->
-    <string name="lbl_new_form">Novo formulárío</string>
-    <string name="lbl_get_task">Atualizar trechos</string>
+    <string name="lbl_new_form">Abrir formulárío</string>
+    <string name="lbl_get_task">Opções</string>
 
     <!-- Form Screen -->
     <string name="tv_insertData">Inserir dados</string>
