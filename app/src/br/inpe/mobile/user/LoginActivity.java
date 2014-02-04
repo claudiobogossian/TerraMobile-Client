@@ -140,7 +140,7 @@ public class LoginActivity extends Activity {
             }
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         return userExists;
@@ -184,7 +184,7 @@ public class LoginActivity extends Activity {
                 }
             }
             catch (SQLException e) {
-                e.printStackTrace();
+                ExceptionHandler.saveLogFile(e.toString());
             }
         }
     }

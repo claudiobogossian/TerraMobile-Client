@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 import br.inpe.mobile.Utility;
+import br.inpe.mobile.exception.ExceptionHandler;
 
 /**
  * Async object implementation to PostTasks to server
@@ -50,7 +51,7 @@ public class UploadTasks extends AsyncTask<String, String, String> {
             catch (Exception e) {
                 message = "Erro ao enviar as fotos.";
                 //String error = e.getResponseBodyAsString();
-                e.printStackTrace();
+                ExceptionHandler.saveLogFile(e.toString());
             }
         }
         

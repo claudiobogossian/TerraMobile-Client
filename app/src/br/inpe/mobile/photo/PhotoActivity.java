@@ -279,7 +279,7 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
             isStored = true;
         }
         catch (Exception e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         return isStored;
@@ -324,7 +324,7 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
             setZoomListener();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
     }
     

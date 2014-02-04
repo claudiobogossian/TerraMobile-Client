@@ -80,7 +80,7 @@ public class TaskActivity extends Activity {
                     }
                     catch (Exception e) {
                         self.hideLoadingMask();
-                        e.printStackTrace();
+                        ExceptionHandler.saveLogFile(e.toString());
                     }
                 }
                 else {
@@ -112,7 +112,7 @@ public class TaskActivity extends Activity {
                         self.getRemoteZipBaseMap();
                     }
                     catch (Exception e) {
-                        e.printStackTrace();
+                        ExceptionHandler.saveLogFile(e.toString());
                     }
                 }
                 else {

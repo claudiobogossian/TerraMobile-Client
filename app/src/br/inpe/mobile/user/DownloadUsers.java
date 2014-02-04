@@ -9,6 +9,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import android.os.AsyncTask;
 import android.widget.Toast;
 import br.inpe.mobile.Utility;
+import br.inpe.mobile.exception.ExceptionHandler;
 
 /**
  * Async class implementation to get users from server.
@@ -39,11 +40,11 @@ public class DownloadUsers extends AsyncTask<String, String, String> {
             }
             catch (HttpClientErrorException e) {
                 message = "Erro ao verificar usuários no servidor.";
-                e.printStackTrace();
+                ExceptionHandler.saveLogFile(e.toString());
             }
             catch (Exception e) {
                 message = "Erro ao verificar usuários no servidor.";
-                e.printStackTrace();
+                ExceptionHandler.saveLogFile(e.toString());
             }
         }
         

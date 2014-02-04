@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import android.os.AsyncTask;
 import android.widget.Toast;
 import br.inpe.mobile.Utility;
+import br.inpe.mobile.exception.ExceptionHandler;
 
 /**
  * Async class implementation to get tasks from server.
@@ -51,7 +52,7 @@ public class DownloadTasks extends AsyncTask<String, String, String> {
             }
             catch (Exception e) {
                 message = "Ocorreu um erro ao fazer o download das tarefas.";
-                e.printStackTrace();
+                ExceptionHandler.saveLogFile(e.toString());
             }
         }
         

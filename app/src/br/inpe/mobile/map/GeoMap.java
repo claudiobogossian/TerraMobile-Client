@@ -7,6 +7,7 @@ import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.bonuspack.overlays.ExtendedOverlayItem;
 import org.osmdroid.bonuspack.overlays.ItemizedOverlayWithBubble;
+import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
@@ -66,6 +67,8 @@ public class GeoMap extends Activity {
     
     private LayoutInflater                         inflater;
     
+    public static String tileSourcePath;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +98,14 @@ public class GeoMap extends Activity {
         mapView.setMaxZoomLevel(20);
         mapView.setBuiltInZoomControls(true);
         mapView.setMultiTouchControls(true);
-        mapView.setTileSource(TileSourceFactory.MAPQUESTOSM);
+        
+        OnlineTileSourceBase tileSource = TileSourceFactory.MAPQUESTOSM;
+        String tileSourceName = tileSource.name();
+        String pathBase = tileSource.TILE_PATH_BASE.getAbsolutePath();
+        
+        tileSourcePath = pathBase + "/" + tileSourceName;
+        
+        mapView.setTileSource(tileSource);
         // mapView.setUseDataConnection(false); // keeps the mapView from loading online tiles using network connection.
         
         MapOverlay movl = new MapOverlay(this);

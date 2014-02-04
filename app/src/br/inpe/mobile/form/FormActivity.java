@@ -300,7 +300,7 @@ public class FormActivity extends Activity {
                 }
                 catch (SQLException e) {
                     Log.e(self.LOG_TAG, "ERRO AO CRIAR CURSOR!" + e.getMessage());
-                    e.printStackTrace();
+                    ExceptionHandler.saveLogFile(e.toString());
                 }
             }
         });
@@ -502,7 +502,7 @@ public class FormActivity extends Activity {
                 spnPluvialGallery.setSelection(((ArrayAdapter<String>) spnPluvialGallery.getAdapter()).getPosition(taskParam.getForm().getPluvialGallery()));
             }
             catch (Exception e) {
-                e.printStackTrace();
+                ExceptionHandler.saveLogFile(e.toString());
             }
             
             if (taskParam.getId() != null) {
@@ -537,7 +537,7 @@ public class FormActivity extends Activity {
             spnPluvialGallery.setSelection(((ArrayAdapter<String>) spnPluvialGallery.getAdapter()).getPosition(task.getForm().getPluvialGallery()));
         }
         catch (Exception e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
     }
     
@@ -561,7 +561,7 @@ public class FormActivity extends Activity {
             currentFeatureId = currentTask.getAddress().getFeatureId().substring(0, 8);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         if (lastFeatureId != null && currentFeatureId != null && lastFeatureId.equals(currentFeatureId)) {
@@ -651,7 +651,7 @@ public class FormActivity extends Activity {
             latitude = Double.valueOf(stringLat);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         try {
@@ -659,7 +659,7 @@ public class FormActivity extends Activity {
             longitude = Double.valueOf(stringLong);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         form.setCoordx(latitude);
@@ -829,7 +829,7 @@ public class FormActivity extends Activity {
             fis = new FileInputStream(imagefile);
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -999,7 +999,7 @@ public class FormActivity extends Activity {
                 }
             }
             catch (Exception e) {
-                e.printStackTrace();
+                ExceptionHandler.saveLogFile(e.toString());
             }
         }
     }

@@ -75,7 +75,7 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
      * @author Paulo Luan
      * 
      * */
-    public void saveLogFile(String text) {
+    public static void saveLogFile(String text) {
         File path = new File(Environment.getExternalStorageDirectory() + "/inpe/" + "/dados" + "/log/");
         
         if (!path.exists()) {
@@ -90,7 +90,7 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
                 logFile.createNewFile();
             }
             catch (IOException e) {
-                e.printStackTrace();
+                ExceptionHandler.saveLogFile(e.toString());
             }
         }
         try {
@@ -100,7 +100,7 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
             buf.close();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
     }
     

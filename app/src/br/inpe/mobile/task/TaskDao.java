@@ -7,6 +7,7 @@ import android.util.Log;
 import br.inpe.mobile.address.Address;
 import br.inpe.mobile.database.DatabaseAdapter;
 import br.inpe.mobile.database.DatabaseHelper;
+import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.form.Form;
 import br.inpe.mobile.user.SessionManager;
 import br.inpe.mobile.user.User;
@@ -108,7 +109,7 @@ public class TaskDao {
             result = true;
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         return result;
@@ -130,7 +131,7 @@ public class TaskDao {
             tasks = taskQueryBuilder.query();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         return tasks;
@@ -152,7 +153,7 @@ public class TaskDao {
             tasks = taskQueryBuilder.query();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         return tasks;
@@ -179,7 +180,7 @@ public class TaskDao {
             tasks = taskQueryBuilder.query();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         return tasks;
@@ -206,7 +207,7 @@ public class TaskDao {
             count = taskQueryBuilder.countOf();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         return count;
@@ -233,7 +234,7 @@ public class TaskDao {
             count = taskQueryBuilder.countOf();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         return count;
@@ -258,7 +259,7 @@ public class TaskDao {
             count = taskQueryBuilder.countOf();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         return count;
@@ -281,7 +282,7 @@ public class TaskDao {
                 persistedTask = getTaskById(task.getId());
             }
             catch (Exception e) {
-                e.printStackTrace();
+                ExceptionHandler.saveLogFile(e.toString());
             }
             
             try {
@@ -297,7 +298,7 @@ public class TaskDao {
                 }
             }
             catch (SQLException e) {
-                e.printStackTrace();
+                ExceptionHandler.saveLogFile(e.toString());
             }
         }
         
@@ -324,7 +325,7 @@ public class TaskDao {
                 isSaved = true;
             }
             catch (SQLException e) {
-                e.printStackTrace();
+                ExceptionHandler.saveLogFile(e.toString());
             }
         }
         
@@ -337,7 +338,7 @@ public class TaskDao {
             task = taskDao.queryForId(id);
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         return task;
     }
@@ -349,7 +350,7 @@ public class TaskDao {
             task = taskDao.queryBuilder().where().eq("address_id", addressId).queryForFirst();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         return task;
     }
@@ -400,7 +401,7 @@ public class TaskDao {
             }
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
     }
     
@@ -420,7 +421,7 @@ public class TaskDao {
             featureId = task.getAddress().getFeatureId().substring(0, 8);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         return featureId;

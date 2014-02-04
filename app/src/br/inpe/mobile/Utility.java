@@ -31,6 +31,7 @@ import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
+import br.inpe.mobile.exception.ExceptionHandler;
 
 public class Utility {
     
@@ -39,7 +40,14 @@ public class Utility {
     private static final int    TWO_MINUTES = 1000 * 60 * 2;
     
     //public static final String  hostUrl     = "http://192.168.0.181:8000/terramobile-server/";
-    public static final String  hostUrl     = "http://institutosoma.dyndns.org:8000/terramobile-server/";
+    
+    //public static String host = "http://192.168.0.181";
+    public static String host = "http://institutosoma.dyndns.org";
+    
+    public static String port = "8000";
+    public static String server = "terramobile-server";
+    
+    public static final String  hostUrl     = host + ":" + port + "/" + server + "/" ;
     
     //public static final String  hostUrl     = "http://200.144.100.34:8080/";
     
@@ -305,7 +313,7 @@ public class Utility {
             result = stringHexa(hashMd5);
         }
         catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         return result;
     }
@@ -384,7 +392,7 @@ public class Utility {
             bitmapImage = BitmapFactory.decodeStream(new FileInputStream(file), null, options);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         return bitmapImage;

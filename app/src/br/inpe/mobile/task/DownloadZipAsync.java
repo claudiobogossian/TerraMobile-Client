@@ -17,10 +17,11 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.widget.Toast;
 import br.inpe.mobile.Utility;
+import br.inpe.mobile.exception.ExceptionHandler;
+import br.inpe.mobile.map.GeoMap;
 
 public class DownloadZipAsync extends AsyncTask<String, String, String> {
-    String               path     = null;
-    
+    String               tileSourcePath = GeoMap.tileSourcePath;
     String               filePath = null;
     
     private TaskActivity taskActivity;
@@ -34,9 +35,8 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
         String message = null;
         
         try {
-            path = Environment.getExternalStorageDirectory() + "/osmdroid/tiles/";
-            filePath = path + "base_map.zip";
-            
+            String zipFilePath = Environment.getExternalStorageDirectory() + "/inpe/dados";
+            filePath = zipFilePath + "base_map.zip";
             File baseMapZip = new File(filePath);
             
             if (!baseMapZip.exists()) {
@@ -53,15 +53,15 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
         }
         catch (Exception e) {
             message = "Ocorreu um erro ao baixar o arquivo.";
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         try {
-            this.unzip(filePath, path);
+            this.unzip(filePath, tileSourcePath);
         }
         catch (Exception e) {
             message = "Ocorreu um erro ao descompactar o arquivo.";
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         return message;
@@ -99,6 +99,8 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
         conexion.connect();
         
         int fileSize = conexion.getContentLength();
+        
+        Utility.dirChecker(filePath); //TODO: testar
         
         InputStream input = new BufferedInputStream(url.openStream());
         OutputStream output = new FileOutputStream(filePath);
@@ -153,7 +155,7 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
                     }
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
+                    ExceptionHandler.saveLogFile(e.toString());
                 }
                 finally {
                     zin.closeEntry();

@@ -7,6 +7,7 @@ import java.util.List;
 import android.util.Log;
 import br.inpe.mobile.database.DatabaseAdapter;
 import br.inpe.mobile.database.DatabaseHelper;
+import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.form.Form;
 import br.inpe.mobile.task.Task;
 import br.inpe.mobile.user.SessionManager;
@@ -50,7 +51,7 @@ public class PhotoDao {
             photos = photoQueryBuilder.query();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         return photos;
@@ -76,7 +77,7 @@ public class PhotoDao {
             photos = photoQueryBuilder.query();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         return photos;
@@ -107,7 +108,7 @@ public class PhotoDao {
             photos = photoQueryBuilder.query();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         return photos;
@@ -133,7 +134,7 @@ public class PhotoDao {
         }
         catch (SQLException e) {
             Log.e(LOG_TAG, e.getMessage());
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         return result;
@@ -162,7 +163,7 @@ public class PhotoDao {
         }
         catch (SQLException e) {
             Log.e(LOG_TAG, e.getMessage());
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         return result;
@@ -209,7 +210,7 @@ public class PhotoDao {
                 isSaved = true;
             }
             catch (SQLException e) {
-                e.printStackTrace();
+                ExceptionHandler.saveLogFile(e.toString());
             }
         }
         

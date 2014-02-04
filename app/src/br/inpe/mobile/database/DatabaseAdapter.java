@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import br.inpe.mobile.address.Address;
+import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.form.Form;
 import br.inpe.mobile.photo.Photo;
 import br.inpe.mobile.task.Task;
@@ -47,7 +48,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
             this.createDaos();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
     }
     

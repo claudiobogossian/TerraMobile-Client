@@ -7,6 +7,7 @@ import java.util.List;
 import android.os.AsyncTask;
 import android.widget.Toast;
 import br.inpe.mobile.Utility;
+import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.task.Task;
 import br.inpe.mobile.task.TaskActivity;
 import br.inpe.mobile.task.TaskDao;
@@ -62,7 +63,7 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
             catch (Exception e) {
                 message = "Ocorreu um erro ao enviar as imagens.";
                 //String error = e.getResponseBodyAsString();
-                e.printStackTrace();
+                ExceptionHandler.saveLogFile(e.toString());
             }
         }
         return message;

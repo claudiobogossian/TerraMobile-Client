@@ -14,6 +14,7 @@ import android.widget.TextView;
 import br.inpe.mobile.R;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.database.DatabaseHelper;
+import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.task.Task;
 import br.inpe.mobile.user.SessionManager;
 import br.inpe.mobile.user.User;
@@ -73,7 +74,7 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
             cursor = this.getAddressCursor("%" + filter + "%");
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         
         return cursor;
@@ -114,7 +115,7 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
             cursor = results.getRawCursor();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            ExceptionHandler.saveLogFile(e.toString());
         }
         finally {
             if (iterator != null) {
