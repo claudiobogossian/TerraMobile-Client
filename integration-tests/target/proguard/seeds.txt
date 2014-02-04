@@ -1,0 +1,3 @@
+br.inpe.mobile.tests.BuildConfig
+br.inpe.mobile.tests.BuildConfig: boolean DEBUG
+br.inpe.mobile.tests.BuildConfig: BuildConfig()

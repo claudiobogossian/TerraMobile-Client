@@ -1,0 +1,60 @@
+_____________________________________________________________________
+- Program class: com/github/mobile/tests/BuildConfig
+  Superclass:    java/lang/Object
+  Major version: 0x32
+  Minor version: 0x0
+  Access flags:  0x31
+    = public final class br.inpe.mobile.tests.BuildConfig extends java.lang.Object
+
+Interfaces (count = 0):
+
+Constant Pool (count = 20):
+  - Integer [1]
+  - Class [com/github/mobile/tests/BuildConfig]
+  - Class [java/lang/Object]
+  - Methodref [java/lang/Object.<init> ()V]
+  - NameAndType [<init> ()V]
+  - Utf8 [()V]
+  - Utf8 [<init>]
+  - Utf8 [BuildConfig.java]
+  - Utf8 [Code]
+  - Utf8 [ConstantValue]
+  - Utf8 [DEBUG]
+  - Utf8 [Lcom/github/mobile/tests/BuildConfig;]
+  - Utf8 [LineNumberTable]
+  - Utf8 [LocalVariableTable]
+  - Utf8 [SourceFile]
+  - Utf8 [Z]
+  - Utf8 [com/github/mobile/tests/BuildConfig]
+  - Utf8 [java/lang/Object]
+  - Utf8 [this]
+
+Fields (count = 1):
+  - Field:        DEBUG Z
+    Access flags: 0x19
+      = public static final boolean DEBUG
+    Class member attributes (count = 1):
+    - Constant value attribute:
+    - Integer [1]
+
+Methods (count = 1):
+  - Method:       <init>()V
+    Access flags: 0x1
+      = public BuildConfig()
+    Class member attributes (count = 1):
+    - Code attribute instructions (code length = 5, locals = 1, stack = 1):
+      [0] aload_0 v0
+      [1] invokespecial #4
+        - Methodref [java/lang/Object.<init> ()V]
+      [4] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 2):
+      - Line number table attribute (count = 1)
+        [0] -> line 3
+      - Local variable table attribute (count = 1)
+        v0: 0 -> 5 [Lcom/github/mobile/tests/BuildConfig; this]
+
+Class file attributes (count = 1):
+  - Source file attribute:
+    - Utf8 [BuildConfig.java]
+
