@@ -1,3 +1,5 @@
+## Terra Mobile Client [![Build Status](https://travis-ci.org/PauloLuan/TerraMobile-Client.png?branch=master)](https://travis-ci.org/PauloLuan/TerraMobile-Client)
+
 This repository contains the source code for the TerraMobile Android app.
 
 Please see the [issues](https://github.com/PauloLuan/terramobile/issues) section to
