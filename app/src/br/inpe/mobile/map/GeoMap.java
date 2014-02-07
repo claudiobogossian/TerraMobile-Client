@@ -1,5 +1,6 @@
 package br.inpe.mobile.map;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,14 +102,13 @@ public class GeoMap extends Activity {
 		mapView.setMultiTouchControls(true);
 
 		OnlineTileSourceBase tileSource = TileSourceFactory.MAPQUESTOSM;
-		String tileSourceName = tileSource.name();
-		String pathBase = tileSource.TILE_PATH_BASE.getAbsolutePath();
+		tileSourcePath = tileSource.OSMDROID_PATH.getAbsolutePath() + "/";
 
-		tileSourcePath = pathBase + "/" + tileSourceName;
+		//String tileSourceName = tileSource.name();
+		//tileSourcePath = pathBase + "/" + tileSourceName;
 
 		mapView.setTileSource(tileSource);
-		// mapView.setUseDataConnection(false); // keeps the mapView from
-		// loading online tiles using network connection.
+		mapView.setUseDataConnection(false); //  letting osmdroid know you would use it in offline mode, keeps the mapView from loading online tiles using network connection.
 
 		MapOverlay movl = new MapOverlay(this);
 		mapView.getOverlays().add(movl);

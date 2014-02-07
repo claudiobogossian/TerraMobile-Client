@@ -55,6 +55,7 @@
 
     <!-- Task Screen -->
     <string name="btn_sync_tasks">Sincronizar com o servidor</string>
+    <string name="btn_view_downloads">Mostrar Downloads</string>
     <string name="info_send_tasks">Enviando informaçãoes ao servidor</string>
     <string name="btn_clear_tasks">Apagar trechos</string>
     <string name="userName">Nome</string>

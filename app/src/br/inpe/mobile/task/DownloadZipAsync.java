@@ -1,31 +1,41 @@
 package br.inpe.mobile.task;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Arrays;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+import android.app.DownloadManager;
+import android.app.DownloadManager.Request;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
+import android.view.View;
 import android.widget.Toast;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.map.GeoMap;
 
 public class DownloadZipAsync extends AsyncTask<String, String, String> {
+	private long enqueue;
+	private DownloadManager downloadManager;
+	
 	String tileSourcePath = GeoMap.tileSourcePath;
 	String filePath = null;
-
+	
+	String message = null;	
+	List<String> mapLevels = Arrays.asList("12", "13", "14", "15", "16");
+	
 	private TaskActivity taskActivity;
 
 	public DownloadZipAsync(TaskActivity taskActivity) {
@@ -34,23 +44,41 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
 
 	@Override
 	protected String doInBackground(String... urls) {
-		String message = null;
-
+		
+		//TODO: vai pegar os mapLevels do servidor?
+		// server.getArrayDeMapLevels
+		
+		for (String mapLevel : mapLevels) {
+			String url = urls[0] + "?level=" + mapLevel;
+			downloadZipFiles(url, mapLevel);
+		}
+		
+		/*
 		try {
-			String zipFilePath = Environment.getExternalStorageDirectory()
-					+ "/inpe/dados/";
-			filePath = zipFilePath + "base_map.zip";
+			this.unzip(filePath, tileSourcePath);
+		} catch (Exception e) {
+			message = "Ocorreu um erro ao descompactar o arquivo.";
+			StringWriter errors = new StringWriter();
+			e.printStackTrace(new PrintWriter(errors));
+			ExceptionHandler.saveLogFile(errors.toString());
+		}*/
+
+		return message;
+	}
+
+	public void downloadZipFiles(String url, String mapLevel) {
+		try {
+			filePath = tileSourcePath + "bauru_" + mapLevel + ".zip";
 			File baseMapZip = new File(filePath);
 
 			if (!baseMapZip.exists()) {
-				this.getRemoteBaseMap(urls[0]);
+				this.getRemoteBaseMap(url, mapLevel);
 			} else {
 				long localFileSize = baseMapZip.length();
-				boolean isSameSize = this.compareSizeOfRemoteFile(urls[0],
-						localFileSize);
+				boolean isSameSize = this.compareSizeOfRemoteFile(url, localFileSize);
 
 				if (!isSameSize) {
-					this.getRemoteBaseMap(urls[0]);
+					this.getRemoteBaseMap(url, mapLevel);
 				}
 			}
 		} catch (Exception e) {
@@ -59,21 +87,9 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
 			e.printStackTrace(new PrintWriter(errors));
 			ExceptionHandler.saveLogFile(errors.toString());
 		}
-
-		try {
-			this.unzip(filePath, tileSourcePath);
-		} catch (Exception e) {
-			message = "Ocorreu um erro ao descompactar o arquivo.";
-			StringWriter errors = new StringWriter();
-			e.printStackTrace(new PrintWriter(errors));
-			ExceptionHandler.saveLogFile(errors.toString());
-		}
-
-		return message;
 	}
-
-	public boolean compareSizeOfRemoteFile(String remoteUrl, long localFileSize)
-			throws IOException {
+	
+	public boolean compareSizeOfRemoteFile(String remoteUrl, long localFileSize) throws IOException {
 		boolean isSameSize = false;
 
 		URL url = new URL(remoteUrl);
@@ -97,31 +113,15 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
 	 * 
 	 * @throws IOException
 	 */
-	public void getRemoteBaseMap(String remoteUrl) throws IOException {
-		int count;
-
-		URL url = new URL(remoteUrl);
-		URLConnection conexion = url.openConnection();
-		conexion.connect();
-
-		int fileSize = conexion.getContentLength();
-
-		InputStream input = new BufferedInputStream(url.openStream());
-		OutputStream output = new FileOutputStream(filePath);
-
-		byte data[] = new byte[1024];
-		long total = 0;
-
-		while ((count = input.read(data)) != -1) {
-			total += count;
-			Integer progress = (int) ((total * 100) / fileSize);
-			publishProgress("Baixando mapa de base...", "" + progress);
-			output.write(data, 0, count);
-		}
-
-		output.flush();
-		output.close();
-		input.close();
+	public void getRemoteBaseMap(String remoteUrl, String mapLevel) throws IOException {
+		downloadManager = (DownloadManager) taskActivity.getSystemService(Context.DOWNLOAD_SERVICE);
+		
+		Request request = new Request(Uri.parse("http://institutosoma.dyndns.org:8000/terramobile-server/rest/tiles/zip?level=" + mapLevel));
+		request.setDestinationInExternalPublicDir("osmdroid", "bauru_" + mapLevel + ".zip");
+				
+		publishProgress("Iniciado download: " + mapLevel +".zip ");
+		
+		enqueue = downloadManager.enqueue(request);
 	}
 
 	/**
@@ -175,18 +175,19 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		taskActivity.showLoadingMask("Carregando, aguarde...");
+		//taskActivity.showLoadingMask("Carregando, aguarde...");
 	}
 
 	@Override
 	protected void onProgressUpdate(String... progress) {
 		super.onProgressUpdate(progress);
-		taskActivity.onProgressUpdate(progress);
+		Utility.showToast(progress[0] , Toast.LENGTH_LONG, taskActivity);
+		//taskActivity.onProgressUpdate(progress);
 	}
 
 	@Override
 	protected void onPostExecute(String message) {
-		taskActivity.hideLoadingMask();
+		//taskActivity.hideLoadingMask();
 
 		if (message != null) {
 			Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);

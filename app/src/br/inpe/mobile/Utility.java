@@ -41,8 +41,8 @@ public class Utility {
 
 	private static final int TWO_MINUTES = 1000 * 60 * 2;
 
-	public static String host = "http://192.168.0.181";
-	// public static String host = "http://institutosoma.dyndns.org";
+	//public static String host = "http://192.168.0.181";
+	 public static String host = "http://institutosoma.dyndns.org";
 
 	public static String port = "8000";
 	public static String server = "terramobile-server";

@@ -10,7 +10,9 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -193,6 +195,12 @@ public class TaskActivity extends Activity {
 		} else {
 			self.getRemoteTasks();
 		}
+	}
+	
+	public void showDownloads(View view) {
+		Intent i = new Intent();
+		i.setAction(DownloadManager.ACTION_VIEW_DOWNLOADS);
+		startActivity(i);
 	}
 
 	public void showLoadingMask(String message) {

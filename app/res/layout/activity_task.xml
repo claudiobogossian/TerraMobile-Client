@@ -38,7 +38,6 @@
                 android:gravity="left|right"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/red" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -62,7 +61,6 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/green" />
         </LinearLayout>
-
     </LinearLayout>
 
     <LinearLayout
@@ -81,6 +79,14 @@
             android:drawableLeft="@drawable/ico_update"
             android:gravity="center_vertical|left"
             android:text="@string/btn_sync_tasks" />
+
+        <Button
+            android:id="@+id/btn_view_downloads"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|left"
+            android:onClick="showDownloads"
+            android:text="@string/btn_view_downloads" />
 
         <Button
             android:id="@+id/btn_get_tiles"
