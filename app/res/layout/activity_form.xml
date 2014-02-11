@@ -256,6 +256,33 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
+                    android:text="@string/tv_variance"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" >
+
+                <Spinner
+                    android:id="@+id/spnVariance"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:entries="@array/variance" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
                     android:text="@string/tv_number_confirmation"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
@@ -303,6 +330,7 @@
                         android:id="@+id/edt_other_numbers"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="phone"
                         android:layout_weight="1" />
                 </TableRow>
             </TableLayout>
@@ -361,33 +389,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:entries="@array/secondary_use" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:text="@string/tv_variance"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" >
-
-                <Spinner
-                    android:id="@+id/spnVariance"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:entries="@array/variance" />
             </TableRow>
         </TableLayout>
 
