@@ -17,10 +17,8 @@ import java.util.zip.ZipInputStream;
 import android.app.DownloadManager;
 import android.app.DownloadManager.Request;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.view.View;
 import android.widget.Toast;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.exception.ExceptionHandler;
@@ -116,7 +114,9 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
 	public void getRemoteBaseMap(String remoteUrl, String mapLevel) throws IOException {
 		downloadManager = (DownloadManager) taskActivity.getSystemService(Context.DOWNLOAD_SERVICE);
 		
-		Request request = new Request(Uri.parse("http://institutosoma.dyndns.org:8000/terramobile-server/rest/tiles/zip?level=" + mapLevel));
+		String url = Utility.hostUrl + "rest/tiles/zip?level=" + mapLevel;
+		
+		Request request = new Request(Uri.parse(url));
 		request.setDestinationInExternalPublicDir("osmdroid", "bauru_" + mapLevel + ".zip");
 				
 		publishProgress("Iniciado download: " + mapLevel +".zip ");

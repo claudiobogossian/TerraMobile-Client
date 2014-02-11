@@ -8,6 +8,7 @@ import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.bonuspack.overlays.ExtendedOverlayItem;
 import org.osmdroid.bonuspack.overlays.ItemizedOverlayWithBubble;
+import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -22,7 +23,9 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -80,22 +83,25 @@ public class GeoMap extends Activity {
 
 		inflater = LayoutInflater.from(getBaseContext());
 		View viewControl = inflater.inflate(R.layout.geomap_gps, null);
-		LayoutParams layoutParamsControl = new LayoutParams(
-				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		this.addContentView(viewControl, layoutParamsControl);
+
+		self.createButtonUpdateLocation();
+		self.createMapView();
+	}
+	
+	public void createButtonUpdateLocation() {
 		ImageButton imageButton = (ImageButton) findViewById(R.id.btn_update_location);
 		imageButton.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				self.createMyLocationItem();
 			}
 		});
-
-		self.createMapView();
 	}
-
+	
 	public void createMapView() {
+		
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setMaxZoomLevel(20);
 		mapView.setBuiltInZoomControls(true);
@@ -116,8 +122,7 @@ public class GeoMap extends Activity {
 		poiInfoWindow = new POIInfoWindow(mapView);
 
 		final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
-		poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this,
-				poiItems, mapView, poiInfoWindow);
+		poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, poiItems, mapView, poiInfoWindow);
 
 		location = LocationProvider.getInstance(this).getLocation();
 		controller = (MapController) mapView.getController();
@@ -136,7 +141,8 @@ public class GeoMap extends Activity {
 
 		// poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this,
 		// poiItems, mapView);
-		mapView.getOverlays().add(poiMarkers);
+		mapView.getOverlays().add(poiMarkers);		
+		mapView.invalidate();
 	}
 
 	public void createMyLocationItem() {
@@ -208,9 +214,27 @@ public class GeoMap extends Activity {
 		finish();
 	}
 
+	/**
+	 * In order for the MapView to start loading a new tile archive file, you
+	 * need the MapTileFileArchiveProvider class to call its findArchiveFiles()
+	 * function. As it is coded now, this only happens when the
+	 * MapTileFileArchiveProvider class is constructed, and when the system
+	 * sends a ACTION_MEDIA_UNMOUNTED/ACTION_MEDIA_MOUNTED notification.
+	 * 
+	 * */
+	public void refreshMapView() {
+		
+		Uri uri = Uri.parse("file://" + this.tileSourcePath);
+		
+		sendBroadcast(new Intent(
+				Intent.ACTION_MEDIA_MOUNTED,
+				uri));
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
+		self.refreshMapView();
 		self.showLandmarks();
 	}
 
