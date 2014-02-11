@@ -129,6 +129,7 @@ public class FormActivity extends Activity {
 
 	private void setSpinnerListeners() {
 		setSpinnerNumberConfirmation();
+		setSpinnerVariance();
 	}
 
 	/**
@@ -164,6 +165,28 @@ public class FormActivity extends Activity {
 					public void onNothingSelected(AdapterView<?> parentView) {
 					}
 				});
+	}
+	
+	private void setSpinnerVariance() {
+
+		spnVariance.setOnItemSelectedListener(new OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+				Object spnVarianceItem = spnVariance.getSelectedItem();
+				String spnVarianceString = (spnVarianceItem == null) ? "" : spnVarianceItem.toString();
+				
+				String free = resources.getString(string.free);
+
+				if (spnVarianceString == free) {
+					findViewById(R.id.ground_informations_layout).setVisibility(View.GONE);
+				} else {
+					findViewById(R.id.ground_informations_layout).setVisibility(View.VISIBLE);
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parentView) {}
+		});
 	}
 
 	/**

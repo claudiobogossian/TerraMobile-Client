@@ -274,38 +274,10 @@
                     android:entries="@array/variance" />
             </TableRow>
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:text="@string/tv_number_confirmation"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" >
-
-                <Spinner
-                    android:id="@+id/spnNumberConfirmation"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:entries="@array/number_confirmation"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true" />
-            </TableRow>
-
             <TableLayout
-                android:id="@+id/numbers_founded_layout"
-                android:visibility="gone" >
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" 
+                android:id="@+id/ground_informations_layout">
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -316,7 +288,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
-                        android:text="@string/tv_numbers_founded"
+                        android:text="@string/tv_number_confirmation"
                         android:textColor="@color/black"
                         android:textStyle="bold" />
                 </TableRow>
@@ -326,70 +298,104 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" >
 
-                    <EditText
-                        android:id="@+id/edt_other_numbers"
+                    <Spinner
+                        android:id="@+id/spnNumberConfirmation"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="phone"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:entries="@array/number_confirmation"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true" />
+                </TableRow>
+
+                <TableLayout
+                    android:id="@+id/numbers_founded_layout"
+                    android:visibility="gone" >
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:text="@string/tv_numbers_founded"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" >
+
+                        <EditText
+                            android:id="@+id/edt_other_numbers"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:inputType="phone" />
+                    </TableRow>
+                </TableLayout>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" >
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:text="@string/tv_primary_use"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" >
+
+                    <Spinner
+                        android:id="@+id/spnPrimaryUse"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:entries="@array/primary_use"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" >
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:text="@string/tv_secondary_use"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" >
+
+                    <Spinner
+                        android:id="@+id/spnSecundaryUse"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:entries="@array/secondary_use" />
                 </TableRow>
             </TableLayout>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:text="@string/tv_primary_use"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" >
-
-                <Spinner
-                    android:id="@+id/spnPrimaryUse"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:entries="@array/primary_use"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:text="@string/tv_secondary_use"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" >
-
-                <Spinner
-                    android:id="@+id/spnSecundaryUse"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:entries="@array/secondary_use" />
-            </TableRow>
         </TableLayout>
 
         <TableLayout
