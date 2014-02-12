@@ -12,6 +12,7 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -502,6 +503,33 @@ public class Utility {
 
 		return result;
 	}
+	
+        /**
+         * Gets the External SDCard Path.
+         */
+        public static File getExternalSdCardPath() {
+                String path = null;
+                
+                File sdCardFile = null;
+                List<String> sdCardPossiblePath = Arrays.asList("external_sd", "ext_sd", "external", "extSdCard");
+                
+                for (String sdPath : sdCardPossiblePath) {
+                        File file = new File("/mnt/", sdPath);
+                        
+                        if (file.isDirectory() && file.canWrite()) {
+                                path = file.getAbsolutePath();
+                        }
+                }
+                
+                if (path != null) {
+                        sdCardFile = new File(path, "osmdroid");
+                }
+                else {
+                        sdCardFile = new File(Environment.getExternalStorageDirectory(), "osmdroid");
+                }
+                
+                return sdCardFile;
+        }
 
 	/**
 	 * 
