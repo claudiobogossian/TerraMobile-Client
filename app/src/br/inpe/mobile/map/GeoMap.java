@@ -1,6 +1,5 @@
 package br.inpe.mobile.map;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,24 +7,27 @@ import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.bonuspack.overlays.ExtendedOverlayItem;
 import org.osmdroid.bonuspack.overlays.ItemizedOverlayWithBubble;
-import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
+import org.osmdroid.tileprovider.MapTileProviderBasic;
+import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.TilesOverlay;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -107,11 +109,16 @@ public class GeoMap extends Activity {
                 mapView.setBuiltInZoomControls(true);
                 mapView.setMultiTouchControls(true);
                 
-                OnlineTileSourceBase tileSource = TileSourceFactory.MAPQUESTOSM;
-                tileSourcePath = tileSource.OSMDROID_PATH.getAbsolutePath() + "/";
+                OnlineTileSourceBase mapQuestTileSource = TileSourceFactory.MAPQUESTOSM;
+                tileSourcePath = mapQuestTileSource.OSMDROID_PATH.getAbsolutePath() + "/";
                 
-                //String tileSourceName = tileSource.name();
-                //tileSourcePath = pathBase + "/" + tileSourceName;
+                final MapTileProviderBasic tileProvider = new MapTileProviderBasic(getApplicationContext());
+                final ITileSource tileSource = new XYTileSource("MapquestOSM", ResourceProxy.string.mapquest_osm, 11, 21, 256, ".png", "http://tile.openstreetmap.org/");              
+                
+                tileProvider.setTileSource(tileSource);
+                final TilesOverlay tilesOverlay = new TilesOverlay(tileProvider, this.getBaseContext());
+                tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
+                mapView.getOverlays().add(tilesOverlay);
                 
                 mapView.setTileSource(tileSource);
                 mapView.setUseDataConnection(false); //  letting osmdroid know you would use it in offline mode, keeps the mapView from loading online tiles using network connection.
@@ -131,8 +138,11 @@ public class GeoMap extends Activity {
                         self.createMyLocationItem();
                 }
                 else {
-                        controller.setZoom(12);
-                        controller.setCenter(new GeoPoint(-22.317773, -49.059534));
+                        //controller.setZoom(12);
+                        //controller.setCenter(new GeoPoint(-22.317773, -49.059534));
+                        
+                        controller.setZoom(20);
+                        controller.setCenter(new GeoPoint(-22.32261,-49.028732));
                 }
                 
                 // new GeoPoint(-22.317773, -49.059534) // Bauru
