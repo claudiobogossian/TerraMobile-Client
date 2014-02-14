@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
@@ -15,10 +16,16 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import android.app.DownloadManager;
+import android.app.DownloadManager.Query;
 import android.app.DownloadManager.Request;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.widget.Toast;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.exception.ExceptionHandler;
@@ -35,7 +42,7 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
         
         String                  message        = null;
         
-        List<String>            mapLevels      = Arrays.asList("12", "13", "14", "15", "16");
+        List<String>            mapLevels      = Arrays.asList("12", "13");
         
         private TaskActivity    taskActivity;
         
@@ -45,9 +52,6 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
         
         @Override
         protected String doInBackground(String... urls) {
-                
-                //TODO: vai pegar os mapLevels do servidor?
-                // server.getArrayDeMapLevels
                 
                 for (String mapLevel : mapLevels) {
                         String url = urls[0] + "?level=" + mapLevel;
@@ -68,7 +72,9 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
         
         public void downloadZipFiles(String url, String mapLevel) {
                 try {
-                        filePath = tileSourcePath + "bauru_" + mapLevel + ".zip";
+                        File pathTest = Utility.getExternalSdCardPath();
+                        //filePath = tileSourcePath + "bauru_" + mapLevel + ".zip";
+                        filePath = pathTest + "bauru_" + mapLevel + ".zip";
                         File baseMapZip = new File(filePath);
                         
                         if (!baseMapZip.exists()) {
@@ -121,9 +127,51 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
                 downloadManager = (DownloadManager) taskActivity.getSystemService(Context.DOWNLOAD_SERVICE);
                 
                 String url = Utility.hostUrl + "rest/tiles/zip?level=" + mapLevel;
-                
                 Request request = new Request(Uri.parse(url));
-                request.setDestinationInExternalPublicDir("osmdroid", "bauru_" + mapLevel + ".zip");
+                
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "bauru_" + mapLevel + ".zip");
+                
+                BroadcastReceiver receiver = new BroadcastReceiver() {
+                        @Override
+                        public void onReceive(Context context, Intent intent) {
+                                String action = intent.getAction();
+                                
+                                if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
+                                        Query query = new Query();
+                                        query.setFilterById(enqueue);
+                                        
+                                        Cursor c = downloadManager.query(query);
+
+                                        while (c.moveToNext()) {
+                                                int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
+                                                
+                                                if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
+                                                        String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                                                        
+                                                        File file = null;
+                                                        
+                                                        try {
+                                                                file = new File(new URI(uriString));
+                                                        }
+                                                        catch (Exception e) {
+                                                                e.printStackTrace();
+                                                        }
+                                                        
+                                                        if(file != null || !file.exists()) {
+                                                                String fileName = file.getName();
+                                                                
+                                                                String inputPath = file.getPath();
+                                                                String outputPath = tileSourcePath + fileName;
+                                                                
+                                                                Utility.moveFile(inputPath, outputPath);
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+                };
+
+                taskActivity.registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
                 
                 publishProgress("Iniciado download: " + mapLevel + ".zip ");
                 

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
@@ -517,6 +518,52 @@ public class Utility {
                 }
                 
                 return sdCardFile;
+        }
+        
+        public static void moveFile(
+                                    String inputPath,
+                                    String outputPath) {
+                InputStream in = null;
+                OutputStream out = null;
+                
+                Boolean inputFileExists = new File(inputPath).exists();
+                
+                if(inputFileExists) {
+                        try {
+                                //create output directory if it doesn't exist
+                                File dir = new File(outputPath);
+                             
+                                //if (!dir.exists()) {
+                                //        dir.mkdirs();
+                                //}
+                                
+                                in = new FileInputStream(inputPath);
+                                out = new FileOutputStream(outputPath);
+                                
+                                byte[] buffer = new byte[1024];
+                                int read;
+                                
+                                while ((read = in.read(buffer)) != -1) {
+                                        out.write(buffer, 0, read);
+                                }
+                                
+                                in.close();
+                                in = null;
+                                
+                                // write the output file
+                                out.flush();
+                                out.close();
+                                out = null;
+                                
+                                // delete the original file
+                                new File(inputPath).delete();       
+                        }
+                        catch (Exception e) {
+                                StringWriter errors = new StringWriter();
+                                e.printStackTrace(new PrintWriter(errors));
+                                ExceptionHandler.saveLogFile(errors.toString());
+                        }
+                }
         }
         
         /**
