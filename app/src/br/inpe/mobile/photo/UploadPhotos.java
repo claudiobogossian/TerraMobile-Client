@@ -9,6 +9,7 @@ import java.util.List;
 import android.os.AsyncTask;
 import android.widget.Toast;
 import br.inpe.mobile.Utility;
+import br.inpe.mobile.constants.Constants;
 import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.task.Task;
 import br.inpe.mobile.task.TaskActivity;
@@ -75,7 +76,7 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
         
         public void uploadTasks() {
                 List<Task> tasks = TaskDao.getFinishedTasks();
-                String url = Utility.hostUrl + "rest/tasks?user={user_hash}";
+                String url = Constants.HOST_URL + Constants.TASKS_REST;
                 UploadTasks remote = new UploadTasks(tasks, userHash, taskActivity);
                 remote.execute(new String[] { url });
         }

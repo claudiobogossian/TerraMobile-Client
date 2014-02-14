@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import br.inpe.mobile.R;
 import br.inpe.mobile.Utility;
+import br.inpe.mobile.constants.Constants;
 import br.inpe.mobile.database.DatabaseAdapter;
 import br.inpe.mobile.database.DatabaseHelper;
 import br.inpe.mobile.exception.ExceptionHandler;
@@ -158,7 +159,7 @@ public class LoginActivity extends Activity {
          */
         public void getRemoteUsers() {
                 if (Utility.isNetworkAvailable(this)) {
-                        String url = Utility.hostUrl + "rest/users";
+                        String url = Constants.HOST_URL + Constants.USER_REST;
                         DownloadUsers remote = new DownloadUsers(this);
                         remote.execute(new String[] { url });
                 }

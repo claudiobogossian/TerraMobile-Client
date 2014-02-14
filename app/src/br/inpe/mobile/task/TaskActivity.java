@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.inpe.mobile.R;
 import br.inpe.mobile.Utility;
+import br.inpe.mobile.constants.Constants;
 import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.photo.Photo;
 import br.inpe.mobile.photo.PhotoDao;
@@ -170,7 +171,7 @@ public class TaskActivity extends Activity {
          */
         public void getRemoteTasks() {
                 String userHash = session.getUserHash();
-                String url = Utility.hostUrl + "rest/tasks?user={user_hash}";
+                String url = Constants.HOST_URL + Constants.TASKS_REST;
                 DownloadTasks remote = new DownloadTasks(userHash, this);
                 remote.execute(new String[] { url });
         }
@@ -186,7 +187,7 @@ public class TaskActivity extends Activity {
                 List<Photo> photos = PhotoDao.getNotSyncPhotos();
                 
                 if (photos != null && !photos.isEmpty()) {
-                        String url = Utility.hostUrl + "rest/photos?user={user_hash}";
+                        String url = Constants.HOST_URL + Constants.PHOTOS_REST;
                         UploadPhotos remote = new UploadPhotos(photos, userHash, this);
                         remote.execute(new String[] { url });
                 }
@@ -245,7 +246,7 @@ public class TaskActivity extends Activity {
          * cached tiles zip file from server
          ******************************************************************************************************************/
         public void getRemoteZipBaseMap() {
-                String url = Utility.hostUrl + "rest/tiles/zip";
+                String url = Constants.HOST_URL + Constants.ZIP_REST;
                 // String url = "http://200.144.100.34:8080/rest/tiles/zip";
                 new DownloadZipAsync(this).execute(url);
         }

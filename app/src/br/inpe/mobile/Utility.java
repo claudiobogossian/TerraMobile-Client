@@ -40,19 +40,7 @@ import br.inpe.mobile.exception.ExceptionHandler;
 public class Utility {
         
         private final static String TAG         = "#UTILITY";
-        
         private static final int    TWO_MINUTES = 1000 * 60 * 2;
-        
-        //public static String host = "http://192.168.0.181";
-        public static String        host        = "http://institutosoma.dyndns.org";
-        
-        public static String        port        = "8000";
-        
-        public static String        server      = "terramobile-server";
-        
-        public static final String  hostUrl     = host + ":" + port + "/" + server + "/";
-        
-        // public static final String hostUrl = "http://200.144.100.34:8080/";
         
         /**
          * Determines whether one Location reading is better than the current

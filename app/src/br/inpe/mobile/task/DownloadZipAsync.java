@@ -28,6 +28,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.widget.Toast;
 import br.inpe.mobile.Utility;
+import br.inpe.mobile.constants.Constants;
 import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.map.GeoMap;
 
@@ -126,7 +127,7 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
         public void getRemoteBaseMap(String remoteUrl, String mapLevel) throws IOException {
                 downloadManager = (DownloadManager) taskActivity.getSystemService(Context.DOWNLOAD_SERVICE);
                 
-                String url = Utility.hostUrl + "rest/tiles/zip?level=" + mapLevel;
+                String url = Constants.HOST_URL + Constants.ZIP_REST + Constants.LEVEL_QUERY_STRING + mapLevel;
                 Request request = new Request(Uri.parse(url));
                 
                 request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "bauru_" + mapLevel + ".zip");
