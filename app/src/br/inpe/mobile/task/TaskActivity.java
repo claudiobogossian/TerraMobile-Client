@@ -24,6 +24,7 @@ import br.inpe.mobile.R;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.constants.Constants;
 import br.inpe.mobile.exception.ExceptionHandler;
+import br.inpe.mobile.map.BaseMapDownload;
 import br.inpe.mobile.photo.Photo;
 import br.inpe.mobile.photo.PhotoDao;
 import br.inpe.mobile.photo.UploadPhotos;
@@ -248,6 +249,6 @@ public class TaskActivity extends Activity {
         public void getRemoteZipBaseMap() {
                 String url = Constants.HOST_URL + Constants.ZIP_REST;
                 // String url = "http://200.144.100.34:8080/rest/tiles/zip";
-                new DownloadZipAsync(this).execute(url);
+                new BaseMapDownload(this).execute(url);
         }
 }

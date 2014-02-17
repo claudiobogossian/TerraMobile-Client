@@ -1,4 +1,4 @@
-package br.inpe.mobile.task;
+package br.inpe.mobile.map;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,9 +30,9 @@ import android.widget.Toast;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.constants.Constants;
 import br.inpe.mobile.exception.ExceptionHandler;
-import br.inpe.mobile.map.GeoMap;
+import br.inpe.mobile.task.TaskActivity;
 
-public class DownloadZipAsync extends AsyncTask<String, String, String> {
+public class BaseMapDownload extends AsyncTask<String, String, String> {
         String                  tileSourcePath = GeoMap.tileSourcePath;
         
         String                  filePath       = null;
@@ -44,7 +44,7 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
         
         private TaskActivity    taskActivity;
         
-        public DownloadZipAsync(TaskActivity taskActivity) {
+        public BaseMapDownload(TaskActivity taskActivity) {
                 this.taskActivity = taskActivity;
         }
         
