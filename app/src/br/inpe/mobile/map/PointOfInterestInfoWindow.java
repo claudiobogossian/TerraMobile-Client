@@ -18,13 +18,13 @@ import br.inpe.mobile.task.Task;
  * 
  * @author M.Kergall
  */
-public class POIInfoWindow extends DefaultInfoWindow {
+public class PointOfInterestInfoWindow extends DefaultInfoWindow {
         
         private Task         task;
         
         NominatimPOIProvider poiProvider = new NominatimPOIProvider();
         
-        public POIInfoWindow(MapView mapView) {
+        public PointOfInterestInfoWindow(MapView mapView) {
                 super(R.layout.bubble_white, mapView);
                 
                 View view = getView().findViewById(R.id.linearLayoutBubble);

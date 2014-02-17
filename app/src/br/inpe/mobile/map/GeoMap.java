@@ -55,7 +55,7 @@ public class GeoMap extends Activity {
         
         private Location                               location;
         
-        private POIInfoWindow                          poiInfoWindow;
+        private PointOfInterestInfoWindow                          poiInfoWindow;
         
         private OverlayItem                            myLocationOverlayItem;
         
@@ -125,7 +125,7 @@ public class GeoMap extends Activity {
                 MapOverlay movl = new MapOverlay(this);
                 mapView.getOverlays().add(movl);
                 
-                poiInfoWindow = new POIInfoWindow(mapView);
+                poiInfoWindow = new PointOfInterestInfoWindow(mapView);
                 
                 final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
                 poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, poiItems, mapView, poiInfoWindow);
@@ -290,7 +290,7 @@ public class GeoMap extends Activity {
                 poiMarker.setMarker(marker);
                 // poiMarker.setMarkerHotspot(poiMarker.HotspotPlace.CENTER);
                 
-                // thumbnail loading moved in POIInfoWindow.onOpen for better
+                // thumbnail loading moved in PointOfInterestInfoWindow.onOpen for better
                 // performances.
                 poiMarker.setRelatedObject(feature);
                 
