@@ -9,7 +9,7 @@
 		<artifactId>terramobile-android-parent</artifactId>
 	</parent>
 
-	<packaging>apk</packaging>
+	<!--  <packaging>apk</packaging> -->
 	<name>TerraMobile for Android</name>
 	<artifactId>terramobile-android</artifactId>
 	<url>https://github.com/PauloLuan/TerraMobile</url>
@@ -90,14 +90,18 @@
 		</dependency>
 		
 	</dependencies>
+	
+	<!--  
 	<build>
 		<plugins>
+		    
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
-			</plugin>
+			</plugin>		 
 		</plugins>
 	</build>
+	-->
 
 	<profiles>
 		<profile>

@@ -33,16 +33,13 @@ import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.map.GeoMap;
 
 public class DownloadZipAsync extends AsyncTask<String, String, String> {
-        private long            enqueue;
-        
-        private DownloadManager downloadManager;
-        
         String                  tileSourcePath = GeoMap.tileSourcePath;
         
         String                  filePath       = null;
         
         String                  message        = null;
         
+        //List<String>            mapLevels      = Arrays.asList("12", "13","14","15","16","17","18");
         List<String>            mapLevels      = Arrays.asList("12", "13");
         
         private TaskActivity    taskActivity;
@@ -73,9 +70,7 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
         
         public void downloadZipFiles(String url, String mapLevel) {
                 try {
-                        File pathTest = Utility.getExternalSdCardPath();
-                        //filePath = tileSourcePath + "bauru_" + mapLevel + ".zip";
-                        filePath = pathTest + "bauru_" + mapLevel + ".zip";
+                        filePath = tileSourcePath + "bauru_" + mapLevel + ".zip";
                         File baseMapZip = new File(filePath);
                         
                         if (!baseMapZip.exists()) {
@@ -125,12 +120,14 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
          * @throws IOException
          */
         public void getRemoteBaseMap(String remoteUrl, String mapLevel) throws IOException {
-                downloadManager = (DownloadManager) taskActivity.getSystemService(Context.DOWNLOAD_SERVICE);
+                final DownloadManager downloadManager = (DownloadManager) taskActivity.getSystemService(Context.DOWNLOAD_SERVICE);
                 
                 String url = Constants.HOST_URL + Constants.ZIP_REST + Constants.LEVEL_QUERY_STRING + mapLevel;
                 Request request = new Request(Uri.parse(url));
                 
                 request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "bauru_" + mapLevel + ".zip");
+               
+                final long enqueue = downloadManager.enqueue(request);
                 
                 BroadcastReceiver receiver = new BroadcastReceiver() {
                         @Override
@@ -141,9 +138,9 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
                                         Query query = new Query();
                                         query.setFilterById(enqueue);
                                         
-                                        Cursor c = downloadManager.query(query);
-
-                                        while (c.moveToNext()) {
+                                        Cursor c = downloadManager.query(query);                                   
+                                        
+                                        if (c.moveToNext()) {
                                                 int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
                                                 
                                                 if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
@@ -158,25 +155,39 @@ public class DownloadZipAsync extends AsyncTask<String, String, String> {
                                                                 e.printStackTrace();
                                                         }
                                                         
-                                                        if(file != null || !file.exists()) {
+                                                        if (file != null || !file.exists()) {
                                                                 String fileName = file.getName();
                                                                 
                                                                 String inputPath = file.getPath();
                                                                 String outputPath = tileSourcePath + fileName;
                                                                 
                                                                 Utility.moveFile(inputPath, outputPath);
+                                                                
+                                                                sendActionMountedEvent();
                                                         }
                                                 }
                                         }
                                 }
                         }
                 };
-
+                
                 taskActivity.registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
                 
                 publishProgress("Iniciado download: " + mapLevel + ".zip ");
-                
-                enqueue = downloadManager.enqueue(request);
+        }
+        
+        /**
+         * In order for the MapView to start loading a new tile archive file,
+         * you need the MapTileFileArchiveProvider class to call its
+         * findArchiveFiles() function. As it is coded now, this only happens
+         * when the MapTileFileArchiveProvider class is constructed, and when
+         * the system sends a ACTION_MEDIA_UNMOUNTED/ACTION_MEDIA_MOUNTED
+         * notification.
+         * 
+         * */
+        public void sendActionMountedEvent() {
+                Uri uri = Uri.parse("file://" + this.tileSourcePath);
+                taskActivity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, uri));
         }
         
         /**

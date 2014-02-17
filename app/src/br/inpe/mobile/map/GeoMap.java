@@ -26,7 +26,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -141,10 +140,11 @@ public class GeoMap extends Activity {
                         //controller.setZoom(12);
                         //controller.setCenter(new GeoPoint(-22.317773, -49.059534));
                         
-                        controller.setZoom(20);
+                        controller.setZoom(12);
                         controller.setCenter(new GeoPoint(-22.32261,-49.028732));
                 }
                 
+                // new GeoPoint(-25.50116, -54.62678)
                 // new GeoPoint(-22.317773, -49.059534) // Bauru
                 // new GeoPoint(-23.157221, -45.792443) // SJC
                 
@@ -222,26 +222,9 @@ public class GeoMap extends Activity {
                 finish();
         }
         
-        /**
-         * In order for the MapView to start loading a new tile archive file,
-         * you need the MapTileFileArchiveProvider class to call its
-         * findArchiveFiles() function. As it is coded now, this only happens
-         * when the MapTileFileArchiveProvider class is constructed, and when
-         * the system sends a ACTION_MEDIA_UNMOUNTED/ACTION_MEDIA_MOUNTED
-         * notification.
-         * 
-         * */
-        public void refreshMapView() {
-                
-                Uri uri = Uri.parse("file://" + this.tileSourcePath);
-                
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, uri));
-        }
-        
         @Override
         protected void onResume() {
                 super.onResume();
-                self.refreshMapView();
                 self.showLandmarks();
         }
         
@@ -369,9 +352,7 @@ public class GeoMap extends Activity {
                         else if (resultCode == RESULT_CANCELED) {}
                 }
                 if (requestCode == TASK) {
-                        if (resultCode == RESULT_OK) {
-                                
-                        }
+                        //self.refreshMapView();
                 }
         }
         
