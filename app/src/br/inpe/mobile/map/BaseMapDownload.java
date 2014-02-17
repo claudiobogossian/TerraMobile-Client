@@ -39,8 +39,7 @@ public class BaseMapDownload extends AsyncTask<String, String, String> {
         
         String                  message        = null;
         
-        //List<String>            mapLevels      = Arrays.asList("12", "13","14","15","16","17","18");
-        List<String>            mapLevels      = Arrays.asList("12", "13");
+        List<String>            mapLevels      = Arrays.asList("12", "13","14","15","16","17","18");
         
         private TaskActivity    taskActivity;
         
