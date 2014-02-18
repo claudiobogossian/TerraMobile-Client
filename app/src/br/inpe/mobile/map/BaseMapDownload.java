@@ -39,7 +39,8 @@ public class BaseMapDownload extends AsyncTask<String, String, String> {
         
         String                  message        = null;
         
-        List<String>            mapLevels      = Arrays.asList("12", "13","14","15","16","17","18");
+        //List<String>            mapLevels      = Arrays.asList("12", "13","14","15","16","17","18");
+        List<String>            mapLevels      = Arrays.asList("12", "13");
         
         private TaskActivity    taskActivity;
         
@@ -155,12 +156,10 @@ public class BaseMapDownload extends AsyncTask<String, String, String> {
                                                         }
                                                         
                                                         if (file != null || !file.exists()) {
+                                                                String inputPath = file.getPath();
                                                                 String fileName = file.getName();
                                                                 
-                                                                String inputPath = file.getPath();
-                                                                String outputPath = tileSourcePath + fileName;
-                                                                
-                                                                Utility.moveFile(inputPath, outputPath);
+                                                                Utility.moveFile(inputPath, tileSourcePath, fileName);
                                                                 
                                                                 sendActionMountedEvent();
                                                         }

@@ -510,7 +510,8 @@ public class Utility {
         
         public static void moveFile(
                                     String inputPath,
-                                    String outputPath) {
+                                    String outputPath,
+                                    String fileName) {
                 InputStream in = null;
                 OutputStream out = null;
                 
@@ -521,12 +522,12 @@ public class Utility {
                                 //create output directory if it doesn't exist
                                 File dir = new File(outputPath);
                              
-                                //if (!dir.exists()) {
-                                //        dir.mkdirs();
-                                //}
+                                if (!dir.exists()) {
+                                        dir.mkdirs();
+                                }
                                 
                                 in = new FileInputStream(inputPath);
-                                out = new FileOutputStream(outputPath);
+                                out = new FileOutputStream(outputPath + fileName);
                                 
                                 byte[] buffer = new byte[1024];
                                 int read;
