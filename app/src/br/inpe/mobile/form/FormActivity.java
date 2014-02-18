@@ -963,10 +963,14 @@ public class FormActivity extends Activity {
                 else {
                         String message = null;
                         String notDetected = resources.getString(R.string.not_detected);
+                        String free = resources.getString(R.string.free);
                         String spnVarianceString = spnVariance.getSelectedItem().toString();
                         
-                        if (!spnVarianceString.equals(notDetected)) {
-                                // Quando não é detectado nenhuma desconformidade, então não é
+                        boolean isNotDetected = spnVarianceString.equals(notDetected);
+                        boolean isFree = spnVarianceString.equals(free);
+                        
+                        if (!isNotDetected && !isFree) {
+                                // Quando não é detectado nenhuma desconformidade ou vago, então não é
                                 // obrigatório o preenchimento das informações.
                                 message = self.checkNull();
                         }
