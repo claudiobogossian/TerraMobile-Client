@@ -194,6 +194,21 @@ public class FormActivity extends Activity {
                 });
         }
         
+        public void clearInformationsForWastelands() {
+                try {
+                        removePicturesIfWasNotPersisted();
+                        
+                        spnNumberConfirmation.setSelection(0);
+                        spnPrimaryUse.setSelection(0);
+                        spnSecondaryUse.setSelection(0);               
+
+                        edtOtherNumbers.setText("");
+                }
+                catch (Exception e) {
+                        e.printStackTrace();
+                }               
+        }
+        
         /**
          * 
          * 
@@ -226,7 +241,7 @@ public class FormActivity extends Activity {
                 buttonCancel.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                self.removeImageIfWasNotPersisted();
+                                self.removePicturesIfWasNotPersisted();
                                 setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "CANCEL"));
                                 finish();
                         }
@@ -956,60 +971,108 @@ public class FormActivity extends Activity {
                 }
         }
         
-        public void validateFields() {
-                if (photos.isEmpty()) {
-                        Utility.showToast("Você precisa tirar ao menos uma foto.", Toast.LENGTH_LONG, FormActivity.this);
+        // Quando não é detectado nenhuma desconformidade ou vago, então não é obrigatório o preenchimento das informações.
+        
+        /**
+         * 
+         * Verifies if the selection of the spinner variance is either Not Detected or Free.
+         * 
+         * */
+        public boolean isVarianceFreeOrNotDetected(){
+                boolean isNotDetected = isVarianceNotDetected();
+                boolean isFree = isVarianceFree();
+                
+                boolean isSelected = false;
+                
+                if (isNotDetected || isFree) {
+                        isSelected = true;
                 }
-                else {
-                        String message = null;
-                        String notDetected = resources.getString(R.string.not_detected);
-                        String free = resources.getString(R.string.free);
-                        String spnVarianceString = spnVariance.getSelectedItem().toString();
-                        
-                        boolean isNotDetected = spnVarianceString.equals(notDetected);
-                        boolean isFree = spnVarianceString.equals(free);
-                        
-                        if (!isNotDetected && !isFree) {
-                                // Quando não é detectado nenhuma desconformidade ou vago, então não é
-                                // obrigatório o preenchimento das informações.
-                                message = self.checkNull();
-                        }
-                        
-                        if (message != null) {
-                                Utility.showToast(message, Toast.LENGTH_LONG, self);
-                        }
-                        else {
-                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FormActivity.this);
-                                alertDialogBuilder.setTitle("Atenção");
-                                alertDialogBuilder.setMessage("Deseja salvar?").setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-                                        public void onClick(
-                                                            DialogInterface dialog,
-                                                            int id) {
-                                                dialog.cancel();
-                                                self.saveTaskIntoLocalDatabase();
-                                        }
-                                }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
-                                        public void onClick(
-                                                            DialogInterface dialog,
-                                                            int id) {
-                                                dialog.cancel();
-                                        }
-                                });
-                                
-                                AlertDialog alertDialog = alertDialogBuilder.create();
-                                alertDialog.show();
-                        }
-                }
+                
+                return isSelected;
         }
         
+
+        /**
+         * 
+         * Verifies if the selection of the spinner variance is Not Detected.
+         * 
+         * */
+        public boolean isVarianceNotDetected(){
+                String notDetected = resources.getString(R.string.not_detected);
+                String spnVarianceString = spnVariance.getSelectedItem().toString();
+                boolean isNotDetected = spnVarianceString.equals(notDetected);
+                return isNotDetected;
+        }
+        
+        /**
+         * 
+         * Verifies if the selection of the spinner variance is Free.
+         * 
+         * */
+        public boolean isVarianceFree(){
+                String free = resources.getString(R.string.free);
+                String spnVarianceString = spnVariance.getSelectedItem().toString();
+                boolean isFree = spnVarianceString.equals(free);
+                return isFree;
+        }
+        
+        public void validateFields() {
+                String message = null;
+                               
+                if (!isVarianceFreeOrNotDetected()) {
+                        message = self.checkNull();
+                }
+                
+                if(!isVarianceFree()) {
+                        if (photos.isEmpty()) {
+                                if(message == null) {
+                                        message = "\n\n Você precisa tirar ao menos uma foto.";                
+                                } else {
+                                        message += "\n\n Você precisa tirar ao menos uma foto.";
+                                }
+                        }
+                }
+                
+                if (message != null) {
+                        Utility.showToast(message, Toast.LENGTH_LONG, self);
+                }
+                else {
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FormActivity.this);
+                        alertDialogBuilder.setTitle("Atenção");
+                        alertDialogBuilder.setMessage("Deseja salvar?").setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                                public void onClick(
+                                                    DialogInterface dialog,
+                                                    int id) {
+                                        dialog.cancel();
+                                        self.saveTaskIntoLocalDatabase();
+                                }
+                        }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                                public void onClick(
+                                                    DialogInterface dialog,
+                                                    int id) {
+                                        dialog.cancel();
+                                }
+                        });
+                        
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.show();
+                }
+        }
+
         protected void saveTaskIntoLocalDatabase() {
                 boolean isSaved = false;
                 
                 self.showLoadingMask();
                 
+                if (isVarianceFree()) {
+                        clearInformationsForWastelands();
+                }
+                else if (photos.isEmpty()) {
+                        isSaved = PhotoDao.savePhotos(photos);
+                }
+                
                 Form filledForm = self.makeFormInformationsToObject(currentTask.getForm());
                 currentTask.setForm(filledForm);
-                
                 currentTask.setDone(true);
                 
                 isSaved = TaskDao.updateTask(currentTask);
@@ -1017,8 +1080,6 @@ public class FormActivity extends Activity {
                 if (!this.checkInfrastructureFieldsIsNull()) {
                         TaskDao.updateInfrastructureDataFromAllForms(currentTask);
                 }
-                
-                isSaved = PhotoDao.savePhotos(photos);
                 
                 Intent data = new Intent();
                 
@@ -1041,11 +1102,9 @@ public class FormActivity extends Activity {
          * cancelled the operation.
          * 
          * */
-        public void removeImageIfWasNotPersisted() {
+        public void removePicturesIfWasNotPersisted() {
                 for (Photo photo : photos) {
-                        if (photo.getId() == null) { // remove file if it not persisted on
-                                // database (exists only on
-                                // filesystem).
+                        if (photo.getId() == null) { // remove file if it not persisted on database (exists only on filesystem).
                                 File file = new File(photo.getPath());
                                 file.delete();
                                 photos.remove(photo);
