@@ -112,8 +112,8 @@ public class GeoMap extends Activity {
                 tileSourcePath = mapQuestTileSource.OSMDROID_PATH.getAbsolutePath() + "/";
                 
                 final MapTileProviderBasic tileProvider = new MapTileProviderBasic(getApplicationContext());
-                final ITileSource tileSource = new XYTileSource("MapquestOSM", ResourceProxy.string.mapquest_osm, 11, 21, 256, ".png", "http://tile.openstreetmap.org/");              
-                
+                final ITileSource tileSource = new XYTileSource("MapquestOSM", ResourceProxy.string.mapquest_osm, 11, 20, 256, ".png", new String[] { "http://tile.openstreetmap.org/" });
+
                 tileProvider.setTileSource(tileSource);
                 final TilesOverlay tilesOverlay = new TilesOverlay(tileProvider, this.getBaseContext());
                 tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);

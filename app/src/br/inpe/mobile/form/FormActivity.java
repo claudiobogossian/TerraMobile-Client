@@ -618,11 +618,12 @@ public class FormActivity extends Activity {
                         ExceptionHandler.saveLogFile(errors.toString());
                 }
                 
-                if (lastFeatureId != null && currentFeatureId != null && lastFeatureId.equals(currentFeatureId)) {
-                        
-                        isSame = true;
+                if (lastFeatureId != null && currentFeatureId != null && lastFeatureId.equals(currentFeatureId)) {                        
+                        if (lastTask.getAddress().getName() == currentTask.getAddress().getName()) {
+                                isSame = true;
+                        }
                 }
-                
+
                 return isSame;
         }
         
@@ -1067,7 +1068,7 @@ public class FormActivity extends Activity {
                 if (isVarianceFree()) {
                         clearInformationsForWastelands();
                 }
-                else if (photos.isEmpty()) {
+                else if (!photos.isEmpty()) {
                         isSaved = PhotoDao.savePhotos(photos);
                 }
                 

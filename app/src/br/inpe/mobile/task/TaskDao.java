@@ -403,9 +403,11 @@ public class TaskDao {
                         taskQueryBuilder.join(userQueryBuilder);
                         
                         String featureId = getFeatureId(task);
-                        addressQueryBuilder.where().like("featureId", "%" + featureId + "%");
-                        
+                        addressQueryBuilder.where().like("featureId", "%" + featureId + "%").and().like("name", "%" + task.getAddress().getName() + "%");
+
                         taskQueryBuilder.join(addressQueryBuilder);
+                        
+                        String test = taskQueryBuilder.prepareStatementString(); // TODO: remove
                         
                         tasks = taskQueryBuilder.query();
                         
@@ -447,7 +449,7 @@ public class TaskDao {
                 
                 // gets the sector and block to the verification (0, 8).
                 try {
-                        featureId = task.getAddress().getFeatureId().substring(0, 6);
+                        featureId = task.getAddress().getFeatureId().substring(0, 8);
                 }
                 catch (Exception e) {
                         StringWriter errors = new StringWriter();
