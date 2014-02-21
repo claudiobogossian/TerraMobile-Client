@@ -607,10 +607,10 @@ public class FormActivity extends Activity {
                 String lastFeatureId = null;
                 String currentFeatureId = null;
                 
-                // gets the sector and block to the verification (0, 8).
+                // gets the sector and block to the verification (0, 6).
                 try {
-                        lastFeatureId = lastTask.getAddress().getFeatureId().substring(0, 8);
-                        currentFeatureId = currentTask.getAddress().getFeatureId().substring(0, 8);
+                        lastFeatureId = lastTask.getAddress().getFeatureId().substring(0, 6);
+                        currentFeatureId = currentTask.getAddress().getFeatureId().substring(0, 6);
                 }
                 catch (Exception e) {
                         StringWriter errors = new StringWriter();

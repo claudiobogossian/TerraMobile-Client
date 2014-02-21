@@ -447,9 +447,9 @@ public class TaskDao {
         private static String getFeatureId(Task task) {
                 String featureId = "";
                 
-                // gets the sector and block to the verification (0, 8).
+                // gets the sector and block to the verification (0, 6).
                 try {
-                        featureId = task.getAddress().getFeatureId().substring(0, 8);
+                        featureId = task.getAddress().getFeatureId().substring(0, 6);
                 }
                 catch (Exception e) {
                         StringWriter errors = new StringWriter();
