@@ -20,7 +20,9 @@ import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.TilesOverlay;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -371,4 +373,24 @@ public class GeoMap extends Activity {
                         return false;
                 }
         }
+        
+        @Override
+        public void onBackPressed() {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GeoMap.this);
+                alertDialogBuilder.setTitle("Atenção");
+                alertDialogBuilder.setMessage("Deseja realmente sair?").setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                finish();
+                        }
+                }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                        }
+                });
+                
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+        }
+        
 }
