@@ -51,7 +51,7 @@ public class UploadTasks extends AsyncTask<String, String, String> {
                                         Task responseTask = receivedTasks.get(0);
                                         
                                         if (responseTask != null) {
-                                                TaskDao.deleteTasks(tasks);
+                                                TaskDao.deleteTask(task);
                                         }
                                         
                                         publishProgress("Enviando tarefas... " + i + " de " + tasks.size());
