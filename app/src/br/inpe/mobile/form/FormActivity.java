@@ -1003,7 +1003,7 @@ public class FormActivity extends Activity {
         
         public void validateFields() {
                 String message = null;
-                                
+                
                 if (!isVarianceFree()) {
                         
                         message = self.checkNull();
