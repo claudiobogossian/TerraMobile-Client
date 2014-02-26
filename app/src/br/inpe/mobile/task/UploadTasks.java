@@ -41,21 +41,28 @@ public class UploadTasks extends AsyncTask<String, String, String> {
                 String message = null;
                 
                 for (String url : urls) {
-                        try {
-                                publishProgress("Enviando o seu trabalho para o servidor...");
-                                Task[] responseTasks = taskActivity.restTemplate.postForObject(url, this.tasks, Task[].class, userHash);
-                                List<Task> response = new ArrayList<Task>(Arrays.asList(responseTasks));
-                                if (response != null) {
-                                        publishProgress("Excluindo tarefas concluídas...");
-                                        TaskDao.deleteTasks(tasks);
+                        
+                        for (int i = 0; i < this.tasks.size(); i++) {
+                                
+                                try {
+                                        Task task = tasks.get(i);
+                                        
+                                        Task[] responseTasks = taskActivity.restTemplate.postForObject(url, new Task[] { task }, Task[].class, userHash);
+                                        List<Task> receivedTasks = new ArrayList<Task>(Arrays.asList(responseTasks));
+                                        
+                                        Task responseTask = receivedTasks.get(0);
+                                        
+                                        if (responseTask != null) {
+                                                TaskDao.deleteTasks(tasks);
+                                        }
+                                        
+                                        publishProgress("Enviando tarefas... " + i + " de " + tasks.size());
                                 }
-                        }
-                        catch (Exception e) {
-                                message = "Erro ao enviar as fotos.";
-                                // String error = e.getResponseBodyAsString();
-                                StringWriter errors = new StringWriter();
-                                e.printStackTrace(new PrintWriter(errors));
-                                ExceptionHandler.saveLogFile(errors.toString());
+                                catch (Exception e) {
+                                        message = "Ocorreu um erro de conexão ao enviar as imagens.";
+                                        // String error = e.getResponseBodyAsString();
+                                        ExceptionHandler.saveLogFile(e);
+                                }
                         }
                 }
                 

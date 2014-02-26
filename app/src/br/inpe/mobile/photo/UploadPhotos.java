@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.web.client.HttpClientErrorException;
+
 import android.os.AsyncTask;
 import android.widget.Toast;
 import br.inpe.mobile.Utility;
@@ -47,28 +49,32 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                 PhotoDao.verifyIntegrityOfPictures();
                 
                 for (String url : urls) {
-                        try {
-                                Photo[] responsePhotos = taskActivity.restTemplate.postForObject(url, this.photos, Photo[].class, userHash);
-                                List<Photo> photos = new ArrayList<Photo>(Arrays.asList(responsePhotos));
-                                
-                                if (photos != null) {
-                                        publishProgress("Verificando se existem imagens não utilizadas no aparelho...", "0", "" + photos.size());
+                        
+                        for (int i = 0; i < this.photos.size(); i++) {
+                                try {
+                                        Photo photo = photos.get(i);
                                         
-                                        int progress = 0;
+                                        Photo[] responsePhotos = taskActivity.restTemplate.postForObject(url, new Photo[] { photo }, Photo[].class, userHash);
+                                        List<Photo> receivedPhotos = new ArrayList<Photo>(Arrays.asList(responsePhotos));
                                         
-                                        for (Photo photo : photos) {
-                                                PhotoDao.deletePhoto(photo);
-                                                progress++;
-                                                publishProgress("Verificando se existem imagens não utilizadas no aparelho...", "" + progress);
+                                        Photo responsePhoto = receivedPhotos.get(0);
+                                        
+                                        if (responsePhoto != null) {
+                                                PhotoDao.deletePhoto(responsePhoto);
                                         }
+                                        
+                                        publishProgress("Enviando imagens... " + (i + 1) + " de " + photos.size());
                                 }
-                        }
-                        catch (Exception e) {
-                                message = "Ocorreu um erro ao enviar as imagens.";
-                                // String error = e.getResponseBodyAsString();
-                                StringWriter errors = new StringWriter();
-                                e.printStackTrace(new PrintWriter(errors));
-                                ExceptionHandler.saveLogFile(errors.toString());
+                                catch (HttpClientErrorException e) {
+                                        message = "Ocorreu um erro de conexão ao enviar as imagens.";
+                                        // String error = e.getResponseBodyAsString();
+                                        ExceptionHandler.saveLogFile(e);
+                                }
+                                catch (Exception e) {
+                                        message = "Ocorreu um erro ao enviar as imagens.";
+                                        // String error = e.getResponseBodyAsString();
+                                        ExceptionHandler.saveLogFile(e);
+                                }
                         }
                 }
                 return message;
@@ -100,9 +106,8 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                 if (message != null) {
                         Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
                 }
-                else {
-                        this.uploadTasks();
-                }
+                
+                this.uploadTasks();
         }
         
 }

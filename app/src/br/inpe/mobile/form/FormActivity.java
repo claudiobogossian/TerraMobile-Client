@@ -200,13 +200,13 @@ public class FormActivity extends Activity {
                         
                         spnNumberConfirmation.setSelection(0);
                         spnPrimaryUse.setSelection(0);
-                        spnSecondaryUse.setSelection(0);               
-
+                        spnSecondaryUse.setSelection(0);
+                        
                         edtOtherNumbers.setText("");
                 }
                 catch (Exception e) {
                         e.printStackTrace();
-                }               
+                }
         }
         
         /**
@@ -346,9 +346,7 @@ public class FormActivity extends Activity {
                                 }
                                 catch (SQLException e) {
                                         Log.e(self.LOG_TAG, "ERRO AO CRIAR CURSOR!" + e.getMessage());
-                                        StringWriter errors = new StringWriter();
-                                        e.printStackTrace(new PrintWriter(errors));
-                                        ExceptionHandler.saveLogFile(errors.toString());
+                                        ExceptionHandler.saveLogFile(e);
                                 }
                         }
                 });
@@ -550,9 +548,7 @@ public class FormActivity extends Activity {
                                 spnPluvialGallery.setSelection(((ArrayAdapter<String>) spnPluvialGallery.getAdapter()).getPosition(taskParam.getForm().getPluvialGallery()));
                         }
                         catch (Exception e) {
-                                StringWriter errors = new StringWriter();
-                                e.printStackTrace(new PrintWriter(errors));
-                                ExceptionHandler.saveLogFile(errors.toString());
+                                ExceptionHandler.saveLogFile(e);
                         }
                         
                         if (taskParam.getId() != null) {
@@ -587,9 +583,7 @@ public class FormActivity extends Activity {
                         spnPluvialGallery.setSelection(((ArrayAdapter<String>) spnPluvialGallery.getAdapter()).getPosition(task.getForm().getPluvialGallery()));
                 }
                 catch (Exception e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
         }
         
@@ -613,17 +607,15 @@ public class FormActivity extends Activity {
                         currentFeatureId = currentTask.getAddress().getFeatureId().substring(0, 6);
                 }
                 catch (Exception e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
-                if (lastFeatureId != null && currentFeatureId != null && lastFeatureId.equals(currentFeatureId)) {                        
-                        if (lastTask.getAddress().getName() == currentTask.getAddress().getName()) {
+                if (lastFeatureId != null && currentFeatureId != null && lastFeatureId.equals(currentFeatureId)) {
+                        if (lastTask.getAddress().getName().equals(currentTask.getAddress().getName())) {
                                 isSame = true;
                         }
                 }
-
+                
                 return isSame;
         }
         
@@ -721,9 +713,7 @@ public class FormActivity extends Activity {
                         latitude = Double.valueOf(stringLat);
                 }
                 catch (Exception e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 try {
@@ -731,9 +721,7 @@ public class FormActivity extends Activity {
                         longitude = Double.valueOf(stringLong);
                 }
                 catch (Exception e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 form.setCoordx(latitude);
@@ -905,9 +893,7 @@ public class FormActivity extends Activity {
                         fis = new FileInputStream(imagefile);
                 }
                 catch (FileNotFoundException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -976,10 +962,11 @@ public class FormActivity extends Activity {
         
         /**
          * 
-         * Verifies if the selection of the spinner variance is either Not Detected or Free.
+         * Verifies if the selection of the spinner variance is either Not
+         * Detected or Free.
          * 
          * */
-        public boolean isVarianceFreeOrNotDetected(){
+        public boolean isVarianceFreeOrNotDetected() {
                 boolean isNotDetected = isVarianceNotDetected();
                 boolean isFree = isVarianceFree();
                 
@@ -992,13 +979,12 @@ public class FormActivity extends Activity {
                 return isSelected;
         }
         
-
         /**
          * 
          * Verifies if the selection of the spinner variance is Not Detected.
          * 
          * */
-        public boolean isVarianceNotDetected(){
+        public boolean isVarianceNotDetected() {
                 String notDetected = resources.getString(R.string.not_detected);
                 String spnVarianceString = spnVariance.getSelectedItem().toString();
                 boolean isNotDetected = spnVarianceString.equals(notDetected);
@@ -1010,7 +996,7 @@ public class FormActivity extends Activity {
          * Verifies if the selection of the spinner variance is Free.
          * 
          * */
-        public boolean isVarianceFree(){
+        public boolean isVarianceFree() {
                 String free = resources.getString(R.string.free);
                 String spnVarianceString = spnVariance.getSelectedItem().toString();
                 boolean isFree = spnVarianceString.equals(free);
@@ -1019,16 +1005,17 @@ public class FormActivity extends Activity {
         
         public void validateFields() {
                 String message = null;
-                               
+                
                 if (!isVarianceFreeOrNotDetected()) {
                         message = self.checkNull();
                 }
                 
-                if(!isVarianceFree()) {
+                if (!isVarianceFree()) {
                         if (photos.isEmpty()) {
-                                if(message == null) {
-                                        message = "\n\n Você precisa tirar ao menos uma foto.";                
-                                } else {
+                                if (message == null) {
+                                        message = "\n\n Você precisa tirar ao menos uma foto.";
+                                }
+                                else {
                                         message += "\n\n Você precisa tirar ao menos uma foto.";
                                 }
                         }
@@ -1059,7 +1046,7 @@ public class FormActivity extends Activity {
                         alertDialog.show();
                 }
         }
-
+        
         protected void saveTaskIntoLocalDatabase() {
                 boolean isSaved = false;
                 
@@ -1133,9 +1120,7 @@ public class FormActivity extends Activity {
                                 }
                         }
                         catch (Exception e) {
-                                StringWriter errors = new StringWriter();
-                                e.printStackTrace(new PrintWriter(errors));
-                                ExceptionHandler.saveLogFile(errors.toString());
+                                ExceptionHandler.saveLogFile(e);
                         }
                 }
         }

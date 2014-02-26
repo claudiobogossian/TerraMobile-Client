@@ -4,8 +4,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.List;
 import java.util.UUID;
 
@@ -283,9 +281,7 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
                         isStored = true;
                 }
                 catch (Exception e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return isStored;
@@ -331,9 +327,7 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
                         setZoomListener();
                 }
                 catch (IOException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
         }
         

@@ -1,7 +1,5 @@
 package br.inpe.mobile.user;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -42,15 +40,11 @@ public class DownloadUsers extends AsyncTask<String, String, String> {
                         }
                         catch (HttpClientErrorException e) {
                                 message = "Erro ao verificar usuários no servidor.";
-                                StringWriter errors = new StringWriter();
-                                e.printStackTrace(new PrintWriter(errors));
-                                ExceptionHandler.saveLogFile(errors.toString());
+                                ExceptionHandler.saveLogFile(e);
                         }
                         catch (Exception e) {
                                 message = "Erro ao verificar usuários no servidor.";
-                                StringWriter errors = new StringWriter();
-                                e.printStackTrace(new PrintWriter(errors));
-                                ExceptionHandler.saveLogFile(errors.toString());
+                                ExceptionHandler.saveLogFile(e);
                         }
                 }
                 

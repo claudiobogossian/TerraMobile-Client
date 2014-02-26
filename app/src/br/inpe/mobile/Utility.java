@@ -6,8 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -304,9 +302,7 @@ public class Utility {
                         result = stringHexa(hashMd5);
                 }
                 catch (NoSuchAlgorithmException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 return result;
         }
@@ -386,9 +382,7 @@ public class Utility {
                         bitmapImage = BitmapFactory.decodeStream(new FileInputStream(file), null, options);
                 }
                 catch (Exception e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return bitmapImage;
@@ -517,11 +511,11 @@ public class Utility {
                 
                 Boolean inputFileExists = new File(inputPath).exists();
                 
-                if(inputFileExists) {
+                if (inputFileExists) {
                         try {
                                 //create output directory if it doesn't exist
                                 File dir = new File(outputPath);
-                             
+                                
                                 if (!dir.exists()) {
                                         dir.mkdirs();
                                 }
@@ -545,12 +539,10 @@ public class Utility {
                                 out = null;
                                 
                                 // delete the original file
-                                new File(inputPath).delete();       
+                                new File(inputPath).delete();
                         }
                         catch (Exception e) {
-                                StringWriter errors = new StringWriter();
-                                e.printStackTrace(new PrintWriter(errors));
-                                ExceptionHandler.saveLogFile(errors.toString());
+                                ExceptionHandler.saveLogFile(e);
                         }
                 }
         }

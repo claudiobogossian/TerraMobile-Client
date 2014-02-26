@@ -1,7 +1,5 @@
 package br.inpe.mobile.user;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -143,9 +141,7 @@ public class LoginActivity extends Activity {
                         }
                 }
                 catch (SQLException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return userExists;
@@ -189,9 +185,7 @@ public class LoginActivity extends Activity {
                                 }
                         }
                         catch (SQLException e) {
-                                StringWriter errors = new StringWriter();
-                                e.printStackTrace(new PrintWriter(errors));
-                                ExceptionHandler.saveLogFile(errors.toString());
+                                ExceptionHandler.saveLogFile(e);
                         }
                 }
         }

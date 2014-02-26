@@ -86,9 +86,7 @@ public class TaskActivity extends Activity {
                                         }
                                         catch (Exception e) {
                                                 self.hideLoadingMask();
-                                                StringWriter errors = new StringWriter();
-                                                e.printStackTrace(new PrintWriter(errors));
-                                                ExceptionHandler.saveLogFile(errors.toString());
+                                                ExceptionHandler.saveLogFile(e);
                                         }
                                 }
                                 else {
@@ -121,9 +119,7 @@ public class TaskActivity extends Activity {
                                                 self.getRemoteZipBaseMap();
                                         }
                                         catch (Exception e) {
-                                                StringWriter errors = new StringWriter();
-                                                e.printStackTrace(new PrintWriter(errors));
-                                                ExceptionHandler.saveLogFile(errors.toString());
+                                                ExceptionHandler.saveLogFile(e);
                                         }
                                 }
                                 else {
@@ -186,15 +182,9 @@ public class TaskActivity extends Activity {
         public void syncronizeWithServer() {
                 String userHash = session.getUserHash();
                 List<Photo> photos = PhotoDao.getNotSyncPhotos();
-                
-                if (photos != null && !photos.isEmpty()) {
-                        String url = Constants.HOST_URL + Constants.PHOTOS_REST;
-                        UploadPhotos remote = new UploadPhotos(photos, userHash, this);
-                        remote.execute(new String[] { url });
-                }
-                else {
-                        self.getRemoteTasks();
-                }
+                String url = Constants.HOST_URL + Constants.PHOTOS_REST;
+                UploadPhotos remote = new UploadPhotos(photos, userHash, this);
+                remote.execute(new String[] { url });
         }
         
         public void showDownloads(View view) {

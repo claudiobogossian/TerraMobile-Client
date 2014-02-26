@@ -57,7 +57,7 @@ public class GeoMap extends Activity {
         
         private Location                               location;
         
-        private PointOfInterestInfoWindow                          poiInfoWindow;
+        private PointOfInterestInfoWindow              poiInfoWindow;
         
         private OverlayItem                            myLocationOverlayItem;
         
@@ -115,7 +115,7 @@ public class GeoMap extends Activity {
                 
                 final MapTileProviderBasic tileProvider = new MapTileProviderBasic(getApplicationContext());
                 final ITileSource tileSource = new XYTileSource("MapquestOSM", ResourceProxy.string.mapquest_osm, 11, 20, 256, ".png", new String[] { "http://tile.openstreetmap.org/" });
-
+                
                 tileProvider.setTileSource(tileSource);
                 final TilesOverlay tilesOverlay = new TilesOverlay(tileProvider, this.getBaseContext());
                 tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
@@ -143,7 +143,7 @@ public class GeoMap extends Activity {
                         //controller.setCenter(new GeoPoint(-22.317773, -49.059534));
                         
                         controller.setZoom(12);
-                        controller.setCenter(new GeoPoint(-22.32261,-49.028732));
+                        controller.setCenter(new GeoPoint(-22.32261, -49.028732));
                 }
                 
                 // new GeoPoint(-25.50116, -54.62678)

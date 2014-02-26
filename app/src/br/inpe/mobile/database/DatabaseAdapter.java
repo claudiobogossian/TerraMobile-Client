@@ -1,7 +1,5 @@
 package br.inpe.mobile.database;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.sql.SQLException;
 
 import android.content.Context;
@@ -50,9 +48,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
                         this.createDaos();
                 }
                 catch (SQLException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
         }
         

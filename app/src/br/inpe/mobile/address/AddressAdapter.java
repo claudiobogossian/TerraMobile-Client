@@ -1,7 +1,5 @@
 package br.inpe.mobile.address;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.sql.SQLException;
 
 import android.annotation.SuppressLint;
@@ -77,9 +75,7 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
                         cursor = this.getAddressCursor("%" + filter + "%");
                 }
                 catch (SQLException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return cursor;
@@ -120,9 +116,7 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
                         cursor = results.getRawCursor();
                 }
                 catch (SQLException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 finally {
                         if (iterator != null) {

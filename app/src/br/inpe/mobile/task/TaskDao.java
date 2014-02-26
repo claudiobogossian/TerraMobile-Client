@@ -1,7 +1,5 @@
 package br.inpe.mobile.task;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -111,9 +109,7 @@ public class TaskDao {
                         result = true;
                 }
                 catch (SQLException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return result;
@@ -135,9 +131,7 @@ public class TaskDao {
                         tasks = taskQueryBuilder.query();
                 }
                 catch (SQLException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return tasks;
@@ -159,9 +153,7 @@ public class TaskDao {
                         tasks = taskQueryBuilder.query();
                 }
                 catch (SQLException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return tasks;
@@ -188,9 +180,7 @@ public class TaskDao {
                         tasks = taskQueryBuilder.query();
                 }
                 catch (SQLException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return tasks;
@@ -217,9 +207,7 @@ public class TaskDao {
                         count = taskQueryBuilder.countOf();
                 }
                 catch (SQLException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return count;
@@ -246,9 +234,7 @@ public class TaskDao {
                         count = taskQueryBuilder.countOf();
                 }
                 catch (SQLException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return count;
@@ -273,9 +259,7 @@ public class TaskDao {
                         count = taskQueryBuilder.countOf();
                 }
                 catch (SQLException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return count;
@@ -298,9 +282,7 @@ public class TaskDao {
                                 persistedTask = getTaskById(task.getId());
                         }
                         catch (Exception e) {
-                                StringWriter errors = new StringWriter();
-                                e.printStackTrace(new PrintWriter(errors));
-                                ExceptionHandler.saveLogFile(errors.toString());
+                                ExceptionHandler.saveLogFile(e);
                         }
                         
                         try {
@@ -316,9 +298,7 @@ public class TaskDao {
                                 }
                         }
                         catch (SQLException e) {
-                                StringWriter errors = new StringWriter();
-                                e.printStackTrace(new PrintWriter(errors));
-                                ExceptionHandler.saveLogFile(errors.toString());
+                                ExceptionHandler.saveLogFile(e);
                         }
                 }
                 
@@ -345,9 +325,7 @@ public class TaskDao {
                                 isSaved = true;
                         }
                         catch (SQLException e) {
-                                StringWriter errors = new StringWriter();
-                                e.printStackTrace(new PrintWriter(errors));
-                                ExceptionHandler.saveLogFile(errors.toString());
+                                ExceptionHandler.saveLogFile(e);
                         }
                 }
                 
@@ -360,9 +338,7 @@ public class TaskDao {
                         task = taskDao.queryForId(id);
                 }
                 catch (SQLException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 return task;
         }
@@ -374,9 +350,7 @@ public class TaskDao {
                         task = taskDao.queryBuilder().where().eq("address_id", addressId).queryForFirst();
                 }
                 catch (SQLException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 return task;
         }
@@ -404,7 +378,7 @@ public class TaskDao {
                         
                         String featureId = getFeatureId(task);
                         addressQueryBuilder.where().like("featureId", "%" + featureId + "%").and().like("name", "%" + task.getAddress().getName() + "%");
-
+                        
                         taskQueryBuilder.join(addressQueryBuilder);
                         
                         String test = taskQueryBuilder.prepareStatementString(); // TODO: remove
@@ -430,9 +404,7 @@ public class TaskDao {
                         }
                 }
                 catch (SQLException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
         }
         
@@ -452,9 +424,7 @@ public class TaskDao {
                         featureId = task.getAddress().getFeatureId().substring(0, 6);
                 }
                 catch (Exception e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return featureId;

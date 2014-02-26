@@ -57,7 +57,7 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
                 errorReport.append(Build.VERSION.INCREMENTAL);
                 errorReport.append(LINE_SEPARATOR);
                 
-                this.saveLogFile(errorReport.toString());
+                saveLogFile(errorReport.toString());
                 
                 Intent intent = new Intent(myContext, Main.class);
                 intent.putExtra("error", errorReport.toString());
@@ -75,7 +75,7 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
          * @author Paulo Luan
          * 
          * */
-        public static void saveLogFile(String text) {
+        public static void saveLogFile(String text) {                
                 File path = new File(Environment.getExternalStorageDirectory() + "/inpe/" + "/dados" + "/log/");
                 
                 if (!path.exists()) {
@@ -90,9 +90,7 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
                                 logFile.createNewFile();
                         }
                         catch (IOException e) {
-                                StringWriter errors = new StringWriter();
-                                e.printStackTrace(new PrintWriter(errors));
-                                ExceptionHandler.saveLogFile(errors.toString());
+                                ExceptionHandler.saveLogFile(e);
                         }
                 }
                 try {
@@ -102,10 +100,15 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
                         buf.close();
                 }
                 catch (IOException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
+        }
+        
+        public static void saveLogFile(Exception exception) {
+                StringWriter errors = new StringWriter();
+                exception.printStackTrace(new PrintWriter(errors));
+                String text = errors.toString();
+                saveLogFile(text);
         }
         
 }

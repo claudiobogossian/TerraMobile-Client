@@ -1,7 +1,5 @@
 package br.inpe.mobile.task;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -55,9 +53,7 @@ public class DownloadTasks extends AsyncTask<String, String, String> {
                         }
                         catch (Exception e) {
                                 message = "Ocorreu um erro ao fazer o download das tarefas.";
-                                StringWriter errors = new StringWriter();
-                                e.printStackTrace(new PrintWriter(errors));
-                                ExceptionHandler.saveLogFile(errors.toString());
+                                ExceptionHandler.saveLogFile(e);
                         }
                 }
                 

@@ -33,15 +33,15 @@ import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.task.TaskActivity;
 
 public class BaseMapDownload extends AsyncTask<String, String, String> {
-        String                  tileSourcePath = GeoMap.tileSourcePath;
+        String               tileSourcePath = GeoMap.tileSourcePath;
         
-        String                  filePath       = null;
+        String               filePath       = null;
         
-        String                  message        = null;
+        String               message        = null;
         
-        List<String>            mapLevels      = Arrays.asList("12", "13","14","15","16","17","18", "19","20");
+        List<String>         mapLevels      = Arrays.asList("12", "13", "14", "15", "16", "17", "18", "19", "20");
         
-        private TaskActivity    taskActivity;
+        private TaskActivity taskActivity;
         
         public BaseMapDownload(TaskActivity taskActivity) {
                 this.taskActivity = taskActivity;
@@ -86,9 +86,7 @@ public class BaseMapDownload extends AsyncTask<String, String, String> {
                 }
                 catch (Exception e) {
                         message = "Ocorreu um erro ao baixar o arquivo.";
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
         }
         
@@ -125,7 +123,7 @@ public class BaseMapDownload extends AsyncTask<String, String, String> {
                 Request request = new Request(Uri.parse(url));
                 
                 request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "bauru_" + mapLevel + ".zip");
-               
+                
                 final long enqueue = downloadManager.enqueue(request);
                 
                 BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -137,7 +135,7 @@ public class BaseMapDownload extends AsyncTask<String, String, String> {
                                         Query query = new Query();
                                         query.setFilterById(enqueue);
                                         
-                                        Cursor c = downloadManager.query(query);                                   
+                                        Cursor c = downloadManager.query(query);
                                         
                                         if (c.moveToNext()) {
                                                 int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
@@ -223,9 +221,7 @@ public class BaseMapDownload extends AsyncTask<String, String, String> {
                                         }
                                 }
                                 catch (Exception e) {
-                                        StringWriter errors = new StringWriter();
-                                        e.printStackTrace(new PrintWriter(errors));
-                                        ExceptionHandler.saveLogFile(errors.toString());
+                                        ExceptionHandler.saveLogFile(e);
                                 }
                                 finally {
                                         zin.closeEntry();

@@ -1,8 +1,6 @@
 package br.inpe.mobile.photo;
 
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -53,9 +51,7 @@ public class PhotoDao {
                         photos = photoQueryBuilder.query();
                 }
                 catch (SQLException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return photos;
@@ -81,9 +77,7 @@ public class PhotoDao {
                         photos = photoQueryBuilder.query();
                 }
                 catch (SQLException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return photos;
@@ -114,9 +108,7 @@ public class PhotoDao {
                         photos = photoQueryBuilder.query();
                 }
                 catch (SQLException e) {
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return photos;
@@ -142,9 +134,7 @@ public class PhotoDao {
                 }
                 catch (SQLException e) {
                         Log.e(LOG_TAG, e.getMessage());
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return result;
@@ -173,9 +163,7 @@ public class PhotoDao {
                 }
                 catch (SQLException e) {
                         Log.e(LOG_TAG, e.getMessage());
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        ExceptionHandler.saveLogFile(errors.toString());
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return result;
@@ -197,6 +185,8 @@ public class PhotoDao {
                                 PhotoDao.deletePhoto(picture);
                         }
                 }
+                
+                //TODO: verificar ao contrário, ou seja, fotos que estão no PATH mas não estão no banco.
         }
         
         /**
@@ -222,9 +212,7 @@ public class PhotoDao {
                                 isSaved = true;
                         }
                         catch (SQLException e) {
-                                StringWriter errors = new StringWriter();
-                                e.printStackTrace(new PrintWriter(errors));
-                                ExceptionHandler.saveLogFile(errors.toString());
+                                ExceptionHandler.saveLogFile(e);
                         }
                 }
                 

@@ -1,7 +1,8 @@
 package br.inpe.mobile.constants;
 
 public interface Constants {
-        //public static String HOST = "http://192.168.0.181"; //local URL
+        //public static String       HOST               = "http://192.168.0.181";                //local URL
+        //public static String       HOST               = "http://localhost";                //Debug URL
         public static final String HOST               = "http://institutosoma.dyndns.org";
         public static final String PORT               = "8000";
         public static final String SERVER             = "terramobile-server";
