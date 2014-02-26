@@ -4,8 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1005,12 +1003,11 @@ public class FormActivity extends Activity {
         
         public void validateFields() {
                 String message = null;
-                
-                if (!isVarianceFreeOrNotDetected()) {
-                        message = self.checkNull();
-                }
-                
+                                
                 if (!isVarianceFree()) {
+                        
+                        message = self.checkNull();
+                        
                         if (photos.isEmpty()) {
                                 if (message == null) {
                                         message = "\n\n Você precisa tirar ao menos uma foto.";
