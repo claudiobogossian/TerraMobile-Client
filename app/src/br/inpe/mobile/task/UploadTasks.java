@@ -54,7 +54,8 @@ public class UploadTasks extends AsyncTask<String, String, String> {
                                                 TaskDao.deleteTask(task);
                                         }
                                         
-                                        publishProgress("Enviando tarefas... " + i + " de " + tasks.size());
+                                        int currenValue = i + 1;
+                                        publishProgress("Enviando tarefas... " + currenValue + " de " + tasks.size());
                                 }
                                 catch (Exception e) {
                                         message = "Ocorreu um erro de conexão ao enviar as imagens.";
