@@ -131,15 +131,18 @@ public class TaskActivity extends Activity {
         public void initializeRestTemplate() {
                 this.restTemplate = new RestTemplate();
                 
+                HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+                requestFactory.setReadTimeout(9000);
+                requestFactory.setConnectTimeout(9000);
+                // Set the request factory IMPORTANT: This section I had to add for POST
+                // request. Not needed for GET
+                this.restTemplate.setRequestFactory(requestFactory);
+                
                 // Add converters, Note I use the Jackson Converter, I removed the http
                 // form converter because it is not needed when posting String, used for
                 // multipart forms.
                 this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 this.restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
-                
-                // Set the request factory IMPORTANT: This section I had to add for POST
-                // request. Not needed for GET
-                this.restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         }
         
         /**
