@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
@@ -82,7 +83,10 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
                         path.mkdirs();
                 }
                 
-                String fileName = "log_" + new Date().toString() + ".txt";
+                SimpleDateFormat simpleDate =  new SimpleDateFormat("dd_MM_yyyy HH_mm_ss");
+                String stringDate = simpleDate.format(new Date());
+                String fileName = "log_" + stringDate + ".txt";
+                
                 File logFile = new File(path, fileName);
                 
                 if (!logFile.exists()) {
@@ -90,7 +94,7 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
                                 logFile.createNewFile();
                         }
                         catch (IOException e) {
-                                ExceptionHandler.saveLogFile(e);
+                                e.printStackTrace();
                         }
                 }
                 try {
@@ -100,7 +104,7 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
                         buf.close();
                 }
                 catch (IOException e) {
-                        ExceptionHandler.saveLogFile(e);
+                        e.printStackTrace();
                 }
         }
         
