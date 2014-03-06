@@ -11,7 +11,6 @@ import java.util.Date;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Environment;
 import br.inpe.mobile.Main;
 import br.inpe.mobile.Utility;
 

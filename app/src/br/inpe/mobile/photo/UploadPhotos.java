@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.web.client.HttpClientErrorException;
-
 import android.os.AsyncTask;
 import android.widget.Toast;
 import br.inpe.mobile.Utility;
@@ -79,7 +77,7 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
         
         public void uploadTasks() {
                 List<Task> tasks = TaskDao.getFinishedTasks();
-                String url = Constants.HOST_URL + Constants.TASKS_REST;
+                String url = Utility.getServerUrl() + Constants.TASKS_REST;
                 UploadTasks remote = new UploadTasks(tasks, userHash, taskActivity);
                 remote.execute(new String[] { url });
         }

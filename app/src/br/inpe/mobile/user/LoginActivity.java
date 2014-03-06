@@ -155,7 +155,7 @@ public class LoginActivity extends Activity {
          */
         public void getRemoteUsers() {
                 if (Utility.isNetworkAvailable(this)) {
-                        String url = Constants.HOST_URL + Constants.USER_REST;
+                        String url = Utility.getServerUrl() + Constants.USER_REST;
                         DownloadUsers remote = new DownloadUsers(this);
                         remote.execute(new String[] { url });
                 }

@@ -144,7 +144,7 @@ public class TaskActivity extends Activity {
          */
         public void getRemoteTasks() {
                 String userHash = session.getUserHash();
-                String url = Constants.HOST_URL + Constants.TASKS_REST;
+                String url = Utility.getServerUrl() + Constants.TASKS_REST;
                 DownloadTasks remote = new DownloadTasks(userHash, this);
                 remote.execute(new String[] { url });
         }
@@ -158,7 +158,7 @@ public class TaskActivity extends Activity {
         public void syncronizeWithServer() {
                 String userHash = session.getUserHash();
                 List<Photo> photos = PhotoDao.getNotSyncPhotos();
-                String url = Constants.HOST_URL + Constants.PHOTOS_REST;
+                String url = Utility.getServerUrl() + Constants.PHOTOS_REST;
                 UploadPhotos remote = new UploadPhotos(photos, userHash, this);
                 remote.execute(new String[] { url });
         }
@@ -213,7 +213,7 @@ public class TaskActivity extends Activity {
          * cached tiles zip file from server
          ******************************************************************************************************************/
         public void getRemoteZipBaseMap() {
-                String url = Constants.HOST_URL + Constants.ZIP_REST;
+                String url = Utility.getServerUrl() + Constants.ZIP_REST;
                 // String url = "http://200.144.100.34:8080/rest/tiles/zip";
                 new BaseMapDownload(this).execute(url);
         }

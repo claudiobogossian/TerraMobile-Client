@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.http.HttpException;
-import org.springframework.web.client.HttpClientErrorException;
-
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;

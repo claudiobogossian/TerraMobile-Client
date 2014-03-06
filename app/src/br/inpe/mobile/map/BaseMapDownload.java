@@ -117,7 +117,7 @@ public class BaseMapDownload extends AsyncTask<String, String, String> {
         public void getRemoteBaseMap(String remoteUrl, String mapLevel) throws IOException {
                 final DownloadManager downloadManager = (DownloadManager) taskActivity.getSystemService(Context.DOWNLOAD_SERVICE);
                 
-                String url = Constants.HOST_URL + Constants.ZIP_REST + Constants.LEVEL_QUERY_STRING + mapLevel;
+                String url = Utility.getServerUrl() + Constants.ZIP_REST + Constants.LEVEL_QUERY_STRING + mapLevel;
                 Request request = new Request(Uri.parse(url));
                 
                 request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "bauru_" + mapLevel + ".zip");
