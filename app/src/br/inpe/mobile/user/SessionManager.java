@@ -123,9 +123,8 @@ public class SessionManager {
                 String hash = pref.getString(KEY_HASH, null);
                 
                 /*
-                if(hash == null) {
-                        logoutUser();
-                }*/
+                 * if(hash == null) { logoutUser(); }
+                 */
                 
                 return hash;
         }

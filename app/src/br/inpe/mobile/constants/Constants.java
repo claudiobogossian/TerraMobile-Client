@@ -12,7 +12,7 @@ public interface Constants {
         
         public static final String EXTERNAL_HOST_URL  = EXTERNAL_HOST + ":" + PORT + "/" + SERVER + "/";
         public static final String INTERNAL_HOST_URL  = INTERNAL_HOST + ":" + PORT + "/" + SERVER + "/";
-                                                                                                         
+        
         public static final String USER_REST          = "rest/users";
         public static final String TASKS_REST         = "rest/tasks?user={user_hash}";
         public static final String PHOTOS_REST        = "rest/photos?user={user_hash}";

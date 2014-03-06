@@ -557,7 +557,7 @@ public class Utility {
          */
         public static String getServerUrl() {
                 String serverUrl = null;
-                try {            
+                try {
                         disableStrictMode();
                         
                         URL url = new URL(Constants.INTERNAL_HOST_URL);
@@ -592,7 +592,6 @@ public class Utility {
                         StrictMode.setThreadPolicy(policy);
                 }
         }
-        
         
         /**
          * 
