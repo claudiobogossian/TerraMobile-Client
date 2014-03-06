@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -33,6 +34,7 @@ import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
+import br.inpe.mobile.constants.Constants;
 import br.inpe.mobile.exception.ExceptionHandler;
 
 public class Utility {
@@ -478,7 +480,7 @@ public class Utility {
         /**
          * Gets the External SDCard Path.
          */
-        public static File getExternalSdCardPath() {
+        public static String getExternalSdCardPath() {
                 String path = null;
                 
                 File sdCardFile = null;
@@ -493,13 +495,13 @@ public class Utility {
                 }
                 
                 if (path != null) {
-                        sdCardFile = new File(path, "osmdroid");
+                        sdCardFile = new File(path);
                 }
                 else {
-                        sdCardFile = new File(Environment.getExternalStorageDirectory(), "osmdroid");
+                        sdCardFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
                 }
                 
-                return sdCardFile;
+                return sdCardFile.getAbsolutePath();
         }
         
         public static void moveFile(
@@ -549,9 +551,39 @@ public class Utility {
         
         /**
          * 
+         * Ping to the server and verify if the service's (url) running.
+         * 
+         * @return the soma's server url
+         *
+        public String getServerUrl() {
+                try {
+                        URL url = new URL(Constants.SERVER);
+                        
+                        HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
+                        urlc.setRequestProperty("User-Agent", "Android Application:" + Z.APP_VERSION);
+                        urlc.setRequestProperty("Connection", "close");
+                        urlc.setConnectTimeout(1000 * 30); // mTimeout is in seconds
+                        urlc.connect();
+                        
+                        if (urlc.getResponseCode() == 200) {
+                                Main.Log("getResponseCode == 200");
+                                return new Boolean(true);
+                        }
+                }
+                catch (MalformedURLException e1) {
+                        e1.printStackTrace();
+                }
+                catch (IOException e) {
+                        e.printStackTrace();
+                }
+
+                return "";
+        }*/
+        
+        /**
+         * 
          * @return
          */
-        
         public static String getDeviceId(Context ctx) {
                 TelephonyManager tManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
                 return tManager.getDeviceId();
