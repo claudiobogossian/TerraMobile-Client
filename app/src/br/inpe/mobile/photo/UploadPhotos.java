@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.constants.Constants;
@@ -46,29 +47,26 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                 PhotoDao.verifyIntegrityOfPictures();
                 
                 for (String url : urls) {
-                        for (int j = 0; j < 500; j++) { //TODO: remover, apenas teste
-                        
-                                for (int i = 0; i < this.photos.size(); i++) {
-                                        try {
-                                                Photo photo = photos.get(i);
-                                                
-                                                Photo[] responsePhotos = new RestTemplateFactory().postForObject(url, new Photo[] { photo }, Photo[].class, userHash);
-                                                List<Photo> receivedPhotos = new ArrayList<Photo>(Arrays.asList(responsePhotos));
-                                                
-                                                Photo responsePhoto = receivedPhotos.get(0);
-                                                
-                                                if (responsePhoto != null) {
-                                                        //PhotoDao.deletePhoto(responsePhoto);
-                                                }
-                                                
-                                                publishProgress("Enviando imagens... " + (j + 1) + " de " + photos.size());
-                                                //publishProgress("Enviando imagens... " + (i + 1) + " de " + photos.size()); //TODO;
+                        for (int i = 0; i < this.photos.size(); i++) {
+                                try {
+                                        Photo photo = photos.get(i);
+                                        
+                                        Photo[] responsePhotos = new RestTemplateFactory().postForObject(url, new Photo[] { photo }, Photo[].class, userHash);
+                                        List<Photo> receivedPhotos = new ArrayList<Photo>(Arrays.asList(responsePhotos));
+                                        
+                                        Photo responsePhoto = receivedPhotos.get(0);
+                                        
+                                        if (responsePhoto != null) {
+                                                PhotoDao.deletePhoto(responsePhoto);
                                         }
-                                        catch (Exception e) {
-                                                message = "Ocorreu um erro ao enviar as imagens.";
-                                                // String error = e.getResponseBodyAsString();
-                                                ExceptionHandler.saveLogFile(e);
-                                        }
+                                        
+                                        publishProgress("Enviando imagens... " + (i + 1) + " de " + photos.size());
+                                        Log.d("Imagem Enviada!!", "ID: " + responsePhoto.toString());
+                                }
+                                catch (Exception e) {
+                                        message = "Ocorreu um erro ao enviar as imagens.";
+                                        // String error = e.getResponseBodyAsString();
+                                        ExceptionHandler.saveLogFile(e);
                                 }
                         }
                 }
@@ -89,9 +87,9 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
         }
         
         @Override
-        protected void onProgressUpdate(String... progress) {
-                super.onProgressUpdate(progress);
-                taskActivity.onProgressUpdate(progress);
+        protected void onProgressUpdate(String... values) {
+                taskActivity.setLoadMaskMessage(values[0]);
+                Log.i(taskActivity.LOG_TAG, " Progress: " + values);
         }
         
         @Override

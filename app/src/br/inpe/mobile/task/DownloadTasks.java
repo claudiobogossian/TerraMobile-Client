@@ -41,8 +41,7 @@ public class DownloadTasks extends AsyncTask<String, String, String> {
                                 Task[] responseTasks = response.getBody();
                                 ArrayList<Task> tasks = new ArrayList<Task>(Arrays.asList(responseTasks));
                                 
-                                publishProgress("Salvando tarefas no banco de dados local...", "0", "" + tasks.size()); // set Max Length of progress
-                                                                                                                        // dialog
+                                publishProgress("Salvando tarefas no banco de dados local...", "0", "" + tasks.size()); // set Max Length of progress                                                                                       // dialog
                                 
                                 int progress = 0;
                                 
