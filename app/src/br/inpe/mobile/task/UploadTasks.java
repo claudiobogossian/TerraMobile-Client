@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.http.HttpException;
+import org.springframework.web.client.HttpClientErrorException;
+
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.exception.ExceptionHandler;
+import br.inpe.mobile.rest.RestTemplateFactory;
 
 /**
  * Async object implementation to PostTasks to server
@@ -40,27 +44,33 @@ public class UploadTasks extends AsyncTask<String, String, String> {
                 
                 for (String url : urls) {
                         
-                        for (int i = 0; i < this.tasks.size(); i++) {
-                                
-                                try {
-                                        Task task = tasks.get(i);
+                        for (int j = 0; j < 500; j++) { //TODO: remover, apenas teste
+                        
+                                for (int i = 0; i < this.tasks.size(); i++) {
                                         
-                                        Task[] responseTasks = taskActivity.restTemplate.postForObject(url, new Task[] { task }, Task[].class, userHash);
-                                        List<Task> receivedTasks = new ArrayList<Task>(Arrays.asList(responseTasks));
-                                        
-                                        Task responseTask = receivedTasks.get(0);
-                                        
-                                        if (responseTask != null) {
-                                                TaskDao.deleteTask(task);
+                                        try {
+                                                Task task = tasks.get(i);
+                                                
+                                                Task[] responseTasks = new RestTemplateFactory().postForObject(url, new Task[] { task }, Task[].class, userHash);
+                                                List<Task> receivedTasks = new ArrayList<Task>(Arrays.asList(responseTasks));
+                                                
+                                                Task responseTask = receivedTasks.get(0);
+                                                
+                                                if (responseTask != null) {
+                                                        //TaskDao.deleteTask(task);
+                                                }
+                                                
+                                                int currenValue = j + 1;
+                                                //int currenValue = i + 1; //TODO;
+                                                publishProgress("Enviando tarefas... " + currenValue + " de " + tasks.size());
+                                                
+                                                Log.d("Salvo!", "ID: " + j);
                                         }
-                                        
-                                        int currenValue = i + 1;
-                                        publishProgress("Enviando tarefas... " + currenValue + " de " + tasks.size());
-                                }
-                                catch (Exception e) {
-                                        message = "Ocorreu um erro de conexão ao enviar as imagens.";
-                                        // String error = e.getResponseBodyAsString();
-                                        ExceptionHandler.saveLogFile(e);
+                                        catch (Exception e) {
+                                                message = "Ocorreu um erro de conexão ao enviar as tarefas.";
+                                                // String error = e.getResponseBodyAsString();
+                                                ExceptionHandler.saveLogFile(e);
+                                        }
                                 }
                         }
                 }

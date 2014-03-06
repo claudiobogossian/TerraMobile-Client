@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.exception.ExceptionHandler;
+import br.inpe.mobile.rest.RestTemplateFactory;
 
 /**
  * Async class implementation to get tasks from server.
@@ -36,7 +37,7 @@ public class DownloadTasks extends AsyncTask<String, String, String> {
                 for (String url : urls) {
                         try {
                                 publishProgress("Fazendo Download das tarefas...");
-                                ResponseEntity<Task[]> response = taskActivity.restTemplate.getForEntity(url, Task[].class, userHash);
+                                ResponseEntity<Task[]> response = new RestTemplateFactory().getForEntity(url, Task[].class, userHash);
                                 Task[] responseTasks = response.getBody();
                                 ArrayList<Task> tasks = new ArrayList<Task>(Arrays.asList(responseTasks));
                                 

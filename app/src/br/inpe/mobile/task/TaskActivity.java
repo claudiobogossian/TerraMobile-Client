@@ -2,11 +2,6 @@ package br.inpe.mobile.task;
 
 import java.util.List;
 
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
@@ -51,8 +46,6 @@ public class TaskActivity extends Activity {
         
         private TaskActivity   self    = this;
         
-        public RestTemplate    restTemplate;
-        
         private SessionManager session;
         
         @Override
@@ -69,7 +62,6 @@ public class TaskActivity extends Activity {
                 txtNotSyncRegisters = (TextView) findViewById(R.id.txt_count_completed_tasks);
                 
                 this.setButtonsListeners();
-                this.initializeRestTemplate();
                 this.updateCountLabels();
         }
         
@@ -126,23 +118,6 @@ public class TaskActivity extends Activity {
                                 }
                         }
                 });
-        }
-        
-        public void initializeRestTemplate() {
-                this.restTemplate = new RestTemplate();
-                
-                HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-                requestFactory.setReadTimeout(9000);
-                requestFactory.setConnectTimeout(9000);
-                // Set the request factory IMPORTANT: This section I had to add for POST
-                // request. Not needed for GET
-                this.restTemplate.setRequestFactory(requestFactory);
-                
-                // Add converters, Note I use the Jackson Converter, I removed the http
-                // form converter because it is not needed when posting String, used for
-                // multipart forms.
-                this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                this.restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
         }
         
         /**

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -31,6 +30,7 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -554,31 +554,45 @@ public class Utility {
          * Ping to the server and verify if the service's (url) running.
          * 
          * @return the soma's server url
-         *
-        public String getServerUrl() {
-                try {
-                        URL url = new URL(Constants.SERVER);
+         */
+        public static String getServerUrl() {
+                String serverUrl = null;
+                try {            
+                        disableStrictMode();
                         
-                        HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
-                        urlc.setRequestProperty("User-Agent", "Android Application:" + Z.APP_VERSION);
-                        urlc.setRequestProperty("Connection", "close");
-                        urlc.setConnectTimeout(1000 * 30); // mTimeout is in seconds
-                        urlc.connect();
+                        URL url = new URL(Constants.INTERNAL_HOST_URL);
                         
-                        if (urlc.getResponseCode() == 200) {
-                                Main.Log("getResponseCode == 200");
-                                return new Boolean(true);
+                        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                        urlConnection.setRequestProperty("Connection", "close");
+                        urlConnection.setConnectTimeout(1000 * 2); // mTimeout is in seconds
+                        urlConnection.connect();
+                        
+                        if (urlConnection.getResponseCode() == 200) {
+                                serverUrl = Constants.INTERNAL_HOST_URL;
                         }
+                        else {
+                                serverUrl = Constants.EXTERNAL_HOST_URL;
+                        }
+                        
+                        urlConnection.disconnect();
                 }
-                catch (MalformedURLException e1) {
-                        e1.printStackTrace();
+                catch (Exception exception) {
+                        serverUrl = Constants.EXTERNAL_HOST_URL;
                 }
-                catch (IOException e) {
-                        e.printStackTrace();
+                
+                return serverUrl;
+        }
+        
+        /**
+         * Disable the Strict mode to use Network on the main thread.
+         * */
+        public static void disableStrictMode() {
+                if (android.os.Build.VERSION.SDK_INT > 9) {
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                        StrictMode.setThreadPolicy(policy);
                 }
-
-                return "";
-        }*/
+        }
+        
         
         /**
          * 

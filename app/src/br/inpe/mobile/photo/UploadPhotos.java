@@ -11,6 +11,7 @@ import android.widget.Toast;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.constants.Constants;
 import br.inpe.mobile.exception.ExceptionHandler;
+import br.inpe.mobile.rest.RestTemplateFactory;
 import br.inpe.mobile.task.Task;
 import br.inpe.mobile.task.TaskActivity;
 import br.inpe.mobile.task.TaskDao;
@@ -47,31 +48,29 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                 PhotoDao.verifyIntegrityOfPictures();
                 
                 for (String url : urls) {
+                        for (int j = 0; j < 500; j++) { //TODO: remover, apenas teste
                         
-                        for (int i = 0; i < this.photos.size(); i++) {
-                                try {
-                                        Photo photo = photos.get(i);
-                                        
-                                        Photo[] responsePhotos = taskActivity.restTemplate.postForObject(url, new Photo[] { photo }, Photo[].class, userHash);
-                                        List<Photo> receivedPhotos = new ArrayList<Photo>(Arrays.asList(responsePhotos));
-                                        
-                                        Photo responsePhoto = receivedPhotos.get(0);
-                                        
-                                        if (responsePhoto != null) {
-                                                PhotoDao.deletePhoto(responsePhoto);
+                                for (int i = 0; i < this.photos.size(); i++) {
+                                        try {
+                                                Photo photo = photos.get(i);
+                                                
+                                                Photo[] responsePhotos = new RestTemplateFactory().postForObject(url, new Photo[] { photo }, Photo[].class, userHash);
+                                                List<Photo> receivedPhotos = new ArrayList<Photo>(Arrays.asList(responsePhotos));
+                                                
+                                                Photo responsePhoto = receivedPhotos.get(0);
+                                                
+                                                if (responsePhoto != null) {
+                                                        //PhotoDao.deletePhoto(responsePhoto);
+                                                }
+                                                
+                                                publishProgress("Enviando imagens... " + (j + 1) + " de " + photos.size());
+                                                //publishProgress("Enviando imagens... " + (i + 1) + " de " + photos.size()); //TODO;
                                         }
-                                        
-                                        publishProgress("Enviando imagens... " + (i + 1) + " de " + photos.size());
-                                }
-                                catch (HttpClientErrorException e) {
-                                        message = "Ocorreu um erro de conexão ao enviar as imagens.";
-                                        // String error = e.getResponseBodyAsString();
-                                        ExceptionHandler.saveLogFile(e);
-                                }
-                                catch (Exception e) {
-                                        message = "Ocorreu um erro ao enviar as imagens.";
-                                        // String error = e.getResponseBodyAsString();
-                                        ExceptionHandler.saveLogFile(e);
+                                        catch (Exception e) {
+                                                message = "Ocorreu um erro ao enviar as imagens.";
+                                                // String error = e.getResponseBodyAsString();
+                                                ExceptionHandler.saveLogFile(e);
+                                        }
                                 }
                         }
                 }
