@@ -35,6 +35,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ZoomControls;
 import br.inpe.mobile.R;
+import br.inpe.mobile.Utility;
 import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.user.SessionManager;
 
@@ -88,7 +89,7 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
                 ImageButton bt_cancel = (ImageButton) findViewById(R.id.foto_control_bt_cancel);
                 ImageButton bt_ok = (ImageButton) findViewById(R.id.foto_control_bt_ok);
                 
-                pathfullapp = new File(Environment.getExternalStorageDirectory() + "/inpe/" + "/dados" + "/fotos/");
+                pathfullapp = new File(Utility.getExternalSdCardPath() + "/inpe/" + "/dados" + "/fotos/");
                 
                 if (!pathfullapp.exists()) {
                         pathfullapp.mkdirs();

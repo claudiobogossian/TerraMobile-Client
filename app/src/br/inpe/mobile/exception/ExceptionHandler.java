@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Environment;
 import br.inpe.mobile.Main;
+import br.inpe.mobile.Utility;
 
 public class ExceptionHandler extends Throwable implements java.lang.Thread.UncaughtExceptionHandler {
         private final Activity myContext;
@@ -76,7 +77,7 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
          * 
          * */
         public static void saveLogFile(String text) {
-                File path = new File(Environment.getExternalStorageDirectory() + "/inpe/" + "/dados" + "/log/");
+                File path = new File(Utility.getExternalSdCardPath() + "/inpe/" + "/dados" + "/log/");
                 
                 if (!path.exists()) {
                         path.mkdirs();
