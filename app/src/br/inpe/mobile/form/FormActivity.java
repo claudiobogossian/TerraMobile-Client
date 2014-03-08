@@ -528,6 +528,8 @@ public class FormActivity extends Activity {
          * */
         public void setFieldsWithTaskProperties(Task taskParam) {
                 if (taskParam != null) {
+                        currentTask = taskParam;
+                        
                         address.setText(taskParam.getAddress().getName());
                         edtNeighborhood.setText(taskParam.getAddress().getNeighborhood());
                         edtPostalCode.setText(taskParam.getAddress().getPostalCode());
