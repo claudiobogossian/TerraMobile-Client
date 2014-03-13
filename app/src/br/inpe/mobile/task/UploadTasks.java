@@ -1,8 +1,11 @@
 package br.inpe.mobile.task;
 
+import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.j256.ormlite.dao.CloseableIterator;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -20,17 +23,11 @@ import br.inpe.mobile.rest.RestTemplateFactory;
  */
 public class UploadTasks extends AsyncTask<String, String, String> {
         
-        private List<Task>   tasks;
-        
         private String       userHash;
         
         private TaskActivity taskActivity;
         
-        public UploadTasks(
-                           List<Task> tasks,
-                           String userHash,
-                           TaskActivity taskActivity) {
-                this.tasks = tasks;
+        public UploadTasks(String userHash, TaskActivity taskActivity) {
                 this.userHash = userHash;
                 this.taskActivity = taskActivity;
         }
@@ -40,10 +37,11 @@ public class UploadTasks extends AsyncTask<String, String, String> {
                 String message = null;
                 
                 for (String url : urls) {
+                        CloseableIterator<Task> iterator = TaskDao.getIteratorForNotFinishedTasks();
                         
-                        for (int i = 0; i < this.tasks.size(); i++) {
-                                try {
-                                        Task task = tasks.get(i);
+                        try {
+                                while (iterator.hasNext()) {
+                                        Task task = iterator.current();
                                         Task[] responseTasks = new RestTemplateFactory().postForObject(url, new Task[] { task }, Task[].class, userHash);
                                         
                                         List<Task> receivedTasks = new ArrayList<Task>(Arrays.asList(responseTasks));
@@ -54,14 +52,19 @@ public class UploadTasks extends AsyncTask<String, String, String> {
                                                 TaskDao.deleteTask(task);
                                         }
                                         
-                                        publishProgress("Enviando tarefas... " + (i + 1) + " de " + tasks.size());
-                                }
-                                catch (Exception e) {
-                                        message = "Ocorreu um erro de conexão ao enviar as tarefas.";
-                                        // String error = e.getResponseBodyAsString();
-                                        ExceptionHandler.saveLogFile(e);
+                                        //publishProgress("Enviando tarefas... " + (i + 1) + " de " + tasks.size());
                                 }
                         }
+                        catch (Exception e) {
+                                message = "Ocorreu um erro de conexão ao enviar as tarefas.";
+                                // String error = e.getResponseBodyAsString();
+                                ExceptionHandler.saveLogFile(e);
+                                
+                        }
+                        finally {
+                                iterator.closeQuietly();
+                        }
+                        
                 }
                 
                 return message;

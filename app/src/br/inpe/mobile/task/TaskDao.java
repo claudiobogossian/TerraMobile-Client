@@ -3,6 +3,7 @@ package br.inpe.mobile.task;
 import java.sql.SQLException;
 import java.util.List;
 
+import android.database.Cursor;
 import android.util.Log;
 import br.inpe.mobile.address.Address;
 import br.inpe.mobile.database.DatabaseAdapter;
@@ -12,6 +13,8 @@ import br.inpe.mobile.form.Form;
 import br.inpe.mobile.user.SessionManager;
 import br.inpe.mobile.user.User;
 
+import com.j256.ormlite.android.AndroidDatabaseResults;
+import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -184,6 +187,36 @@ public class TaskDao {
                 }
                 
                 return tasks;
+        }
+        
+        /**
+         * Get the cursor of all tasks based of the current user.
+         * 
+         * @retun Cursor cursor of all the tasks of the user.
+         * @author Paulo Luan
+         */
+        public static CloseableIterator<Task> getIteratorForNotFinishedTasks() {
+                QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+                QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+                
+                // when you are done, prepare your query and build an iterator
+                CloseableIterator<Task> iterator = null;
+                Cursor cursor = null;
+                
+                try {
+                        String userHash = session.getUserHash();
+                        userQueryBuilder.where().eq("hash", userHash);
+                        taskQueryBuilder.join(userQueryBuilder);
+                        
+                        taskQueryBuilder.where().eq("done", Boolean.FALSE);
+                        
+                        iterator = taskDao.iterator(taskQueryBuilder.prepare());                        
+                }
+                catch (SQLException e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+
+                return iterator;
         }
         
         /**
