@@ -24,6 +24,18 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
                 myContext = context;
         }
         
+        /**
+         * This functions is called when the application throws an error, this
+         * is the default handler for all erros.
+         * 
+         * @param Thread
+         *                : the thread of occur the error.
+         * @param Throwable
+         *                : the exception object with the cause of the problem.
+         * 
+         * @author Paulo Luan
+         * 
+         * */
         public void uncaughtException(Thread thread, Throwable exception) {
                 StringWriter stackTrace = new StringWriter();
                 exception.printStackTrace(new PrintWriter(stackTrace));
@@ -83,7 +95,7 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
                         path.mkdirs();
                 }
                 
-                SimpleDateFormat simpleDate =  new SimpleDateFormat("dd_MM_yyyy HH_mm_ss");
+                SimpleDateFormat simpleDate = new SimpleDateFormat("dd_MM_yyyy HH_mm_ss");
                 String stringDate = simpleDate.format(new Date());
                 String fileName = "log_" + stringDate + ".txt";
                 
@@ -108,6 +120,15 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
                 }
         }
         
+        /**
+         * Receives an exception and transform it into a plain text with the
+         * cause.
+         * 
+         * @param Exception
+         *                : the exception with the error.
+         * @author Paulo Luan
+         * 
+         * */
         public static void saveLogFile(Exception exception) {
                 StringWriter errors = new StringWriter();
                 exception.printStackTrace(new PrintWriter(errors));

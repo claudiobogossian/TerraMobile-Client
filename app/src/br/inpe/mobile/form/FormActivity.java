@@ -103,6 +103,10 @@ public class FormActivity extends Activity {
         protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+                /**
+                 * Defines the default exception handler to log unexpected
+                 * android errors
+                 */
                 
                 resources = getResources();
                 
@@ -208,7 +212,7 @@ public class FormActivity extends Activity {
         }
         
         /**
-         * 
+         * Calls to several functions to register all listener events to the buttons.
          * 
          * @author Paulo Luan
          * */
@@ -219,9 +223,9 @@ public class FormActivity extends Activity {
                 self.setButtonOkListener();
                 self.setButtonClearSpinnersListener();
         }
-        
+
         /**
-         * 
+         * When clicked, clears the spinners and Addresses fields.
          * 
          * @author Paulo Luan
          * */
@@ -234,7 +238,12 @@ public class FormActivity extends Activity {
                         }
                 });
         }
-        
+
+        /**
+         * Removes the pictures and kill the current activity.
+         * 
+         * @author Paulo Luan
+         * */
         public void setButtonCancelListener() {
                 buttonCancel.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -246,6 +255,14 @@ public class FormActivity extends Activity {
                 });
         }
         
+        
+        /**
+         * Override the functions "onBackPressed" to map another function to the
+         * native button back, when it is clicked, a popup is displayed to the
+         * user.
+         * 
+         * @author Paulo Luan
+         * */
         @Override
         public void onBackPressed() {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FormActivity.this);
@@ -266,7 +283,7 @@ public class FormActivity extends Activity {
         }
         
         /**
-         * 
+         *  Creates new Intent to show the camera and take the picture.
          * 
          * @author Paulo Luan
          * */
@@ -351,7 +368,7 @@ public class FormActivity extends Activity {
         }
         
         /**
-         * 
+         * Clear all the address fields.
          * 
          * @author Paulo Luan
          * */
@@ -387,7 +404,8 @@ public class FormActivity extends Activity {
         }
         
         /**
-         * 
+         * Maps the XML Elements to the Java objects, to manipulate it in the
+         * Java code.
          * 
          * @author Paulo Luan
          * */
@@ -675,7 +693,9 @@ public class FormActivity extends Activity {
         }
         
         /**
-         * onClick handler
+         * Toggle the visibility of the infrastructure form to Gone os visible.
+         * 
+         * @author PauloLuan
          */
         public void toggleInfrastructureFields(View v) {
                 View formInfra = findViewById(R.id.formInfra);
@@ -771,6 +791,7 @@ public class FormActivity extends Activity {
         
         /**
          * 
+         * Creates the auto Complete Text View to user search the addresses.
          * 
          * @author Paulo Luan
          * */
@@ -824,7 +845,7 @@ public class FormActivity extends Activity {
         }
         
         /**
-         * 
+         * Clear the focus from all the Edit Text widgets, of this activity.
          * 
          @author Paulo Luan
          */

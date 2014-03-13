@@ -44,8 +44,8 @@ public class UploadTasks extends AsyncTask<String, String, String> {
                         for (int i = 0; i < this.tasks.size(); i++) {
                                 try {
                                         Task task = tasks.get(i);
-                                        
                                         Task[] responseTasks = new RestTemplateFactory().postForObject(url, new Task[] { task }, Task[].class, userHash);
+                                        
                                         List<Task> receivedTasks = new ArrayList<Task>(Arrays.asList(responseTasks));
                                         
                                         Task responseTask = receivedTasks.get(0);
@@ -55,7 +55,6 @@ public class UploadTasks extends AsyncTask<String, String, String> {
                                         }
                                         
                                         publishProgress("Enviando tarefas... " + (i + 1) + " de " + tasks.size());
-                                        Log.d("Task Salva!", "ID: " + task.toString());
                                 }
                                 catch (Exception e) {
                                         message = "Ocorreu um erro de conexão ao enviar as tarefas.";
@@ -69,7 +68,10 @@ public class UploadTasks extends AsyncTask<String, String, String> {
         }
         
         @Override
-        protected void onPreExecute() {}
+        protected void onPreExecute() {
+                super.onPreExecute();
+                taskActivity.showLoadingMask("Enviando as Tarefas, aguarde...");
+        }
         
         @Override
         protected void onProgressUpdate(String... values) {

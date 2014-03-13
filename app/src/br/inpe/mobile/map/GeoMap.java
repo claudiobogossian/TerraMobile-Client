@@ -51,24 +51,31 @@ import br.inpe.mobile.user.SessionManager;
 
 public class GeoMap extends Activity {
         
+        /** the canvas of the Map. */
         private MapView                                mapView;
         
+        /** the controller of the map. */
         private MapController                          controller;
         
+        /** the location of the user */
         private Location                               location;
         
+        /** the window that appear the informations about the Task */
         private PointOfInterestInfoWindow              poiInfoWindow;
         
+        /** The user location landmark . */
         private OverlayItem                            myLocationOverlayItem;
+        ItemizedIconOverlay<OverlayItem>               currentLocationOverlay;
         
-        // other activities
+        /**
+         * the code of the Activitise, used on the callback 'onActivityResult'
+         * function.
+         */
         private static final int                       GEOFORM = 101;
-        
         private static final int                       TASK    = 103;
         
+        /** The landmarks that represents the List of Tasks objects. */
         ItemizedOverlayWithBubble<ExtendedOverlayItem> poiMarkers;
-        
-        ItemizedIconOverlay<OverlayItem>               currentLocationOverlay;
         
         private GeoMap                                 self    = this;
         
@@ -80,6 +87,12 @@ public class GeoMap extends Activity {
         public void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+                /**
+                 * Defines the default exception handler to log unexpected
+                 * android errors
+                 */
+                
+                //createFakeDataIntoTasks(); //TODO: remove
                 
                 this.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 setContentView(R.layout.activity_geomap);
@@ -91,6 +104,15 @@ public class GeoMap extends Activity {
                 
                 self.createButtonUpdateLocation();
                 self.createMapView();
+        }
+        
+        public void createFakeDataIntoTasks() {
+                List<Task> features = TaskDao.getAllTasks();
+                
+                for (Task task : features) {
+                        task.setDone(true);
+                        TaskDao.saveTask(task);
+                }
         }
         
         public void createButtonUpdateLocation() {
@@ -114,7 +136,7 @@ public class GeoMap extends Activity {
                 tileSourcePath = mapQuestTileSource.OSMDROID_PATH.getAbsolutePath() + "/";
                 
                 final MapTileProviderBasic tileProvider = new MapTileProviderBasic(getApplicationContext());
-                final ITileSource tileSource = new XYTileSource("MapquestOSM", ResourceProxy.string.mapquest_osm, 11, 20, 256, ".png", new String[] { "http://tile.openstreetmap.org/" });
+                final ITileSource tileSource = new XYTileSource("MapquestOSM", ResourceProxy.string.mapquest_osm, 6, 20, 256, ".png", new String[] { "http://tile.openstreetmap.org/" });
                 
                 tileProvider.setTileSource(tileSource);
                 final TilesOverlay tilesOverlay = new TilesOverlay(tileProvider, this.getBaseContext());

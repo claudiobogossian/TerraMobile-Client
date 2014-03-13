@@ -52,6 +52,10 @@ public class TaskActivity extends Activity {
         public void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+                /**
+                 * Defines the default exception handler to log unexpected
+                 * android errors
+                 */
                 
                 session = SessionManager.getInstance();
                 

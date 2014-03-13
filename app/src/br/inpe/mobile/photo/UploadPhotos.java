@@ -61,7 +61,6 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                                         }
                                         
                                         publishProgress("Enviando imagens... " + (i + 1) + " de " + photos.size());
-                                        Log.d("Imagem Enviada!!", "ID: " + responsePhoto.toString());
                                 }
                                 catch (Exception e) {
                                         message = "Ocorreu um erro ao enviar as imagens.";

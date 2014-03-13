@@ -47,6 +47,10 @@ public class LoginActivity extends Activity {
         protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+                /**
+                 * Defines the default exception handler to log unexpected
+                 * android errors
+                 */
                 
                 session = SessionManager.getInstance();
                 
