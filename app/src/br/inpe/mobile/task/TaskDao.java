@@ -271,7 +271,7 @@ public class TaskDao {
         }
         
         /**
-         * Get Count of completed tasks.
+         * Get Count of all tasks.
          * 
          * @author Paulo Luan
          */
