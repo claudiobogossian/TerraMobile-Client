@@ -1,7 +1,5 @@
 package br.inpe.mobile.task;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
@@ -18,8 +16,6 @@ import br.inpe.mobile.Utility;
 import br.inpe.mobile.constants.Constants;
 import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.map.BaseMapDownload;
-import br.inpe.mobile.photo.Photo;
-import br.inpe.mobile.photo.PhotoDao;
 import br.inpe.mobile.photo.UploadPhotos;
 import br.inpe.mobile.user.SessionManager;
 
@@ -161,9 +157,8 @@ public class TaskActivity extends Activity {
          */
         public void syncronizeWithServer() {
                 String userHash = session.getUserHash();
-                List<Photo> photos = PhotoDao.getNotSyncPhotos();
                 String url = Utility.getServerUrl() + Constants.PHOTOS_REST;
-                UploadPhotos remote = new UploadPhotos(photos, userHash, this);
+                UploadPhotos remote = new UploadPhotos(userHash, this);
                 remote.execute(new String[] { url });
         }
         
@@ -189,6 +184,8 @@ public class TaskActivity extends Activity {
         public void setLoadMaskMessage(String message) {
                 if (mProgressDialog == null || !mProgressDialog.isShowing()) {
                         this.showLoadingMask(message);
+                } else {
+                        mProgressDialog.setMessage(message);
                 }
         }
         
