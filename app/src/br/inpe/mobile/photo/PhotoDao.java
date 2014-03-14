@@ -13,6 +13,7 @@ import br.inpe.mobile.task.Task;
 import br.inpe.mobile.user.SessionManager;
 import br.inpe.mobile.user.User;
 
+import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
@@ -30,7 +31,6 @@ public class PhotoDao {
         
         private static Dao<Photo, Integer> photoDao = db.getPhotoDao();
         
-        // TODO: pegar apenas fotos que estão com status "done"
         public static List<Photo> getNotSyncPhotos() {
                 List<Photo> photos = null;
                 
@@ -55,6 +55,42 @@ public class PhotoDao {
                 }
                 
                 return photos;
+        }
+        
+        /**
+         * Returns an iterator of all the pictures of the current users.
+         * 
+         * @return {@link CloseableIterator} the iterator of the database
+         *         registers.
+         * @author PauloLuan
+         * */
+        public static CloseableIterator<Photo> getIteratorForNotSyncPhotos() {
+                QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+                QueryBuilder<Form, Integer> formQueryBuilder = formDao.queryBuilder();
+                QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
+                QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+                
+                // when you are done, prepare your query and build an iterator
+                CloseableIterator<Photo> iterator = null;
+                
+                try {
+                        String userHash = SessionManager.getInstance().getUserHash();
+                        userQueryBuilder.where().eq("hash", userHash);
+                        
+                        taskQueryBuilder.join(userQueryBuilder);
+                        formQueryBuilder.join(taskQueryBuilder);
+                        
+                        photoQueryBuilder.join(formQueryBuilder);
+                        
+                        photoQueryBuilder.iterator();
+                        
+                        iterator = photoDao.iterator(photoQueryBuilder.prepare());
+                }
+                catch (SQLException e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+                
+                return iterator;
         }
         
         public static List<Photo> getAllPhotos() {
@@ -218,4 +254,36 @@ public class PhotoDao {
                 
                 return isSaved;
         }
+        
+        /**
+         * Get Count of completed photos.
+         * 
+         * @author Paulo Luan
+         */
+        public static Long getCountOfCompletedPhotos() {
+                long count = 0;
+                
+                QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+                QueryBuilder<Form, Integer> formQueryBuilder = formDao.queryBuilder();
+                QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
+                QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+                
+                try {
+                        String userHash = SessionManager.getInstance().getUserHash();
+                        userQueryBuilder.where().eq("hash", userHash);
+                        
+                        taskQueryBuilder.join(userQueryBuilder);
+                        formQueryBuilder.join(taskQueryBuilder);
+                        
+                        photoQueryBuilder.join(formQueryBuilder);
+                        
+                        count = photoQueryBuilder.countOf();
+                }
+                catch (SQLException e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+                
+                return count;
+        }
+        
 }
