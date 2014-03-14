@@ -111,7 +111,7 @@ public class GeoMap extends Activity {
                 
                 for (Task task : features) {
                         task.setDone(true);
-                        TaskDao.saveTask(task);
+                        TaskDao.updateTask(task);
                 }
         }
         

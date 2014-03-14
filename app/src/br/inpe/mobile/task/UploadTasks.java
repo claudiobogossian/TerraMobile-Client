@@ -1,18 +1,16 @@
 package br.inpe.mobile.task;
 
-import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.j256.ormlite.dao.CloseableIterator;
-
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.rest.RestTemplateFactory;
+
+import com.j256.ormlite.dao.CloseableIterator;
 
 /**
  * Async object implementation to PostTasks to server
@@ -37,34 +35,46 @@ public class UploadTasks extends AsyncTask<String, String, String> {
                 String message = null;
                 
                 for (String url : urls) {
-                        CloseableIterator<Task> iterator = TaskDao.getIteratorForNotFinishedTasks();
+                        CloseableIterator<Task> iterator = TaskDao.getIteratorForFinishedTasks();
+                        List<Task> testTasks = TaskDao.getAllTasks();
+                        
+                        Long countOfRegisters = TaskDao.getCountOfCompletedTasks();
+                        publishProgress("Enviando Tarefas...", "0", "" + countOfRegisters); // set Max Length of progress                                                                                       // dialog
+                        int progress = 0;
                         
                         try {
                                 while (iterator.hasNext()) {
-                                        Task task = iterator.current();
-                                        Task[] responseTasks = new RestTemplateFactory().postForObject(url, new Task[] { task }, Task[].class, userHash);
-                                        
-                                        List<Task> receivedTasks = new ArrayList<Task>(Arrays.asList(responseTasks));
-                                        
-                                        Task responseTask = receivedTasks.get(0);
-                                        
-                                        if (responseTask != null) {
-                                                TaskDao.deleteTask(task);
+                                        try {
+                                                Task task = (Task) iterator.next();
+                                                
+                                                Task[] responseTasks = new RestTemplateFactory().postForObject(url, new Task[] { task }, Task[].class, userHash);
+                                                
+                                                List<Task> receivedTasks = new ArrayList<Task>(Arrays.asList(responseTasks));
+                                                
+                                                Task responseTask = receivedTasks.get(0);
+                                                
+                                                if (responseTask != null) {
+                                                        TaskDao.deleteTask(task);
+                                                }
+                                                
+                                                progress++;
+                                                publishProgress("Enviando tarefas...", "" + progress);
                                         }
-                                        
-                                        //publishProgress("Enviando tarefas... " + (i + 1) + " de " + tasks.size());
+                                        catch (Exception e) {
+                                                message = "Sincronização efetuada, mas alguns registros não foram enviados.";
+                                                // String error = e.getResponseBodyAsString();
+                                                ExceptionHandler.saveLogFile(e);
+                                        }
                                 }
                         }
                         catch (Exception e) {
-                                message = "Ocorreu um erro de conexão ao enviar as tarefas.";
+                                message = "Ocorreu um erro ao enviar as imagens.";
                                 // String error = e.getResponseBodyAsString();
                                 ExceptionHandler.saveLogFile(e);
-                                
                         }
                         finally {
                                 iterator.closeQuietly();
                         }
-                        
                 }
                 
                 return message;
@@ -77,9 +87,8 @@ public class UploadTasks extends AsyncTask<String, String, String> {
         }
         
         @Override
-        protected void onProgressUpdate(String... values) {
-                taskActivity.setLoadMaskMessage(values[0]);
-                Log.i(taskActivity.LOG_TAG, " Progress: " + values);
+        protected void onProgressUpdate(String... progress) {
+                taskActivity.onProgressUpdate(progress);
         }
         
         @Override
