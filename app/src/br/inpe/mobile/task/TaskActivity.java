@@ -190,7 +190,7 @@ public class TaskActivity extends Activity {
         }
         
         public void onProgressUpdate(String... progress) {
-                mProgressDialog.setMessage(progress[0]);
+                this.setLoadMaskMessage(progress[0]);
                 
                 if (progress.length == 2) {
                         mProgressDialog.setProgress(Integer.parseInt(progress[1]));
