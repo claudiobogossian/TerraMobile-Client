@@ -1,7 +1,8 @@
 package br.inpe.mobile.map;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
@@ -44,10 +45,14 @@ import br.inpe.mobile.address.Address;
 import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.form.FormActivity;
 import br.inpe.mobile.location.LocationProvider;
+import br.inpe.mobile.photo.Photo;
+import br.inpe.mobile.photo.PhotoDao;
 import br.inpe.mobile.task.Task;
 import br.inpe.mobile.task.TaskActivity;
 import br.inpe.mobile.task.TaskDao;
 import br.inpe.mobile.user.SessionManager;
+
+import com.j256.ormlite.dao.CloseableIterator;
 
 public class GeoMap extends Activity {
         
@@ -106,12 +111,33 @@ public class GeoMap extends Activity {
                 self.createMapView();
         }
         
+        /**
+         * 
+         * Function to create some task to test the application.
+         * 
+         * */
         public void createFakeDataIntoTasks() {
-                List<Task> features = TaskDao.getAllTasks();
-                
-                for (Task task : features) {
-                        task.setDone(true);
-                        TaskDao.updateTask(task);
+                try {
+                        Photo basePhoto = PhotoDao.getIteratorForNotSyncPhotos().first();
+                        CloseableIterator<Task> taskIterator = TaskDao.getIteratorForFinishedTasks();
+                        
+                        while (taskIterator.hasNext()) {
+                                Task task = (Task) taskIterator.next();
+                                
+                                task.setDone(true);
+                                
+                                Photo newPhoto = new Photo();
+                                newPhoto.setPath(basePhoto.getPath());
+                                newPhoto.setBase64(basePhoto.getBase64());
+                                newPhoto.setForm(task.getForm());
+                                PhotoDao.savePhotos(Arrays.asList(newPhoto));
+                                
+                                TaskDao.updateTask(task);
+                        }
+                }
+                catch (SQLException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
                 }
         }
         
@@ -258,21 +284,20 @@ public class GeoMap extends Activity {
         }
         
         /**
-         * Update all landmarks from the map.
+         * Show all landmarks to the map.
          * 
          * @author Paulo Luan
          * @param tasks
          */
-        public void updateLandmarks(List<Task> tasks) {}
-        
         public void showLandmarks() {
-                List<Task> features = TaskDao.getAllTasks();
+                CloseableIterator<Task> taskIterator = TaskDao.getIteratorForFinishedTasks();
                 
                 if (poiMarkers != null) {
                         poiMarkers.removeAllItems();
                 }
                 
-                for (Task feature : features) {
+                while (taskIterator.hasNext()) {
+                        Task feature = (Task) taskIterator.next();
                         
                         Double lat, lon;
                         

@@ -28,6 +28,8 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
         
         private TaskActivity taskActivity;
         
+        int progress = 0;
+        
         public UploadPhotos(
                             String userHash,
                             TaskActivity taskActivity) {
@@ -43,10 +45,6 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                 
                 for (String url : urls) {
                         CloseableIterator<Photo> iterator = PhotoDao.getIteratorForNotSyncPhotos();
-                        
-                        Long countOfRegisters = PhotoDao.getCountOfCompletedPhotos();       
-                        publishProgress("Enviando Fotos...", "0", "" + countOfRegisters); // set Max Length of progress                                                                                       // dialog
-                        int progress = 0;
                         
                         try {
                                 while (iterator.hasNext()) {
@@ -92,7 +90,9 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
         @Override
         protected void onPreExecute() {
                 super.onPreExecute();
-                taskActivity.showLoadingMask("Enviando as Fotos, aguarde...");
+
+                Long countOfRegisters = PhotoDao.getCountOfCompletedPhotos();       
+                publishProgress("Enviando Fotos...", "0", "" + countOfRegisters); // set Max Length of progress                                                                                       // dialog
         }
         
         @Override

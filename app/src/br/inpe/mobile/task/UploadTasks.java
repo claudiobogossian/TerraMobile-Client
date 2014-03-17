@@ -25,6 +25,8 @@ public class UploadTasks extends AsyncTask<String, String, String> {
         
         private TaskActivity taskActivity;
         
+        int progress = 0;
+        
         public UploadTasks(String userHash, TaskActivity taskActivity) {
                 this.userHash = userHash;
                 this.taskActivity = taskActivity;
@@ -36,11 +38,6 @@ public class UploadTasks extends AsyncTask<String, String, String> {
                 
                 for (String url : urls) {
                         CloseableIterator<Task> iterator = TaskDao.getIteratorForFinishedTasks();
-                        List<Task> testTasks = TaskDao.getAllTasks();
-                        
-                        Long countOfRegisters = TaskDao.getCountOfCompletedTasks();
-                        publishProgress("Enviando Tarefas...", "0", "" + countOfRegisters); // set Max Length of progress                                                                                       // dialog
-                        int progress = 0;
                         
                         try {
                                 while (iterator.hasNext()) {
@@ -83,7 +80,9 @@ public class UploadTasks extends AsyncTask<String, String, String> {
         @Override
         protected void onPreExecute() {
                 super.onPreExecute();
-                taskActivity.showLoadingMask("Enviando as Tarefas, aguarde...");
+
+                Long countOfRegisters = TaskDao.getCountOfCompletedTasks();
+                publishProgress("Enviando Tarefas...", "0", "" + countOfRegisters); // set Max Length of progress                                                                                       // dialog
         }
         
         @Override
