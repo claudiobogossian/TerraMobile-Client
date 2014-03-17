@@ -62,6 +62,9 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
         
         @Override
         public void onCreate(Bundle savedInstanceState) {
+                
+                System.gc();
+                
                 super.onCreate(savedInstanceState);
                 Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
                 /**
