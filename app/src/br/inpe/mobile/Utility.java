@@ -247,7 +247,7 @@ public class Utility {
         }
         
         /**
-         * 
+         *  Format a string postal code to better visible string.
          * 
          * @param cepvalue
          * @return
@@ -259,10 +259,10 @@ public class Utility {
         }
         
         /**
-         * 
+         *  Get an String and change their value if it's null.
          * 
          * @param correct
-         * @return
+         * @return String the modified string.
          */
         public static String correctNull(String correct) {
                 if (correct == null || correct.compareTo("") == 0) {
@@ -504,6 +504,15 @@ public class Utility {
                 return sdCardFile.getAbsolutePath();
         }
         
+        /**
+         * 
+         * Move a file from  a path to another.
+         * 
+         * @param inputPath the input file path.
+         * @param outputPath the destination folder.
+         * @param fileName the name of the file,
+         * 
+         * */
         public static void moveFile(
                                     String inputPath,
                                     String outputPath,
@@ -595,7 +604,9 @@ public class Utility {
         
         /**
          * 
-         * @return
+         * Gets the device ID.
+         * 
+         * @return String the device id
          */
         public static String getDeviceId(Context ctx) {
                 TelephonyManager tManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);

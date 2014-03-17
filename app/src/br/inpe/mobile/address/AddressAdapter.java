@@ -9,6 +9,7 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.Filterable;
 import android.widget.TextView;
 import br.inpe.mobile.R;
@@ -24,6 +25,12 @@ import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
+/**
+ * This class is responsible for the {@link AutoCompleteTextView} of address,
+ * that the user input the address text, and the widget will be search the data
+ * on the database.
+ * 
+ * */
 public class AddressAdapter extends CursorAdapter implements Filterable {
         
         private static final String LOG_TAG = "#AddressAdapter";
