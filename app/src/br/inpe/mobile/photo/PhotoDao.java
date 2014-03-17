@@ -93,32 +93,6 @@ public class PhotoDao {
                 return iterator;
         }
         
-        public static List<Photo> getAllPhotos() {
-                List<Photo> photos = null;
-                
-                QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
-                QueryBuilder<Form, Integer> formQueryBuilder = formDao.queryBuilder();
-                QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
-                QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
-                
-                try {
-                        String userHash = SessionManager.getInstance().getUserHash();
-                        userQueryBuilder.where().eq("hash", userHash);
-                        
-                        taskQueryBuilder.join(userQueryBuilder);
-                        formQueryBuilder.join(taskQueryBuilder);
-                        
-                        photoQueryBuilder.join(formQueryBuilder);
-                        
-                        photos = photoQueryBuilder.query();
-                }
-                catch (SQLException e) {
-                        ExceptionHandler.saveLogFile(e);
-                }
-                
-                return photos;
-        }
-        
         /**
          * 
          * Get a List of photos related to a form.
@@ -212,9 +186,12 @@ public class PhotoDao {
          * @author Paulo Luan
          * */
         public static void verifyIntegrityOfPictures() {
-                List<Photo> photos = PhotoDao.getAllPhotos();
                 
-                for (Photo picture : photos) {
+                CloseableIterator<Photo> iterator = getIteratorForNotSyncPhotos();
+                
+                while (iterator.hasNext()) {
+                        Photo picture = (Photo) iterator.next();
+                        
                         File file = new File(picture.getPath());
                         
                         if (!file.exists()) {
