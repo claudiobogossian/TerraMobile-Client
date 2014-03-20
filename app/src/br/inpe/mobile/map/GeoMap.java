@@ -290,25 +290,34 @@ public class GeoMap extends Activity {
          * @param tasks
          */
         public void showLandmarks() {
-                CloseableIterator<Task> taskIterator = TaskDao.getIteratorForFinishedTasks();
+                CloseableIterator<Task> taskIterator = null;
                 
                 if (poiMarkers != null) {
                         poiMarkers.removeAllItems();
                 }
                 
-                while (taskIterator.hasNext()) {
-                        Task feature = (Task) taskIterator.next();
+                try {
+                        taskIterator = TaskDao.getIteratorForAllTasks();
                         
-                        Double lat, lon;
-                        
-                        lat = feature.getAddress().getCoordy();
-                        lon = feature.getAddress().getCoordx();
-                        
-                        if (lat != null && lon != null) {
-                                ExtendedOverlayItem poiMarker = createOverlayItem(feature);
-                                poiMarkers.addItem(poiMarker);
-                        }
+                        while (taskIterator.hasNext()) {
+                                Task feature = (Task) taskIterator.next();
+                                
+                                Double lat, lon;
+                                
+                                lat = feature.getAddress().getCoordy();
+                                lon = feature.getAddress().getCoordx();
+                                
+                                if (lat != null && lon != null) {
+                                        ExtendedOverlayItem poiMarker = createOverlayItem(feature);
+                                        poiMarkers.addItem(poiMarker);
+                                }
+                        }       
                 }
+                catch (Exception e) {
+                        e.printStackTrace();
+                } finally {
+                        taskIterator.closeQuietly();
+                } 
         }
         
         /**
