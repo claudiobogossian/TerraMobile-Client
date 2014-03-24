@@ -1,13 +1,9 @@
 package br.inpe.mobile.map;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
-import org.osmdroid.bonuspack.overlays.ExtendedOverlayItem;
-import org.osmdroid.bonuspack.overlays.ItemizedOverlayWithBubble;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
@@ -16,24 +12,18 @@ import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.ItemizedIconOverlay;
-import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.TilesOverlay;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
@@ -41,7 +31,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 import br.inpe.mobile.R;
 import br.inpe.mobile.Utility;
-import br.inpe.mobile.address.Address;
 import br.inpe.mobile.exception.ExceptionHandler;
 import br.inpe.mobile.form.FormActivity;
 import br.inpe.mobile.location.LocationProvider;
@@ -57,36 +46,28 @@ import com.j256.ormlite.dao.CloseableIterator;
 public class GeoMap extends Activity {
         
         /** the canvas of the Map. */
-        private MapView                                mapView;
+        private MapView          mapView;
         
         /** the controller of the map. */
-        private MapController                          controller;
+        private MapController    controller;
         
         /** the location of the user */
-        private Location                               location;
-        
-        /** the window that appear the informations about the Task */
-        private PointOfInterestInfoWindow              poiInfoWindow;
-        
-        /** The user location landmark . */
-        private OverlayItem                            myLocationOverlayItem;
-        ItemizedIconOverlay<OverlayItem>               currentLocationOverlay;
+        private Location         location;
         
         /**
-         * the code of the Activitise, used on the callback 'onActivityResult'
+         * the code of the Activities, used on the callback 'onActivityResult'
          * function.
          */
-        private static final int                       GEOFORM = 101;
-        private static final int                       TASK    = 103;
+        private static final int GEOFORM = 101;
+        private static final int TASK    = 103;
         
-        /** The landmarks that represents the List of Tasks objects. */
-        ItemizedOverlayWithBubble<ExtendedOverlayItem> poiMarkers;
+        private GeoMap           self    = this;
         
-        private GeoMap                                 self    = this;
+        private LayoutInflater   inflater;
         
-        private LayoutInflater                         inflater;
+        private LandmarksFactory landmarksFactory;
         
-        public static String                           tileSourcePath;
+        public static String     tileSourcePath;
         
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -98,6 +79,8 @@ public class GeoMap extends Activity {
                  */
                 
                 //createFakeDataIntoTasks(); //TODO: remove
+                
+                landmarksFactory = new LandmarksFactory(this);
                 
                 this.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 setContentView(R.layout.activity_geomap);
@@ -141,18 +124,20 @@ public class GeoMap extends Activity {
                 }
         }
         
+        /**
+         * Creates and handler the button that creates the user location update.
+         * */
         public void createButtonUpdateLocation() {
                 ImageButton imageButton = (ImageButton) findViewById(R.id.btn_update_location);
                 imageButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                self.createMyLocationItem();
+                                landmarksFactory.createMyLocationItem(mapView);
                         }
                 });
         }
         
         public void createMapView() {
-                
                 mapView = (MapView) findViewById(R.id.mapview);
                 mapView.setMaxZoomLevel(20);
                 mapView.setBuiltInZoomControls(true);
@@ -172,81 +157,20 @@ public class GeoMap extends Activity {
                 mapView.setTileSource(tileSource);
                 mapView.setUseDataConnection(false); //  letting osmdroid know you would use it in offline mode, keeps the mapView from loading online tiles using network connection.
                 
-                MapOverlay movl = new MapOverlay(this);
-                mapView.getOverlays().add(movl);
-                
-                poiInfoWindow = new PointOfInterestInfoWindow(mapView);
-                
-                final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
-                poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, poiItems, mapView, poiInfoWindow);
+                landmarksFactory.createMapOverlayHandler(mapView, this);
+                landmarksFactory.createPoiMarkers(mapView, this);
                 
                 location = LocationProvider.getInstance(this).getLocation();
                 controller = (MapController) mapView.getController();
                 
                 if (location != null) {
-                        self.createMyLocationItem();
+                        landmarksFactory.createMyLocationItem(mapView);
                 }
                 else {
-                        //controller.setZoom(12);
-                        //controller.setCenter(new GeoPoint(-22.317773, -49.059534));
-                        
                         controller.setZoom(12);
                         controller.setCenter(new GeoPoint(-22.32261, -49.028732));
                 }
                 
-                // new GeoPoint(-25.50116, -54.62678)
-                // new GeoPoint(-22.317773, -49.059534) // Bauru
-                // new GeoPoint(-23.157221, -45.792443) // SJC
-                
-                // POI markers:
-                
-                // poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this,
-                // poiItems, mapView);
-                mapView.getOverlays().add(poiMarkers);
-                mapView.invalidate();
-        }
-        
-        public void createMyLocationItem() {
-                location = LocationProvider.getInstance(this).getLocation();
-                
-                if (location != null) {
-                        poiInfoWindow.close();
-                        
-                        GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
-                        
-                        myLocationOverlayItem = new OverlayItem("", "", geoPoint);
-                        Drawable myCurrentLocationMarker = getResources().getDrawable(R.drawable.person);
-                        myLocationOverlayItem.setMarker(myCurrentLocationMarker);
-                        
-                        final ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
-                        items.add(myLocationOverlayItem);
-                        
-                        if (currentLocationOverlay != null) {
-                                currentLocationOverlay.removeAllItems();
-                        }
-                        else { // (creation) first time set the zoom.
-                                controller.setZoom(16);
-                        }
-                        
-                        ResourceProxy resourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
-                        currentLocationOverlay = new ItemizedIconOverlay<OverlayItem>(items, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-                                public boolean onItemSingleTapUp(
-                                                                 final int index,
-                                                                 final OverlayItem item) {
-                                        return true;
-                                }
-                                
-                                public boolean onItemLongPress(
-                                                               final int index,
-                                                               final OverlayItem item) {
-                                        return true;
-                                }
-                        }, resourceProxy);
-                        
-                        mapView.getOverlays().add(currentLocationOverlay);
-                        
-                        controller.setCenter(geoPoint);
-                }
         }
         
         public void openGeoform() {
@@ -275,91 +199,16 @@ public class GeoMap extends Activity {
         @Override
         protected void onResume() {
                 super.onResume();
-                self.showLandmarks();
+                
+                if(FormActivity.lastTask != null) {
+                        landmarksFactory.updatePoiMarkers(FormActivity.lastTask);
+                }
         }
         
         @Override
         protected void onPause() {
                 super.onPause();
         }
-        
-        /**
-         * Show all landmarks to the map.
-         * 
-         * @author Paulo Luan
-         * @param tasks
-         */
-        public void showLandmarks() {
-                CloseableIterator<Task> taskIterator = null;
-                
-                if (poiMarkers != null) {
-                        poiMarkers.removeAllItems();
-                }
-                
-                try {
-                        taskIterator = TaskDao.getIteratorForAllTasks();
-                        
-                        while (taskIterator.hasNext()) {
-                                Task feature = (Task) taskIterator.next();
-                                
-                                Double lat, lon;
-                                
-                                lat = feature.getAddress().getCoordy();
-                                lon = feature.getAddress().getCoordx();
-                                
-                                if (lat != null && lon != null) {
-                                        ExtendedOverlayItem poiMarker = createOverlayItem(feature);
-                                        poiMarkers.addItem(poiMarker);
-                                }
-                        }
-                }
-                catch (Exception e) {
-                        e.printStackTrace();
-                }
-                finally {
-                        taskIterator.closeQuietly();
-                }
-        }
-        
-        /**
-         * Creates an overlay item.
-         * 
-         * @return
-         */
-        public ExtendedOverlayItem createOverlayItem(Task feature) {
-                Address address = feature.getAddress();
-                Double latitude = address.getCoordy();
-                Double longitude = address.getCoordx();
-                GeoPoint geoPoint = new GeoPoint(latitude, longitude);
-                
-                // GeoPoint geoPoint = new GeoPoint(-22.318567, -49.060907);
-                
-                String featureString = "Nome : " + feature.getAddress().getName() + "\nNúmero : " + feature.getAddress().getNumber() + "\nLote : " + feature.getAddress().getFeatureId();
-                
-                ExtendedOverlayItem poiMarker = new ExtendedOverlayItem(featureString, "", geoPoint, this);
-                Drawable marker = null;
-                
-                if (feature.isDone()) {
-                        marker = getResources().getDrawable(R.drawable.ic_landmark_green);
-                }
-                else {
-                        marker = getResources().getDrawable(R.drawable.ic_landmark_red);
-                }
-                
-                poiMarker.setMarker(marker);
-                // poiMarker.setMarkerHotspot(poiMarker.HotspotPlace.CENTER);
-                
-                // thumbnail loading moved in PointOfInterestInfoWindow.onOpen for better
-                // performances.
-                poiMarker.setRelatedObject(feature);
-                
-                // controller.setCenter(geoPoint);
-                
-                return poiMarker;
-        }
-        
-        // TODO: listar todos os tasks e fazer landmarks disto, abrindo a tela de
-        // formulário baseado no objeto clicado.
         
         /*
          * 
@@ -412,22 +261,6 @@ public class GeoMap extends Activity {
                 }
                 if (requestCode == TASK) {
                         //self.refreshMapView();
-                }
-        }
-        
-        public class MapOverlay extends org.osmdroid.views.overlay.Overlay {
-                
-                public MapOverlay(Context ctx) {
-                        super(ctx);
-                }
-                
-                @Override
-                protected void draw(Canvas c, MapView osmv, boolean shadow) {}
-                
-                @Override
-                public boolean onTouchEvent(MotionEvent e, MapView mapView) {
-                        if (e.getAction() == MotionEvent.ACTION_DOWN) if (poiInfoWindow.isOpen()) poiInfoWindow.close();
-                        return false;
                 }
         }
         
