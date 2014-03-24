@@ -184,7 +184,8 @@ public class TaskActivity extends Activity {
         public void setLoadMaskMessage(String message) {
                 if (mProgressDialog == null || !mProgressDialog.isShowing()) {
                         this.showLoadingMask(message);
-                } else {
+                }
+                else {
                         mProgressDialog.setMessage(message);
                 }
         }

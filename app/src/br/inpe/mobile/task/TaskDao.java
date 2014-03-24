@@ -180,12 +180,12 @@ public class TaskDao {
                         
                         taskQueryBuilder.where().eq("done", Boolean.TRUE);
                         
-                        iterator = taskDao.iterator(taskQueryBuilder.prepare());                        
+                        iterator = taskDao.iterator(taskQueryBuilder.prepare());
                 }
                 catch (SQLException e) {
                         ExceptionHandler.saveLogFile(e);
                 }
-
+                
                 return iterator;
         }
         
@@ -207,12 +207,12 @@ public class TaskDao {
                         userQueryBuilder.where().eq("hash", userHash);
                         taskQueryBuilder.join(userQueryBuilder);
                         
-                        iterator = taskDao.iterator(taskQueryBuilder.prepare());                        
+                        iterator = taskDao.iterator(taskQueryBuilder.prepare());
                 }
                 catch (SQLException e) {
                         ExceptionHandler.saveLogFile(e);
                 }
-
+                
                 return iterator;
         }
         

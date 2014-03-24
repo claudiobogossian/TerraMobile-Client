@@ -25,7 +25,7 @@ public class UploadTasks extends AsyncTask<String, String, String> {
         
         private TaskActivity taskActivity;
         
-        int progress = 0;
+        int                  progress = 0;
         
         public UploadTasks(String userHash, TaskActivity taskActivity) {
                 this.userHash = userHash;
@@ -80,7 +80,7 @@ public class UploadTasks extends AsyncTask<String, String, String> {
         @Override
         protected void onPreExecute() {
                 super.onPreExecute();
-
+                
                 Long countOfRegisters = TaskDao.getCountOfCompletedTasks();
                 publishProgress("Enviando Tarefas...", "0", "" + countOfRegisters); // set Max Length of progress                                                                                       // dialog
         }

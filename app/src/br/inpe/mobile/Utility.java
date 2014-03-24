@@ -247,7 +247,7 @@ public class Utility {
         }
         
         /**
-         *  Format a string postal code to better visible string.
+         * Format a string postal code to better visible string.
          * 
          * @param cepvalue
          * @return
@@ -259,7 +259,7 @@ public class Utility {
         }
         
         /**
-         *  Get an String and change their value if it's null.
+         * Get an String and change their value if it's null.
          * 
          * @param correct
          * @return String the modified string.
@@ -506,11 +506,14 @@ public class Utility {
         
         /**
          * 
-         * Move a file from  a path to another.
+         * Move a file from a path to another.
          * 
-         * @param inputPath the input file path.
-         * @param outputPath the destination folder.
-         * @param fileName the name of the file,
+         * @param inputPath
+         *                the input file path.
+         * @param outputPath
+         *                the destination folder.
+         * @param fileName
+         *                the name of the file,
          * 
          * */
         public static void moveFile(

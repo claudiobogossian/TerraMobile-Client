@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import br.inpe.mobile.exception.ExceptionHandler;
+import br.inpe.mobile.form.generator.FormGeneratorExample;
 import br.inpe.mobile.map.GeoMap;
 import br.inpe.mobile.user.LoginActivity;
 import br.inpe.mobile.user.SessionManager;
@@ -13,7 +14,7 @@ public class Main extends Activity {
         
         private Main               self   = this;
         
-        public static final String TAG    = "#MAIN";
+        public static final String TAG    = "#MAIN";    
         
         // other activities
         private static final int   GEOMAP = 100;
@@ -29,6 +30,8 @@ public class Main extends Activity {
                  * Defines the default exception handler to log unexpected
                  * android errors
                  */
+                
+                //startActivity(new Intent(this, FormGeneratorExample.class));
                 
                 session = SessionManager.getInstance();
                 this.checkLogin();

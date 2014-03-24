@@ -42,6 +42,7 @@ public abstract class FormActivity extends Activity {
         public static String              SCHEMA_KEY_MODIFIERS = "modifiers";
         public static String              SCHEMA_KEY_OPTIONS   = "options";
         public static String              SCHEMA_KEY_META      = "meta";
+        public static String              SCHEMA_KEY_BUTTON    = "button";
         public static String              SCHEMA_KEY_HINT      = "hint";
         
         public static final LayoutParams  defaultLayoutParams  = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
@@ -187,7 +188,15 @@ public abstract class FormActivity extends Activity {
                 try {
                         for (int i = 0; i < _widgets.size(); i++) {
                                 widget = _widgets.get(i);
-                                data.put(widget.getPropertyName(), widget.getValue());
+                                
+                                // Button
+                                if (widget instanceof FormButton) {
+                                        Log.i("MakeMachine", "Else");
+                                }
+                                else {
+                                        // Others
+                                        data.put(widget.getPropertyName(), widget.getValue());
+                                }
                         }
                 }
                 catch (JSONException e) {
@@ -342,6 +351,8 @@ public abstract class FormActivity extends Activity {
                         if (type.equals(FormActivity.SCHEMA_KEY_STRING)) { return new FormEditText(this, name); }
                         
                         if (type.equals(FormActivity.SCHEMA_KEY_BOOL)) { return new FormCheckBox(this, name); }
+                        
+                        if (type.equals(FormActivity.SCHEMA_KEY_BUTTON)) { return new FormButton(this, name); }
                         
                         if (type.equals(FormActivity.SCHEMA_KEY_INT)) {
                                 if (property.has(FormActivity.SCHEMA_KEY_OPTIONS)) {

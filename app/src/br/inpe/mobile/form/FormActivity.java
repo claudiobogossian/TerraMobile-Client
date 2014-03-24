@@ -212,7 +212,8 @@ public class FormActivity extends Activity {
         }
         
         /**
-         * Calls to several functions to register all listener events to the buttons.
+         * Calls to several functions to register all listener events to the
+         * buttons.
          * 
          * @author Paulo Luan
          * */
@@ -223,7 +224,7 @@ public class FormActivity extends Activity {
                 self.setButtonOkListener();
                 self.setButtonClearSpinnersListener();
         }
-
+        
         /**
          * When clicked, clears the spinners and Addresses fields.
          * 
@@ -238,7 +239,7 @@ public class FormActivity extends Activity {
                         }
                 });
         }
-
+        
         /**
          * Removes the pictures and kill the current activity.
          * 
@@ -254,7 +255,6 @@ public class FormActivity extends Activity {
                         }
                 });
         }
-        
         
         /**
          * Override the functions "onBackPressed" to map another function to the
@@ -283,7 +283,7 @@ public class FormActivity extends Activity {
         }
         
         /**
-         *  Creates new Intent to show the camera and take the picture.
+         * Creates new Intent to show the camera and take the picture.
          * 
          * @author Paulo Luan
          * */
@@ -847,7 +847,7 @@ public class FormActivity extends Activity {
         /**
          * Clear the focus from all the Edit Text widgets, of this activity.
          * 
-         @author Paulo Luan
+         * @author Paulo Luan
          */
         public void clearAddressFocus() {
                 edtPostalCode.clearFocus();

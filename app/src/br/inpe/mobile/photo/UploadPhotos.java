@@ -28,11 +28,9 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
         
         private TaskActivity taskActivity;
         
-        int progress = 0;
+        int                  progress = 0;
         
-        public UploadPhotos(
-                            String userHash,
-                            TaskActivity taskActivity) {
+        public UploadPhotos(String userHash, TaskActivity taskActivity) {
                 this.userHash = userHash;
                 this.taskActivity = taskActivity;
         }
@@ -60,7 +58,7 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                                                         PhotoDao.deletePhoto(responsePhoto);
                                                 }
                                                 
-                                                progress ++;
+                                                progress++;
                                                 publishProgress("Enviando Imagens...", "" + progress);
                                         }
                                         catch (Exception e) {
@@ -68,15 +66,16 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                                                 // String error = e.getResponseBodyAsString();
                                                 ExceptionHandler.saveLogFile(e);
                                         }
-                                }   
-                        } catch (Exception e) {
+                                }
+                        }
+                        catch (Exception e) {
                                 message = "Ocorreu um erro ao enviar as imagens.";
                                 // String error = e.getResponseBodyAsString();
                                 ExceptionHandler.saveLogFile(e);
                         }
                         finally {
                                 iterator.closeQuietly();
-                        } 
+                        }
                 }
                 return message;
         }
@@ -90,8 +89,8 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
         @Override
         protected void onPreExecute() {
                 super.onPreExecute();
-
-                Long countOfRegisters = PhotoDao.getCountOfCompletedPhotos();       
+                
+                Long countOfRegisters = PhotoDao.getCountOfCompletedPhotos();
                 publishProgress("Enviando Fotos...", "0", "" + countOfRegisters); // set Max Length of progress                                                                                       // dialog
         }
         

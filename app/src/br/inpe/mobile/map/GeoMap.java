@@ -311,13 +311,14 @@ public class GeoMap extends Activity {
                                         ExtendedOverlayItem poiMarker = createOverlayItem(feature);
                                         poiMarkers.addItem(poiMarker);
                                 }
-                        }       
+                        }
                 }
                 catch (Exception e) {
                         e.printStackTrace();
-                } finally {
+                }
+                finally {
                         taskIterator.closeQuietly();
-                } 
+                }
         }
         
         /**
