@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="br.inpe.mobile"
+    package="br.inova.mobile"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -28,34 +28,38 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
-        android:name="br.inpe.mobile.database.ApplicationMemory"
+        android:name="br.inova.mobile.database.ApplicationMemory"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="br.inpe.mobile.form.FormActivity"
+            android:name="br.inova.mobile.form.FormActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" >
         </activity>
-        <activity android:name="br.inpe.mobile.map.GeoMap" >
+        <activity android:name="br.inova.mobile.map.GeoMap" >
         </activity>
         <activity
-            android:name="br.inpe.mobile.task.TaskActivity"
+            android:name="br.inova.mobile.task.TaskActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="br.inpe.mobile.photo.PhotoActivity"
+            android:name="br.inova.mobile.photo.PhotoActivity"
             android:configChanges="orientation"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name="br.inpe.mobile.user.LoginActivity"
+            android:name="br.inova.mobile.user.LoginActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="br.inpe.mobile.Main"
+            android:name="br.inova.mobile.form.generator.FormGeneratorExample"
+            android:screenOrientation="portrait" >
+        </activity> <!-- TODO: Remover -->
+        <activity
+            android:name="br.inova.mobile.Main"
             android:label="@string/title_activity_main"
             android:launchMode="singleTop"
             android:noHistory="true" >
