@@ -17,11 +17,11 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.view.MotionEvent;
-import br.inova.mobile.R;
 import br.inova.mobile.address.Address;
 import br.inova.mobile.location.LocationProvider;
 import br.inova.mobile.task.Task;
 import br.inova.mobile.task.TaskDao;
+import br.inpe.mobile.R;
 
 import com.j256.ormlite.dao.CloseableIterator;
 

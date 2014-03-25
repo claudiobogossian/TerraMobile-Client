@@ -16,13 +16,13 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import br.inova.mobile.R;
 import br.inova.mobile.Utility;
 import br.inova.mobile.constants.Constants;
 import br.inova.mobile.database.DatabaseAdapter;
 import br.inova.mobile.database.DatabaseHelper;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.map.GeoMap;
+import br.inpe.mobile.R;
 
 import com.j256.ormlite.dao.Dao;
 

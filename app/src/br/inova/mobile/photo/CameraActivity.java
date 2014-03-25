@@ -20,8 +20,8 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import br.inova.mobile.R;
 import br.inova.mobile.Utility;
+import br.inpe.mobile.R;
 
 public class CameraActivity extends Activity implements SurfaceHolder.Callback {
         

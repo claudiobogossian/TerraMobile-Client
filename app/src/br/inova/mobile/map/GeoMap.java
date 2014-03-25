@@ -29,7 +29,6 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
-import br.inova.mobile.R;
 import br.inova.mobile.Utility;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.form.FormActivity;
@@ -40,6 +39,7 @@ import br.inova.mobile.task.Task;
 import br.inova.mobile.task.TaskActivity;
 import br.inova.mobile.task.TaskDao;
 import br.inova.mobile.user.SessionManager;
+import br.inpe.mobile.R;
 
 import com.j256.ormlite.dao.CloseableIterator;
 

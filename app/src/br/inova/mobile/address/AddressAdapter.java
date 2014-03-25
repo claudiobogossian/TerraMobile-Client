@@ -12,13 +12,13 @@ import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Filterable;
 import android.widget.TextView;
-import br.inova.mobile.R;
 import br.inova.mobile.Utility;
 import br.inova.mobile.database.DatabaseHelper;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.task.Task;
 import br.inova.mobile.user.SessionManager;
 import br.inova.mobile.user.User;
+import br.inpe.mobile.R;
 
 import com.j256.ormlite.android.AndroidDatabaseResults;
 import com.j256.ormlite.dao.CloseableIterator;

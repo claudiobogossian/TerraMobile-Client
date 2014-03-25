@@ -33,10 +33,10 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ZoomControls;
-import br.inova.mobile.R;
 import br.inova.mobile.Utility;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.user.SessionManager;
+import br.inpe.mobile.R;
 
 public class PhotoActivity extends Activity implements SurfaceHolder.Callback {
         

@@ -44,8 +44,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import br.inova.mobile.R;
-import br.inova.mobile.R.string;
 import br.inova.mobile.Utility;
 import br.inova.mobile.address.AddressAdapter;
 import br.inova.mobile.exception.ExceptionHandler;
@@ -56,6 +54,8 @@ import br.inova.mobile.photo.PhotoActivity;
 import br.inova.mobile.photo.PhotoDao;
 import br.inova.mobile.task.Task;
 import br.inova.mobile.task.TaskDao;
+import br.inpe.mobile.R;
+import br.inpe.mobile.R.string;
 
 public class FormActivity extends Activity {
         

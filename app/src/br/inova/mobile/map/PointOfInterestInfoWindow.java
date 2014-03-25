@@ -7,9 +7,9 @@ import org.osmdroid.views.MapView;
 
 import android.content.Intent;
 import android.view.View;
-import br.inova.mobile.R;
 import br.inova.mobile.form.FormActivity;
 import br.inova.mobile.task.Task;
+import br.inpe.mobile.R;
 
 /**
  * A customized InfoWindow handling POIs. We inherit from DefaultInfoWindow as
