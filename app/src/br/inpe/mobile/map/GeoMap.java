@@ -80,18 +80,15 @@ public class GeoMap extends Activity {
                 
                 //createFakeDataIntoTasks(); //TODO: remove
                 
-                landmarksFactory = new LandmarksFactory(this);
-                
                 this.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 setContentView(R.layout.activity_geomap);
                 
-                inflater = LayoutInflater.from(getBaseContext());
-                View viewControl = inflater.inflate(R.layout.geomap_gps, null);
-                LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-                this.addContentView(viewControl, layoutParamsControl);
-                
-                self.createButtonUpdateLocation();
+                self.createInflatorForGpsButton();
                 self.createMapView();
+                self.createTileSource();
+                self.createLandmarks();
+                self.createUserLocation();
+                self.createButtonUpdateLocation();
         }
         
         /**
@@ -125,6 +122,16 @@ public class GeoMap extends Activity {
         }
         
         /**
+         * Creates the inflator Layout to show the gps button.
+         */
+        public void createInflatorForGpsButton() {
+                inflater = LayoutInflater.from(getBaseContext());
+                View viewControl = inflater.inflate(R.layout.geomap_gps, null);
+                LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+                this.addContentView(viewControl, layoutParamsControl);
+        }
+        
+        /**
          * Creates and handler the button that creates the user location update.
          * */
         public void createButtonUpdateLocation() {
@@ -132,17 +139,27 @@ public class GeoMap extends Activity {
                 imageButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                landmarksFactory.createMyLocationItem(mapView);
+                                landmarksFactory.createMyLocationItem();
                         }
                 });
         }
         
+        /**
+         * Creates the MapView object, the main object of the activity,
+         * responsible for controller of all the map.
+         * */
         public void createMapView() {
                 mapView = (MapView) findViewById(R.id.mapview);
                 mapView.setMaxZoomLevel(20);
                 mapView.setBuiltInZoomControls(true);
                 mapView.setMultiTouchControls(true);
-                
+        }
+        
+        /**
+         * Creates the tile source of the application, that will be responsible
+         * for the map tile reading from the zips.
+         * */
+        private void createTileSource() {
                 OnlineTileSourceBase mapQuestTileSource = TileSourceFactory.MAPQUESTOSM;
                 tileSourcePath = mapQuestTileSource.OSMDROID_PATH.getAbsolutePath() + "/";
                 
@@ -156,21 +173,34 @@ public class GeoMap extends Activity {
                 
                 mapView.setTileSource(tileSource);
                 mapView.setUseDataConnection(false); //  letting osmdroid know you would use it in offline mode, keeps the mapView from loading online tiles using network connection.
-                
-                landmarksFactory.createMapOverlayHandler(mapView, this);
-                landmarksFactory.createPoiMarkers(mapView, this);
-                
+        }
+        
+        /**
+         * Creates an instance of LandMark Factory and call to the initializers
+         * of the landmarks.
+         * */
+        private void createLandmarks() {
+                landmarksFactory = new LandmarksFactory(mapView, this);
+                landmarksFactory.createMapOverlayHandler();
+                landmarksFactory.initializePoiMarkers();
+        }
+        
+        /**
+         * 
+         * Creates the user location item.
+         * 
+         * */
+        private void createUserLocation() {
                 location = LocationProvider.getInstance(this).getLocation();
                 controller = (MapController) mapView.getController();
                 
                 if (location != null) {
-                        landmarksFactory.createMyLocationItem(mapView);
+                        landmarksFactory.createMyLocationItem();
                 }
                 else {
                         controller.setZoom(12);
                         controller.setCenter(new GeoPoint(-22.32261, -49.028732));
                 }
-                
         }
         
         public void openGeoform() {
@@ -200,7 +230,7 @@ public class GeoMap extends Activity {
         protected void onResume() {
                 super.onResume();
                 
-                if(FormActivity.lastTask != null) {
+                if (FormActivity.lastTask != null) {
                         landmarksFactory.updatePoiMarkers(FormActivity.lastTask);
                 }
         }
