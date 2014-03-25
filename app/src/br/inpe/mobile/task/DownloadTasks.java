@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 import br.inpe.mobile.Utility;
 import br.inpe.mobile.exception.ExceptionHandler;
+import br.inpe.mobile.map.LandmarksFactory;
 import br.inpe.mobile.rest.RestTemplateFactory;
 
 /**
@@ -72,12 +73,14 @@ public class DownloadTasks extends AsyncTask<String, String, String> {
         
         @Override
         protected void onPostExecute(String message) {
+                LandmarksFactory.createPoiMarkers();
+                
                 taskActivity.updateCountLabels();
                 taskActivity.hideLoadingMask();
                 
                 if (message != null) {
                         Utility.showToast("Ocorreu um erro ao baixar as atividades.", Toast.LENGTH_LONG, taskActivity);
-                }
+                } 
         }
         
 }
