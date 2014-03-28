@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import br.inova.mobile.address.Address;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.form.Form;
@@ -84,11 +85,13 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
                               int oldVersion,
                               int newVersion) {
                 try {
-                        this.dropTables();
+                        Log.d(DatabaseHelper.class.getName(), "onUpgrade");
+                        
+                        //this.dropTables();
                         // after we drop the old databases, we create the new ones
-                        onCreate(db, connectionSource);
+                        //onCreate(db, connectionSource);
                 }
-                catch (SQLException e) {
+                catch (Exception e) {
                         // Log.e(DatabaseHelper.class.getName(), "Can't drop databases", e);
                         throw new RuntimeException(e);
                 }

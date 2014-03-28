@@ -153,7 +153,7 @@ public class GeoMap extends Activity {
                 mapView.setMaxZoomLevel(20);
                 mapView.setBuiltInZoomControls(true);
                 mapView.setMultiTouchControls(true);
-                mapView.setWillNotCacheDrawing(true);//TODO: teste
+                //mapView.setWillNotCacheDrawing(true);//TODO: teste
         }
         
         /**

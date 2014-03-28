@@ -74,9 +74,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                 mCamera = getCameraInstance();
                 
                 this.initializeLayout();
-                this.initializeButtons();
-                
-                System.gc(); //Garbage Collector to improve more ram memory to activity
+                this.initializeButtons();        
         }
         
         public void initializeLayout() {
@@ -263,6 +261,8 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
         }
         
         private void takePicture() {
+                System.gc(); //Garbage Collector to improve more ram memory to activity
+                
                 if (btnTakePicture.isEnabled()) {
                         btnTakePicture.setEnabled(false);
                         mCamera.takePicture(null, null, jpegCallback);

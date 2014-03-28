@@ -10,7 +10,7 @@
     
     <string-array name="variance">
         <item>@string/not_detected</item>
-        <item>@string/inconsistent</item>
+        <item>@string/nonconforming</item>
         <item>@string/free</item>
         <item>@string/dismembered</item>
         <item>@string/unified</item>

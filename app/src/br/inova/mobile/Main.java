@@ -29,9 +29,7 @@ public class Main extends Activity {
                  * Defines the default exception handler to log unexpected
                  * android errors
                  */
-                
-                //startActivity(new Intent(this, FormGeneratorExample.class));
-                
+        
                 session = SessionManager.getInstance();
                 this.checkLogin();
         }

@@ -26,6 +26,9 @@
     <string name="other_informations">Outras Informações</string>
     <string name="tv_plus_infra">+ Infraestrutura</string>
     <string name="tv_minus_infra">- Infraestrutura</string>
+    <string name="tv_observations">Observações:</string>
+    <string name="tv_plus_observations">+ Observações</string>
+    <string name="tv_minus_observations">- Observações</string>
     <string name="tv_neighborhood">Bairro: </string>
     <string name="tv_postal_code">CEP: </string>
     <string name="tv_number">Número: </string>
@@ -66,7 +69,7 @@
     <string name="non_existent">Inexistente</string>
     <string name="not_confer">Não Confere</string>
     <string name="not_detected">Não Detectada</string>
-    <string name="inconsistent">Desconforme</string>
+    <string name="nonconforming">Desconforme</string>
     <string name="free">Vago</string>
     <string name="dismembered">Desmembrado</string>
     <string name="unified">Unificado</string>

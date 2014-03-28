@@ -69,19 +69,19 @@ public class FormActivity extends Activity {
         private AutoCompleteTextView address;
         
         private EditText             edtNeighborhood, edtPostalCode, edtNumber,
-                        edtOtherNumbers;
+        edtOtherNumbers, edtObservations;
         
         private Spinner              spnNumberConfirmation, spnVariance,
-                        spnPrimaryUse, spnSecondaryUse, spnPavimentation,
-                        spnAsphaltGuide, spnPublicIlumination, spnEnergy,
-                        spnPluvialGallery;
+        spnPrimaryUse, spnSecondaryUse, spnPavimentation,
+        spnAsphaltGuide, spnPublicIlumination, spnEnergy,
+        spnPluvialGallery;
         
         private TextView             lat, lon;
         
         private Button               buttonClearAddressFields;
         
         private Button               buttonCancel, buttonOk, buttonPhoto,
-                        buttonClearSpinners;
+        buttonClearSpinners;
         
         private FormActivity         self    = this;
         
@@ -179,16 +179,19 @@ public class FormActivity extends Activity {
                                                    View selectedItemView,
                                                    int position,
                                                    long id) {
-                                Object spnVarianceItem = spnVariance.getSelectedItem();
-                                String spnVarianceString = (spnVarianceItem == null) ? "" : spnVarianceItem.toString();
+                                boolean isVarianceFreeOrNonconforming = isVarianceFreeOrNonConforming();
                                 
-                                String free = resources.getString(string.free);
-                                
-                                if (spnVarianceString == free) {
+                                if (isVarianceFreeOrNonconforming) {
                                         findViewById(R.id.ground_informations_layout).setVisibility(View.GONE);
                                 }
                                 else {
                                         findViewById(R.id.ground_informations_layout).setVisibility(View.VISIBLE);
+                                }
+                                
+                                if (isVarianceNonConforming()) {
+                                        findViewById(R.id.observationsForm).setVisibility(View.VISIBLE);
+                                        TextView txtObservationTitle = (TextView) findViewById(R.id.txt_observation_title);
+                                        txtObservationTitle.setText(resources.getString(R.string.tv_minus_observations));
                                 }
                         }
                         
@@ -420,6 +423,7 @@ public class FormActivity extends Activity {
                 lon = (TextView) findViewById(R.id.cp_lon);
                 
                 edtOtherNumbers = (EditText) findViewById(R.id.edt_other_numbers);
+                edtObservations = (EditText) findViewById(R.id.edt_observations);
                 
                 // Spinners
                 spnNumberConfirmation = (Spinner) findViewById(R.id.spnNumberConfirmation);
@@ -554,6 +558,7 @@ public class FormActivity extends Activity {
                         edtPostalCode.setText(taskParam.getAddress().getPostalCode());
                         edtNumber.setText(taskParam.getAddress().getNumber());
                         edtOtherNumbers.setText(taskParam.getForm().getOtherNumbers());
+                        edtObservations.setText(taskParam.getForm().getInfo1());
                         
                         try {
                                 spnNumberConfirmation.setSelection(((ArrayAdapter<String>) spnNumberConfirmation.getAdapter()).getPosition(taskParam.getForm().getNumberConfirmation()));
@@ -654,7 +659,7 @@ public class FormActivity extends Activity {
                         if (isSameAddress) {
                                 
                                 this.setInfrastructureFieldsWithTask(lastTask); // sets only
-                                                                                // infrastructure
+                                // infrastructure
                                 
                                 txtInfraTitle.setText(string.tv_plus_infra);
                                 formInfra.setVisibility(View.GONE);
@@ -663,20 +668,20 @@ public class FormActivity extends Activity {
                         // Location (Address) is changed.
                         else {
                                 if (this.checkLastTaskInfrastructureFieldsIsNull(lastTask)) { // if
-                                                                                              // user
-                                                                                              // has
-                                                                                              // filled
-                                                                                              // the
-                                                                                              // last
-                                                                                              // infrastructure
-                                                                                              // don't
-                                                                                              // do
-                                                                                              // anything.
+                                        // user
+                                        // has
+                                        // filled
+                                        // the
+                                        // last
+                                        // infrastructure
+                                        // don't
+                                        // do
+                                        // anything.
                                         this.setFieldsWithTaskProperties(lastTask); // sets all
-                                                                                    // properties to
-                                                                                    // fill the form
-                                                                                    // again of the
-                                                                                    // last task.
+                                        // properties to
+                                        // fill the form
+                                        // again of the
+                                        // last task.
                                         
                                         Builder alert = new AlertDialog.Builder(FormActivity.this);
                                         alert.setTitle(string.caution);
@@ -701,17 +706,33 @@ public class FormActivity extends Activity {
         public void toggleInfrastructureFields(View v) {
                 View formInfra = findViewById(R.id.formInfra);
                 TextView txtTitle = (TextView) findViewById(R.id.txt_infra_title);
-                String title = "Infraestrutura";
                 
                 if (formInfra.isShown()) {
-                        // this.slideUp(this, formInfra);
                         formInfra.setVisibility(View.GONE);
-                        txtTitle.setText(" +  " + title);
+                        txtTitle.setText(resources.getString(R.string.tv_plus_infra));
                 }
                 else {
                         formInfra.setVisibility(View.VISIBLE);
-                        txtTitle.setText(" -  " + title);
-                        // this.slideDown(this, formInfra);
+                        txtTitle.setText(resources.getString(R.string.tv_minus_infra));
+                }
+        }
+        
+        /**
+         * Toggle the visibility of the infrastructure form to Gone os visible.
+         * 
+         * @author PauloLuan
+         */
+        public void toggleObservationField(View v) {
+                View observationsForm = findViewById(R.id.observationsForm);
+                TextView txtTitle = (TextView) findViewById(R.id.txt_observation_title);
+                
+                if (observationsForm.isShown()) {
+                        observationsForm.setVisibility(View.GONE);
+                        txtTitle.setText(resources.getString(R.string.tv_plus_observations));
+                }
+                else {
+                        observationsForm.setVisibility(View.VISIBLE);
+                        txtTitle.setText(resources.getString(R.string.tv_minus_observations));
                 }
         }
         
@@ -750,7 +771,8 @@ public class FormActivity extends Activity {
                 
                 form.setDate(new Date());
                 form.setOtherNumbers(edtOtherNumbers.getText().toString());
-                
+                form.setInfo1(edtObservations.getText().toString());
+                                
                 Object spnNumberConfirmationItem = spnNumberConfirmation.getSelectedItem();
                 String spnNumberConfirmationString = (spnNumberConfirmationItem == null) ? "" : spnNumberConfirmationItem.toString();
                 form.setNumberConfirmation(spnNumberConfirmationString);
@@ -786,7 +808,7 @@ public class FormActivity extends Activity {
                 Object spnPluvialGalleryItem = spnPluvialGallery.getSelectedItem();
                 String spnPluvialGalleryString = (spnPluvialGalleryItem == null) ? "" : spnPluvialGalleryItem.toString();
                 form.setPluvialGallery(spnPluvialGalleryString);
-                
+
                 return form;
         }
         
@@ -855,6 +877,7 @@ public class FormActivity extends Activity {
                 edtNeighborhood.clearFocus();
                 edtNumber.clearFocus();
                 edtOtherNumbers.clearFocus();
+                edtObservations.clearFocus();
                 address.clearFocus();
                 
                 edtPostalCode.setFocusable(false);
@@ -984,17 +1007,17 @@ public class FormActivity extends Activity {
         
         /**
          * 
-         * Verifies if the selection of the spinner variance is either Not
-         * Detected or Free.
+         * Verifies if the selection of the spinner variance is either
+         * Nonconforming or Free.
          * 
          * */
-        public boolean isVarianceFreeOrNotDetected() {
-                boolean isNotDetected = isVarianceNotDetected();
+        public boolean isVarianceFreeOrNonConforming() {
+                boolean isNonConforming = isVarianceNonConforming();
                 boolean isFree = isVarianceFree();
                 
                 boolean isSelected = false;
                 
-                if (isNotDetected || isFree) {
+                if (isNonConforming || isFree) {
                         isSelected = true;
                 }
                 
@@ -1003,14 +1026,14 @@ public class FormActivity extends Activity {
         
         /**
          * 
-         * Verifies if the selection of the spinner variance is Not Detected.
+         * Verifies if the selection of the spinner variance is nonconforming.
          * 
          * */
-        public boolean isVarianceNotDetected() {
-                String notDetected = resources.getString(R.string.not_detected);
+        public boolean isVarianceNonConforming() {
+                String nonConforming = resources.getString(R.string.nonconforming);
                 String spnVarianceString = spnVariance.getSelectedItem().toString();
-                boolean isNotDetected = spnVarianceString.equals(notDetected);
-                return isNotDetected;
+                boolean isNonConforming = spnVarianceString.equals(nonConforming);
+                return isNonConforming;
         }
         
         /**
@@ -1042,6 +1065,10 @@ public class FormActivity extends Activity {
                         }
                 }
                 
+                if(isVarianceNonConforming()) {
+                        message = self.checkNonconformingNull();
+                }
+                
                 if (message != null) {
                         Utility.showToast(message, Toast.LENGTH_LONG, self);
                 }
@@ -1068,12 +1095,26 @@ public class FormActivity extends Activity {
                 }
         }
         
+        
+        /**
+         * Verifies if the Observations field is filled.
+         * */
+        private String checkNonconformingNull() {
+                String message = null;
+                
+                if (edtObservations.getText().toString().equals("")) {
+                        message += "\nCampo de observação.";
+                }
+                
+                return message;
+        }
+
         protected void saveTaskIntoLocalDatabase() {
                 boolean isSaved = false;
                 
                 self.showLoadingMask();
                 
-                if (isVarianceFree()) {
+                if (isVarianceFreeOrNonConforming()) {
                         clearInformationsForWastelands();
                 }
                 else if (!photos.isEmpty()) {
