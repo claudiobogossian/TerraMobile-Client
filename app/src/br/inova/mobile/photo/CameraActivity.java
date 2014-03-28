@@ -6,55 +6,235 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.PixelFormat;
 import android.hardware.Camera;
-import android.hardware.Camera.PictureCallback;
+import android.hardware.Camera.AutoFocusCallback;
+import android.hardware.Camera.Parameters;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
+import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.ZoomControls;
 import br.inova.mobile.Utility;
+import br.inova.mobile.exception.ExceptionHandler;
+import br.inova.mobile.user.SessionManager;
 import br.inpe.mobile.R;
 
 public class CameraActivity extends Activity implements SurfaceHolder.Callback {
         
+        private static String   TAG              = "CAMERA_ACTIVITY";
+        
         private Camera          mCamera;
-        private CameraPreview   mPreview;
         
         public static final int MEDIA_TYPE_IMAGE = 1;
         public static final int MEDIA_TYPE_VIDEO = 2;
         
-        private String          TAG              = "CAMERA_TEST";
+        private static Integer  zoom             = 0;
+        private SessionManager  session;
+        
+        private File            pictureFile      = null;
+        
+        private SurfaceHolder   mSurfaceHolder;
+        
+        LayoutInflater          controlInflater  = null;
+        
+        //Layouts
+        private LinearLayout    takePictureLayout, confirmPictureLayout;
+        
+        // Buttons
+        private ImageButton     btnBack;
+        private ImageButton     btnTakePicture;
+        private ImageButton     btnCancel;
+        private ImageButton     btnOk;
         
         @Override
         public void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 
-                // Create an instance of Camera
+                Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this)); //Defines the default exception handler to log unexpected android errors
+                session = SessionManager.getInstance();
+                
                 mCamera = getCameraInstance();
                 
-                // Create our Preview view and set it as the content of our activity.
-                mPreview = new CameraPreview(this, mCamera);
-                FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
-                preview.addView(mPreview);
+                this.initializeLayout();
+                this.initializeButtons();
                 
-                // Add a listener to the Capture button
-                Button captureButton = (Button) findViewById(R.id.button_capture);
-                captureButton.setOnClickListener(new View.OnClickListener() {
+                System.gc(); //Garbage Collector to improve more ram memory to activity
+        }
+        
+        public void initializeLayout() {
+                requestWindowFeature(Window.FEATURE_NO_TITLE);
+                setContentView(R.layout.activity_photo);
+                //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                getWindow().setFormat(PixelFormat.UNKNOWN);
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                
+                controlInflater = LayoutInflater.from(getBaseContext());
+                View viewControl = controlInflater.inflate(R.layout.photo_control, null);
+                LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+                this.addContentView(viewControl, layoutParamsControl);
+                
+                // widgets and layouts
+                takePictureLayout = (LinearLayout) findViewById(R.id.foto_control_lay3);
+                confirmPictureLayout = (LinearLayout) findViewById(R.id.foto_control_lay4);
+                takePictureLayout.setVisibility(LinearLayout.VISIBLE);
+                confirmPictureLayout.setVisibility(LinearLayout.INVISIBLE);
+                
+                // create a SurfaceView
+                SurfaceView mSurfaceView = (SurfaceView) findViewById(R.id.foto_surface1);
+                mSurfaceHolder = mSurfaceView.getHolder();
+                mSurfaceHolder.addCallback(this);
+                mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        }
+        
+        public void initializeButtons() {
+                btnBack = (ImageButton) findViewById(R.id.foto_control_bt_voltar);
+                btnTakePicture = (ImageButton) findViewById(R.id.foto_control_bt_fotografar);
+                btnCancel = (ImageButton) findViewById(R.id.foto_control_bt_cancel);
+                btnOk = (ImageButton) findViewById(R.id.foto_control_bt_ok);
+                
+                setButtonListeners();
+        }
+        
+        public void setButtonListeners() {
+                setButtonOkListener();
+                setButtonBackListener();
+                setButtonCancelListener();
+                setButtonTakePictureListener();
+        }
+        
+        public void setButtonBackListener() { // button listeners
+                btnBack.setOnClickListener(new View.OnClickListener() {
+                        
                         @Override
                         public void onClick(View v) {
-                                // get an image from the camera
-                                mCamera.takePicture(null, null, mPicture);
+                                setResult(RESULT_CANCELED, new Intent());
+                                finish();
+                        }
+                });
+        }
+        
+        public void setButtonOkListener() {
+                btnOk.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                                setResult(RESULT_OK, new Intent().putExtra("RESULT", pictureFile.getPath()));
+                                finish();
+                        }
+                });
+        }
+        
+        public void setButtonCancelListener() {
+                btnCancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                                pictureFile.delete();
+                                takePictureLayout.setVisibility(View.VISIBLE);
+                                confirmPictureLayout.setVisibility(View.INVISIBLE);
+                                btnTakePicture.setEnabled(true);
+                                mCamera.startPreview();
+                        }
+                });
+        }
+        
+        public void setButtonTakePictureListener() {
+                btnTakePicture.setOnClickListener(new View.OnClickListener() {
+                        
+                        @Override
+                        public void onClick(View v) {
+                                takePicture();
                         }
                 });
                 
+                // AutoFocus when long click
+                btnTakePicture.setOnLongClickListener(new OnLongClickListener() {
+                        
+                        @Override
+                        public boolean onLongClick(View arg0) {
+                                mCamera.autoFocus(new AutoFocusCallback() {
+                                        
+                                        @Override
+                                        public void onAutoFocus(
+                                                                boolean arg0,
+                                                                Camera arg1) { //
+                                                takePicture();
+                                        }
+                                });
+                                return true;
+                        }
+                });
+        }
+        
+        public void setZoomListener() {
+                ZoomControls zooming = (ZoomControls) findViewById(R.id.zooming);
+                
+                Camera.Parameters p = mCamera.getParameters();
+                final int maxZoom = p.getMaxZoom();
+                
+                String zoomString = session.getSavedValue("zoom");
+                
+                if (zoomString != null) {
+                        zoom = Integer.parseInt(zoomString);
+                        setZoom(zoom);
+                }
+                
+                zooming.setOnZoomInClickListener(new OnClickListener() {
+                        public void onClick(View v) {
+                                
+                                if (zoom > maxZoom) zoom = maxZoom;
+                                
+                                if (zoom < maxZoom) {
+                                        zoom++;
+                                }
+                                
+                                setZoom(zoom);
+                        }
+                });
+                
+                zooming.setOnZoomOutClickListener(new OnClickListener() {
+                        public void onClick(View v) {
+                                
+                                if (zoom < 0) zoom = 0;
+                                
+                                if (zoom != 0) {
+                                        zoom--;
+                                }
+                                
+                                setZoom(zoom);
+                        }
+                });
+        }
+        
+        public void setZoom(int zoom) {
+                Camera.Parameters p = mCamera.getParameters();
+                
+                if (p.isZoomSupported()) {
+                        int maxZoom = p.getMaxZoom();
+                        
+                        if (zoom <= maxZoom && zoom >= 0) {
+                                p.setZoom(zoom);
+                                session.saveKeyAndValue("zoom", "" + zoom);
+                        }
+                }
+                
+                mCamera.setParameters(p);
         }
         
         /** Check if this device has a camera */
@@ -72,6 +252,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
         /** A safe way to get an instance of the Camera object. */
         public static Camera getCameraInstance() {
                 Camera c = null;
+                
                 try {
                         c = Camera.open(); // attempt to get a Camera instance
                 }
@@ -81,101 +262,65 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                 return c; // returns null if camera is unavailable
         }
         
-        /** A basic Camera preview class */
-        public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
-                private SurfaceHolder mHolder;
-                private Camera        mCamera;
-                
-                public CameraPreview(Context context, Camera camera) {
-                        super(context);
-                        mCamera = camera;
-                        
-                        // Install a SurfaceHolder.Callback so we get notified when the
-                        // underlying surface is created and destroyed.
-                        mHolder = getHolder();
-                        mHolder.addCallback(this);
-                        // deprecated setting, but required on Android versions prior to 3.0
-                        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-                }
-                
-                public void surfaceCreated(SurfaceHolder holder) {
-                        // The Surface has been created, now tell the camera where to draw the preview.
-                        try {
-                                mCamera.setPreviewDisplay(holder);
-                                mCamera.startPreview();
-                        }
-                        catch (IOException e) {
-                                Log.d(TAG, "Error setting camera preview: " + e.getMessage());
-                        }
-                }
-                
-                public void surfaceDestroyed(SurfaceHolder holder) {
-                        // empty. Take care of releasing the Camera preview in your activity.
-                }
-                
-                public void surfaceChanged(
-                                           SurfaceHolder holder,
-                                           int format,
-                                           int w,
-                                           int h) {
-                        // If your preview can change or rotate, take care of those events here.
-                        // Make sure to stop the preview before resizing or reformatting it.
-                        
-                        if (mHolder.getSurface() == null) {
-                                // preview surface does not exist
-                                return;
-                        }
-                        
-                        // stop preview before making changes
-                        try {
-                                mCamera.stopPreview();
-                        }
-                        catch (Exception e) {
-                                // ignore: tried to stop a non-existent preview
-                        }
-                        
-                        // set preview size and make any resize, rotate or
-                        // reformatting changes here
-                        
-                        // start preview with new settings
-                        try {
-                                mCamera.setPreviewDisplay(mHolder);
-                                mCamera.startPreview();
-                                
-                        }
-                        catch (Exception e) {
-                                Log.d(TAG, "Error starting camera preview: " + e.getMessage());
-                        }
+        private void takePicture() {
+                if (btnTakePicture.isEnabled()) {
+                        btnTakePicture.setEnabled(false);
+                        mCamera.takePicture(null, null, jpegCallback);
                 }
         }
         
-        private PictureCallback mPicture = new PictureCallback() {
-                                                 
-                                                 @Override
-                                                 public void onPictureTaken(
-                                                                            byte[] data,
-                                                                            Camera camera) {
-                                                         
-                                                         File pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
-                                                         if (pictureFile == null) {
-                                                                 //Log.d(TAG, "Error creating media file, check storage permissions: " + e.getMessage());
-                                                                 Log.d(TAG, "Error creating media file, check storage permissions: ");
-                                                                 return;
-                                                         }
-                                                         
-                                                         try {
-                                                                 FileOutputStream fos = new FileOutputStream(pictureFile);
-                                                                 fos.write(data);
-                                                                 fos.close();
-                                                         }
-                                                         catch (FileNotFoundException e) {
-                                                                 Log.d(TAG, "File not found: " + e.getMessage());
-                                                         }
-                                                         catch (IOException e) {
-                                                                 Log.d(TAG, "Error accessing file: " + e.getMessage());
-                                                         }
-                                                 }
-                                         };
+        Camera.PictureCallback jpegCallback = new Camera.PictureCallback() {
+                @Override
+                public void onPictureTaken(
+                                           byte[] _data,
+                                           Camera _camera) {
+                        
+                        pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
+                        
+                        if (pictureFile == null) {
+                                //Log.d(TAG, "Error creating media file, check storage permissions: " + e.getMessage());
+                                Log.d(TAG, "Error creating media file, check storage permissions: ");
+                                return;
+                        }
+                        
+                        try {
+                                FileOutputStream fos = new FileOutputStream(pictureFile);
+                                fos.write(_data);
+                                fos.close();
+                                
+                                setResult(RESULT_OK);
+                                confirmPicture();
+                        }
+                        catch (FileNotFoundException e) {
+                                Log.d(TAG, "File not found: " + e.getMessage());
+                                setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro na obtenção da foto!"));
+                                finish();
+                        }
+                        catch (IOException e) {
+                                Log.d(TAG, "Error accessing file: " + e.getMessage());
+                                setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro na obtenção da foto!"));
+                                finish();
+                        }
+                        
+                }
+        };
+        
+        private void confirmPicture() {
+                takePictureLayout.setVisibility(View.INVISIBLE);
+                confirmPictureLayout.setVisibility(View.VISIBLE);
+        }
+        
+        /**
+         * Maps the camera button and take the picture when that button was
+         * clicked..
+         */
+        @Override
+        public boolean onKeyUp(int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_CAMERA) {
+                        this.takePicture();
+                }
+                return super.onKeyDown(keyCode, event);
+        }
         
         /** Create a file Uri for saving an image or video */
         private static Uri getOutputMediaFileUri(int type) {
@@ -194,7 +339,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                 // Create the storage directory if it does not exist
                 if (!mediaStorageDir.exists()) {
                         if (!mediaStorageDir.mkdirs()) {
-                                Log.d("MyCameraApp", "failed to create directory");
+                                Log.d(TAG, "failed to create directory");
                                 return null;
                         }
                 }
@@ -215,26 +360,96 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                 return mediaFile;
         }
         
+        public void setCameraQuality() {
+                Parameters cameraParameters = mCamera.getParameters();
+                cameraParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO); // set
+                // auto-focus
+                
+                List<Camera.Size> mList = cameraParameters.getSupportedPictureSizes();
+                Camera.Size maxPictureSize = mList.get(mList.size() - 1);
+                
+                if (maxPictureSize.width <= 2048 && maxPictureSize.height <= 1536) {
+                        cameraParameters.setPictureSize(maxPictureSize.width, maxPictureSize.height);
+                }
+                else {
+                        cameraParameters.setPictureSize(2048, 1536);
+                }
+                
+                cameraParameters.setPictureFormat(PixelFormat.JPEG);
+                cameraParameters.set("jpeg-quality", 100);
+                
+                mCamera.setParameters(cameraParameters);
+                
+        }
+        
+        @Override
+        public void surfaceCreated(SurfaceHolder holder) {
+                try {
+                        if (mCamera != null) {
+                                setCameraQuality();
+                                
+                                mCamera.setPreviewDisplay(holder);
+                                mCamera.startPreview();
+                                
+                                setZoomListener();
+                                
+                        }
+                        else {
+                                setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro na obtenção da câmera!"));
+                                finish();
+                        }
+                }
+                catch (IOException e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+        }
+        
+        @Override
+        public void surfaceDestroyed(SurfaceHolder holder) {
+                mCamera.stopPreview();
+                mCamera.release();
+                mCamera = null;
+        }
+        
         @Override
         public void surfaceChanged(
-                                   SurfaceHolder arg0,
-                                   int arg1,
-                                   int arg2,
-                                   int arg3) {
-                // TODO Auto-generated method stub
-                
+                                   SurfaceHolder holder,
+                                   int format,
+                                   int width,
+                                   int height) {
+                Log.i(TAG, format + " --- " + width + " --- " + height);
         }
         
         @Override
-        public void surfaceCreated(SurfaceHolder arg0) {
-                // TODO Auto-generated method stub
-                
+        public void onStart() {
+                super.onStart();
         }
         
         @Override
-        public void surfaceDestroyed(SurfaceHolder arg0) {
-                // TODO Auto-generated method stub
-                
+        public void onResume() {
+                super.onResume();
+                takePictureLayout.setVisibility(View.VISIBLE);
+                confirmPictureLayout.setVisibility(View.INVISIBLE);
+                btnTakePicture.setEnabled(true);
         }
         
+        @Override
+        public void onPause() {
+                super.onPause();
+        }
+        
+        @Override
+        public void onStop() {
+                super.onStop();
+        }
+        
+        @Override
+        public void onRestart() {
+                super.onRestart();
+        }
+        
+        @Override
+        public void onDestroy() {
+                super.onDestroy();
+        }
 }

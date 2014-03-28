@@ -10,7 +10,7 @@
         android:id="@+id/foto_control_lay2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|top"
+        android:layout_gravity="top|right"
         android:layout_margin="10px" >
 
         <LinearLayout

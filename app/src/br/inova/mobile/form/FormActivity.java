@@ -49,8 +49,8 @@ import br.inova.mobile.address.AddressAdapter;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.location.LocationProvider;
 import br.inova.mobile.map.LandmarksFactory;
+import br.inova.mobile.photo.CameraActivity;
 import br.inova.mobile.photo.Photo;
-import br.inova.mobile.photo.PhotoActivity;
 import br.inova.mobile.photo.PhotoDao;
 import br.inova.mobile.task.Task;
 import br.inova.mobile.task.TaskDao;
@@ -297,7 +297,7 @@ public class FormActivity extends Activity {
                         buttonPhoto.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                        Intent i = new Intent(FormActivity.this, PhotoActivity.class);
+                                        Intent i = new Intent(FormActivity.this, CameraActivity.class);
                                         startActivityForResult(i, PHOTO);
                                 }
                         });
