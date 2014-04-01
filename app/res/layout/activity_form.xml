@@ -434,8 +434,9 @@
                         </HorizontalScrollView>
                     </TableRow>
                 </TableLayout>
-
-                <TableLayout
+            </TableLayout>
+            
+            <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
 
@@ -600,7 +601,6 @@
                             android:entries="@array/yes_no" />
                     </TableRow>
                 </TableLayout>
-            </TableLayout>
 
             <TableLayout
                 android:layout_width="match_parent"

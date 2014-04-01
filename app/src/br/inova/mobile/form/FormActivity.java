@@ -1065,7 +1065,7 @@ public class FormActivity extends Activity {
                         }
                 }
                 
-                if(isVarianceNonConforming()) {
+                if (isVarianceNonConforming()) {
                         message = self.checkNonconformingNull();
                 }
                 
@@ -1103,7 +1103,7 @@ public class FormActivity extends Activity {
                 String message = null;
                 
                 if (edtObservations.getText().toString().equals("")) {
-                        message += "\nCampo de observação.";
+                        message = "\nCampo de observação.";
                 }
                 
                 return message;
