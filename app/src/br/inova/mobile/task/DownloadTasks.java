@@ -46,6 +46,8 @@ public class DownloadTasks extends AsyncTask<String, String, String> {
                                 
                                 int progress = 0;
                                 
+                                TaskDao.deleteUncompletedTasks(); // delete all uncompleted tasks before saving the news tasks.
+                                
                                 for (Task task : tasks) {
                                         TaskDao.saveTask(task);
                                         progress++;

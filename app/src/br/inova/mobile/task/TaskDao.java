@@ -54,25 +54,41 @@ public class TaskDao {
         
         /**
          * 
-         * Delete the rows where is syncronized with the server.
+         * Delete the rows where is uncompleted.
          * 
          * @author Paulo Luan
          * @return Boolean result
          */
-        public static Integer deleteSincronizedTasks() {
-                DeleteBuilder<Task, Integer> deleteBuilder = taskDao.deleteBuilder();
-                Integer result = 0;
+        public static Boolean deleteUncompletedTasks() {
+                Boolean isSuccess = false;
+                
+                QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+                QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+                
+                // when you are done, prepare your query and build an iterator
+                CloseableIterator<Task> iterator = null;
                 
                 try {
-                        // only delete the rows where syncronized is true
-                        deleteBuilder.where().eq("done", Boolean.TRUE);
-                        result = deleteBuilder.delete();
+                        String userHash = session.getUserHash();
+                        userQueryBuilder.where().eq("hash", userHash);
+                        taskQueryBuilder.join(userQueryBuilder);
+                        
+                        taskQueryBuilder.where().eq("done", Boolean.FALSE);
+                        
+                        iterator = taskDao.iterator(taskQueryBuilder.prepare());
+                        
+                        while (iterator.hasNext()) {
+                                Task task = (Task) iterator.next();
+                                TaskDao.deleteTask(task);
+                        }
+                        
+                        isSuccess = true;
                 }
                 catch (SQLException e) {
-                        
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
-                return result;
+                return isSuccess;
         }
         
         /**
@@ -317,9 +333,9 @@ public class TaskDao {
                         
                         try {
                                 if (persistedTask == null) {
-                                        formDao.create(task.getForm());
-                                        addressDao.create(task.getAddress());
-                                        taskDao.create(task);
+                                        formDao.createIfNotExists(task.getForm());
+                                        addressDao.createIfNotExists(task.getAddress());
+                                        taskDao.createIfNotExists(task);
                                         
                                         isSaved = true;
                                 }
