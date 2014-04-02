@@ -94,6 +94,27 @@ public class PhotoDao {
                 return iterator;
         }
         
+
+        /**
+         * Returns an iterator of all the pictures of the current users.
+         * 
+         * @return {@link CloseableIterator} the iterator of the database
+         *         registers.
+         * @author PauloLuan
+         * */
+        public static CloseableIterator<Photo> getIteratorForAllPhotos() {
+                CloseableIterator<Photo> iterator = null;
+                
+                try {
+                        iterator = photoDao.iterator();
+                }
+                catch (Exception e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+                
+                return iterator;
+        }
+        
         /**
          * 
          * Get a List of photos related to a form.

@@ -210,7 +210,7 @@ public class TaskDao {
          * @return Cursor cursor of all the tasks of the user.
          * @author Paulo Luan
          */
-        public static CloseableIterator<Task> getIteratorForAllTasks() {
+        public static CloseableIterator<Task> getIteratorForAllTasksForCurrentUser() {
                 QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
                 QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
                 

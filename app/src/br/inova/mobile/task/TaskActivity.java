@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.inova.mobile.Utility;
 import br.inova.mobile.constants.Constants;
+import br.inova.mobile.database.DatabaseBackup;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.map.BaseMapDownload;
 import br.inova.mobile.photo.UploadPhotos;
@@ -71,6 +72,14 @@ public class TaskActivity extends Activity {
                         @Override
                         public void onClick(View v) {
                                 if (Utility.isNetworkAvailable(self)) {
+                                        try {
+                                                DatabaseBackup.makeBackup();
+                                        }
+                                        catch (Exception e) {
+                                                Utility.showToast("Ocorreu um problema ao fazer o Backup, comunique a equipe da Inova.", Toast.LENGTH_LONG, TaskActivity.this);
+                                                ExceptionHandler.saveLogFile(e);
+                                        }
+                                        
                                         try {
                                                 self.syncronizeWithServer();
                                         }
