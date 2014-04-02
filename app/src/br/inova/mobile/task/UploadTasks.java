@@ -82,7 +82,10 @@ public class UploadTasks extends AsyncTask<String, String, String> {
                 super.onPreExecute();
                 
                 Long countOfRegisters = TaskDao.getCountOfCompletedTasks();
-                publishProgress("Enviando Tarefas...", "0", "" + countOfRegisters); // set Max Length of progress                                                                                       // dialog
+                
+                if (countOfRegisters != 0) {
+                        publishProgress("Enviando Tarefas...", "0", "" + countOfRegisters); // set Max Length of progress                                                                                       // dialog
+                }
         }
         
         @Override

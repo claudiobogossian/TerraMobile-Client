@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import android.util.Log;
+import br.inova.mobile.Utility;
 import br.inova.mobile.database.DatabaseAdapter;
 import br.inova.mobile.database.DatabaseHelper;
 import br.inova.mobile.exception.ExceptionHandler;
@@ -126,6 +127,37 @@ public class PhotoDao {
         
         /**
          * 
+         * Verify if the path of the picture exists on the database.
+         * 
+         * @param Path
+         *                The String that will be query at the database.
+         * 
+         * @return Boolean.
+         * 
+         * @author Paulo Luan
+         */
+        public static Boolean isPictureOnDatabase(String path) {
+                Boolean exists = false;
+                
+                QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
+                
+                try {
+                        photoQueryBuilder.where().eq("path", path);
+                        Photo photo = photoQueryBuilder.queryForFirst();
+                        
+                        if (photo != null) {
+                                exists = true;
+                        }
+                }
+                catch (SQLException e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+                
+                return exists;
+        }
+        
+        /**
+         * 
          * Delete photos locally.
          * 
          * @author Paulo Luan
@@ -180,26 +212,26 @@ public class PhotoDao {
         }
         
         /**
-         * Verify all pictures and delete from database if it not exists on File
-         * system.
+         * Verify all pictures and delete from filesystem if it not exists on
+         * Database.
          * 
          * @author Paulo Luan
          * */
         public static void verifyIntegrityOfPictures() {
+                File mediaStorageDir = new File(Utility.getExternalSdCardPath() + "/inova/" + "/dados" + "/fotos/");
+                Log.d("Files", "Path: " + mediaStorageDir.getPath());
                 
-                CloseableIterator<Photo> iterator = getIteratorForNotSyncPhotos();
+                File pictures[] = mediaStorageDir.listFiles();
+                Log.d("Files", "Lenght of files: " + pictures.length);
                 
-                while (iterator.hasNext()) {
-                        Photo picture = (Photo) iterator.next();
+                for (int i = 0; i < pictures.length; i++) {
+                        String path = pictures[i].getPath();
+                        Boolean pictureExists = PhotoDao.isPictureOnDatabase(path);
                         
-                        File file = new File(picture.getPath());
-                        
-                        if (!file.exists()) {
-                                PhotoDao.deletePhoto(picture);
+                        if (!pictureExists) {
+                                pictures[i].delete();
                         }
                 }
-                
-                //TODO: verificar ao contrário, ou seja, fotos que estão no PATH mas não estão no banco.
         }
         
         /**

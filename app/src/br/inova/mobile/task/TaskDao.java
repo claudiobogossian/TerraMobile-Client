@@ -14,7 +14,6 @@ import br.inova.mobile.user.User;
 
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 public class TaskDao {

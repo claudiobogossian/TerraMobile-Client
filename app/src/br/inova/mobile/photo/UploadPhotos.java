@@ -91,7 +91,10 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                 super.onPreExecute();
                 
                 Long countOfRegisters = PhotoDao.getCountOfCompletedPhotos();
-                publishProgress("Enviando Fotos...", "0", "" + countOfRegisters); // set Max Length of progress                                                                                       // dialog
+                
+                if (countOfRegisters != 0) {
+                        publishProgress("Enviando Fotos...", "0", "" + countOfRegisters); // set Max Length of progress                                                                                       // dialog                
+                }
         }
         
         @Override
