@@ -2,6 +2,9 @@ package br.inova.mobile.address;
 
 import java.io.Serializable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.j256.ormlite.field.DatabaseField;
 
 public class Address implements Serializable {
@@ -159,6 +162,26 @@ public class Address implements Serializable {
         
         @Override
         public String toString() {
-                return name + ", nº " + number;
+                JSONObject data = new JSONObject();
+                
+                try {
+                        data.put("id", id);
+                        data.put("name", name);
+                        data.put("number", number);
+                        data.put("extra", extra);
+                        data.put("coordx", coordx);
+                        data.put("coordy", coordy);
+                        data.put("postalCode", postalCode);
+                        data.put("city", city);
+                        data.put("state", state);
+                        data.put("featureId", featureId);
+                        data.put("neighborhood", neighborhood);
+                }
+                catch (JSONException e) {
+                        e.printStackTrace();
+                }
+                
+                return data.toString();
         }
+        
 }

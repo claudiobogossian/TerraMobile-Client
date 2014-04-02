@@ -2,6 +2,9 @@ package br.inova.mobile.user;
 
 import java.io.Serializable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.j256.ormlite.field.DatabaseField;
 
 public class User implements Serializable {
@@ -79,6 +82,24 @@ public class User implements Serializable {
         
         public void setHash(String hash) {
                 this.hash = hash;
+        }
+        
+        @Override
+        public String toString() {
+                JSONObject data = new JSONObject();
+                
+                try {
+                        data.put("id", id);
+                        data.put("name", name);
+                        data.put("login", login);
+                        data.put("password", password);
+                        data.put("hash", hash);
+                }
+                catch (JSONException e) {
+                        e.printStackTrace();
+                }
+                
+                return data.toString();
         }
         
 }

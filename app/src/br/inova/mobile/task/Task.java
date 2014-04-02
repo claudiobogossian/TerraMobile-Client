@@ -2,6 +2,9 @@ package br.inova.mobile.task;
 
 import java.io.Serializable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import br.inova.mobile.address.Address;
 import br.inova.mobile.form.Form;
 import br.inova.mobile.user.User;
@@ -107,10 +110,25 @@ public class Task implements Serializable {
         public static long getSerialversionuid() {
                 return serialVersionUID;
         }
-        
+
         @Override
         public String toString() {
-                return address.toString();
+                JSONObject data = new JSONObject();
+                
+                try {
+                        data.put("id", id);
+                        data.put("address", address);
+                        data.put("user", user);
+                        data.put("form", form);
+                        data.put("done", done);
+                }
+                catch (JSONException e) {
+                        e.printStackTrace();
+                }
+                
+                return data.toString();
         }
+        
+        
         
 }

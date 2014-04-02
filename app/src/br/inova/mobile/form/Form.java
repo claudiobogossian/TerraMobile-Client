@@ -3,6 +3,9 @@ package br.inova.mobile.form;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.j256.ormlite.field.DatabaseField;
 
 public class Form implements Serializable {
@@ -224,6 +227,35 @@ public class Form implements Serializable {
         
         public void setPluvialGallery(String pluvialGallery) {
                 this.pluvialGallery = pluvialGallery;
+        }
+        
+        @Override
+        public String toString() {
+                JSONObject data = new JSONObject();
+                
+                try {
+                        data.put("id", id);
+                        data.put("date", date);
+                        data.put("coordx", coordx);
+                        data.put("coordy", coordy);
+                        data.put("info1", info1);
+                        data.put("info2", info2);
+                        data.put("numberConfirmation", numberConfirmation);
+                        data.put("variance", variance);
+                        data.put("otherNumbers", otherNumbers);
+                        data.put("primaryUse", primaryUse);
+                        data.put("secondaryUse", secondaryUse);
+                        data.put("pavimentation", pavimentation);
+                        data.put("asphaltGuide", asphaltGuide);
+                        data.put("publicIlumination", publicIlumination);
+                        data.put("energy", energy);
+                        data.put("pluvialGallery", pluvialGallery);
+                }
+                catch (JSONException e) {
+                        e.printStackTrace();
+                }
+                
+                return data.toString();
         }
         
 }

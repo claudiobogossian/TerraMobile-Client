@@ -2,6 +2,9 @@ package br.inova.mobile.photo;
 
 import java.io.Serializable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import br.inova.mobile.form.Form;
 
 import com.j256.ormlite.field.DatabaseField;
@@ -63,6 +66,23 @@ public class Photo implements Serializable {
         
         public void setForm(Form form) {
                 this.form = form;
+        }
+        
+        @Override
+        public String toString() {
+                JSONObject data = new JSONObject();
+                
+                try {
+                        data.put("id", id);
+                        data.put("base64", base64);
+                        data.put("path", path);
+                        data.put("form", form);
+                }
+                catch (JSONException e) {
+                        e.printStackTrace();
+                }
+                
+                return data.toString();
         }
         
 }
