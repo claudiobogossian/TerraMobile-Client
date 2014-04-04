@@ -94,7 +94,6 @@ public class PhotoDao {
                 return iterator;
         }
         
-
         /**
          * Returns an iterator of all the pictures of the current users.
          * 
@@ -243,16 +242,21 @@ public class PhotoDao {
                 Log.d("Files", "Path: " + mediaStorageDir.getPath());
                 
                 File pictures[] = mediaStorageDir.listFiles();
-                Log.d("Files", "Lenght of files: " + pictures.length);
                 
-                for (int i = 0; i < pictures.length; i++) {
-                        String path = pictures[i].getPath();
-                        Boolean pictureExists = PhotoDao.isPictureOnDatabase(path);
+                if (pictures != null) {
                         
-                        if (!pictureExists) {
-                                pictures[i].delete();
+                        Log.d("Files", "Lenght of files: " + pictures.length);
+                        
+                        for (int i = 0; i < pictures.length; i++) {
+                                String path = pictures[i].getPath();
+                                Boolean pictureExists = PhotoDao.isPictureOnDatabase(path);
+                                
+                                if (!pictureExists) {
+                                        pictures[i].delete();
+                                }
                         }
                 }
+                
         }
         
         /**
