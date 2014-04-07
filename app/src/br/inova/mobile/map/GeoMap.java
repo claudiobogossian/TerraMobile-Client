@@ -9,6 +9,7 @@ import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
+import org.osmdroid.tileprovider.util.SimpleInvalidationHandler;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
@@ -153,7 +154,6 @@ public class GeoMap extends Activity {
                 mapView.setMaxZoomLevel(20);
                 mapView.setBuiltInZoomControls(true);
                 mapView.setMultiTouchControls(true);
-                //mapView.setWillNotCacheDrawing(true);//TODO: teste
         }
         
         /**
@@ -171,6 +171,8 @@ public class GeoMap extends Activity {
                 final TilesOverlay tilesOverlay = new TilesOverlay(tileProvider, this.getBaseContext());
                 tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
                 mapView.getOverlays().add(tilesOverlay);
+                
+                tileProvider.setTileRequestCompleteHandler(new SimpleInvalidationHandler(mapView));
                 
                 mapView.setTileSource(tileSource);
                 mapView.setUseDataConnection(false); //  letting osmdroid know you would use it in offline mode, keeps the mapView from loading online tiles using network connection.
