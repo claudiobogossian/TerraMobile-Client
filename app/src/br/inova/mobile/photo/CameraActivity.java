@@ -74,7 +74,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                 mCamera = getCameraInstance();
                 
                 this.initializeLayout();
-                this.initializeButtons();        
+                this.initializeButtons();
         }
         
         public void initializeLayout() {
@@ -270,40 +270,40 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
         }
         
         Camera.PictureCallback jpegCallback = new Camera.PictureCallback() {
-                @Override
-                public void onPictureTaken(
-                                           byte[] _data,
-                                           Camera _camera) {
-                        
-                        pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
-                        
-                        if (pictureFile == null) {
-                                //Log.d(TAG, "Error creating media file, check storage permissions: " + e.getMessage());
-                                Log.d(TAG, "Error creating media file, check storage permissions: ");
-                                return;
-                        }
-                        
-                        try {
-                                FileOutputStream fos = new FileOutputStream(pictureFile);
-                                fos.write(_data);
-                                fos.close();
-                                
-                                setResult(RESULT_OK);
-                                confirmPicture();
-                        }
-                        catch (FileNotFoundException e) {
-                                Log.d(TAG, "File not found: " + e.getMessage());
-                                setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro na obtenção da foto!"));
-                                finish();
-                        }
-                        catch (IOException e) {
-                                Log.d(TAG, "Error accessing file: " + e.getMessage());
-                                setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro na obtenção da foto!"));
-                                finish();
-                        }
-                        
-                }
-        };
+                                                    @Override
+                                                    public void onPictureTaken(
+                                                                               byte[] _data,
+                                                                               Camera _camera) {
+                                                            
+                                                            pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
+                                                            
+                                                            if (pictureFile == null) {
+                                                                    //Log.d(TAG, "Error creating media file, check storage permissions: " + e.getMessage());
+                                                                    Log.d(TAG, "Error creating media file, check storage permissions: ");
+                                                                    return;
+                                                            }
+                                                            
+                                                            try {
+                                                                    FileOutputStream fos = new FileOutputStream(pictureFile);
+                                                                    fos.write(_data);
+                                                                    fos.close();
+                                                                    
+                                                                    setResult(RESULT_OK);
+                                                                    confirmPicture();
+                                                            }
+                                                            catch (FileNotFoundException e) {
+                                                                    Log.d(TAG, "File not found: " + e.getMessage());
+                                                                    setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro na obtenção da foto!"));
+                                                                    finish();
+                                                            }
+                                                            catch (IOException e) {
+                                                                    Log.d(TAG, "Error accessing file: " + e.getMessage());
+                                                                    setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro na obtenção da foto!"));
+                                                                    finish();
+                                                            }
+                                                            
+                                                    }
+                                            };
         
         private void confirmPicture() {
                 takePictureLayout.setVisibility(View.INVISIBLE);
@@ -428,9 +428,6 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
         @Override
         public void onResume() {
                 super.onResume();
-                takePictureLayout.setVisibility(View.VISIBLE);
-                confirmPictureLayout.setVisibility(View.INVISIBLE);
-                btnTakePicture.setEnabled(true);
         }
         
         @Override
