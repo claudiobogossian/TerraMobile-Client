@@ -118,7 +118,7 @@ public class LandmarksFactory {
          *                the context used by the function "createOverlayItem"
          * */
         public static void createPoiMarkers() {
-                CloseableIterator<Task> taskIterator = TaskDao.getIteratorForAllTasks();
+                CloseableIterator<Task> taskIterator = TaskDao.getIteratorForAllTasksForCurrentUser();
                 poiMarkers.removeAllItems();
                 
                 try {
