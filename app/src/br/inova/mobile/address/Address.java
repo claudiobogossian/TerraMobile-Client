@@ -104,6 +104,9 @@ public class Address implements Serializable {
                 this.extra = extra;
         }
         
+        /**
+         * @return the Longitude.
+         */
         public Double getCoordx() {
                 return coordx;
         }
@@ -112,6 +115,9 @@ public class Address implements Serializable {
                 this.coordx = coordx;
         }
         
+        /**
+         * @return the Latitude.
+         */
         public Double getCoordy() {
                 return coordy;
         }
