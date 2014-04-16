@@ -25,7 +25,7 @@ import br.inpe.mobile.R;
 
 import com.j256.ormlite.dao.CloseableIterator;
 
-public class LandmarksFactory {
+public class LandmarksManager {
         
         /** The user location landmark . */
         private OverlayItem                                           myLocationOverlayItem;
@@ -41,7 +41,7 @@ public class LandmarksFactory {
         
         private static MapView                                        mapView;
         
-        public LandmarksFactory(MapView mapView, Context context) {
+        public LandmarksManager(MapView mapView, Context context) {
                 this.mapView = mapView;
                 this.context = context;
         }

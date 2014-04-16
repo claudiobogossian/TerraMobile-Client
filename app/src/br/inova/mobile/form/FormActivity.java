@@ -48,7 +48,7 @@ import br.inova.mobile.Utility;
 import br.inova.mobile.address.AddressAdapter;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.location.LocationProvider;
-import br.inova.mobile.map.LandmarksFactory;
+import br.inova.mobile.map.LandmarksManager;
 import br.inova.mobile.photo.CameraActivity;
 import br.inova.mobile.photo.Photo;
 import br.inova.mobile.photo.PhotoDao;
@@ -1135,7 +1135,7 @@ public class FormActivity extends Activity {
                 
                 if (isSaved) {
                         FormActivity.lastTask = currentTask;
-                        LandmarksFactory.setTask(currentTask);
+                        LandmarksManager.setTask(currentTask);
                         data.putExtra("RESULT", "Registro salvo!");
                 }
                 else {

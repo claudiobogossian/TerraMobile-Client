@@ -19,6 +19,8 @@ import java.util.zip.ZipInputStream;
 
 import org.osmdroid.util.GeoPoint;
 
+import com.j256.ormlite.dao.CloseableIterator;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +38,8 @@ import android.util.Log;
 import android.widget.Toast;
 import br.inova.mobile.constants.Constants;
 import br.inova.mobile.exception.ExceptionHandler;
+import br.inova.mobile.task.Task;
+import br.inova.mobile.task.TaskDao;
 
 public class Utility {
         
@@ -614,5 +618,60 @@ public class Utility {
         public static String getDeviceId(Context ctx) {
                 TelephonyManager tManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
                 return tManager.getDeviceId();
+        }
+        
+        public static void getDistanceFromPoints() {
+                CloseableIterator<Task> tasks = TaskDao.getIteratorForAllTasksForCurrentUser();
+                
+                Log.d("100 ?", "Distance: " + calculateDistance(-23.234169, -45.847321, -23.56438, -46.632843));
+                Log.d("20 ?", "Distance: " + calculateDistance(-23.234169, -45.847321, -23.302098, -45.938644));
+                
+                while (tasks.hasNext()) {
+                        Task task = (Task) tasks.next();
+                        
+                        double latitude1 = task.getAddress().getCoordy();
+                        double longitute1 = task.getAddress().getCoordx();
+                        
+                        if (tasks.hasNext()) {
+                                Task task2 = (Task) tasks.next();
+                                
+                                double latitude2 = task2.getAddress().getCoordy();
+                                double longitute2 = task2.getAddress().getCoordx();
+                                
+                                Log.d("LAT LONG", "LAT1 : " + latitude1 + "LAT2 : " + latitude2 + "LON1 : " + longitute1 + "LON2 : " + longitute2);
+                                
+                                Log.d("COMPARISON LAT LONG", "Distance: " + calculateDistance(latitude1, longitute1, latitude2, longitute2));
+                        }
+                }
+        }        
+        
+        /**
+         * Calculate the distance between two geopoints (Latitude and Longitude)
+         * in WGS84
+         * 
+         * @param latitudeOne
+         * @param longituteOne
+         * @param latituteTwo
+         * @param longituteTwo
+         * 
+         * @return distance the distance in kilometers
+         */
+        public static double calculateDistance(
+                                               double latitudeOne,
+                                               double longituteOne,
+                                               double latituteTwo,
+                                               double longituteTwo) {
+                double AVERAGE_RADIUS_OF_EARTH = 6371;
+                
+                double latDistance = Math.toRadians(latitudeOne - latituteTwo);
+                double lngDistance = Math.toRadians(longituteOne - longituteTwo);
+                
+                double a = (Math.sin(latDistance / 2) * Math.sin(latDistance / 2)) + (Math.cos(Math.toRadians(latitudeOne))) * (Math.cos(Math.toRadians(latituteTwo))) * (Math.sin(lngDistance / 2)) * (Math.sin(lngDistance / 2));
+                
+                double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                
+                double distance = AVERAGE_RADIUS_OF_EARTH * c;
+                
+                return distance;
         }
 }

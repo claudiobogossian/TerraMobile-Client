@@ -29,6 +29,8 @@ public class Main extends Activity {
                  * Defines the default exception handler to log unexpected
                  * android errors
                  */
+                
+                //Utility.getDistanceFromPoints();
         
                 session = SessionManager.getInstance();
                 this.checkLogin();

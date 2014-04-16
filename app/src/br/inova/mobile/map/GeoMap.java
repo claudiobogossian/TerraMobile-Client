@@ -66,7 +66,7 @@ public class GeoMap extends Activity {
         
         private LayoutInflater   inflater;
         
-        private LandmarksFactory landmarksFactory;
+        private LandmarksManager landmarksManager;
         
         public static String     tileSourcePath;
         
@@ -140,7 +140,7 @@ public class GeoMap extends Activity {
                 imageButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                landmarksFactory.createMyLocationItem();
+                                landmarksManager.createMyLocationItem();
                         }
                 });
         }
@@ -183,9 +183,9 @@ public class GeoMap extends Activity {
          * of the landmarks.
          * */
         private void createLandmarks() {
-                landmarksFactory = new LandmarksFactory(mapView, this);
-                landmarksFactory.createMapOverlayHandler();
-                landmarksFactory.initializePoiMarkers();
+                landmarksManager = new LandmarksManager(mapView, this);
+                landmarksManager.createMapOverlayHandler();
+                landmarksManager.initializePoiMarkers();
         }
         
         /**
@@ -198,7 +198,7 @@ public class GeoMap extends Activity {
                 controller = (MapController) mapView.getController();
                 
                 if (location != null) {
-                        landmarksFactory.createMyLocationItem();
+                        landmarksManager.createMyLocationItem();
                 }
                 else {
                         controller.setZoom(12);

@@ -9,7 +9,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 import br.inova.mobile.Utility;
 import br.inova.mobile.exception.ExceptionHandler;
-import br.inova.mobile.map.LandmarksFactory;
+import br.inova.mobile.map.LandmarksManager;
 import br.inova.mobile.rest.RestTemplateFactory;
 
 /**
@@ -75,7 +75,7 @@ public class DownloadTasks extends AsyncTask<String, String, String> {
         
         @Override
         protected void onPostExecute(String message) {
-                LandmarksFactory.createPoiMarkers();
+                LandmarksManager.createPoiMarkers();
                 
                 taskActivity.updateCountLabels();
                 taskActivity.hideLoadingMask();
