@@ -4,11 +4,13 @@ import java.util.ArrayList;
 
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.bonuspack.overlays.ExtendedOverlayItem;
 import org.osmdroid.bonuspack.overlays.ItemizedOverlayWithBubble;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.MapView.Projection;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 
@@ -252,6 +254,16 @@ public class LandmarksManager {
                         if (e.getAction() == MotionEvent.ACTION_DOWN) if (poiInfoWindow.isOpen()) poiInfoWindow.close();
                         return false;
                 }
+
+                @Override
+                public boolean onSingleTapUp(MotionEvent e, MapView mapView) {
+                        Projection proj = mapView.getProjection();
+                        IGeoPoint geoPoint = proj.fromPixels(e.getX(), e.getY());
+                        
+                        return false;
+                }
         }
+        
+        
         
 }
