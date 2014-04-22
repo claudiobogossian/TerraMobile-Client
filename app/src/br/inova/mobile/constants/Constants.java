@@ -4,7 +4,7 @@ public interface Constants {
         //public static String       HOST               = "http://192.168.0.181";                //local URL
         //public static String       HOST               = "http://200.144.100.34";          //Debug URL
         
-        public static final String EXTERNAL_HOST      = "http://institutosoma.dyndns.org";
+        public static final String EXTERNAL_HOST      = "http://179.184.164.144";
         public static final String INTERNAL_HOST      = "http://192.168.0.181";
         
         public static final String PORT               = "8000";
