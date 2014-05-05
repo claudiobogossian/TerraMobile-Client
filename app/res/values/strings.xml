@@ -103,5 +103,7 @@
     <string name="txt_general_informations">Informações Gerais</string>
     <string name="txt_count_incompleted_tasks">Tarefas Incompletas:</string>
     <string name="txt_count_not_sync">Tarefas completas:</string>
+    <string name="title_activity_list_tasks">ListTasks</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

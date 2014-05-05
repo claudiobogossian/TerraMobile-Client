@@ -19,8 +19,6 @@ import java.util.zip.ZipInputStream;
 
 import org.osmdroid.util.GeoPoint;
 
-import com.j256.ormlite.dao.CloseableIterator;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -40,6 +38,8 @@ import br.inova.mobile.constants.Constants;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.task.Task;
 import br.inova.mobile.task.TaskDao;
+
+import com.j256.ormlite.dao.CloseableIterator;
 
 public class Utility {
         
@@ -623,8 +623,18 @@ public class Utility {
         public static void getDistanceFromPoints() {
                 CloseableIterator<Task> tasks = TaskDao.getIteratorForAllTasksForCurrentUser();
                 
-                Log.d("100 ?", "Distance: " + calculateDistance(-23.234169, -45.847321, -23.56438, -46.632843));
-                Log.d("20 ?", "Distance: " + calculateDistance(-23.234169, -45.847321, -23.302098, -45.938644));
+                /*
+                Log.d("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 94.75 ?", "Distance: " + calculateDistance(-23.234169, -45.847321, -23.56438, -46.632843));
+                Log.d("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 12.65 ?", "Distance: " + calculateDistance(-23.234169, -45.847321, -23.302098, -45.938644));
+                
+                Log.d("LAT LONG: ", "LAT1 : " + -23.234169 + "LAT2 : " + -45.847321 + "LON1 : " + -23.56438 + "LON2 : " + -46.632843);
+                Log.d("COMPARISON: ", "Distance: " + calculateDistance(-23.234169, -45.847321, -23.302098, -45.938644));
+                
+                Log.d("\n\nLAT LONG: ", "LAT1 : " + latitude1 + "LAT2 : " + latitude2 + "LON1 : " + longitute1 + "LON2 : " + longitute2);
+                Log.d("ORIGINAL: ", "" + calculateDistance(latitude1, longitute1, latitude2, longitute2));
+                Log.d("BIRA: ", "" + calculateDistanceBira(latitude1, longitute1, latitude2, longitute2));
+                 */
+                
                 
                 while (tasks.hasNext()) {
                         Task task = (Task) tasks.next();
@@ -638,12 +648,12 @@ public class Utility {
                                 double latitude2 = task2.getAddress().getCoordy();
                                 double longitute2 = task2.getAddress().getCoordx();
                                 
-                                Log.d("LAT LONG", "LAT1 : " + latitude1 + "LAT2 : " + latitude2 + "LON1 : " + longitute1 + "LON2 : " + longitute2);
-                                
-                                Log.d("COMPARISON LAT LONG", "Distance: " + calculateDistance(latitude1, longitute1, latitude2, longitute2));
+                                Log.d("\n\nLAT LONG: ", "LAT1 : " + latitude1 + "LAT2 : " + latitude2 + "LON1 : " + longitute1 + "LON2 : " + longitute2);
+                                Log.d("ORIGINAL: ", "" + calculateDistance(latitude1, longitute1, latitude2, longitute2));
+                                Log.d("BIRA: ", "" + calculateDistanceBira(latitude1, longitute1, latitude2, longitute2));
                         }
                 }
-        }        
+        }
         
         /**
          * Calculate the distance between two geopoints (Latitude and Longitude)
@@ -666,11 +676,37 @@ public class Utility {
                 double latDistance = Math.toRadians(latitudeOne - latituteTwo);
                 double lngDistance = Math.toRadians(longituteOne - longituteTwo);
                 
+                /** Original **/
                 double a = (Math.sin(latDistance / 2) * Math.sin(latDistance / 2)) + (Math.cos(Math.toRadians(latitudeOne))) * (Math.cos(Math.toRadians(latituteTwo))) * (Math.sin(lngDistance / 2)) * (Math.sin(lngDistance / 2));
-                
                 double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                
                 double distance = AVERAGE_RADIUS_OF_EARTH * c;
+                
+                return distance;
+        }
+        
+        /**
+         * Calculate the distance between two geopoints (Latitude and Longitude)
+         * in WGS84
+         * 
+         * @param latitudeOne
+         * @param longituteOne
+         * @param latituteTwo
+         * @param longituteTwo
+         * 
+         * @return distance the distance in kilometers
+         */
+        public static double calculateDistanceBira(
+                                                   double latitudeOne,
+                                                   double longituteOne,
+                                                   double latituteTwo,
+                                                   double longituteTwo) {
+                double AVERAGE_RADIUS_OF_EARTH = 6371;
+                
+                double latDistance = Math.toRadians(latitudeOne - latituteTwo);
+                double lngDistance = Math.toRadians(longituteOne - longituteTwo);
+                
+                /** Bira **/
+                Double distance = Math.sqrt(AVERAGE_RADIUS_OF_EARTH * AVERAGE_RADIUS_OF_EARTH * (Math.tan(latDistance) * Math.tan(latDistance) + Math.tan(lngDistance) * Math.tan(lngDistance)));
                 
                 return distance;
         }

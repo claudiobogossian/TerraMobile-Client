@@ -103,7 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:text="26/03/2014"
+                android:text="05/05/2014"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <Button

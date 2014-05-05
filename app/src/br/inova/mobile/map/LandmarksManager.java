@@ -227,6 +227,40 @@ public class LandmarksManager {
                 }
         }
         
+        public void createTestLandmark(GeoPoint geoPoint) {
+                /** the controller of the map. */
+                MapController controller = (MapController) mapView.getController();
+                
+                myLocationOverlayItem = new OverlayItem("", "", geoPoint);
+                Drawable myCurrentLocationMarker = context.getResources().getDrawable(R.drawable.ic_landmark_red);
+                myLocationOverlayItem.setMarker(myCurrentLocationMarker);
+                
+                final ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+                items.add(myLocationOverlayItem);
+                
+                controller.setZoom(16);
+                
+                ResourceProxy resourceProxy = new DefaultResourceProxyImpl(context.getApplicationContext());
+                currentLocationOverlay = new ItemizedIconOverlay<OverlayItem>(items, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                        public boolean onItemSingleTapUp(
+                                                         final int index,
+                                                         final OverlayItem item) {
+                                return true;
+                        }
+                        
+                        public boolean onItemLongPress(
+                                                       final int index,
+                                                       final OverlayItem item) {
+                                return true;
+                        }
+                }, resourceProxy);
+                
+                mapView.getOverlays().add(currentLocationOverlay);
+                
+                controller.setCenter(geoPoint);
+
+        }
+        
         /**
          * Creates an map overlay to handler the touch on the map and closes the
          * popup of the landmark
