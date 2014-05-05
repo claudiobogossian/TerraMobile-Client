@@ -73,7 +73,7 @@ public class TaskActivity extends Activity {
                         public void onClick(View v) {
                                 if (Utility.isNetworkAvailable(self)) {
                                         try {
-                                                DatabaseBackup.makeBackup();
+                                                //DatabaseBackup.makeBackup();
                                         }
                                         catch (Exception e) {
                                                 Utility.showToast("Ocorreu um problema ao fazer o Backup, comunique a equipe da Inova.", Toast.LENGTH_LONG, TaskActivity.this);
