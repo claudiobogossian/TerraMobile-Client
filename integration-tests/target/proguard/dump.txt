@@ -4,7 +4,7 @@ _____________________________________________________________________
   Major version: 0x32
   Minor version: 0x0
   Access flags:  0x31
-    = public final class br.inpe.mobile.tests.BuildConfig extends java.lang.Object
+    = public final class br.inova.mobile.tests.BuildConfig extends java.lang.Object
 
 Interfaces (count = 0):
 

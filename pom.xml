@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <version>1.0</version>
-    <groupId>br.inpe.terramobile</groupId>
+    <groupId>br.inova.terramobile</groupId>
     <artifactId>terramobile-android-parent</artifactId>
     <packaging>pom</packaging>
     <name>TerraMobile Android app parent POM project</name>
@@ -29,7 +29,7 @@
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>android-maven-plugin</artifactId>
-                    <version>3.8.0</version>
+                    <version>3.8.2</version>
                     <extensions>true</extensions>
                     <configuration>
                         <sdk>

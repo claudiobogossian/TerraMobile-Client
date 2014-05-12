@@ -1,4 +1,4 @@
-package br.inpe.mobile;
+package br.inova.mobile;
 
 /*
  * Copyright 2012 GitHub Inc.

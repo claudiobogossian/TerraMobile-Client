@@ -5,7 +5,7 @@
 
     <parent>
         <version>1.0</version>
-        <groupId>br.inpe.terramobile</groupId>
+        <groupId>br.inova.terramobile</groupId>
         <artifactId>terramobile-android-parent</artifactId>
     </parent>
 
@@ -27,14 +27,14 @@
             <version>${android.version}</version>
         </dependency>
         <dependency>
-            <groupId>br.inpe.terramobile</groupId>
+            <groupId>br.inova.terramobile</groupId>
             <artifactId>terramobile-android</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
             <type>apk</type>
         </dependency>
         <dependency>
-            <groupId>br.inpe.terramobile</groupId>
+            <groupId>br.inova.terramobile</groupId>
             <artifactId>terramobile-android</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
