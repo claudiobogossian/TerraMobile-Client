@@ -88,7 +88,7 @@ public class GeoMap extends Activity {
                 self.createMapView();
                 self.createTileSource();
                 self.createLandmarks();
-                self.createUserLocation();
+                self.initializeLocation();
                 self.createButtonUpdateLocation();
         }
         
@@ -190,20 +190,23 @@ public class GeoMap extends Activity {
         
         /**
          * 
-         * Creates the user location item.
+         * Initialize the location object and update the initial zoom and Position on the map.
          * 
          * */
-        private void createUserLocation() {
+        private void initializeLocation() {
                 location = LocationProvider.getInstance(this).getLocation();
                 controller = (MapController) mapView.getController();
+
+                controller.setZoom(12);
+                controller.setCenter(new GeoPoint(-22.32261, -49.028732));
                 
-                if (location != null) {
+                /*if (location != null) {
                         landmarksManager.createMyLocationItem();
                 }
                 else {
                         controller.setZoom(12);
                         controller.setCenter(new GeoPoint(-22.32261, -49.028732));
-                }
+                }*/
         }
         
         public void openGeoform() {
