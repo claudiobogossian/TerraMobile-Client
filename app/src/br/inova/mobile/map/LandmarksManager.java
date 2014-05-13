@@ -1,6 +1,7 @@
 package br.inova.mobile.map;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
@@ -16,10 +17,14 @@ import org.osmdroid.views.overlay.OverlayItem;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.view.MotionEvent;
+import android.widget.Toast;
+import br.inova.mobile.Utility;
 import br.inova.mobile.address.Address;
+import br.inova.mobile.location.DistanceFilter;
 import br.inova.mobile.location.LocationProvider;
 import br.inova.mobile.task.Task;
 import br.inova.mobile.task.TaskDao;
@@ -258,7 +263,22 @@ public class LandmarksManager {
                 mapView.getOverlays().add(currentLocationOverlay);
                 
                 controller.setCenter(geoPoint);
-
+        }
+        
+        /**
+         * 
+         * Filter the landmarks by touching on the map.
+         * 
+         * @param Geopoint
+         *                the point that user has clicked.
+         * 
+         * */
+        public static void filterByGeopoint(IGeoPoint geoPoint) {
+                PointF center = new PointF((float) geoPoint.getLatitude(), (float) geoPoint.getLongitude());
+                
+                List<Task> tasks = DistanceFilter.getNearestAddresses(center, 10.0);
+                
+                //Utility.showToast("Filtro efetuado! " + geoPoint, Toast.LENGTH_SHORT, context);
         }
         
         /**
@@ -288,16 +308,16 @@ public class LandmarksManager {
                         if (e.getAction() == MotionEvent.ACTION_DOWN) if (poiInfoWindow.isOpen()) poiInfoWindow.close();
                         return false;
                 }
-
+                
                 @Override
-                public boolean onSingleTapUp(MotionEvent e, MapView mapView) {
+                public boolean onLongPress(MotionEvent e, MapView mapView) {
                         Projection proj = mapView.getProjection();
                         IGeoPoint geoPoint = proj.fromPixels(e.getX(), e.getY());
+                        
+                        LandmarksManager.filterByGeopoint(geoPoint);
                         
                         return false;
                 }
         }
-        
-        
         
 }
