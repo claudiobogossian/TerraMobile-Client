@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.inova.mobile.Utility;
 import br.inova.mobile.constants.Constants;
-import br.inova.mobile.database.DatabaseBackup;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.map.BaseMapDownload;
 import br.inova.mobile.photo.UploadPhotos;

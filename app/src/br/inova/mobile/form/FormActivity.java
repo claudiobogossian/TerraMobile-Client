@@ -1,9 +1,6 @@
 package br.inova.mobile.form;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,14 +17,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -47,9 +39,10 @@ import android.widget.Toast;
 import br.inova.mobile.Utility;
 import br.inova.mobile.address.AddressAdapter;
 import br.inova.mobile.exception.ExceptionHandler;
-import br.inova.mobile.location.LocationProvider;
 import br.inova.mobile.map.LandmarksManager;
+import br.inova.mobile.photo.BitmapRendererTask;
 import br.inova.mobile.photo.CameraActivity;
+import br.inova.mobile.photo.CreatePhotoAsync;
 import br.inova.mobile.photo.Photo;
 import br.inova.mobile.photo.PhotoDao;
 import br.inova.mobile.task.Task;
@@ -69,27 +62,27 @@ public class FormActivity extends Activity {
         private AutoCompleteTextView address;
         
         private EditText             edtNeighborhood, edtPostalCode, edtNumber,
-        edtOtherNumbers, edtObservations;
+                        edtOtherNumbers, edtObservations;
         
         private Spinner              spnNumberConfirmation, spnVariance,
-        spnPrimaryUse, spnSecondaryUse, spnPavimentation,
-        spnAsphaltGuide, spnPublicIlumination, spnEnergy,
-        spnPluvialGallery;
+                        spnPrimaryUse, spnSecondaryUse, spnPavimentation,
+                        spnAsphaltGuide, spnPublicIlumination, spnEnergy,
+                        spnPluvialGallery;
         
-        private TextView             lat, lon;
+        public static TextView       lat, lon;
         
         private Button               buttonClearAddressFields;
         
         private Button               buttonCancel, buttonOk, buttonPhoto,
-        buttonClearSpinners;
+                        buttonClearSpinners;
         
         private FormActivity         self    = this;
         
-        private static Task          currentTask;
+        public static Task           currentTask;
         
         public static Task           lastTask;
         
-        private List<Photo>          photos;
+        public static List<Photo>    photos;
         
         private ProgressDialog       dialog;
         
@@ -772,7 +765,7 @@ public class FormActivity extends Activity {
                 form.setDate(new Date());
                 form.setOtherNumbers(edtOtherNumbers.getText().toString());
                 form.setInfo1(edtObservations.getText().toString());
-                                
+                
                 Object spnNumberConfirmationItem = spnNumberConfirmation.getSelectedItem();
                 String spnNumberConfirmationString = (spnNumberConfirmationItem == null) ? "" : spnNumberConfirmationItem.toString();
                 form.setNumberConfirmation(spnNumberConfirmationString);
@@ -808,7 +801,7 @@ public class FormActivity extends Activity {
                 Object spnPluvialGalleryItem = spnPluvialGallery.getSelectedItem();
                 String spnPluvialGalleryString = (spnPluvialGalleryItem == null) ? "" : spnPluvialGalleryItem.toString();
                 form.setPluvialGallery(spnPluvialGalleryString);
-
+                
                 return form;
         }
         
@@ -921,41 +914,6 @@ public class FormActivity extends Activity {
         
         /**
          * 
-         * Returns Base64 String from filePath of a photo.
-         * 
-         * @param String
-         *                filePath The path of the image that you want to get
-         *                the base.
-         * 
-         * */
-        public String getBytesFromImage(String filePath) {
-                String imgString;
-                
-                File imagefile = new File(filePath);
-                FileInputStream fis = null;
-                
-                try {
-                        fis = new FileInputStream(imagefile);
-                }
-                catch (FileNotFoundException e) {
-                        ExceptionHandler.saveLogFile(e);
-                }
-                
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                
-                Bitmap bitmap = BitmapFactory.decodeStream(fis);
-                bitmap.compress(CompressFormat.JPEG, 70, stream);
-                
-                byte[] imageBytes = stream.toByteArray();
-                
-                // get the base 64 string
-                imgString = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
-                
-                return imgString;
-        }
-        
-        /**
-         * 
          * Callback of the PhotoActivity
          * 
          * */
@@ -963,41 +921,11 @@ public class FormActivity extends Activity {
         public void onActivityResult(
                                      int requestCode,
                                      int resultCode,
-                                     Intent data) {
+                                     final Intent data) {
                 if (requestCode == PHOTO) {
                         if (resultCode == RESULT_OK) {
-                                
-                                Photo photo = new Photo();
-                                
                                 String photoPath = data.getExtras().getString("RESULT");
-                                
-                                // Uri uri = data.getData();
-                                // String photoPath = uri.getPath();
-                                
-                                String blob = self.getBytesFromImage(photoPath);
-                                
-                                photo.setPath(photoPath);
-                                photo.setBase64(blob);
-                                photo.setForm(currentTask.getForm());
-                                
-                                LocationProvider locationProvider = LocationProvider.getInstance(this);
-                                Location location = locationProvider.getLocation();
-                                
-                                if (location != null) {
-                                        lat.setText("" + location.getLatitude());
-                                        lon.setText("" + location.getLongitude());
-                                }
-                                else {
-                                        if (!locationProvider.isGpsEnabled()) {
-                                                Utility.showToast("Seu GPS está desabilitado, ligue-o para capturar sua posição.", Toast.LENGTH_LONG, this);
-                                        }
-                                        
-                                        lat.setText("0.0");
-                                        lon.setText("0.0");
-                                }
-                                
-                                photos.add(photo);
-                                showPictures(photos);
+                                new CreatePhotoAsync(photoPath, this); //TODO: modificar
                         }
                         else if (resultCode == RESULT_CANCELED) {}
                 }
@@ -1095,7 +1023,6 @@ public class FormActivity extends Activity {
                 }
         }
         
-        
         /**
          * Verifies if the Observations field is filled.
          * */
@@ -1108,7 +1035,7 @@ public class FormActivity extends Activity {
                 
                 return message;
         }
-
+        
         protected void saveTaskIntoLocalDatabase() {
                 boolean isSaved = false;
                 
@@ -1192,13 +1119,13 @@ public class FormActivity extends Activity {
                 final File imgFile = new File(picture.getPath());
                 final ImageView imageView = new ImageView(this);
                 
-                Bitmap myBitmap = Utility.decodeSampledBitmapFromFile(imgFile, 100, 100);
+                //Bitmap myBitmap = Utility.decodeSampledBitmapFromFile(imgFile, 100, 100);
                 
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
                 layoutParams.setMargins(5, 5, 5, 5);
                 
                 imageView.setLayoutParams(layoutParams);
-                imageView.setImageBitmap(myBitmap);
+                //imageView.setImageBitmap(myBitmap);
                 
                 imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -1206,6 +1133,8 @@ public class FormActivity extends Activity {
                                 self.showConfirmDeleteImageDialog(picture, imgFile);
                         }
                 });
+                
+                new BitmapRendererTask(imgFile, imageView, 100, 100);
                 
                 return imageView;
         }
@@ -1215,17 +1144,17 @@ public class FormActivity extends Activity {
                                                  final File file) {
                 final Dialog imageDialog = new Dialog(this);
                 
-                final ImageView image = new ImageView(this);
-                final File imgFile = new File(picture.getPath());
-                Bitmap myBitmap = Utility.decodeSampledBitmapFromFile(imgFile, 640, 480);
-                image.setImageBitmap(myBitmap);
+                final ImageView imageView = new ImageView(this);
+                final File imageFile = new File(picture.getPath());
                 
-                imageDialog.setContentView(image);
+                new BitmapRendererTask(imageFile, imageView, 640, 480);
+                
+                imageDialog.setContentView(imageView);
                 imageDialog.setCancelable(true);
                 imageDialog.setCanceledOnTouchOutside(true);
                 imageDialog.show();
                 
-                image.setOnClickListener(new View.OnClickListener() {
+                imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FormActivity.this);

@@ -21,8 +21,6 @@ import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.view.MotionEvent;
-import android.widget.Toast;
-import br.inova.mobile.Utility;
 import br.inova.mobile.address.Address;
 import br.inova.mobile.location.DistanceFilter;
 import br.inova.mobile.location.LocationProvider;

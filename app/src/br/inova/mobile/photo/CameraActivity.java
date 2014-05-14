@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.ImageFormat;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
@@ -366,17 +367,18 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                 // auto-focus
                 
                 List<Camera.Size> mList = cameraParameters.getSupportedPictureSizes();
-                Camera.Size maxPictureSize = mList.get(mList.size() - 1);
+                Camera.Size maxPictureSize = mList.get(0);
                 
                 if (maxPictureSize.width <= 2048 && maxPictureSize.height <= 1536) {
                         cameraParameters.setPictureSize(maxPictureSize.width, maxPictureSize.height);
                 }
                 else {
-                        cameraParameters.setPictureSize(2048, 1536);
+                        //cameraParameters.setPictureSize(2048, 1536);
+                        cameraParameters.setPictureSize(1984, 1488); //mais próximo de 3 megapixels...
                 }
                 
-                cameraParameters.setPictureFormat(PixelFormat.JPEG);
-                cameraParameters.set("jpeg-quality", 100);
+                cameraParameters.setPictureFormat(ImageFormat.JPEG);
+                cameraParameters.set("jpeg-quality", 50);
                 
                 mCamera.setParameters(cameraParameters);
                 
