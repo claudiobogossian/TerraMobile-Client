@@ -1200,12 +1200,16 @@ public class FormActivity extends Activity {
         }
         
         public void showLoadingMask(String message) {
-                dialog = ProgressDialog.show(FormActivity.this, "", message, true);
+                dialog = new ProgressDialog(FormActivity.this);
+                dialog.setMessage(message);
+                dialog.setCancelable(false);
+                dialog.show();
         }
         
         public void hideLoadMask() {
-                dialog.hide();
-                dialog.cancel();
+                if (dialog != null && dialog.isShowing()) {
+                        dialog.dismiss();
+                }
         }
         
         private void showKeyboard(EditText editText) {

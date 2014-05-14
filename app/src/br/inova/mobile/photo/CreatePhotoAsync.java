@@ -72,6 +72,11 @@ public class CreatePhotoAsync extends AsyncTask<String, String, String> {
         }
         
         @Override
+        protected void onPreExecute() {
+                formActivity.showLoadingMask("Processando Imagem, aguarde");
+        }
+        
+        @Override
         protected void onPostExecute(String blob) {
                 Photo photo = new Photo();
                 photo.setBase64(blob);
@@ -98,5 +103,6 @@ public class CreatePhotoAsync extends AsyncTask<String, String, String> {
                 formActivity.photos.add(photo);
                 formActivity.showPictures(formActivity.photos);
                 
+                formActivity.hideLoadMask();
         }
 }
