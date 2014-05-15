@@ -114,10 +114,16 @@ public class Utility {
          *                context of the implementation
          */
         public static boolean isNetworkAvailable(Context context) {
-                Boolean isAvailable = false;
-                ConnectivityManager connect_mng = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                if (connect_mng.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED || connect_mng.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED) isAvailable = true;
-                return isAvailable;
+                Boolean isInternetAvailable = false;
+                
+                ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo netInfo = cm.getActiveNetworkInfo();
+                
+                if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+                        isInternetAvailable = true;
+                }
+                
+                return isInternetAvailable;
         }
         
         /**
@@ -360,8 +366,6 @@ public class Utility {
                 }
         }
         
-        
-        
         /**
          * Create directory if he doesn't exists.
          * 
@@ -547,17 +551,26 @@ public class Utility {
                 CloseableIterator<Task> tasks = TaskDao.getIteratorForAllTasksForCurrentUser();
                 
                 /*
-                Log.d("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 94.75 ?", "Distance: " + calculateDistance(-23.234169, -45.847321, -23.56438, -46.632843));
-                Log.d("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 12.65 ?", "Distance: " + calculateDistance(-23.234169, -45.847321, -23.302098, -45.938644));
-                
-                Log.d("LAT LONG: ", "LAT1 : " + -23.234169 + "LAT2 : " + -45.847321 + "LON1 : " + -23.56438 + "LON2 : " + -46.632843);
-                Log.d("COMPARISON: ", "Distance: " + calculateDistance(-23.234169, -45.847321, -23.302098, -45.938644));
-                
-                Log.d("\n\nLAT LONG: ", "LAT1 : " + latitude1 + "LAT2 : " + latitude2 + "LON1 : " + longitute1 + "LON2 : " + longitute2);
-                Log.d("ORIGINAL: ", "" + calculateDistance(latitude1, longitute1, latitude2, longitute2));
-                Log.d("BIRA: ", "" + calculateDistanceBira(latitude1, longitute1, latitude2, longitute2));
+                 * Log.d("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 94.75 ?",
+                 * "Distance: " + calculateDistance(-23.234169, -45.847321,
+                 * -23.56438, -46.632843));
+                 * Log.d("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 12.65 ?",
+                 * "Distance: " + calculateDistance(-23.234169, -45.847321,
+                 * -23.302098, -45.938644));
+                 * 
+                 * Log.d("LAT LONG: ", "LAT1 : " + -23.234169 + "LAT2 : " +
+                 * -45.847321 + "LON1 : " + -23.56438 + "LON2 : " + -46.632843);
+                 * Log.d("COMPARISON: ", "Distance: " +
+                 * calculateDistance(-23.234169, -45.847321, -23.302098,
+                 * -45.938644));
+                 * 
+                 * Log.d("\n\nLAT LONG: ", "LAT1 : " + latitude1 + "LAT2 : " +
+                 * latitude2 + "LON1 : " + longitute1 + "LON2 : " + longitute2);
+                 * Log.d("ORIGINAL: ", "" + calculateDistance(latitude1,
+                 * longitute1, latitude2, longitute2)); Log.d("BIRA: ", "" +
+                 * calculateDistanceBira(latitude1, longitute1, latitude2,
+                 * longitute2));
                  */
-                
                 
                 while (tasks.hasNext()) {
                         Task task = (Task) tasks.next();
