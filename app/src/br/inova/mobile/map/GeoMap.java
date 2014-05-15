@@ -190,23 +190,23 @@ public class GeoMap extends Activity {
         
         /**
          * 
-         * Initialize the location object and update the initial zoom and Position on the map.
+         * Initialize the location object and update the initial zoom and
+         * Position on the map.
          * 
          * */
         private void initializeLocation() {
                 location = LocationProvider.getInstance(this).getLocation();
                 controller = (MapController) mapView.getController();
-
+                
                 controller.setZoom(12);
                 controller.setCenter(new GeoPoint(-22.32261, -49.028732));
                 
-                /*if (location != null) {
-                        landmarksManager.createMyLocationItem();
-                }
-                else {
-                        controller.setZoom(12);
-                        controller.setCenter(new GeoPoint(-22.32261, -49.028732));
-                }*/
+                /*
+                 * if (location != null) {
+                 * landmarksManager.createMyLocationItem(); } else {
+                 * controller.setZoom(12); controller.setCenter(new
+                 * GeoPoint(-22.32261, -49.028732)); }
+                 */
         }
         
         public void openGeoform() {

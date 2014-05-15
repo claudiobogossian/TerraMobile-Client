@@ -110,7 +110,7 @@ public class Task implements Serializable {
         public static long getSerialversionuid() {
                 return serialVersionUID;
         }
-
+        
         @Override
         public String toString() {
                 JSONObject data = new JSONObject();
@@ -128,7 +128,5 @@ public class Task implements Serializable {
                 
                 return data.toString();
         }
-        
-        
         
 }

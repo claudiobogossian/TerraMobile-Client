@@ -112,7 +112,7 @@ public class DatabaseBackup {
         public static File createBackupFile() {
                 File path = new File(Utility.getExternalSdCardPath() + "/inova/" + "/dados" + "/backup/");
                 
-                if(!path.exists()) {
+                if (!path.exists()) {
                         path.mkdirs();
                 }
                 
