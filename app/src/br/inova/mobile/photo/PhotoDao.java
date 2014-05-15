@@ -121,7 +121,7 @@ public class PhotoDao {
          * @param Form
          *                The Form object that we use to create the query.
          * 
-         * @return List<Photo> photos Collection of pictures that the user was
+         * @return List<Photo> Collection of pictures that the user was
          *         captured.
          * 
          * @author Paulo Luan

@@ -1096,7 +1096,9 @@ public class FormActivity extends Activity {
                 LinearLayout linearLayout = (LinearLayout) findViewById(R.id.layout_pictures);
                 linearLayout.removeAllViews();
                 
-                for (Photo picture : pictures) {
+                List<Photo> clonedPictures = new ArrayList<Photo>(pictures);// TODO: test
+                
+                for (Photo picture : clonedPictures) {
                         try {
                                 
                                 File pic = new File(picture.getPath());

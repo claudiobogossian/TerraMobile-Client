@@ -1,18 +1,11 @@
 package br.inova.mobile;
 
-import java.util.Iterator;
-
-import com.j256.ormlite.dao.CloseableIterator;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.map.GeoMap;
-import br.inova.mobile.photo.Photo;
-import br.inova.mobile.photo.PhotoDao;
 import br.inova.mobile.user.LoginActivity;
 import br.inova.mobile.user.SessionManager;
 
@@ -47,7 +40,7 @@ public class Main extends Activity {
                 //HttpClient.post(postUrl , json);
                 
                 //startActivity(new Intent(this, ListTasks.class));
-                                
+                
                 session = SessionManager.getInstance();
                 this.checkLogin();
         }
