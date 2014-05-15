@@ -380,8 +380,12 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                 cameraParameters.setPictureFormat(ImageFormat.JPEG);
                 cameraParameters.set("jpeg-quality", 50); //TODO: verificar se esta será a resolução oficial.
                 
-                mCamera.setParameters(cameraParameters);
-                
+                try {
+                        mCamera.setParameters(cameraParameters);
+                }
+                catch (Exception exception) {
+                        ExceptionHandler.saveLogFile(exception);
+                }
         }
         
         @Override
