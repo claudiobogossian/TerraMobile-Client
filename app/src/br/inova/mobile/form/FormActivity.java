@@ -1103,10 +1103,7 @@ public class FormActivity extends Activity {
                                 
                                 File pic = new File(picture.getPath());
                                 
-                                if (!pic.exists()) {
-                                        self.deletePicture(picture);
-                                }
-                                else {
+                                if (pic.exists()) {
                                         final ImageView imageView = self.generateImageFromFilePath(picture);
                                         linearLayout.addView(imageView);
                                 }
