@@ -263,8 +263,8 @@ public class FormActivity extends Activity {
         @Override
         public void onBackPressed() {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FormActivity.this);
-                alertDialogBuilder.setTitle("Atenção");
-                alertDialogBuilder.setMessage("Deseja realmente sair?").setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                alertDialogBuilder.setTitle(string.caution);
+                alertDialogBuilder.setMessage(string.exit_form).setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                                 finish();

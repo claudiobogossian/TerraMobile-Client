@@ -4,6 +4,7 @@
     <!-- Main Screen -->
     <string name="app_name">Bauru Digital</string>
     <string name="str_lbl_login">Login</string>
+    <string name="lbl_logoff">Logoff</string>
     <string name="user_name_hint">Usuário</string>
     <string name="password_hint">Senha</string>
     <string name="action_settings">Opções</string>
@@ -55,14 +56,14 @@
     <string name="btn_clear_address">Limpar Endereço</string>
     <string name="caution">Atenção</string>
     <string name="infra_message">Você mudou de trecho mas ainda não preencheu as informações de infraestrutura. \n\nO formulário anterior foi carregado para que você preencha estas informações.</string>
-
+    <string name="exit_form">Fechar formulário?.</string>
+    
     <!-- Task Screen -->
-    <string name="btn_sync_tasks">Sincronizar com o servidor</string>
+    <string name="btn_sync_tasks">Enviar e Receber tarefas</string>
     <string name="btn_view_downloads">Mostrar Downloads</string>
     <string name="info_send_tasks">Enviando informaçãoes ao servidor</string>
     <string name="btn_clear_tasks">Apagar trechos</string>
     <string name="userName">Nome</string>
-    <string name="btn_logout">Sair</string>
 
     <!-- Domains Arrays items -->
     <string name="ok">OK</string>
@@ -99,7 +100,7 @@
     <color name="background_cor7">#104E8B</color>
     <color name="background_cor8">#C11B17</color>
 
-    <string name="btn_sync_tiles">Baixar mapa de base</string>
+    <string name="btn_sync_tiles">Baixar Mapa Offline (Tiles)</string>
     <string name="txt_general_informations">Informações Gerais</string>
     <string name="txt_count_incompleted_tasks">Tarefas Incompletas:</string>
     <string name="txt_count_not_sync">Tarefas completas:</string>
