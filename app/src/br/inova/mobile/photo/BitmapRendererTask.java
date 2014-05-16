@@ -40,7 +40,7 @@ public class BitmapRendererTask extends AsyncTask<Integer, Void, Bitmap> {
                 loadBitmap();
         }
         
-        public void loadBitmap() {
+        private void loadBitmap() {
                 if (cancelPotentialWork(imageFile, imageView)) {
                         final AsyncDrawable asyncDrawable = new AsyncDrawable(this);
                         imageView.setImageDrawable(asyncDrawable);
@@ -51,7 +51,19 @@ public class BitmapRendererTask extends AsyncTask<Integer, Void, Bitmap> {
         // Decode image in background.
         @Override
         protected Bitmap doInBackground(Integer... params) {
-                return decodeSampledBitmapFromFile();
+                Bitmap image = null;
+                
+                try {
+                        image = decodeSampledBitmapFromFile();
+                }
+                catch (OutOfMemoryError exception) {
+                        System.gc();
+                }
+                catch (Exception exception) {
+                        ExceptionHandler.saveLogFile(exception);
+                }
+                
+                return image;
         }
         
         /**
@@ -66,6 +78,8 @@ public class BitmapRendererTask extends AsyncTask<Integer, Void, Bitmap> {
                 Bitmap bitmapImage = null;
                 
                 try {
+                        System.gc();
+                
                         // First decode with inJustDecodeBounds=true to check dimensions
                         final BitmapFactory.Options options = new BitmapFactory.Options();
                         options.inJustDecodeBounds = true;
