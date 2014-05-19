@@ -205,6 +205,35 @@ public class TaskDao {
         }
         
         /**
+         * Get the cursor of finished tasks based of the current user.
+         * 
+         * @return Cursor cursor of finished tasks of the user.
+         * @author Paulo Luan
+         */
+        public static CloseableIterator<Task> getIteratorForUnfinishedTasks() {
+                QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+                QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+                
+                // when you are done, prepare your query and build an iterator
+                CloseableIterator<Task> iterator = null;
+                
+                try {
+                        String userHash = session.getUserHash();
+                        userQueryBuilder.where().eq("hash", userHash);
+                        taskQueryBuilder.join(userQueryBuilder);
+                        
+                        taskQueryBuilder.where().eq("done", Boolean.FALSE);
+                        
+                        iterator = taskDao.iterator(taskQueryBuilder.prepare());
+                }
+                catch (SQLException e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+                
+                return iterator;
+        }
+        
+        /**
          * Get the cursor of all tasks based of the current user.
          * 
          * @return Cursor cursor of all the tasks of the user.

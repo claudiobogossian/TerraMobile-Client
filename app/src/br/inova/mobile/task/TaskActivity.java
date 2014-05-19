@@ -1,8 +1,10 @@
 package br.inova.mobile.task;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
@@ -18,6 +20,7 @@ import br.inova.mobile.map.BaseMapDownload;
 import br.inova.mobile.photo.UploadPhotos;
 import br.inova.mobile.user.SessionManager;
 import br.inpe.mobile.R;
+import br.inpe.mobile.R.string;
 
 /**
  * Activity for loading layout resources
@@ -44,6 +47,8 @@ public class TaskActivity extends Activity {
         
         private SessionManager session;
         
+        private String         name;
+        
         @Override
         public void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
@@ -54,6 +59,7 @@ public class TaskActivity extends Activity {
                  */
                 
                 session = SessionManager.getInstance();
+                name = session.getUserName();
                 
                 // this.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 setContentView(R.layout.activity_task);
@@ -61,11 +67,106 @@ public class TaskActivity extends Activity {
                 txtIncompleteTasks = (TextView) findViewById(R.id.txt_count_incompleted_tasks);
                 txtNotSyncRegisters = (TextView) findViewById(R.id.txt_count_completed_tasks);
                 
-                this.setButtonsListeners();
+                this.createButtons();
                 this.updateCountLabels();
         }
         
-        public void setButtonsListeners() {
+        public void createButtons() {
+                createButtonGetTasks();
+                createButtonLogout();
+                createButtonGetTiles();
+                createButtonGenerateTestTasks();
+        }
+        
+        private void createButtonGenerateTestTasks() {
+                String lowerName = name.toLowerCase();
+                
+                if (lowerName.equals("test") || lowerName.equals("bele")) {
+                        Constants.changeToHomologMode();
+                        
+                        Button btn_generate_tasks = (Button) findViewById(R.id.btnTest);
+                        btn_generate_tasks.setVisibility(View.VISIBLE);
+                        btn_generate_tasks.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(TaskActivity.this);
+                                        alertDialogBuilder.setTitle(string.caution);
+                                        alertDialogBuilder.setMessage(string.generate_registers_message).setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                                                public void onClick(
+                                                                    DialogInterface dialog,
+                                                                    int id) {
+                                                        TaskTestsGenerator.createRegisters();
+                                                }
+                                        }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                                                public void onClick(
+                                                                    DialogInterface dialog,
+                                                                    int id) {
+                                                        dialog.cancel();
+                                                }
+                                        });
+                                        
+                                        AlertDialog alertDialog = alertDialogBuilder.create();
+                                        alertDialog.show();
+                                }
+                        });
+                }
+        }
+        
+        private void createButtonGetTiles() {
+                Button btn_get_tiles = (Button) findViewById(R.id.btn_get_tiles);
+                btn_get_tiles.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                                if (Utility.isNetworkAvailable(self)) {
+                                        try {
+                                                self.getRemoteZipBaseMap();
+                                        }
+                                        catch (Exception e) {
+                                                ExceptionHandler.saveLogFile(e);
+                                        }
+                                }
+                                else {
+                                        Toast.makeText(getApplicationContext(), "Sem conexão com a internet.", Toast.LENGTH_LONG).show();
+                                        Log.i(self.LOG_TAG, "Sem conexão com a internet.");
+                                }
+                        }
+                });
+                
+        }
+        
+        private void createButtonLogout() {
+                Button btnLogout = (Button) findViewById(R.id.btnLogout);
+                btnLogout.setText(Html.fromHtml("Sair <b>" + name + "</b>"));
+                btnLogout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View arg0) {
+                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(TaskActivity.this);
+                                alertDialogBuilder.setTitle(string.caution);
+                                alertDialogBuilder.setMessage(string.logoff_message).setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                                        public void onClick(
+                                                            DialogInterface dialog,
+                                                            int id) {
+                                                // Clear the session data This will clear all session data and
+                                                // redirect user to LoginActivity
+                                                setResult(999);
+                                                SessionManager.logoutUser();
+                                                finish();
+                                        }
+                                }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                                        public void onClick(
+                                                            DialogInterface dialog,
+                                                            int id) {
+                                                dialog.cancel();
+                                        }
+                                });
+                                
+                                AlertDialog alertDialog = alertDialogBuilder.create();
+                                alertDialog.show();
+                        }
+                });
+        }
+        
+        private void createButtonGetTasks() {
                 Button btn_get_tasks = (Button) findViewById(R.id.btn_get_tasks);
                 btn_get_tasks.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -94,38 +195,6 @@ public class TaskActivity extends Activity {
                         }
                 });
                 
-                String name = session.getUserName();
-                Button btnLogout = (Button) findViewById(R.id.btnLogout);
-                btnLogout.setText(Html.fromHtml("Sair <b>" + name + "</b>"));
-                btnLogout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View arg0) {
-                                // Clear the session data This will clear all session data and
-                                // redirect user to LoginActivity
-                                setResult(999);
-                                SessionManager.logoutUser();
-                                finish();
-                        }
-                });
-                
-                Button btn_get_tiles = (Button) findViewById(R.id.btn_get_tiles);
-                btn_get_tiles.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                                if (Utility.isNetworkAvailable(self)) {
-                                        try {
-                                                self.getRemoteZipBaseMap();
-                                        }
-                                        catch (Exception e) {
-                                                ExceptionHandler.saveLogFile(e);
-                                        }
-                                }
-                                else {
-                                        Toast.makeText(getApplicationContext(), "Sem conexão com a internet.", Toast.LENGTH_LONG).show();
-                                        Log.i(self.LOG_TAG, "Sem conexão com a internet.");
-                                }
-                        }
-                });
         }
         
         /**
