@@ -95,7 +95,7 @@ public class TaskActivity extends Activity {
                                                 public void onClick(
                                                                     DialogInterface dialog,
                                                                     int id) {
-                                                        TaskTestsGenerator.createRegisters();
+                                                        new TaskTestsGenerator(TaskActivity.this);
                                                 }
                                         }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
                                                 public void onClick(

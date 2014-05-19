@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import br.inova.mobile.constants.Constants;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.map.GeoMap;
 import br.inova.mobile.user.LoginActivity;

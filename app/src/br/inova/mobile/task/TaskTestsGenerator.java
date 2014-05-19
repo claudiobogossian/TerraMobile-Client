@@ -3,17 +3,47 @@ package br.inova.mobile.task;
 import java.util.Arrays;
 import java.util.Date;
 
+import android.os.AsyncTask;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.form.Form;
+import br.inova.mobile.map.LandmarksManager;
 import br.inova.mobile.photo.Photo;
 import br.inova.mobile.photo.PhotoDao;
 
 import com.j256.ormlite.dao.CloseableIterator;
 
-public class TaskTestsGenerator {
+public class TaskTestsGenerator extends AsyncTask<String, String, String> {
         
-        public static void createRegisters() {
+        private TaskActivity taskActivity;
+        
+        public TaskTestsGenerator(TaskActivity taskActivity) {
+                this.taskActivity = taskActivity;
+                this.execute();
+        }
+        
+        @Override
+        protected void onPreExecute() {
+                taskActivity.showLoadingMask("Criando registros de testes...");
+        }
+        
+        @Override
+        protected void onProgressUpdate(String... progress) {
+                taskActivity.onProgressUpdate(progress);
+        }
+        
+        @Override
+        protected void onPostExecute(String result) {
+                LandmarksManager.createPoiMarkers();
+                taskActivity.updateCountLabels();
+                taskActivity.hideLoadingMask();
+        }
+        
+        @Override
+        protected String doInBackground(String... arg0) {
                 CloseableIterator<Task> taskIterator = TaskDao.getIteratorForUnfinishedTasks();
+                
+                publishProgress("Criando Tarefas... ", "0", "" + TaskDao.getCountOfIncompletedTasks()); // set Max Length of progress                                                                                       // dialog
+                int progress = 0;
                 
                 try {
                         Task baseTask = getBaseTask();
@@ -23,6 +53,9 @@ public class TaskTestsGenerator {
                                 while (taskIterator.hasNext()) {
                                         Task iterateTask = (Task) taskIterator.next();
                                         createTask(iterateTask, baseTask, basePhoto);
+                                        
+                                        progress++;
+                                        publishProgress("Criando Tarefas... ", "" + progress);
                                 }
                         }
                 }
@@ -32,6 +65,7 @@ public class TaskTestsGenerator {
                 finally {
                         taskIterator.closeQuietly();
                 }
+                return null;
         }
         
         private static void verifyRegisters() {

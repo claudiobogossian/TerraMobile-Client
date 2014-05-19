@@ -34,7 +34,7 @@ public class Constants {
         
         public static void changeToHomologMode() {
                 /*** Semi-Production ***/
-                EXTERNAL_HOST = "http://192.168.0.171";
+                EXTERNAL_HOST = "http://192.168.0.171";  //TODO: mudar url de homologação.
                 INTERNAL_HOST = "http://192.168.0.171";
                 applyChanges();
         }
