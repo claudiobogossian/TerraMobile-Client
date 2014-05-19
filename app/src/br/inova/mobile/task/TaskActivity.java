@@ -110,6 +110,9 @@ public class TaskActivity extends Activity {
                                 }
                         });
                 }
+                else {
+                        Constants.changeToProductionMode();
+                }
         }
         
         private void createButtonGetTiles() {
