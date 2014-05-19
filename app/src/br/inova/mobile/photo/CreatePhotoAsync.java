@@ -42,6 +42,8 @@ public class CreatePhotoAsync extends AsyncTask<String, String, String> {
          * 
          * */
         public String getBytesFromImage(final String filePath) {
+                System.gc();
+                
                 String imgString = null;
                 
                 byte[] bytes;
@@ -51,7 +53,6 @@ public class CreatePhotoAsync extends AsyncTask<String, String, String> {
                 ByteArrayOutputStream output = new ByteArrayOutputStream();
                 
                 try {
-                        System.gc();
                         InputStream inputStream = new FileInputStream(filePath);//You can get an inputStream using any IO API
                         
                         while ((bytesRead = inputStream.read(buffer)) != -1) {
