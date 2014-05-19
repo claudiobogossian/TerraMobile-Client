@@ -13,8 +13,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 import br.inova.mobile.Utility;
 import br.inova.mobile.constants.Constants;
@@ -23,6 +25,7 @@ import br.inova.mobile.database.DatabaseHelper;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.map.GeoMap;
 import br.inpe.mobile.R;
+import br.inpe.mobile.R.string;
 
 import com.j256.ormlite.dao.Dao;
 
@@ -76,8 +79,39 @@ public class LoginActivity extends Activity {
                         }
                 });
                 
+                createRemoteUrlSpinner();
+                
                 this.restTemplate = new RestTemplate();
                 this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        }
+        
+        public void createRemoteUrlSpinner() {
+                final Spinner spnLoginUrl;
+                
+                spnLoginUrl = (Spinner) findViewById(R.id.login_sppiner);
+                
+                spnLoginUrl.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        public void onItemSelected(
+                                                   AdapterView<?> adapterView,
+                                                   View view,
+                                                   int i,
+                                                   long l) {
+                                Object spnLoginUrlItem = spnLoginUrl.getSelectedItem();
+                                String spnLoginUrlString = (spnLoginUrlItem == null) ? "" : spnLoginUrlItem.toString();
+                                String productionString = getResources().getString(string.production);
+                                
+                                if (spnLoginUrlString == productionString) {
+                                        Constants.changeToProductionMode();
+                                }
+                                else {
+                                        Constants.changeToHomologMode();
+                                }
+                        }
+                        
+                        public void onNothingSelected(AdapterView<?> adapterView) {
+                                return;
+                        }
+                });
         }
         
         /**

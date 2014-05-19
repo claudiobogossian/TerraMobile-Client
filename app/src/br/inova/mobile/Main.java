@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import br.inova.mobile.constants.Constants;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.map.GeoMap;
 import br.inova.mobile.user.LoginActivity;
@@ -29,17 +30,6 @@ public class Main extends Activity {
                  * Defines the default exception handler to log unexpected
                  * android errors
                  */
-                
-                //Utility.getDistanceFromPoints();        
-                
-                //Utility.disableStrictMode();
-                //String json = "[{\"address\":{\"name\":\"RUA JOAO ABO ARRAGE\",\"id\":18294,\"state\":\"SP\",\"number\":\"3-0\",\"extra\":\"LA Q9 G AZEV\",\"coordx\":-49.0637205940752,\"coordy\":-22.3368180451296,\"postalCode\":\"17012350\",\"city\":\"Bauru\",\"featureId\":\"020226001001\",\"neighborhood\":\"VILA GUEDES DE AZEVEDO\"},\"id\":18436,\"done\":false,\"form\":{\"id\":18294,\"date\":null,\"coordx\":null,\"coordy\":null,\"info1\":null,\"info2\":null,\"numberConfirmation\":null,\"variance\":null,\"otherNumbers\":null,\"primaryUse\":null,\"secondaryUse\":null,\"pavimentation\":null,\"asphaltGuide\":null,\"publicIlumination\":null,\"energy\":null,\"pluvialGallery\":null},\"user\":{\"name\":\"RAUL\",\"id\":1021,\"password\":\"81dc9bdb52d04dc20036dbd8313ed055\",\"hash\":\"b3d48c9573660968438e4a7c12daac4c\",\"login\":\"RAUL\"}}]";
-                //String getUrl = "http://179.184.164.144:8000/terramobile-server/rest/tasks?user=b3d48c9573660968438e4a7c12daac4c";
-                //HttpClient.get(getUrl);
-                //String postUrl = "http://192.168.1.102:8080/bauru-server/rest/tasks?user=b3d48c9573660968438e4a7c12daac4c";
-                //HttpClient.post(postUrl , json);
-                
-                //startActivity(new Intent(this, ListTasks.class));
                 
                 session = SessionManager.getInstance();
                 this.checkLogin();
@@ -77,15 +67,5 @@ public class Main extends Activity {
         public boolean onCreateOptionsMenu(Menu menu) {
                 return true;
         }
-        
-        // @Override
-        // public void onActivityResult(int requestCode, int resultCode, Intent
-        // data) {
-        // if (requestCode == GEOMAP) {
-        // if (resultCode == RESULT_OK) {
-        // } else if (resultCode == RESULT_CANCELED) {
-        // }
-        // }
-        // }
         
 }

@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string-array name="login_options">
+        <item>@string/production</item>
+        <item>@string/homolog</item>
+    </string-array>
     <string-array name="number_confirmation">
         <item></item>
         <item>@string/ok</item>
         <item>@string/non_existent</item>
         <item>@string/not_confer</item>
     </string-array>
-    
     <string-array name="variance">
         <item>@string/not_detected</item>
         <item>@string/nonconforming</item>
@@ -15,7 +18,6 @@
         <item>@string/dismembered</item>
         <item>@string/unified</item>
     </string-array>
-    
     <string-array name="primary_use">
         <item></item>
         <item>@string/none</item>
@@ -27,7 +29,6 @@
         <item>@string/under_construction</item>
         <item>@string/undefined</item>
     </string-array>
-    
     <string-array name="secondary_use">
         <item>@string/none</item>
         <item>@string/residential</item>
@@ -38,7 +39,6 @@
         <item>@string/under_construction</item>
         <item>@string/undefined</item>
     </string-array>
-    
     <string-array name="pavement">
         <item></item>
         <item>@string/asphalt</item>
@@ -47,7 +47,6 @@
         <item>@string/without_paviment</item>
         <item>@string/partial</item>
     </string-array>
-    
     <string-array name="yes_no">
         <item></item>
         <item>@string/yes</item>

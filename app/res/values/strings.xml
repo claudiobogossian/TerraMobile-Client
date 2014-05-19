@@ -4,6 +4,7 @@
     <!-- Main Screen -->
     <string name="app_name">Bauru Digital</string>
     <string name="str_lbl_login">Login</string>
+    <string name="lbl_test">Gerar Tarefas</string>
     <string name="lbl_logoff">Logoff</string>
     <string name="user_name_hint">Usuário</string>
     <string name="password_hint">Senha</string>
@@ -57,15 +58,19 @@
     <string name="caution">Atenção</string>
     <string name="infra_message">Você mudou de trecho mas ainda não preencheu as informações de infraestrutura. \n\nO formulário anterior foi carregado para que você preencha estas informações.</string>
     <string name="exit_form">Fechar formulário?.</string>
-    
+
     <!-- Task Screen -->
     <string name="btn_sync_tasks">Enviar e Receber tarefas</string>
     <string name="btn_view_downloads">Mostrar Downloads</string>
     <string name="info_send_tasks">Enviando informaçãoes ao servidor</string>
     <string name="btn_clear_tasks">Apagar trechos</string>
     <string name="userName">Nome</string>
+    <string name="generate_registers_message">Criar Registros de testes?</string>
+    <string name="logoff_message">Fazer Logoff?</string>
 
     <!-- Domains Arrays items -->
+    <string name="homolog">Homologação</string>
+    <string name="production">Produção</string>
     <string name="ok">OK</string>
     <string name="non_existent">Inexistente</string>
     <string name="not_confer">Não Confere</string>

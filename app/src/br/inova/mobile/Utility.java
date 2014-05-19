@@ -22,6 +22,7 @@ import org.osmdroid.util.GeoPoint;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
@@ -500,12 +501,14 @@ public class Utility {
          */
         public static String getServerUrl() {
                 String serverUrl = null;
+                HttpURLConnection urlConnection = null;
+                
                 try {
                         disableStrictMode();
                         
                         URL url = new URL(Constants.INTERNAL_HOST_URL);
                         
-                        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                        urlConnection = (HttpURLConnection) url.openConnection();
                         urlConnection.setRequestProperty("Connection", "close");
                         urlConnection.setConnectTimeout(1000 * 2); // mTimeout is in seconds
                         urlConnection.connect();
@@ -517,10 +520,14 @@ public class Utility {
                                 serverUrl = Constants.EXTERNAL_HOST_URL;
                         }
                         
-                        urlConnection.disconnect();
                 }
                 catch (Exception exception) {
                         serverUrl = Constants.EXTERNAL_HOST_URL;
+                }
+                finally {
+                        if (urlConnection != null) {
+                                urlConnection.disconnect();
+                        }
                 }
                 
                 return serverUrl;
@@ -545,6 +552,11 @@ public class Utility {
         public static String getDeviceId(Context ctx) {
                 TelephonyManager tManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
                 return tManager.getDeviceId();
+        }
+        
+        public static boolean isInDebug(Context context) {
+                boolean isDebuggable = (0 != (context.getApplicationInfo().flags &= ApplicationInfo.FLAG_DEBUGGABLE));
+                return isDebuggable;
         }
         
         public static void getDistanceFromPoints() {
