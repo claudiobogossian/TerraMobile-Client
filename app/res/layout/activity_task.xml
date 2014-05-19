@@ -95,18 +95,37 @@
             android:gravity="center_vertical|left"
             android:onClick="showDownloads"
             android:text="@string/btn_view_downloads" />
+    </LinearLayout>
+
+
+    <!-- stretching frame layout, using layout_weight -->
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1" >
+    </FrameLayout>
+
+    <!-- content fixated to the bottom of the screen -->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btnTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|left"
+            android:text="@string/lbl_test"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
             android:drawableLeft="@drawable/logout"
             android:gravity="center_vertical|left"
             android:text="@string/lbl_logoff" />
-
     </LinearLayout>
-
-    <!-- Button to show session data -->
 
 </LinearLayout>
