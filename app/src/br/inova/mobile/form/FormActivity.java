@@ -17,6 +17,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
@@ -53,10 +56,10 @@ import br.inpe.mobile.R.string;
 public class FormActivity extends Activity {
         
         // tag used to debug
-        private final String         LOG_TAG = "#" + getClass().getSimpleName();
+        private final String         LOG_TAG         = "#" + getClass().getSimpleName();
         
         // other activities
-        private static final int     PHOTO   = 102;
+        private static final int     PHOTO           = 102;
         
         // widgets
         private AutoCompleteTextView address;
@@ -76,7 +79,7 @@ public class FormActivity extends Activity {
         private Button               buttonCancel, buttonOk, buttonPhoto,
                         buttonClearSpinners;
         
-        private FormActivity         self    = this;
+        private FormActivity         self            = this;
         
         public static Task           currentTask;
         
@@ -87,6 +90,8 @@ public class FormActivity extends Activity {
         private ProgressDialog       dialog;
         
         private Resources            resources;
+        
+        private List<ImageView>      imagesToDestroy = new ArrayList<ImageView>();
         
         /**
          * 
@@ -1135,6 +1140,8 @@ public class FormActivity extends Activity {
                 
                 new BitmapRendererTask(imgFile, imageView, 100, 100);
                 
+                imagesToDestroy.add(imageView);
+                
                 return imageView;
         }
         
@@ -1146,7 +1153,8 @@ public class FormActivity extends Activity {
                 final ImageView imageView = new ImageView(this);
                 final File imageFile = new File(picture.getPath());
                 
-                new BitmapRendererTask(imageFile, imageView, 640, 480);
+                //new BitmapRendererTask(imageFile, imageView, 640, 480);
+                new BitmapRendererTask(imageFile, imageView, 340, 280);
                 
                 imageDialog.setContentView(imageView);
                 imageDialog.setCancelable(true);
@@ -1178,6 +1186,33 @@ public class FormActivity extends Activity {
                                 alertDialog.show();
                         }
                 });
+                
+                imagesToDestroy.add(imageView);
+        }
+        
+        @Override
+        protected void onDestroy() {
+                for (ImageView image : imagesToDestroy) {
+                        try {
+                                Drawable drawable = image.getDrawable();
+                                
+                                if (drawable instanceof BitmapDrawable) {
+                                        BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                                        Bitmap bitmap = bitmapDrawable.getBitmap();
+                                        
+                                        if (bitmap != null) {
+                                                bitmap.recycle();
+                                        }
+                                }
+                        }
+                        catch (Exception exception) {
+                                ExceptionHandler.saveLogFile(exception);
+                        }
+                }
+                
+                System.gc();
+                
+                super.onDestroy();
         }
         
         /**
