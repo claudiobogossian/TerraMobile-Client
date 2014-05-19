@@ -177,14 +177,6 @@ public class BitmapRendererTask extends AsyncTask<Integer, Void, Bitmap> {
                 return null;
         }
         
-        /**
-         * Clear Bitmap image from memory and calls the Garbage Collector.
-         * */
-        public static void clearBitmap(Bitmap bm) {
-                bm.recycle();
-                System.gc();
-        }
-        
         @Override
         protected void onPostExecute(Bitmap bitmap) {
                 if (isCancelled()) {
