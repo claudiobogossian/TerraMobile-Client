@@ -2,6 +2,8 @@ package br.inova.mobile.photo;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.util.Log;
@@ -10,6 +12,7 @@ import br.inova.mobile.database.DatabaseAdapter;
 import br.inova.mobile.database.DatabaseHelper;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.form.Form;
+import br.inova.mobile.rest.RestTemplateFactory;
 import br.inova.mobile.task.Task;
 import br.inova.mobile.user.SessionManager;
 import br.inova.mobile.user.User;
@@ -185,7 +188,6 @@ public class PhotoDao {
          * @return Boolean result
          */
         public static Boolean deletePhotos(List<Photo> photos) {
-                Dao<Photo, Integer> dao = db.getPhotoDao();
                 Boolean result = false;
                 
                 try {
@@ -224,8 +226,7 @@ public class PhotoDao {
                         if (photo.getId() != null) {
                                 deleteWithDeleteBuilder(photo);
                         }
-                        
-                        Long teste = getCountOfCompletedPhotos();
+
                         result = true;
                 }
                 catch (SQLException e) {
@@ -240,8 +241,7 @@ public class PhotoDao {
                 Dao<Photo, Integer> dao = db.getPhotoDao();
                 DeleteBuilder<Photo, Integer> deleteBuilder = dao.deleteBuilder();
                 deleteBuilder.where().eq("id", photo.getId());
-                int i = dao.delete (deleteBuilder.prepare());
-                String teste = "";
+                dao.delete(deleteBuilder.prepare());
         }
         
         /**
@@ -331,6 +331,24 @@ public class PhotoDao {
                 }
                 
                 return count;
+        }
+        
+        public static void deletePhotosTest() {
+                CloseableIterator<Photo> iterator = PhotoDao.getIteratorForNotSyncPhotos();
+                
+                try {
+                        while (iterator.hasNext()) {
+                                Photo photo = (Photo) iterator.next();
+                                PhotoDao.deletePhoto(photo);
+                        }
+                }
+                catch (Exception e) {
+                        e.printStackTrace();
+                }
+                finally {
+                        iterator.closeQuietly();
+                }
+                
         }
         
 }

@@ -55,7 +55,7 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                                                 Photo responsePhoto = receivedPhotos.get(0);
                                                 
                                                 if (responsePhoto != null) {
-                                                        PhotoDao.deletePhoto(responsePhoto);
+                                                        PhotoDao.deletePhoto(photo);
                                                 }
                                                 
                                                 progress++;

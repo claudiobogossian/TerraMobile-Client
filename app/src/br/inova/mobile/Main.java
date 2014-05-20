@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.map.GeoMap;
+import br.inova.mobile.photo.PhotoDao;
 import br.inova.mobile.user.LoginActivity;
 import br.inova.mobile.user.SessionManager;
 
@@ -29,6 +30,9 @@ public class Main extends Activity {
                  * Defines the default exception handler to log unexpected
                  * android errors
                  */
+                
+                
+                //PhotoDao.deletePhotosTest(); //TODO: REMOVER!!
                 
                 session = SessionManager.getInstance();
                 this.checkLogin();
