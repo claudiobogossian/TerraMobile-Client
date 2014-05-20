@@ -16,6 +16,7 @@ import br.inova.mobile.user.User;
 
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 public class PhotoDao {
@@ -183,15 +184,16 @@ public class PhotoDao {
          * @author Paulo Luan
          * @return Boolean result
          */
-        public static Integer deletePhotos(List<Photo> photos) {
+        public static Boolean deletePhotos(List<Photo> photos) {
                 Dao<Photo, Integer> dao = db.getPhotoDao();
-                Integer result = 0;
+                Boolean result = false;
                 
                 try {
                         for (Photo photo : photos) {
                                 File file = new File(photo.getPath());
                                 file.delete();
-                                result = dao.delete(photo);
+                                deleteWithDeleteBuilder(photo);
+                                result = true;
                         }
                 }
                 catch (SQLException e) {
@@ -210,17 +212,20 @@ public class PhotoDao {
          * @return Boolean result
          */
         public static boolean deletePhoto(Photo photo) {
-                Dao<Photo, Integer> dao = db.getPhotoDao();
                 boolean result = false;
                 
                 try {
                         File file = new File(photo.getPath());
-                        file.delete();
                         
-                        if (photo.getId() != null) {
-                                dao.delete(photo);
+                        if (file.exists()) {
+                                file.delete();
                         }
                         
+                        if (photo.getId() != null) {
+                                deleteWithDeleteBuilder(photo);
+                        }
+                        
+                        Long teste = getCountOfCompletedPhotos();
                         result = true;
                 }
                 catch (SQLException e) {
@@ -229,6 +234,14 @@ public class PhotoDao {
                 }
                 
                 return result;
+        }
+        
+        private static void deleteWithDeleteBuilder(Photo photo) throws SQLException {
+                Dao<Photo, Integer> dao = db.getPhotoDao();
+                DeleteBuilder<Photo, Integer> deleteBuilder = dao.deleteBuilder();
+                deleteBuilder.where().eq("id", photo.getId());
+                int i = dao.delete (deleteBuilder.prepare());
+                String teste = "";
         }
         
         /**

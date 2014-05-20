@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Main Screen -->
-    <string name="app_name">Bauru Digital</string>
+    <string name="app_name">Terra Mobile</string>
     <string name="str_lbl_login">Login</string>
     <string name="lbl_test">Gerar Tarefas</string>
     <string name="lbl_logoff">Logoff</string>
@@ -12,7 +12,7 @@
     <string name="btn_begin">Iniciar</string>
     <string name="btn_exit">Sair</string>
     <string name="lbl_exit">Sair</string>
-    <string name="title_activity_main">Bauru Digital</string>
+    <string name="title_activity_main">Terra Mobile</string>
 
     <!-- GeoMap Screen -->
     <string name="lbl_new_form">Abrir formulárío</string>
