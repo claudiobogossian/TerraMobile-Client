@@ -50,12 +50,17 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                                                 Photo photo = (Photo) iterator.next();
                                                 
                                                 Photo[] responsePhotos = new RestTemplateFactory().postForObject(url, new Photo[] { photo }, Photo[].class, userHash);
-                                                List<Photo> receivedPhotos = new ArrayList<Photo>(Arrays.asList(responsePhotos));
                                                 
-                                                Photo responsePhoto = receivedPhotos.get(0);
-                                                
-                                                if (responsePhoto != null) {
-                                                        PhotoDao.deletePhoto(photo);
+                                                if (responsePhotos != null) {
+                                                        List<Photo> receivedPhotos = new ArrayList<Photo>(Arrays.asList(responsePhotos));
+                                                        
+                                                        if (!receivedPhotos.isEmpty()) {
+                                                                Photo responsePhoto = receivedPhotos.get(0);
+                                                                
+                                                                if (responsePhoto != null) {
+                                                                        iterator.remove();
+                                                                }
+                                                        }
                                                 }
                                                 
                                                 progress++;
