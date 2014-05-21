@@ -36,6 +36,8 @@ public class UploadTasks extends AsyncTask<String, String, String> {
         protected String doInBackground(String... urls) {
                 String message = null;
                 
+                List<Integer> tasksToRemove = new ArrayList<Integer>();
+                
                 for (String url : urls) {
                         CloseableIterator<Task> iterator = TaskDao.getIteratorForFinishedTasks();
                         
@@ -51,7 +53,7 @@ public class UploadTasks extends AsyncTask<String, String, String> {
                                                 Task responseTask = receivedTasks.get(0);
                                                 
                                                 if (responseTask != null) {
-                                                        iterator.remove();
+                                                        tasksToRemove.add(task.getId());
                                                 }
                                                 
                                                 progress++;
@@ -73,6 +75,8 @@ public class UploadTasks extends AsyncTask<String, String, String> {
                                 iterator.closeQuietly();
                         }
                 }
+                
+                TaskDao.removePhotosByIds(tasksToRemove);
                 
                 return message;
         }

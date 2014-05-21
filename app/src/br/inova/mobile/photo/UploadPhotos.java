@@ -41,6 +41,8 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                 
                 PhotoDao.verifyIntegrityOfPictures();
                 
+                List<Integer> photosToRemove = new ArrayList<Integer>();
+                
                 for (String url : urls) {
                         CloseableIterator<Photo> iterator = PhotoDao.getIteratorForNotSyncPhotos();
                         
@@ -58,7 +60,10 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                                                                 Photo responsePhoto = receivedPhotos.get(0);
                                                                 
                                                                 if (responsePhoto != null) {
-                                                                        iterator.remove();
+                                                                        photosToRemove.add(photo.getId());
+                                                                        
+                                                                        //Long countOfRegisters = PhotoDao.getCountOfCompletedPhotos();
+                                                                        //iterator.remove();
                                                                 }
                                                         }
                                                 }
@@ -81,7 +86,11 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                         finally {
                                 iterator.closeQuietly();
                         }
+                        
                 }
+                
+                PhotoDao.removePhotosByIds(photosToRemove);
+                
                 return message;
         }
         

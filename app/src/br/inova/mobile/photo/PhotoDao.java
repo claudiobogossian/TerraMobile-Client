@@ -2,8 +2,6 @@ package br.inova.mobile.photo;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import android.util.Log;
@@ -12,7 +10,6 @@ import br.inova.mobile.database.DatabaseAdapter;
 import br.inova.mobile.database.DatabaseHelper;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.form.Form;
-import br.inova.mobile.rest.RestTemplateFactory;
 import br.inova.mobile.task.Task;
 import br.inova.mobile.user.SessionManager;
 import br.inova.mobile.user.User;
@@ -194,7 +191,7 @@ public class PhotoDao {
                         for (Photo photo : photos) {
                                 File file = new File(photo.getPath());
                                 file.delete();
-                                deleteWithDeleteBuilder(photo);
+                                deleteWithDeleteBuilder(photo.getId());
                                 result = true;
                         }
                 }
@@ -224,9 +221,9 @@ public class PhotoDao {
                         }
                         
                         if (photo.getId() != null) {
-                                deleteWithDeleteBuilder(photo);
+                                deleteWithDeleteBuilder(photo.getId());
                         }
-
+                        
                         result = true;
                 }
                 catch (SQLException e) {
@@ -235,13 +232,6 @@ public class PhotoDao {
                 }
                 
                 return result;
-        }
-        
-        private static void deleteWithDeleteBuilder(Photo photo) throws SQLException {
-                Dao<Photo, Integer> dao = db.getPhotoDao();
-                DeleteBuilder<Photo, Integer> deleteBuilder = dao.deleteBuilder();
-                deleteBuilder.where().eq("id", photo.getId());
-                dao.delete(deleteBuilder.prepare());
         }
         
         /**
@@ -347,6 +337,29 @@ public class PhotoDao {
                 }
                 finally {
                         iterator.closeQuietly();
+                }
+                
+        }
+        
+        private static void deleteWithDeleteBuilder(Integer photoId) throws SQLException {
+                Dao<Photo, Integer> dao = db.getPhotoDao();
+                DeleteBuilder<Photo, Integer> deleteBuilder = dao.deleteBuilder();
+                deleteBuilder.where().eq("id", photoId);
+                dao.delete(deleteBuilder.prepare());
+        }
+        
+        public static void removePhotosByIds(List<Integer> photosIds) {
+                
+                for (Integer photoId : photosIds) {
+                        if (photoId != null) {
+                                try {
+                                        deleteWithDeleteBuilder(photoId);
+                                }
+                                catch (SQLException exception) {
+                                        ExceptionHandler.saveLogFile(exception);
+                                }
+                                
+                        }
                 }
                 
         }

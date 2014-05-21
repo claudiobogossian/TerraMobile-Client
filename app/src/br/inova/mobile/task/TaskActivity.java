@@ -81,7 +81,7 @@ public class TaskActivity extends Activity {
         private void createButtonGenerateTestTasks() {
                 String lowerName = name.toLowerCase();
                 
-                if (lowerName.equals("test") || lowerName.equals("bele")) {
+                if (lowerName.equals("testemobile") || lowerName.equals("bele")) {
                         Constants.changeToHomologMode();
                         
                         Button btn_generate_tasks = (Button) findViewById(R.id.btnTest);

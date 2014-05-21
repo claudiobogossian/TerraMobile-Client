@@ -14,6 +14,7 @@ import br.inova.mobile.user.User;
 
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 public class TaskDao {
@@ -452,8 +453,6 @@ public class TaskDao {
                         
                         taskQueryBuilder.join(addressQueryBuilder);
                         
-                        String test = taskQueryBuilder.prepareStatementString(); // TODO: remove
-                        
                         tasks = taskQueryBuilder.query();
                         
                         if (tasks != null && !tasks.isEmpty()) {
@@ -499,5 +498,27 @@ public class TaskDao {
                 }
                 
                 return featureId;
+        }
+        
+        private static void deleteWithDeleteBuilder(Integer taskId) throws SQLException {
+                Dao<Task, Integer> dao = db.getTaskDao();
+                DeleteBuilder<Task, Integer> deleteBuilder = dao.deleteBuilder();
+                deleteBuilder.where().eq("_id", taskId);
+                dao.delete(deleteBuilder.prepare());
+        }
+        
+        public static void removePhotosByIds(List<Integer> tasksToRemove) {
+                
+                for (Integer taskId : tasksToRemove) {
+                        if (taskId != null) {
+                                try {
+                                        deleteWithDeleteBuilder(taskId);
+                                }
+                                catch (SQLException exception) {
+                                        ExceptionHandler.saveLogFile(exception);
+                                }
+                                
+                        }
+                }
         }
 }
