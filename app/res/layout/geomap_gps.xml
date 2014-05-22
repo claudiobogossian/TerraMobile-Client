@@ -10,7 +10,8 @@
         android:id="@+id/btn_open_search_city_toolbar"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/ic_action_search" />
+        android:src="@drawable/ic_action_search"
+        android:visibility="gone" />
 
     <ImageButton
         android:id="@+id/btn_update_location"

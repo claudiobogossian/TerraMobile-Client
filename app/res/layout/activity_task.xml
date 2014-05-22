@@ -77,7 +77,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_action_refresh"
-            android:gravity="center_vertical|left"
             android:text="@string/btn_sync_tasks" />
 
         <Button
@@ -85,14 +84,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_action_map"
-            android:gravity="center_vertical|left"
             android:text="@string/btn_sync_tiles" />
 
         <Button
             android:id="@+id/btn_view_downloads"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical|left"
             android:drawableLeft="@drawable/ic_action_download"
             android:onClick="showDownloads"
             android:text="@string/btn_view_downloads" />
@@ -131,8 +128,7 @@
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_action_undo"
-            android:gravity="center_vertical|left"
+            android:drawableLeft="@drawable/ic_signout"
             android:text="@string/lbl_logoff" />
     </LinearLayout>
 
