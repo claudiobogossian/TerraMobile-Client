@@ -36,9 +36,9 @@ public class Constants {
         
         public static void changeToHomologMode() {
                 /*** Semi-Production ***/
-                EXTERNAL_HOST = "http://192.168.0.171";
-                INTERNAL_HOST = "http://192.168.0.171";
-                //SERVER = "terramobile-homolog";
+                //EXTERNAL_HOST = "http://192.168.0.171";
+                //INTERNAL_HOST = "http://192.168.0.171";
+                SERVER = "terramobile-homolog";
                 applyChanges();
         }
         
