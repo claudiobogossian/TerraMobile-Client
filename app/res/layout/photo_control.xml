@@ -23,14 +23,14 @@
                 android:id="@+id/foto_control_bt_voltar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ico_voltar" >
+                android:src="@drawable/ic_action_back" >
             </ImageButton>
 
             <ImageButton
                 android:id="@+id/foto_control_bt_fotografar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ico_foto" >
+                android:src="@drawable/ic_action_camera" >
             </ImageButton>
         </LinearLayout>
 
@@ -44,14 +44,14 @@
                 android:id="@+id/foto_control_bt_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ico_cancelar" >
+                android:src="@drawable/ic_action_cancel" >
             </ImageButton>
 
             <ImageButton
                 android:id="@+id/foto_control_bt_ok"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ico_ok" >
+                android:src="@drawable/ic_action_save" >
             </ImageButton>
         </LinearLayout>
     </FrameLayout>

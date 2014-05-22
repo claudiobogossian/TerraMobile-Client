@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:src="@drawable/ico_ok" />
+            android:src="@drawable/ic_action_save" />
 
         <TextView
             android:id="@+id/rowTaskTitle"

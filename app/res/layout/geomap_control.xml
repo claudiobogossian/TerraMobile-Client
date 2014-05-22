@@ -23,21 +23,20 @@
                 android:id="@+id/geomap_control_bt_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ico_voltar" >
+                android:src="@drawable/ic_action_back" >
             </ImageButton>
 
             <ImageButton
                 android:id="@+id/geomap_control_bt_form"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_form" >
+                android:layout_height="wrap_content" >
             </ImageButton>
 
             <ImageButton
                 android:id="@+id/geomap_control_bt_update_tasks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ico_update" >
+                android:src="@drawable/ic_action_refresh" >
             </ImageButton>
         </LinearLayout>
     </FrameLayout>

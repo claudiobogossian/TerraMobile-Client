@@ -79,7 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:drawableRight="@drawable/ico_clear"
+                    android:drawableRight="@drawable/ic_action_discard"
                     android:text="@string/btn_clear_address" />
             </TableRow>
 
@@ -410,7 +410,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"
-                            android:drawableTop="@drawable/ico_foto"
+                            android:drawableTop="@drawable/ic_action_camera"
                             android:text="@string/btn_get_photo" />
                     </TableRow>
 
@@ -672,7 +672,7 @@
                     android:layout_width="250dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ico_clear"
+                    android:drawableTop="@drawable/ic_action_discard"
                     android:text="@string/btn_clear" />
 
                 <Button
@@ -680,7 +680,7 @@
                     android:layout_width="250dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ico_cancelar"
+                    android:drawableTop="@drawable/ic_action_cancel"
                     android:text="@string/btn_cancel" />
 
                 <Button
@@ -688,7 +688,7 @@
                     android:layout_width="250dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ico_ok"
+                    android:drawableTop="@drawable/ic_action_save"
                     android:text="@string/btn_save" />
             </TableRow>
         </TableLayout>
