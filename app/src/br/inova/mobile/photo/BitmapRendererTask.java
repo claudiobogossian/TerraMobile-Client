@@ -79,7 +79,7 @@ public class BitmapRendererTask extends AsyncTask<Integer, Void, Bitmap> {
                 
                 try {
                         System.gc();
-                
+                        
                         // First decode with inJustDecodeBounds=true to check dimensions
                         final BitmapFactory.Options options = new BitmapFactory.Options();
                         options.inJustDecodeBounds = true;

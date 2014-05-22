@@ -11,6 +11,7 @@ import br.inova.mobile.form.Form;
 import br.inova.mobile.photo.Photo;
 import br.inova.mobile.task.Task;
 import br.inova.mobile.user.User;
+import br.mobile.city.City;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
@@ -33,19 +34,17 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
         
         // the DAO object we use to access the Task table
         private Dao<Task, Integer>    taskDao          = null;
-        
         private Dao<Form, Integer>    formDao          = null;
-        
         private Dao<Photo, Integer>   photoDao         = null;
-        
         private Dao<User, Integer>    userDao          = null;
-        
         private Dao<Address, Integer> addressDao       = null;
+        private Dao<City, Integer>    cityDao          = null;
         
         public DatabaseAdapter(Context context) {
                 super(context, DATABASE_NAME, null, DATABASE_VERSION);
                 
                 try {
+                        this.createCityTable();
                         this.createDaos();
                 }
                 catch (SQLException e) {
@@ -108,6 +107,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
                 photoDao = getDao(Photo.class);
                 userDao = getDao(User.class);
                 addressDao = getDao(Address.class);
+                cityDao = getDao(City.class);
         }
         
         public void createTables() throws SQLException {
@@ -116,6 +116,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
                 TableUtils.createTable(connectionSource, Photo.class);
                 TableUtils.createTable(connectionSource, Form.class);
                 TableUtils.createTable(connectionSource, Task.class);
+                TableUtils.createTable(connectionSource, City.class);
         }
         
         public void dropTables() throws SQLException {
@@ -124,6 +125,16 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
                 TableUtils.dropTable(connectionSource, Photo.class, true);
                 TableUtils.dropTable(connectionSource, Form.class, true);
                 TableUtils.dropTable(connectionSource, Task.class, true);
+                TableUtils.dropTable(connectionSource, City.class, true);
+        }
+        
+        public void createCityTable() throws SQLException {
+                try {
+                        TableUtils.createTableIfNotExists(connectionSource, City.class);
+                }
+                catch (Exception e) {
+                        e.printStackTrace();
+                }
         }
         
         /**
@@ -183,6 +194,14 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
                 this.addressDao = addressDao;
         }
         
+        public Dao<City, Integer> getCityDao() {
+                return cityDao;
+        }
+        
+        public void setCityDao(Dao<City, Integer> cityDao) {
+                this.cityDao = cityDao;
+        }
+        
         /**
          * Close the database connections and clear any cached DAOs.
          */
@@ -194,5 +213,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
                 photoDao = null;
                 userDao = null;
                 addressDao = null;
+                cityDao = null;
         }
+        
 }

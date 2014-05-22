@@ -559,6 +559,28 @@ public class Utility {
                 return isDebuggable;
         }
         
+        public static String parseAssetFileToString(
+                                                    Context context,
+                                                    String filename) {
+                String fileText = null;
+                
+                try {
+                        InputStream stream = context.getAssets().open(filename);
+                        int size = stream.available();
+                        
+                        byte[] bytes = new byte[size];
+                        stream.read(bytes);
+                        stream.close();
+                        
+                        fileText = new String(bytes);
+                }
+                catch (IOException e) {
+                        Log.i("MakeMachine", "IOException: " + e.getMessage());
+                }
+                
+                return fileText;
+        }
+        
         public static void getDistanceFromPoints() {
                 CloseableIterator<Task> tasks = TaskDao.getIteratorForAllTasksForCurrentUser();
                 

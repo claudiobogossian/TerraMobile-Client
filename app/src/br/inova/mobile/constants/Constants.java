@@ -22,6 +22,7 @@ public class Constants {
                 /*** DEBUG ***/
                 EXTERNAL_HOST = "http://192.168.0.171";
                 INTERNAL_HOST = "http://192.168.0.171";
+                SERVER = "terramobile-server";
                 applyChanges();
         }
         
@@ -29,14 +30,14 @@ public class Constants {
                 /*** Production ***/
                 EXTERNAL_HOST = "http://179.184.164.144";
                 INTERNAL_HOST = "http://192.168.0.181";
+                SERVER = "terramobile-server";
                 applyChanges();
         }
         
         public static void changeToHomologMode() {
                 /*** Semi-Production ***/
-                EXTERNAL_HOST = "http://192.168.0.171"; //TODO: mudar url de homologação.
+                EXTERNAL_HOST = "http://192.168.0.171";
                 INTERNAL_HOST = "http://192.168.0.171";
-                //PORT = "8000";
                 //SERVER = "terramobile-homolog";
                 applyChanges();
         }

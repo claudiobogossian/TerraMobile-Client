@@ -1,8 +1,5 @@
 package br.inova.mobile.map;
 
-import java.sql.SQLException;
-import java.util.Arrays;
-
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
@@ -34,41 +31,39 @@ import br.inova.mobile.Utility;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.form.FormActivity;
 import br.inova.mobile.location.LocationProvider;
-import br.inova.mobile.photo.Photo;
-import br.inova.mobile.photo.PhotoDao;
-import br.inova.mobile.task.Task;
 import br.inova.mobile.task.TaskActivity;
 import br.inova.mobile.task.TaskDao;
 import br.inova.mobile.user.SessionManager;
 import br.inpe.mobile.R;
-
-import com.j256.ormlite.dao.CloseableIterator;
+import br.mobile.city.CitySearchToolbar;
 
 public class GeoMap extends Activity {
         
         /** the canvas of the Map. */
-        private MapView          mapView;
+        private MapView               mapView;
         
         /** the controller of the map. */
-        private MapController    controller;
+        public MapController          controller;
         
         /** the location of the user */
-        private Location         location;
+        private Location              location;
         
         /**
          * the code of the Activities, used on the callback 'onActivityResult'
          * function.
          */
-        private static final int GEOFORM = 101;
-        private static final int TASK    = 103;
+        private static final int      GEOFORM = 101;
+        private static final int      TASK    = 103;
         
-        private GeoMap           self    = this;
+        protected static final String LOG_TAG = "#GEOMAP";
         
-        private LayoutInflater   inflater;
+        private GeoMap                self    = this;
         
-        private LandmarksManager landmarksManager;
+        private LayoutInflater        inflater;
         
-        public static String     tileSourcePath;
+        private LandmarksManager      landmarksManager;
+        
+        public static String          tileSourcePath;
         
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -79,47 +74,17 @@ public class GeoMap extends Activity {
                  * android errors
                  */
                 
-                //createFakeDataIntoTasks(); //TODO: remove
-                
                 this.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 setContentView(R.layout.activity_geomap);
                 
-                self.createInflatorForGpsButton();
                 self.createMapView();
                 self.createTileSource();
                 self.createLandmarks();
                 self.initializeLocation();
+                self.createInflatorForGpsButton();
                 self.createButtonUpdateLocation();
-        }
-        
-        /**
-         * 
-         * Function to create some task to test the application.
-         * 
-         * */
-        public void createFakeDataIntoTasks() {
-                try {
-                        Photo basePhoto = PhotoDao.getIteratorForNotSyncPhotos().first();
-                        CloseableIterator<Task> taskIterator = TaskDao.getIteratorForFinishedTasks();
-                        
-                        while (taskIterator.hasNext()) {
-                                Task task = (Task) taskIterator.next();
-                                
-                                task.setDone(true);
-                                
-                                Photo newPhoto = new Photo();
-                                newPhoto.setPath(basePhoto.getPath());
-                                newPhoto.setBase64(basePhoto.getBase64());
-                                newPhoto.setForm(task.getForm());
-                                PhotoDao.savePhotos(Arrays.asList(newPhoto));
-                                
-                                TaskDao.updateTask(task);
-                        }
-                }
-                catch (SQLException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                }
+                
+                new CitySearchToolbar(this);
         }
         
         /**
@@ -132,9 +97,20 @@ public class GeoMap extends Activity {
                 this.addContentView(viewControl, layoutParamsControl);
         }
         
-        /**
-         * Creates and handler the button that creates the user location update.
-         * */
+        /*
+         * ======================================================================
+         * =========================
+         * 
+         * </ END Cities Search Toolbar
+         * 
+         * ======================================================================
+         * =========================/
+         * 
+         * 
+         * 
+         * /** Creates and handler the button that creates the user location
+         * update.
+         */
         public void createButtonUpdateLocation() {
                 ImageButton imageButton = (ImageButton) findViewById(R.id.btn_update_location);
                 imageButton.setOnClickListener(new View.OnClickListener() {

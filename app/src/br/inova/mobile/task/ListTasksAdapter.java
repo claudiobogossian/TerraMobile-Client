@@ -31,10 +31,10 @@ public class ListTasksAdapter extends ArrayAdapter<String> {
                 String s = values[position];
                 
                 if (s.startsWith("Windows7") || s.startsWith("iPhone") || s.startsWith("Solaris")) {
-                        imageView.setImageResource(R.drawable.ico_cancelar);
+                        imageView.setImageResource(R.drawable.ic_action_cancel);
                 }
                 else {
-                        imageView.setImageResource(R.drawable.ico_ok);
+                        imageView.setImageResource(R.drawable.ic_action_save);
                 }
                 
                 return rowView;
