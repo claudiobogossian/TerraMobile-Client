@@ -19,6 +19,7 @@ import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.Parameters;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -333,15 +334,19 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                 // To be safe, you should check that the SDCard is mounted
                 // using Environment.getExternalStorageState() before doing this.
                 
-                File mediaStorageDir = new File(Utility.getExternalSdCardPath() + "/inova/" + "/dados" + "/fotos/");
+                String photosPath = "/inova/" + "/dados" + "/fotos/";
+                File mediaStorageDir = new File(Utility.getExternalSdCardPath() + photosPath);
                 // This location works best if you want the created images to be shared
                 // between applications and persist after your app has been uninstalled.
+                
+                if (!mediaStorageDir.canWrite()) {
+                        mediaStorageDir = new File(Environment.getExternalStorageDirectory() + photosPath);
+                }
                 
                 // Create the storage directory if it does not exist
                 if (!mediaStorageDir.exists()) {
                         if (!mediaStorageDir.mkdirs()) {
-                                Log.d(TAG, "failed to create directory");
-                                return null;
+                                Log.d("Error", "");
                         }
                 }
                 

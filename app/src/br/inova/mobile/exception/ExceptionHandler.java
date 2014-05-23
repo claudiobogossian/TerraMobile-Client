@@ -12,6 +12,7 @@ import java.util.Date;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Environment;
 import br.inova.mobile.Main;
 import br.inova.mobile.Utility;
 
@@ -89,7 +90,12 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
          * 
          * */
         public static void saveLogFile(String text) {
-                File path = new File(Utility.getExternalSdCardPath() + "/inova/" + "/dados" + "/log/");
+                String logsPath = "/inova/" + "/dados" + "/log/";
+                File path = new File(Utility.getExternalSdCardPath() + logsPath);
+                
+                if (!path.canWrite()) {
+                        path = new File(Environment.getExternalStorageDirectory() + logsPath);
+                }
                 
                 if (!path.exists()) {
                         path.mkdirs();
