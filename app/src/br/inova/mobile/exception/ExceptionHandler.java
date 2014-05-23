@@ -93,12 +93,11 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
                 String logsPath = "/inova/" + "/dados" + "/log/";
                 File path = new File(Utility.getExternalSdCardPath() + logsPath);
                 
-                if (!path.canWrite()) {
-                        path = new File(Environment.getExternalStorageDirectory() + logsPath);
-                }
-                
                 if (!path.exists()) {
-                        path.mkdirs();
+                        if (!path.mkdirs()) {
+                                path = new File(Environment.getExternalStorageDirectory() + logsPath);
+                                path.mkdirs();
+                        }
                 }
                 
                 SimpleDateFormat simpleDate = new SimpleDateFormat("dd_MM_yyyy HH_mm_ss");
