@@ -11,6 +11,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.widget.Toast;
 import br.inova.mobile.Utility;
+import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.form.FormActivity;
 import br.inova.mobile.location.LocationProvider;
 
@@ -41,7 +42,7 @@ public class CreatePhotoAsync extends AsyncTask<String, String, String> {
          *                the base.
          * 
          * */
-        public String getBytesFromImage(final String filePath) {
+        public static String getBytesFromImage(final String filePath) {
                 System.gc();
                 
                 String imgString = null;
@@ -62,11 +63,11 @@ public class CreatePhotoAsync extends AsyncTask<String, String, String> {
                         bytes = output.toByteArray();
                         imgString = Base64.encodeBytes(bytes);
                 }
-                catch (IOException e) {
-                        e.printStackTrace();
+                catch (IOException exception) {
+                        ExceptionHandler.saveLogFile(exception);
                 }
-                catch (OutOfMemoryError e) {
-                        e.printStackTrace();
+                catch (OutOfMemoryError exception) {
+                        ExceptionHandler.saveLogFile("OutOfMemory ao tentar converter para Base64... " + exception.getLocalizedMessage() + exception.getMessage());
                 }
                 
                 return imgString;

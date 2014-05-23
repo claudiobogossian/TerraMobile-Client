@@ -2,8 +2,10 @@ package br.inova.mobile.photo;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
+import android.os.Environment;
 import android.util.Log;
 import br.inova.mobile.Utility;
 import br.inova.mobile.database.DatabaseAdapter;
@@ -89,26 +91,6 @@ public class PhotoDao {
                         iterator = photoDao.iterator(photoQueryBuilder.prepare());
                 }
                 catch (SQLException e) {
-                        ExceptionHandler.saveLogFile(e);
-                }
-                
-                return iterator;
-        }
-        
-        /**
-         * Returns an iterator of all the pictures of the current users.
-         * 
-         * @return {@link CloseableIterator} the iterator of the database
-         *         registers.
-         * @author PauloLuan
-         * */
-        public static CloseableIterator<Photo> getIteratorForAllPhotos() {
-                CloseableIterator<Photo> iterator = null;
-                
-                try {
-                        iterator = photoDao.iterator();
-                }
-                catch (Exception e) {
                         ExceptionHandler.saveLogFile(e);
                 }
                 
@@ -241,15 +223,74 @@ public class PhotoDao {
          * @author Paulo Luan
          * */
         public static void verifyIntegrityOfPictures() {
+                verifyBase64();
+                removeFilesFromExternalMemoryIfNotInDatabase();
+        }
+        
+        /**
+         * 
+         * Iterate over all database photos registers, verifying the consistency
+         * on the Base64. If on the construction of the image occurs an error
+         * the application will save the file without base64 (null). That
+         * function creates again the base64 of the picture and save it into the
+         * database.
+         * 
+         * */
+        private static void verifyBase64() {
+                CloseableIterator<Photo> iterator = PhotoDao.getIteratorForNotSyncPhotos();
+                List<Integer> photosToRemove = new ArrayList<Integer>();
+                
+                try {
+                        while (iterator.hasNext()) {
+                                try {
+                                        Photo photo = (Photo) iterator.next();
+                                        
+                                        if (photo.getBase64() == null) {
+                                                File photoFile = new File(photo.getPath());
+                                                
+                                                if (!photoFile.exists()) {
+                                                        photosToRemove.add(photo.getId()); // NÃO TEM O QUE FAZER, FOTO NÃO EXISTE, NÃO TEM COMO TIRAR BASE64. FOTO PERDIDA.
+                                                }
+                                                else {
+                                                        photo.setBase64(CreatePhotoAsync.getBytesFromImage(photo.getPath()));
+                                                }
+                                        }
+                                }
+                                catch (OutOfMemoryError exception) {
+                                        ExceptionHandler.saveLogFile("OutofMemory ao verificar consistência das imagens antes de enviar para o servidor." + exception.getLocalizedMessage() + exception.getMessage());
+                                }
+                                catch (Exception exception) {
+                                        ExceptionHandler.saveLogFile(exception);
+                                }
+                        }
+                }
+                catch (Exception e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+                finally {
+                        iterator.closeQuietly();
+                }
+                
+                PhotoDao.removePhotosByIds(photosToRemove);
+        }
+        
+        /**
+         * 
+         * Iterate over the files on the photo's directory and compare on the
+         * database either the register exists or not. If the register don't
+         * exists on the database the file would be removed from the filesystem.
+         * 
+         * */
+        private static void removeFilesFromExternalMemoryIfNotInDatabase() {
                 File mediaStorageDir = new File(Utility.getExternalSdCardPath() + "/inova/" + "/dados" + "/fotos/");
-                Log.d("Files", "Path: " + mediaStorageDir.getPath());
+                
+                if (!mediaStorageDir.canWrite()) {
+                        mediaStorageDir = new File(Environment.getExternalStorageDirectory() + "/inova/" + "/dados" + "/fotos/");
+                }
                 
                 File pictures[] = mediaStorageDir.listFiles();
                 
                 if (pictures != null) {
-                        
-                        Log.d("Files", "Lenght of files: " + pictures.length);
-                        
                         for (int i = 0; i < pictures.length; i++) {
                                 String path = pictures[i].getPath();
                                 Boolean pictureExists = PhotoDao.isPictureOnDatabase(path);
@@ -259,7 +300,6 @@ public class PhotoDao {
                                 }
                         }
                 }
-                
         }
         
         /**

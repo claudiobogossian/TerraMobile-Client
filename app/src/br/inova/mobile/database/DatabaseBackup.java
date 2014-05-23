@@ -83,7 +83,7 @@ public class DatabaseBackup {
          */
         public static JSONArray createPhotoJsonArray() {
                 JSONArray photoJsonArray = new JSONArray();
-                CloseableIterator<Photo> photoIterator = PhotoDao.getIteratorForAllPhotos();
+                CloseableIterator<Photo> photoIterator = PhotoDao.getIteratorForNotSyncPhotos();
                 
                 try {
                         while (photoIterator.hasNext()) {

@@ -1,5 +1,6 @@
 package br.inova.mobile.photo;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -51,25 +52,40 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                                         try {
                                                 Photo photo = (Photo) iterator.next();
                                                 
-                                                Photo[] responsePhotos = new RestTemplateFactory().postForObject(url, new Photo[] { photo }, Photo[].class, userHash);
-                                                
-                                                if (responsePhotos != null) {
-                                                        List<Photo> receivedPhotos = new ArrayList<Photo>(Arrays.asList(responsePhotos));
+                                                if (photo.getBase64() == null) {
+                                                        File photoFile = new File(photo.getPath());
                                                         
-                                                        if (!receivedPhotos.isEmpty()) {
-                                                                Photo responsePhoto = receivedPhotos.get(0);
+                                                        if (!photoFile.exists()) {
+                                                                photosToRemove.add(photo.getId()); // NÃO TEM O QUE FAZER, FOTO NÃO EXISTE, NÃO TEM COMO TIRAR BASE64. FOTO PERDIDA.
+                                                        }
+                                                        else {
+                                                                String blob = CreatePhotoAsync.getBytesFromImage(photo.getPath());
+                                                                photo.setBase64(blob);
+                                                        }
+                                                }
+                                                
+                                                if (photo.getBase64() != null) {
+                                                        Photo[] responsePhotos = new RestTemplateFactory().postForObject(url, new Photo[] { photo }, Photo[].class, userHash);
+                                                        
+                                                        if (responsePhotos != null) {
+                                                                List<Photo> receivedPhotos = new ArrayList<Photo>(Arrays.asList(responsePhotos));
                                                                 
-                                                                if (responsePhoto != null) {
-                                                                        photosToRemove.add(photo.getId());
+                                                                if (!receivedPhotos.isEmpty()) {
+                                                                        Photo responsePhoto = receivedPhotos.get(0);
                                                                         
-                                                                        //Long countOfRegisters = PhotoDao.getCountOfCompletedPhotos();
-                                                                        //iterator.remove();
+                                                                        if (responsePhoto != null) {
+                                                                                photosToRemove.add(photo.getId());
+                                                                        }
                                                                 }
                                                         }
                                                 }
                                                 
                                                 progress++;
                                                 publishProgress("Enviando Imagens...", "" + progress);
+                                        }
+                                        catch (OutOfMemoryError exception) {
+                                                System.gc();
+                                                ExceptionHandler.saveLogFile("OutOfMemory ao enviar Foto para o servidor. " + exception.getLocalizedMessage() + exception.getMessage());
                                         }
                                         catch (Exception e) {
                                                 message = "Sincronização efetuada, mas alguns registros não foram enviados.";

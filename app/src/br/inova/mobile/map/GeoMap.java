@@ -97,19 +97,8 @@ public class GeoMap extends Activity {
                 this.addContentView(viewControl, layoutParamsControl);
         }
         
-        /*
-         * ======================================================================
-         * =========================
-         * 
-         * </ END Cities Search Toolbar
-         * 
-         * ======================================================================
-         * =========================/
-         * 
-         * 
-         * 
-         * /** Creates and handler the button that creates the user location
-         * update.
+        /**
+         * Creates and handler the button that creates the user location update.
          */
         public void createButtonUpdateLocation() {
                 ImageButton imageButton = (ImageButton) findViewById(R.id.btn_update_location);

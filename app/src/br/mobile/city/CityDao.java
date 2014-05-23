@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 import br.inova.mobile.Utility;
 import br.inova.mobile.database.DatabaseAdapter;
 import br.inova.mobile.database.DatabaseHelper;
@@ -42,10 +43,12 @@ public class CityDao {
                                         
                                         City cityObject = new City(null, name, asciiName, state, latitude, longitude);
                                         saveCity(cityObject);
+                                        
+                                        Log.d("SAVED CITY", cityObject.getName());
                                 }
                         }
-                        catch (Exception e) {
-                                e.printStackTrace();
+                        catch (Exception exception) {
+                                ExceptionHandler.saveLogFile(exception);
                         }
                 }
                 

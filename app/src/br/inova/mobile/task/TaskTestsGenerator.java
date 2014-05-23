@@ -109,7 +109,7 @@ public class TaskTestsGenerator extends AsyncTask<String, String, String> {
         }
         
         private static Photo getBasePhoto() {
-                CloseableIterator<Photo> photoIterator = PhotoDao.getIteratorForAllPhotos();
+                CloseableIterator<Photo> photoIterator = PhotoDao.getIteratorForNotSyncPhotos();
                 Photo basePhoto = null;
                 
                 try {

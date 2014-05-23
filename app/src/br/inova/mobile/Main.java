@@ -31,6 +31,10 @@ public class Main extends Activity {
                  * android errors
                  */
                 
+                if (Utility.isInDebug(this)) {
+                        Constants.changeToDebugMode();
+                }
+                
                 session = SessionManager.getInstance();
                 this.checkLogin();
         }
