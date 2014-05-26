@@ -12,11 +12,11 @@ import br.inova.mobile.photo.PhotoDao;
 
 import com.j256.ormlite.dao.CloseableIterator;
 
-public class TaskTestsGenerator extends AsyncTask<String, String, String> {
+public class TasksGenerator extends AsyncTask<String, String, String> {
         
         private TaskActivity taskActivity;
         
-        public TaskTestsGenerator(TaskActivity taskActivity) {
+        public TasksGenerator(TaskActivity taskActivity) {
                 this.taskActivity = taskActivity;
                 this.execute();
         }
@@ -109,7 +109,7 @@ public class TaskTestsGenerator extends AsyncTask<String, String, String> {
         }
         
         private static Photo getBasePhoto() {
-                CloseableIterator<Photo> photoIterator = PhotoDao.getIteratorForNotSyncPhotos();
+                CloseableIterator<Photo> photoIterator = new PhotoDao().getIteratorForNotSyncPhotos();
                 Photo basePhoto = null;
                 
                 try {
