@@ -3,7 +3,7 @@
     android:id="@+id/geomap_control_lay0"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:gravity="bottom"
+    android:gravity="top"
     android:orientation="vertical" >
 
     <FrameLayout
@@ -20,23 +20,24 @@
             android:orientation="horizontal" >
 
             <ImageButton
-                android:id="@+id/geomap_control_bt_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_back" >
-            </ImageButton>
-
-            <ImageButton
-                android:id="@+id/geomap_control_bt_form"
+                android:id="@+id/btn_geomap_open_form"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_paste" >
             </ImageButton>
 
             <ImageButton
-                android:id="@+id/geomap_control_bt_update_tasks"
+                android:id="@+id/btn_geomap_open_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_refresh" >
+                android:src="@drawable/ic_action_settings" >
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/btn_geomap_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_signout" >
             </ImageButton>
         </LinearLayout>
     </FrameLayout>

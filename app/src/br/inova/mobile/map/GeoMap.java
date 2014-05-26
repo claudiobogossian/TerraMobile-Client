@@ -35,6 +35,7 @@ import br.inova.mobile.task.TaskActivity;
 import br.inova.mobile.task.TaskDao;
 import br.inova.mobile.user.SessionManager;
 import br.inpe.mobile.R;
+import br.inpe.mobile.R.string;
 import br.mobile.city.CitySearchToolbar;
 
 public class GeoMap extends Activity {
@@ -77,21 +78,70 @@ public class GeoMap extends Activity {
                 this.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 setContentView(R.layout.activity_geomap);
                 
+                inflater = LayoutInflater.from(getBaseContext());
+                
                 self.createMapView();
                 self.createTileSource();
                 self.createLandmarks();
                 self.initializeLocation();
                 self.createInflatorForGpsButton();
+                self.createInflatorForMenuButtons();
                 self.createButtonUpdateLocation();
                 
                 new CitySearchToolbar(this);
+        }
+        
+        private void createInflatorForMenuButtons() {
+                View viewControl = inflater.inflate(R.layout.geomap_control, null);
+                LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+                this.addContentView(viewControl, layoutParamsControl);
+                
+                ImageButton btn_geomap_logout = (ImageButton) findViewById(R.id.btn_geomap_logout);
+                btn_geomap_logout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                                self.logoff();
+                        }
+                });
+                
+                ImageButton btn_geomap_open_form = (ImageButton) findViewById(R.id.btn_geomap_open_form);
+                btn_geomap_open_form.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                                self.openGeoform();
+                        }
+                });
+                
+                ImageButton btn_geomap_open_settings = (ImageButton) findViewById(R.id.btn_geomap_open_settings);
+                btn_geomap_open_settings.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                                self.openTaskScreen();
+                        }
+                });
+        }
+        
+        protected void logoff() {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GeoMap.this);
+                alertDialogBuilder.setTitle("Atenção");
+                alertDialogBuilder.setMessage(string.logoff_message).setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                                self.finishThisScreen();
+                        }
+                }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                        }
+                });
+                
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
         }
         
         /**
          * Creates the inflator Layout to show the gps button.
          */
         public void createInflatorForGpsButton() {
-                inflater = LayoutInflater.from(getBaseContext());
                 View viewControl = inflater.inflate(R.layout.geomap_gps, null);
                 LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
                 this.addContentView(viewControl, layoutParamsControl);
@@ -226,7 +276,7 @@ public class GeoMap extends Activity {
         public boolean onOptionsItemSelected(MenuItem item) {
                 switch (item.getItemId()) {
                         case R.id.btnContextExit:
-                                self.finishThisScreen();
+                                self.logoff();
                                 return true;
                         case R.id.btnContextGetTasks:
                                 self.openTaskScreen();

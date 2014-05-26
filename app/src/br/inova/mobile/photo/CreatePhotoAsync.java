@@ -29,8 +29,9 @@ public class CreatePhotoAsync extends AsyncTask<String, String, String> {
         
         @Override
         protected String doInBackground(String... arg0) {
-                String blob = getBytesFromImage(photoPath);
-                return blob;
+                //String blob = getBytesFromImage(photoPath);
+                //return blob;
+                return null;
         }
         
         /**
@@ -81,7 +82,7 @@ public class CreatePhotoAsync extends AsyncTask<String, String, String> {
         @Override
         protected void onPostExecute(String blob) {
                 Photo photo = new Photo();
-                photo.setBase64(blob);
+                //photo.setBase64(blob);
                 
                 photo.setPath(photoPath);
                 photo.setForm(formActivity.currentTask.getForm());

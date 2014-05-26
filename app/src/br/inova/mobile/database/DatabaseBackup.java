@@ -7,14 +7,79 @@ import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.os.AsyncTask;
 import android.os.Environment;
 import br.inova.mobile.Utility;
 import br.inova.mobile.exception.ExceptionHandler;
+import br.inova.mobile.task.TaskActivity;
 
 /**
  * @author PauloLuan
  */
-public class DatabaseBackup {
+public class DatabaseBackup extends AsyncTask<String, String, String> {
+        
+        private TaskActivity taskActivity;
+        
+        public DatabaseBackup(TaskActivity taskActivity) {
+                this.taskActivity = taskActivity;
+                this.execute();
+        }
+        
+        @Override
+        protected String doInBackground(String... arg0) {
+                makeSqliteBackupToSdCard(taskActivity);
+                return null;
+        }
+        
+        @Override
+        protected void onPreExecute() {
+                taskActivity.showLoadingMask("Fazendo Backup do banco de dados.");
+        }
+        
+        @Override
+        protected void onPostExecute(String result) {
+                taskActivity.hideLoadingMask();
+        }
+        
+        /**
+         * 
+         * Make a copy of the tasks database into the sdcard.
+         * 
+         * */
+        private static void makeSqliteBackupToSdCard(TaskActivity taskActivity) {
+                
+                try {
+                        String backupPath = "/inova/" + "/dados" + "/backup/";
+                        
+                        File sd = new File(Utility.getExternalSdCardPath() + backupPath);
+                        File data = Environment.getDataDirectory();
+                        
+                        if (!sd.exists()) {
+                                sd.mkdirs();
+                        }
+                        
+                        if (sd.canWrite()) {
+                                String currentDBPath = "//data//br.inpe.mobile//databases//tasks.db";
+                                
+                                String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
+                                String backupDBPath = "DB_" + timeStamp + ".sqlite";
+                                
+                                File currentDB = new File(data, currentDBPath);
+                                File backupDB = new File(sd, backupDBPath);
+                                
+                                if (currentDB.exists()) {
+                                        FileChannel inputDatabaseStream = new FileInputStream(currentDB).getChannel();
+                                        FileChannel outputDatabaseStream = new FileOutputStream(backupDB).getChannel();
+                                        outputDatabaseStream.transferFrom(inputDatabaseStream, 0, inputDatabaseStream.size());
+                                        inputDatabaseStream.close();
+                                        outputDatabaseStream.close();
+                                }
+                        }
+                }
+                catch (Exception exception) {
+                        ExceptionHandler.saveLogFile(exception);
+                }
+        }
         
         /**
          * Creates two array, one of all the completely tasks and other with all
@@ -130,44 +195,5 @@ public class DatabaseBackup {
          *                buf.append(text); buf.newLine(); buf.close(); } catch
          *                (IOException e) { e.printStackTrace(); } }
          */
-        
-        /**
-         * 
-         * Make a copy of the tasks database into the sdcard.
-         * 
-         * */
-        public static void makeSqliteBackupToSdCard() {
-                try {
-                        String backupPath = "/inova/" + "/dados" + "/backup/";
-                        
-                        File sd = new File(Utility.getExternalSdCardPath() + backupPath);
-                        File data = Environment.getDataDirectory();
-                        
-                        if (!sd.exists()) {
-                                sd.mkdirs();
-                        }
-                        
-                        if (sd.canWrite()) {
-                                String currentDBPath = "//data//br.inpe.mobile//databases//tasks.db";
-                                
-                                String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
-                                String backupDBPath = "DB_" + timeStamp + ".sqlite";
-                                
-                                File currentDB = new File(data, currentDBPath);
-                                File backupDB = new File(sd, backupDBPath);
-                                
-                                if (currentDB.exists()) {
-                                        FileChannel inputDatabaseStream = new FileInputStream(currentDB).getChannel();
-                                        FileChannel outputDatabaseStream = new FileOutputStream(backupDB).getChannel();
-                                        outputDatabaseStream.transferFrom(inputDatabaseStream, 0, inputDatabaseStream.size());
-                                        inputDatabaseStream.close();
-                                        outputDatabaseStream.close();
-                                }
-                        }
-                }
-                catch (Exception exception) {
-                        ExceptionHandler.saveLogFile(exception);
-                }
-        }
         
 }

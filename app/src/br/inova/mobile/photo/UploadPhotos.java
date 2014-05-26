@@ -29,6 +29,8 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
         
         private TaskActivity taskActivity;
         
+        private PhotoDao     photoDao = new PhotoDao();
+        
         int                  progress = 0;
         
         public UploadPhotos(String userHash, TaskActivity taskActivity) {
@@ -40,12 +42,12 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
         protected String doInBackground(String... urls) {
                 String message = null;
                 
-                PhotoDao.verifyIntegrityOfPictures();
+                photoDao.verifyIntegrityOfPictures();
                 
                 List<Integer> photosToRemove = new ArrayList<Integer>();
                 
                 for (String url : urls) {
-                        CloseableIterator<Photo> iterator = PhotoDao.getIteratorForNotSyncPhotos();
+                        CloseableIterator<Photo> iterator = photoDao.getIteratorForNotSyncPhotos();
                         
                         try {
                                 while (iterator.hasNext()) {
@@ -102,7 +104,6 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                         finally {
                                 iterator.closeQuietly();
                         }
-                        
                 }
                 
                 PhotoDao.removePhotosByIds(photosToRemove);

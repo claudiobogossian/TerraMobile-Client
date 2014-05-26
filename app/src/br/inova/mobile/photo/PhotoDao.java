@@ -2,9 +2,9 @@ package br.inova.mobile.photo;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
+import android.database.Cursor;
 import android.os.Environment;
 import android.util.Log;
 import br.inova.mobile.Utility;
@@ -16,6 +16,7 @@ import br.inova.mobile.task.Task;
 import br.inova.mobile.user.SessionManager;
 import br.inova.mobile.user.User;
 
+import com.j256.ormlite.android.AndroidDatabaseResults;
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
@@ -35,32 +36,6 @@ public class PhotoDao {
         
         private static Dao<Photo, Integer> photoDao = db.getPhotoDao();
         
-        public static List<Photo> getNotSyncPhotos() {
-                List<Photo> photos = null;
-                
-                QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
-                QueryBuilder<Form, Integer> formQueryBuilder = formDao.queryBuilder();
-                QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
-                QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
-                
-                try {
-                        String userHash = SessionManager.getInstance().getUserHash();
-                        userQueryBuilder.where().eq("hash", userHash);
-                        
-                        taskQueryBuilder.join(userQueryBuilder);
-                        formQueryBuilder.join(taskQueryBuilder);
-                        
-                        photoQueryBuilder.join(formQueryBuilder);
-                        
-                        photos = photoQueryBuilder.query();
-                }
-                catch (SQLException e) {
-                        ExceptionHandler.saveLogFile(e);
-                }
-                
-                return photos;
-        }
-        
         /**
          * Returns an iterator of all the pictures of the current users.
          * 
@@ -68,16 +43,22 @@ public class PhotoDao {
          *         registers.
          * @author PauloLuan
          * */
-        public static CloseableIterator<Photo> getIteratorForNotSyncPhotos() {
-                QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
-                QueryBuilder<Form, Integer> formQueryBuilder = formDao.queryBuilder();
-                QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
-                QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+        public CloseableIterator<Photo> getIteratorForNotSyncPhotos() {
                 
                 // when you are done, prepare your query and build an iterator
                 CloseableIterator<Photo> iterator = null;
                 
                 try {
+                        Dao<Task, Integer> taskDao = db.getDao(Task.class);
+                        Dao<Form, Integer> formDao = db.getDao(Form.class);
+                        Dao<User, Integer> userDao = db.getDao(User.class);
+                        Dao<Photo, Integer> photoDao = db.getDao(Photo.class);
+                        
+                        QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+                        QueryBuilder<Form, Integer> formQueryBuilder = formDao.queryBuilder();
+                        QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
+                        QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+                        
                         String userHash = SessionManager.getInstance().getUserHash();
                         userQueryBuilder.where().eq("hash", userHash);
                         
@@ -222,56 +203,9 @@ public class PhotoDao {
          * 
          * @author Paulo Luan
          * */
-        public static void verifyIntegrityOfPictures() {
-                verifyBase64();
+        public void verifyIntegrityOfPictures() {
+                //verifyBase64();
                 removeFilesFromExternalMemoryIfNotInDatabase();
-        }
-        
-        /**
-         * 
-         * Iterate over all database photos registers, verifying the consistency
-         * on the Base64. If on the construction of the image occurs an error
-         * the application will save the file without base64 (null). That
-         * function creates again the base64 of the picture and save it into the
-         * database.
-         * 
-         * */
-        private static void verifyBase64() {
-                CloseableIterator<Photo> iterator = PhotoDao.getIteratorForNotSyncPhotos();
-                List<Integer> photosToRemove = new ArrayList<Integer>();
-                
-                try {
-                        while (iterator.hasNext()) {
-                                try {
-                                        Photo photo = (Photo) iterator.next();
-                                        
-                                        if (photo.getBase64() == null) {
-                                                File photoFile = new File(photo.getPath());
-                                                
-                                                if (!photoFile.exists()) {
-                                                        photosToRemove.add(photo.getId()); // NÃO TEM O QUE FAZER, FOTO NÃO EXISTE, NÃO TEM COMO TIRAR BASE64. FOTO PERDIDA.
-                                                }
-                                                else {
-                                                        photo.setBase64(CreatePhotoAsync.getBytesFromImage(photo.getPath()));
-                                                }
-                                        }
-                                }
-                                catch (OutOfMemoryError exception) {
-                                        ExceptionHandler.saveLogFile("OutofMemory ao verificar consistência das imagens antes de enviar para o servidor." + exception.getLocalizedMessage() + exception.getMessage());
-                                }
-                                catch (Exception exception) {
-                                        ExceptionHandler.saveLogFile(exception);
-                                }
-                        }
-                }
-                catch (Exception e) {
-                        ExceptionHandler.saveLogFile(e);
-                }
-                finally {
-                        iterator.closeQuietly();
-                }
-                
-                PhotoDao.removePhotosByIds(photosToRemove);
         }
         
         /**
@@ -363,24 +297,6 @@ public class PhotoDao {
                 return count;
         }
         
-        public static void deletePhotosTest() {
-                CloseableIterator<Photo> iterator = PhotoDao.getIteratorForNotSyncPhotos();
-                
-                try {
-                        while (iterator.hasNext()) {
-                                Photo photo = (Photo) iterator.next();
-                                PhotoDao.deletePhoto(photo);
-                        }
-                }
-                catch (Exception e) {
-                        e.printStackTrace();
-                }
-                finally {
-                        iterator.closeQuietly();
-                }
-                
-        }
-        
         private static void deleteWithDeleteBuilder(Integer photoId) throws SQLException {
                 Dao<Photo, Integer> dao = db.getPhotoDao();
                 DeleteBuilder<Photo, Integer> deleteBuilder = dao.deleteBuilder();
@@ -401,7 +317,46 @@ public class PhotoDao {
                                 
                         }
                 }
-                
         }
         
+        public void testPhotos() {
+                CloseableIterator<Photo> iterator = getIteratorForNotSyncPhotos();
+                
+                StringBuilder stringBuilder = new StringBuilder();
+                
+                try {
+                        // get the raw results which can be cast under Android
+                        AndroidDatabaseResults results = (AndroidDatabaseResults) iterator.getRawResults();
+                        Cursor cursor = results.getRawCursor();
+                        
+                        stringBuilder.append("QUANTIDADE DE REGISTROS: " + cursor.getCount());
+                        
+                        if (cursor != null) {
+                                try {
+                                        do {
+                                                stringBuilder.append("\n\nPosição: " + "" + cursor.getPosition());
+                                                stringBuilder.append("ID: " + cursor.getString(cursor.getColumnIndex("id")));
+                                        }
+                                        while (cursor.moveToNext());
+                                        
+                                }
+                                catch (IllegalStateException e) {
+                                        
+                                }
+                        }
+                        
+                        for (int i = 0; i < 1000; i++) {
+                                stringBuilder.append("\n\nPosição: 10");
+                                stringBuilder.append("ID: testeteteteete");
+                        }
+                        
+                        ExceptionHandler.saveLogFile(stringBuilder.toString());
+                }
+                finally {
+                        if (iterator != null) {
+                                iterator.closeQuietly();
+                        }
+                }
+                
+        }
 }

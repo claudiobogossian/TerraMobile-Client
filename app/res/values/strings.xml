@@ -59,7 +59,7 @@
     <string name="btn_clear_address">Limpar Endereço</string>
     <string name="caution">Atenção</string>
     <string name="infra_message">Você mudou de trecho mas ainda não preencheu as informações de infraestrutura. \n\nO formulário anterior foi carregado para que você preencha estas informações.</string>
-    <string name="exit_form">Fechar formulário?.</string>
+    <string name="exit_form">Fechar formulário?</string>
 
     <!-- Task Screen -->
     <string name="btn_sync_tasks">Enviar e Receber tarefas</string>

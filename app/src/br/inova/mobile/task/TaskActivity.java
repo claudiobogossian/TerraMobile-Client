@@ -91,7 +91,7 @@ public class TaskActivity extends Activity {
                                         public void onClick(
                                                             DialogInterface dialog,
                                                             int id) {
-                                                DatabaseBackup.makeSqliteBackupToSdCard();
+                                                new DatabaseBackup(self);
                                         }
                                 }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
                                         public void onClick(
