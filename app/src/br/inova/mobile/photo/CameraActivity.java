@@ -348,8 +348,9 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                 }
                 
                 // Create a media file name
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
                 File mediaFile;
+                
                 if (type == MEDIA_TYPE_IMAGE) {
                         mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
                 }
