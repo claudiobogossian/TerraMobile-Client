@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.inova.mobile.Utility;
 import br.inova.mobile.constants.Constants;
+import br.inova.mobile.database.DatabaseBackup;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.map.BaseMapDownload;
 import br.inova.mobile.photo.UploadPhotos;
@@ -74,8 +75,36 @@ public class TaskActivity extends Activity {
         public void createButtons() {
                 createButtonGetTasks();
                 createButtonLogout();
+                createButtonBackup();
                 createButtonGetTiles();
                 createButtonGenerateTestTasks();
+        }
+        
+        private void createButtonBackup() {
+                Button btn_make_backup = (Button) findViewById(R.id.btnMakeBackup);
+                btn_make_backup.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(TaskActivity.this);
+                                alertDialogBuilder.setTitle(string.caution);
+                                alertDialogBuilder.setMessage(string.message_make_backup).setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                                        public void onClick(
+                                                            DialogInterface dialog,
+                                                            int id) {
+                                                DatabaseBackup.makeSqliteBackupToSdCard();
+                                        }
+                                }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                                        public void onClick(
+                                                            DialogInterface dialog,
+                                                            int id) {
+                                                dialog.cancel();
+                                        }
+                                });
+                                
+                                AlertDialog alertDialog = alertDialogBuilder.create();
+                                alertDialog.show();
+                        }
+                });
         }
         
         private void createButtonGenerateTestTasks() {
@@ -95,7 +124,7 @@ public class TaskActivity extends Activity {
                                                 public void onClick(
                                                                     DialogInterface dialog,
                                                                     int id) {
-                                                        new TaskTestsGenerator(TaskActivity.this);
+                                                        new TasksGenerator(TaskActivity.this);
                                                 }
                                         }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
                                                 public void onClick(

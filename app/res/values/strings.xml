@@ -5,6 +5,8 @@
     <string name="app_name">Terra Mobile</string>
     <string name="str_lbl_login">Login</string>
     <string name="lbl_test">Gerar Tarefas</string>
+    <string name="lbl_make_backup">Fazer Backup do Banco de Dados</string>
+    <string name="message_make_backup">Deseja fazer o backup do banco de dados?</string>
     <string name="lbl_logoff">Logoff</string>
     <string name="user_name_hint">Usuário</string>
     <string name="password_hint">Senha</string>
