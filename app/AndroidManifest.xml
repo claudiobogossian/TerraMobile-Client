@@ -3,11 +3,10 @@
     package="br.inpe.mobile"
     android:versionCode="1"
     android:versionName="1.0" >
-
-    <!-- IMPORTANTE: a versão selecionada abaixo foi intencional para que force o sistema operacional a criar um menu de contexto em aparelhos que não possuem este botão. -->
+    
     <uses-sdk
-        android:minSdkVersion="9"
-        android:targetSdkVersion="10" />
+        android:minSdkVersion="10"
+        android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -31,8 +30,10 @@
     <application
         android:name="br.inova.mobile.database.ApplicationMemory"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:theme="@style/AppTheme" >
         <activity
             android:name="br.inova.mobile.form.FormActivity"
