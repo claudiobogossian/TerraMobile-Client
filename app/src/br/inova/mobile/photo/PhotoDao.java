@@ -2,12 +2,10 @@ package br.inova.mobile.photo;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
-import android.database.Cursor;
-import android.os.Environment;
 import android.util.Log;
-import br.inova.mobile.Utility;
 import br.inova.mobile.database.DatabaseAdapter;
 import br.inova.mobile.database.DatabaseHelper;
 import br.inova.mobile.exception.ExceptionHandler;
@@ -16,9 +14,9 @@ import br.inova.mobile.task.Task;
 import br.inova.mobile.user.SessionManager;
 import br.inova.mobile.user.User;
 
-import com.j256.ormlite.android.AndroidDatabaseResults;
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
 
@@ -49,24 +47,7 @@ public class PhotoDao {
                 CloseableIterator<Photo> iterator = null;
                 
                 try {
-                        Dao<Task, Integer> taskDao = db.getDao(Task.class);
-                        Dao<Form, Integer> formDao = db.getDao(Form.class);
-                        Dao<User, Integer> userDao = db.getDao(User.class);
-                        Dao<Photo, Integer> photoDao = db.getDao(Photo.class);
-                        
-                        QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
-                        QueryBuilder<Form, Integer> formQueryBuilder = formDao.queryBuilder();
-                        QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
-                        QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
-                        
-                        String userHash = SessionManager.getInstance().getUserHash();
-                        userQueryBuilder.where().eq("hash", userHash);
-                        
-                        taskQueryBuilder.join(userQueryBuilder);
-                        formQueryBuilder.join(taskQueryBuilder);
-                        
-                        photoQueryBuilder.join(formQueryBuilder);
-                        
+                        QueryBuilder<Photo, Integer> photoQueryBuilder = getQueryBuilderForUser();
                         photoQueryBuilder.iterator();
                         
                         iterator = photoDao.iterator(photoQueryBuilder.prepare());
@@ -76,6 +57,28 @@ public class PhotoDao {
                 }
                 
                 return iterator;
+        }
+        
+        private QueryBuilder<Photo, Integer> getQueryBuilderForUser() throws SQLException {
+                Dao<Task, Integer> taskDao = db.getDao(Task.class);
+                Dao<Form, Integer> formDao = db.getDao(Form.class);
+                Dao<User, Integer> userDao = db.getDao(User.class);
+                Dao<Photo, Integer> photoDao = db.getDao(Photo.class);
+                
+                QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+                QueryBuilder<Form, Integer> formQueryBuilder = formDao.queryBuilder();
+                QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
+                QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+                
+                String userHash = SessionManager.getInstance().getUserHash();
+                userQueryBuilder.where().eq("hash", userHash);
+                
+                taskQueryBuilder.join(userQueryBuilder);
+                formQueryBuilder.join(taskQueryBuilder);
+                
+                photoQueryBuilder.join(formQueryBuilder);
+                
+                return photoQueryBuilder;
         }
         
         /**
@@ -111,6 +114,69 @@ public class PhotoDao {
         
         /**
          * 
+         * Get a List of ID's of all photos .
+         * 
+         * @param id
+         *                The Photo ID.
+         * 
+         * @return List<Photo> Collection of pictures that the user was
+         *         captured.
+         * 
+         * @author Paulo Luan
+         */
+        public static List<Integer> getListOfPhotosIds() {
+                List<Integer> photosIds = new ArrayList<Integer>();
+                
+                try {
+                        //TODO: vai pegar as fotos de todos os usuários?
+                        
+                        String query = "SELECT id from photo";
+                        GenericRawResults<String[]> rawResults = photoDao.queryRaw(query);
+                        List<String[]> results = rawResults.getResults();
+                        
+                        for (String[] strings : results) {
+                                for (String s : strings)
+                                        photosIds.add(Integer.valueOf(s));
+                        }
+                        
+                }
+                catch (Exception e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+                
+                return photosIds;
+        }
+        
+        /**
+         * 
+         * Get a Photo by ID.
+         * 
+         * @param id
+         *                The Photo ID.
+         * 
+         * @return List<Photo> Collection of pictures that the user was
+         *         captured.
+         * 
+         * @author Paulo Luan
+         */
+        public static Photo getPhotosById(Integer id) {
+                Photo photo = null;
+                
+                QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
+                
+                try {
+                        photoQueryBuilder.where().eq("id", id);
+                        photo = photoQueryBuilder.queryForFirst();
+                }
+                catch (SQLException e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+                
+                return photo;
+        }
+        
+        /**
+         * 
          * Verify if the path of the picture exists on the database.
          * 
          * @param Path
@@ -129,7 +195,7 @@ public class PhotoDao {
                         photoQueryBuilder.where().eq("path", path);
                         Photo photo = photoQueryBuilder.queryForFirst();
                         
-                        if (photo != null) {
+                        if (photo != null && photo.getForm() != null) {
                                 exists = true;
                         }
                 }
@@ -198,45 +264,6 @@ public class PhotoDao {
         }
         
         /**
-         * Verify all pictures and delete from filesystem if it not exists on
-         * Database.
-         * 
-         * @author Paulo Luan
-         * */
-        public void verifyIntegrityOfPictures() {
-                //verifyBase64();
-                removeFilesFromExternalMemoryIfNotInDatabase();
-        }
-        
-        /**
-         * 
-         * Iterate over the files on the photo's directory and compare on the
-         * database either the register exists or not. If the register don't
-         * exists on the database the file would be removed from the filesystem.
-         * 
-         * */
-        private static void removeFilesFromExternalMemoryIfNotInDatabase() {
-                File mediaStorageDir = new File(Utility.getExternalSdCardPath() + "/inova/" + "/dados" + "/fotos/");
-                
-                if (!mediaStorageDir.canWrite()) {
-                        mediaStorageDir = new File(Environment.getExternalStorageDirectory() + "/inova/" + "/dados" + "/fotos/");
-                }
-                
-                File pictures[] = mediaStorageDir.listFiles();
-                
-                if (pictures != null) {
-                        for (int i = 0; i < pictures.length; i++) {
-                                String path = pictures[i].getPath();
-                                Boolean pictureExists = PhotoDao.isPictureOnDatabase(path);
-                                
-                                if (!pictureExists) {
-                                        pictures[i].delete();
-                                }
-                        }
-                }
-        }
-        
-        /**
          * Save a list of photos into local database.
          * 
          * @author Paulo Luan
@@ -297,11 +324,18 @@ public class PhotoDao {
                 return count;
         }
         
-        private static void deleteWithDeleteBuilder(Integer photoId) throws SQLException {
+        static void deleteWithDeleteBuilder(Integer photoId) throws SQLException {
                 Dao<Photo, Integer> dao = db.getPhotoDao();
                 DeleteBuilder<Photo, Integer> deleteBuilder = dao.deleteBuilder();
                 deleteBuilder.where().eq("id", photoId);
-                dao.delete(deleteBuilder.prepare());
+                Integer isDeleted = dao.delete(deleteBuilder.prepare());
+                
+                if (isDeleted == 1) {
+                        Log.d(LOG_TAG, "Excluiu com sucesso!");
+                }
+                else {
+                        Log.d(LOG_TAG, "Não excluiu!!");
+                }
         }
         
         public static void removePhotosByIds(List<Integer> photosIds) {
@@ -317,46 +351,5 @@ public class PhotoDao {
                                 
                         }
                 }
-        }
-        
-        public void testPhotos() {
-                CloseableIterator<Photo> iterator = getIteratorForNotSyncPhotos();
-                
-                StringBuilder stringBuilder = new StringBuilder();
-                
-                try {
-                        // get the raw results which can be cast under Android
-                        AndroidDatabaseResults results = (AndroidDatabaseResults) iterator.getRawResults();
-                        Cursor cursor = results.getRawCursor();
-                        
-                        stringBuilder.append("QUANTIDADE DE REGISTROS: " + cursor.getCount());
-                        
-                        if (cursor != null) {
-                                try {
-                                        do {
-                                                stringBuilder.append("\n\nPosição: " + "" + cursor.getPosition());
-                                                stringBuilder.append("ID: " + cursor.getString(cursor.getColumnIndex("id")));
-                                        }
-                                        while (cursor.moveToNext());
-                                        
-                                }
-                                catch (IllegalStateException e) {
-                                        
-                                }
-                        }
-                        
-                        for (int i = 0; i < 1000; i++) {
-                                stringBuilder.append("\n\nPosição: 10");
-                                stringBuilder.append("ID: testeteteteete");
-                        }
-                        
-                        ExceptionHandler.saveLogFile(stringBuilder.toString());
-                }
-                finally {
-                        if (iterator != null) {
-                                iterator.closeQuietly();
-                        }
-                }
-                
         }
 }

@@ -202,6 +202,19 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
                 this.cityDao = cityDao;
         }
         
+        /*
+        @Override
+        public synchronized SQLiteDatabase getWritableDatabase() {
+                //TODO: REMOVER
+                return SQLiteDatabase.openDatabase(Utility.getExternalSdCardPath() + "/inova/dados/backup/tasks.db", null, SQLiteDatabase.OPEN_READWRITE);
+        }
+        
+        @Override
+        public synchronized SQLiteDatabase getReadableDatabase() {
+                //TODO: REMOVER
+                return SQLiteDatabase.openDatabase(Utility.getExternalSdCardPath() + "/inova/dados/backup/tasks.db", null, SQLiteDatabase.OPEN_READONLY);
+        }*/
+        
         /**
          * Close the database connections and clear any cached DAOs.
          */

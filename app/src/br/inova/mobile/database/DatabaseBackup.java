@@ -49,7 +49,7 @@ public class DatabaseBackup extends AsyncTask<String, String, String> {
         private static void makeSqliteBackupToSdCard(TaskActivity taskActivity) {
                 
                 try {
-                        String backupPath = "/inova/" + "/dados" + "/backup/";
+                        String backupPath = "/inova/dados/backup/";
                         
                         File sd = new File(Utility.getExternalSdCardPath() + backupPath);
                         File data = Environment.getDataDirectory();
@@ -62,7 +62,7 @@ public class DatabaseBackup extends AsyncTask<String, String, String> {
                                 String currentDBPath = "//data//br.inpe.mobile//databases//tasks.db";
                                 
                                 String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
-                                String backupDBPath = "DB_" + timeStamp + ".sqlite";
+                                String backupDBPath = "DB_" + timeStamp + ".db";
                                 
                                 File currentDB = new File(data, currentDBPath);
                                 File backupDB = new File(sd, backupDBPath);

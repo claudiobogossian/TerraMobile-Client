@@ -22,12 +22,13 @@ public class Constants {
         public static Boolean ISDEBUG            = false;
         
         public static void changeToDebugMode() {
-                /*** DEBUG ***/
+                /*** DEBUG ***
                 EXTERNAL_HOST = "http://192.168.0.171";
                 INTERNAL_HOST = "http://192.168.0.171";
                 SERVER = "terramobile-server";
                 ISDEBUG = true;
-                ISPRODUCTION = false;
+                ISPRODUCTION = false; */
+                changeToProductionMode();
                 applyChanges();
         }
         
