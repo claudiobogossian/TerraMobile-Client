@@ -12,15 +12,8 @@ import br.inova.mobile.user.SessionManager;
 
 public class Main extends Activity {
         
-        private Main               self   = this;
-        
-        public static final String TAG    = "#MAIN";
-        
-        // other activities
-        private static final int   GEOMAP = 100;
-        
         // Session Manager Class
-        SessionManager             session;
+        SessionManager session;
         
         @Override
         protected void onCreate(Bundle savedInstanceState) {
