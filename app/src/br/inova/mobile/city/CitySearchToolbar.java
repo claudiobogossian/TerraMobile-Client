@@ -1,4 +1,4 @@
-package br.mobile.city;
+package br.inova.mobile.city;
 
 import java.sql.SQLException;
 import java.util.Date;

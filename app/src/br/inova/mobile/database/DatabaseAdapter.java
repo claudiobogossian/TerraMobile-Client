@@ -6,12 +6,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import br.inova.mobile.address.Address;
+import br.inova.mobile.city.City;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.form.Form;
 import br.inova.mobile.photo.Photo;
 import br.inova.mobile.task.Task;
 import br.inova.mobile.user.User;
-import br.mobile.city.City;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;

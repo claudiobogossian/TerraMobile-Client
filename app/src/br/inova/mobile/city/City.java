@@ -1,4 +1,4 @@
-package br.mobile.city;
+package br.inova.mobile.city;
 
 import org.json.JSONException;
 import org.json.JSONObject;
