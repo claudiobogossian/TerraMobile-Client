@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Process;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -74,8 +75,9 @@ public class LoginActivity extends Activity {
                 bt_exit.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                // setResult(RESULT_CANCELED, new Intent());
-                                finish();
+                                self.finish();
+                                Process.killProcess(Process.myPid());
+                                System.exit(10);
                         }
                 });
                 
@@ -99,12 +101,17 @@ public class LoginActivity extends Activity {
                                 Object spnLoginUrlItem = spnLoginUrl.getSelectedItem();
                                 String spnLoginUrlString = (spnLoginUrlItem == null) ? "" : spnLoginUrlItem.toString();
                                 String productionString = getResources().getString(string.production);
+                                String homologString = getResources().getString(string.homolog);
+                                String presentationString = getResources().getString(string.presentation);
                                 
                                 if (spnLoginUrlString == productionString) {
                                         Constants.changeToProductionMode();
                                 }
-                                else {
+                                else if (spnLoginUrlString == homologString) {
                                         Constants.changeToHomologMode();
+                                }
+                                else if (spnLoginUrlString == presentationString) {
+                                        Constants.changeToPresentationMode();;
                                 }
                         }
                         

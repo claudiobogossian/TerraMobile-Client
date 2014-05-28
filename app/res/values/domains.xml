@@ -4,6 +4,7 @@
     <string-array name="login_options">
         <item>@string/production</item>
         <item>@string/homolog</item>
+        <item>@string/presentation</item>
     </string-array>
     <string-array name="number_confirmation">
         <item></item>

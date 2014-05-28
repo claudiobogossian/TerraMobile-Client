@@ -71,6 +71,7 @@
     <string name="logoff_message">Fazer Logoff?</string>
 
     <!-- Domains Arrays items -->
+    <string name="presentation">Apresentação</string>
     <string name="homolog">Homologação</string>
     <string name="production">Produção</string>
     <string name="ok">OK</string>

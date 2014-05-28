@@ -22,13 +22,12 @@ public class Constants {
         public static Boolean ISDEBUG            = false;
         
         public static void changeToDebugMode() {
-                /*** DEBUG ***
+                /*** DEBUG ***/
                 EXTERNAL_HOST = "http://192.168.0.171";
                 INTERNAL_HOST = "http://192.168.0.171";
                 SERVER = "terramobile-server";
                 ISDEBUG = true;
-                ISPRODUCTION = false; */
-                changeToProductionMode();
+                ISPRODUCTION = false;
                 applyChanges();
         }
         
@@ -53,6 +52,16 @@ public class Constants {
                 else {
                         changeToDebugMode();
                 }
+                
+                applyChanges();
+        }
+        
+        public static void changeToPresentationMode() {
+                /*** Semi-Production ***/
+                EXTERNAL_HOST = "http://179.184.164.144";
+                INTERNAL_HOST = "http://192.168.0.181";
+                SERVER = "terramobile-presentation";
+                ISPRODUCTION = false;
                 
                 applyChanges();
         }
