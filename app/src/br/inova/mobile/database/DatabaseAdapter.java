@@ -26,22 +26,26 @@ import com.j256.ormlite.table.TableUtils;
  */
 public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
         
-        private final String          LOG_TAG          = "#" + getClass().getSimpleName();
+        private final String            LOG_TAG          = "#" + getClass().getSimpleName();
         
-        private static final String   DATABASE_NAME    = "tasks.db";
+        private static final String     DATABASE_NAME    = "tasks.db";
         
-        private static final int      DATABASE_VERSION = 1;
+        private static final int        DATABASE_VERSION = 1;
         
         // the DAO object we use to access the Task table
-        private Dao<Task, Integer>    taskDao          = null;
-        private Dao<Form, Integer>    formDao          = null;
-        private Dao<Photo, Integer>   photoDao         = null;
-        private Dao<User, Integer>    userDao          = null;
-        private Dao<Address, Integer> addressDao       = null;
-        private Dao<City, Integer>    cityDao          = null;
+        private Dao<Task, Integer>      taskDao          = null;
+        private Dao<Form, Integer>      formDao          = null;
+        private Dao<Photo, Integer>     photoDao         = null;
+        private Dao<User, Integer>      userDao          = null;
+        private Dao<Address, Integer>   addressDao       = null;
+        private Dao<City, Integer>      cityDao          = null;
+        
+        private static ConnectionSource cs;
         
         public DatabaseAdapter(Context context) {
                 super(context, DATABASE_NAME, null, DATABASE_VERSION);
+                
+                cs = connectionSource;
                 
                 try {
                         this.createCityTable();
@@ -138,6 +142,16 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
         }
         
         /**
+         * Clear all user registers, by droping and recreating the city table.
+         * 
+         * @author Paulo Luan
+         * */
+        public static void resetCityTable() throws SQLException {
+                TableUtils.dropTable(cs, City.class, true);
+                TableUtils.createTable(cs, City.class);
+        }
+        
+        /**
          * Clear all user registers, by droping and recreating the user table.
          * 
          * @author Paulo Luan
@@ -203,17 +217,18 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
         }
         
         /*
-        @Override
-        public synchronized SQLiteDatabase getWritableDatabase() {
-                //TODO: REMOVER
-                return SQLiteDatabase.openDatabase(Utility.getExternalSdCardPath() + "/inova/dados/backup/tasks.db", null, SQLiteDatabase.OPEN_READWRITE);
-        }
-        
-        @Override
-        public synchronized SQLiteDatabase getReadableDatabase() {
-                //TODO: REMOVER
-                return SQLiteDatabase.openDatabase(Utility.getExternalSdCardPath() + "/inova/dados/backup/tasks.db", null, SQLiteDatabase.OPEN_READONLY);
-        }*/
+         * @Override public synchronized SQLiteDatabase getWritableDatabase() {
+         * //TODO: REMOVER return
+         * SQLiteDatabase.openDatabase(Utility.getExternalSdCardPath() +
+         * "/inova/dados/backup/tasks.db", null, SQLiteDatabase.OPEN_READWRITE);
+         * }
+         * 
+         * @Override public synchronized SQLiteDatabase getReadableDatabase() {
+         * //TODO: REMOVER return
+         * SQLiteDatabase.openDatabase(Utility.getExternalSdCardPath() +
+         * "/inova/dados/backup/tasks.db", null, SQLiteDatabase.OPEN_READONLY);
+         * }
+         */
         
         /**
          * Close the database connections and clear any cached DAOs.

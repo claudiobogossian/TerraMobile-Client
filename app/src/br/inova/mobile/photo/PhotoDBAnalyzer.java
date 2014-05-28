@@ -37,7 +37,7 @@ public class PhotoDBAnalyzer extends AsyncTask<String, String, String> {
         }
         
         public static void verifyIntegrityOfPictures() {
-                Log.d(LOG_TAG, "ANALISANDO AS FOTOS");
+                Log.d(LOG_TAG, "#### ANALISANDO AS FOTOS ####");
                 removePhotoIfFormIsNull();
                 removeFilesFromExternalMemoryIfNotInDatabase();
         }
@@ -64,6 +64,7 @@ public class PhotoDBAnalyzer extends AsyncTask<String, String, String> {
                                 Boolean pictureExists = PhotoDao.isPictureOnDatabase(path);
                                 
                                 if (!pictureExists) {
+                                        Log.d(LOG_TAG, "Removendo Arquivo da foto: " + path);
                                         pictures[i].delete();
                                 }
                         }
@@ -143,6 +144,8 @@ public class PhotoDBAnalyzer extends AsyncTask<String, String, String> {
                 catch (SQLException e) {
                         ExceptionHandler.saveLogFile(e);
                 }
+                
+                Log.d(LOG_TAG, "COUNT das fotos no BD: " + count);
                 
                 return count;
         }

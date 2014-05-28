@@ -280,6 +280,7 @@ public class PhotoDao {
                                 for (Photo photo : photos) {
                                         if (photo.getId() == null) {
                                                 photoDao.create(photo);
+                                                Log.d(LOG_TAG, "Foto Salva com sucesso! ID: " + photo.getId());
                                         }
                                 }
                                 
@@ -316,6 +317,8 @@ public class PhotoDao {
                         photoQueryBuilder.join(formQueryBuilder);
                         
                         count = photoQueryBuilder.countOf();
+                        
+                        Log.d(LOG_TAG, "COUNT de todas as fotos: " + count);
                 }
                 catch (SQLException e) {
                         ExceptionHandler.saveLogFile(e);
@@ -331,10 +334,10 @@ public class PhotoDao {
                 Integer isDeleted = dao.delete(deleteBuilder.prepare());
                 
                 if (isDeleted == 1) {
-                        Log.d(LOG_TAG, "Excluiu com sucesso!");
+                        Log.d(LOG_TAG, "Excluiu com sucesso! ID: " + photoId);
                 }
                 else {
-                        Log.d(LOG_TAG, "Não excluiu!!");
+                        Log.d(LOG_TAG, "Não excluiu!! ID: " + photoId);
                 }
         }
         
