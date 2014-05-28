@@ -43,7 +43,7 @@
         </activity>
         <activity
             android:name="br.inova.mobile.map.GeoMap"
-            android:configChanges="orientation"
+            android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" >
         </activity>
         <activity
