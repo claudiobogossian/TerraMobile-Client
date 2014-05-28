@@ -65,9 +65,12 @@ public class CityAdapter extends CursorAdapter implements Filterable {
         @SuppressLint("DefaultLocale")
         @Override
         public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
-                String filter = constraint.toString();
-                
                 Cursor cursor = null;
+                String filter = "";
+                
+                if (constraint != null) {
+                        filter = constraint.toString();
+                }
                 
                 try {
                         cursor = this.getCityCursor("%" + filter + "%");

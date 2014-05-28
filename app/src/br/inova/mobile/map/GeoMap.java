@@ -14,6 +14,7 @@ import org.osmdroid.views.overlay.TilesOverlay;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -63,6 +64,8 @@ public class GeoMap extends Activity {
         private LayoutInflater        inflater;
         
         private LandmarksManager      landmarksManager;
+        
+        private static ProgressDialog mProgressDialog;
         
         public static String          tileSourcePath;
         
@@ -308,6 +311,48 @@ public class GeoMap extends Activity {
                 }
                 if (requestCode == TASK) {
                         //self.refreshMapView();
+                }
+        }
+        
+        public void showLoadingMask(String message) {
+                mProgressDialog = new ProgressDialog(self);
+                mProgressDialog.setMessage(message);
+                mProgressDialog.setCancelable(false);
+                mProgressDialog.show();
+        }
+        
+        public void hideLoadingMask() {
+                if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                        mProgressDialog.dismiss();
+                }
+        }
+        
+        public void setLoadMaskMessage(String message) {
+                if (mProgressDialog == null || !mProgressDialog.isShowing()) {
+                        this.showLoadingMask(message);
+                }
+                else {
+                        mProgressDialog.setMessage(message);
+                }
+        }
+        
+        public void onProgressUpdate(String... progress) {
+                this.setLoadMaskMessage(progress[0]);
+                
+                if (progress.length == 2) {
+                        mProgressDialog.setProgress(Integer.parseInt(progress[1]));
+                }
+                
+                if (progress.length == 3) {
+                        this.hideLoadingMask();
+                        
+                        mProgressDialog = new ProgressDialog(self);
+                        mProgressDialog.setMessage(progress[0]);
+                        mProgressDialog.setIndeterminate(false);
+                        mProgressDialog.setMax(Integer.parseInt(progress[2]));
+                        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                        mProgressDialog.setCancelable(false);
+                        mProgressDialog.show();
                 }
         }
         
