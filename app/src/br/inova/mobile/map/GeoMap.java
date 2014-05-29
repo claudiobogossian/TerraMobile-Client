@@ -84,7 +84,8 @@ public class GeoMap extends Activity {
                 inflater = LayoutInflater.from(getBaseContext());
                 
                 self.createMapView();
-                self.createTileSource();
+                self.createBaseTileSource();
+                //self.createTransitTileSource();
                 self.createLandmarks();
                 self.initializeLocation();
                 self.createInflatorForGpsButton();
@@ -178,7 +179,7 @@ public class GeoMap extends Activity {
          * Creates the tile source of the application, that will be responsible
          * for the map tile reading from the zips.
          * */
-        private void createTileSource() {
+        private void createBaseTileSource() {
                 OnlineTileSourceBase mapQuestTileSource = TileSourceFactory.MAPQUESTOSM;
                 tileSourcePath = mapQuestTileSource.OSMDROID_PATH.getAbsolutePath() + "/";
                 
@@ -194,6 +195,20 @@ public class GeoMap extends Activity {
                 
                 mapView.setTileSource(tileSource);
                 mapView.setUseDataConnection(false); //  letting osmdroid know you would use it in offline mode, keeps the mapView from loading online tiles using network connection.
+        }
+        
+        public void createTransitTileSource() {
+                //http://map.be-mobile.be/customer/corriocityview/br/los//z/x/y.png
+                
+                //create the second one
+                final MapTileProviderBasic anotherTileProvider = new MapTileProviderBasic(getApplicationContext());
+                final ITileSource anotherTileSource = new XYTileSource("TransitTiles", null, 1, 20, 256, ".png", new String[] { "http://map.be-mobile.be/customer/corriocityview/br/los/" });
+                anotherTileProvider.setTileSource(anotherTileSource);
+                final TilesOverlay secondTilesOverlay = new TilesOverlay(anotherTileProvider, this.getBaseContext());
+                secondTilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
+        
+                anotherTileProvider.setTileRequestCompleteHandler(new SimpleInvalidationHandler(mapView));
+                mapView.getOverlays().add(secondTilesOverlay);
         }
         
         /**
