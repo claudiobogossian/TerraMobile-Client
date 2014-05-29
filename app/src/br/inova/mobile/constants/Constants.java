@@ -1,5 +1,9 @@
 package br.inova.mobile.constants;
 
+import android.content.Context;
+import br.inova.mobile.Utility;
+import br.inpe.mobile.R.string;
+
 public class Constants {
         
         /*** Production ***/
@@ -64,6 +68,38 @@ public class Constants {
                 ISPRODUCTION = false;
                 
                 applyChanges();
+        }
+        
+        public static void changeServerMode(
+                                            Context context,
+                                            String spnLoginUrlString) {
+                
+                String productionString = context.getResources().getString(string.production);
+                String homologString = context.getResources().getString(string.homolog);
+                String presentationString = context.getResources().getString(string.presentation);
+                
+                if (spnLoginUrlString != null) {
+                        if (spnLoginUrlString.equals(productionString)) {
+                                Constants.changeToProductionMode();
+                        }
+                        else if (spnLoginUrlString.equals(homologString)) {
+                                Constants.changeToHomologMode();
+                        }
+                        else if (spnLoginUrlString.equals(presentationString)) {
+                                Constants.changeToPresentationMode();
+                        }
+                }
+                
+        }
+        
+        public static String getTasksUrl() {
+                String url = Utility.getServerUrl() + TASKS_REST;
+                return url;
+        }
+        
+        public static String getPhotosUrl() {
+                String url = Utility.getServerUrl() + PHOTOS_REST;
+                return url;
         }
         
         private static void applyChanges() {
