@@ -95,6 +95,8 @@ public class LandmarksManager {
                                 item.setRelatedObject(feature);
                         }
                 }
+                
+                mapView.invalidate();
         }
         
         /**
@@ -143,6 +145,7 @@ public class LandmarksManager {
                         e.printStackTrace();
                 }
                 finally {
+                        mapView.invalidate();
                         taskIterator.closeQuietly();
                 }
         }
