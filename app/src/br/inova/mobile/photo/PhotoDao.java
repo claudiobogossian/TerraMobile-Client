@@ -41,7 +41,7 @@ public class PhotoDao {
          *         registers.
          * @author PauloLuan
          * */
-        public CloseableIterator<Photo> getIteratorForNotSyncPhotos() {
+        public synchronized CloseableIterator<Photo> getIteratorForNotSyncPhotos() {
                 
                 // when you are done, prepare your query and build an iterator
                 CloseableIterator<Photo> iterator = null;
@@ -59,7 +59,7 @@ public class PhotoDao {
                 return iterator;
         }
         
-        private QueryBuilder<Photo, Integer> getQueryBuilderForUser() throws SQLException {
+        private synchronized static QueryBuilder<Photo, Integer> getQueryBuilderForUser() throws SQLException {
                 Dao<Task, Integer> taskDao = db.getDao(Task.class);
                 Dao<Form, Integer> formDao = db.getDao(Form.class);
                 Dao<User, Integer> userDao = db.getDao(User.class);
@@ -93,7 +93,7 @@ public class PhotoDao {
          * 
          * @author Paulo Luan
          */
-        public static List<Photo> getPhotosByForm(Form form) {
+        public synchronized static List<Photo> getPhotosByForm(Form form) {
                 List<Photo> photos = null;
                 
                 QueryBuilder<Form, Integer> formQueryBuilder = formDao.queryBuilder();
@@ -124,13 +124,14 @@ public class PhotoDao {
          * 
          * @author Paulo Luan
          */
-        public static List<Integer> getListOfPhotosIds() {
+        public synchronized static List<Integer> getListOfPhotosIds() {
                 List<Integer> photosIds = new ArrayList<Integer>();
                 
                 try {
-                        //TODO: vai pegar as fotos de todos os usuários?
+                        QueryBuilder<Photo, Integer> photoQueryBuilder = getQueryBuilderForUser();
+                        photoQueryBuilder.selectColumns("id");
+                        String query = photoQueryBuilder.prepareStatementString();
                         
-                        String query = "SELECT id from photo";
                         GenericRawResults<String[]> rawResults = photoDao.queryRaw(query);
                         List<String[]> results = rawResults.getResults();
                         
@@ -159,7 +160,7 @@ public class PhotoDao {
          * 
          * @author Paulo Luan
          */
-        public static Photo getPhotosById(Integer id) {
+        public synchronized static Photo getPhotosById(Integer id) {
                 Photo photo = null;
                 
                 QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
@@ -186,7 +187,7 @@ public class PhotoDao {
          * 
          * @author Paulo Luan
          */
-        public static Boolean isPictureOnDatabase(String path) {
+        public synchronized static Boolean isPictureOnDatabase(String path) {
                 Boolean exists = false;
                 
                 QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
@@ -213,7 +214,7 @@ public class PhotoDao {
          * @author Paulo Luan
          * @return Boolean result
          */
-        public static Boolean deletePhotos(List<Photo> photos) {
+        public synchronized static Boolean deletePhotos(List<Photo> photos) {
                 Boolean result = false;
                 
                 try {
@@ -239,7 +240,7 @@ public class PhotoDao {
          * @author Paulo Luan
          * @return Boolean result
          */
-        public static boolean deletePhoto(Photo photo) {
+        public synchronized static boolean deletePhoto(Photo photo) {
                 boolean result = false;
                 
                 try {
@@ -270,7 +271,7 @@ public class PhotoDao {
          * @param List
          *                <Photo> Photos that will be saved into database.
          */
-        public static boolean savePhotos(List<Photo> photos) {
+        public synchronized static boolean savePhotos(List<Photo> photos) {
                 boolean isSaved = false;
                 
                 if (photos != null) {
@@ -295,11 +296,44 @@ public class PhotoDao {
         }
         
         /**
+         * Save a list of photos into local database.
+         * 
+         * @author Paulo Luan
+         * @param List
+         *                <Photo> Photos that will be saved into database.
+         */
+        public synchronized static boolean savePhoto(Photo photo) {
+                boolean isSaved = false;
+                
+                if (photo != null) {
+                        Dao<Photo, Integer> photoDao = db.getPhotoDao();
+                        
+                        try {
+                                if (photo.getId() == null) {
+                                        photoDao.create(photo);
+                                        Log.d(LOG_TAG, "Foto Salva com sucesso! ID: " + photo.getId());
+                                }
+                                else {
+                                        photoDao.update(photo);
+                                        Log.d(LOG_TAG, "Foto Atualizada com sucesso! ID: " + photo.getId());
+                                }
+                                
+                                isSaved = true;
+                        }
+                        catch (SQLException e) {
+                                ExceptionHandler.saveLogFile(e);
+                        }
+                }
+                
+                return isSaved;
+        }
+        
+        /**
          * Get Count of completed photos.
          * 
          * @author Paulo Luan
          */
-        public static Long getCountOfCompletedPhotos() {
+        public synchronized static Long getCountOfCompletedPhotos() {
                 long count = 0;
                 
                 QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
@@ -327,7 +361,7 @@ public class PhotoDao {
                 return count;
         }
         
-        static void deleteWithDeleteBuilder(Integer photoId) throws SQLException {
+        static synchronized void deleteWithDeleteBuilder(Integer photoId) throws SQLException {
                 Dao<Photo, Integer> dao = db.getPhotoDao();
                 DeleteBuilder<Photo, Integer> deleteBuilder = dao.deleteBuilder();
                 deleteBuilder.where().eq("id", photoId);
@@ -341,7 +375,8 @@ public class PhotoDao {
                 }
         }
         
-        public static void removePhotosByIds(List<Integer> photosIds) {
+        public synchronized static void removePhotosByIds(
+                                                          List<Integer> photosIds) {
                 
                 for (Integer photoId : photosIds) {
                         if (photoId != null) {
@@ -355,4 +390,5 @@ public class PhotoDao {
                         }
                 }
         }
+        
 }
