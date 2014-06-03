@@ -5,6 +5,7 @@
         <item>@string/production</item>
         <item>@string/homolog</item>
         <item>@string/presentation</item>
+        <item>@string/debug</item>
     </string-array>
     <string-array name="number_confirmation">
         <item></item>

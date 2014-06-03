@@ -26,19 +26,19 @@ import br.inova.mobile.database.DatabaseHelper;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.map.GeoMap;
 import br.inpe.mobile.R;
-import br.inpe.mobile.R.string;
 
 import com.j256.ormlite.dao.Dao;
 
 public class LoginActivity extends Activity {
         // tag used to debug
-        private final String   LOG_TAG = "#" + getClass().getSimpleName();
+        private final String   LOG_TAG     = "#" + getClass().getSimpleName();
         
         // widgets
         private Button         bt_begin, bt_exit;
+        private Spinner        spnLoginUrl = null;
         
         // this instance
-        private LoginActivity  self    = this;
+        private LoginActivity  self        = this;
         
         // session Manager
         private SessionManager session;
@@ -88,8 +88,6 @@ public class LoginActivity extends Activity {
         }
         
         public void createRemoteUrlSpinner() {
-                final Spinner spnLoginUrl;
-                
                 spnLoginUrl = (Spinner) findViewById(R.id.login_sppiner);
                 
                 spnLoginUrl.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -100,19 +98,8 @@ public class LoginActivity extends Activity {
                                                    long l) {
                                 Object spnLoginUrlItem = spnLoginUrl.getSelectedItem();
                                 String spnLoginUrlString = (spnLoginUrlItem == null) ? "" : spnLoginUrlItem.toString();
-                                String productionString = getResources().getString(string.production);
-                                String homologString = getResources().getString(string.homolog);
-                                String presentationString = getResources().getString(string.presentation);
                                 
-                                if (spnLoginUrlString == productionString) {
-                                        Constants.changeToProductionMode();
-                                }
-                                else if (spnLoginUrlString == homologString) {
-                                        Constants.changeToHomologMode();
-                                }
-                                else if (spnLoginUrlString == presentationString) {
-                                        Constants.changeToPresentationMode();;
-                                }
+                                Constants.changeServerMode(self, spnLoginUrlString);
                         }
                         
                         public void onNothingSelected(AdapterView<?> adapterView) {
@@ -132,12 +119,15 @@ public class LoginActivity extends Activity {
                 String login = txt_login_username.getText().toString();
                 String password = txt_login_password.getText().toString();
                 
+                Object spnLoginUrlItem = spnLoginUrl.getSelectedItem();
+                String spnLoginUrlString = (spnLoginUrlItem == null) ? "" : spnLoginUrlItem.toString();
+                
                 if ((!login.equals("")) && (!password.equals(""))) {
                         String passHash = Utility.generateHashMD5(password);
                         String userHash = Utility.generateHashMD5(login + passHash);
                         
                         if (this.isValidHash(userHash)) {
-                                session.createLoginSession(login, userHash);
+                                session.createLoginSession(login, userHash, spnLoginUrlString);
                                 Intent i = new Intent(this, GeoMap.class);
                                 startActivity(i);
                                 finish();

@@ -74,6 +74,7 @@
     <string name="presentation">Apresentação</string>
     <string name="homolog">Homologação</string>
     <string name="production">Produção</string>
+    <string name="debug">Debug</string>
     <string name="ok">OK</string>
     <string name="non_existent">Inexistente</string>
     <string name="not_confer">Não Confere</string>

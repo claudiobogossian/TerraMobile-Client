@@ -1,6 +1,7 @@
 package br.inova.mobile.constants;
 
 import android.content.Context;
+import android.util.Log;
 import br.inova.mobile.Utility;
 import br.inpe.mobile.R.string;
 
@@ -32,6 +33,9 @@ public class Constants {
                 SERVER = "terramobile-server";
                 ISDEBUG = true;
                 ISPRODUCTION = false;
+                
+                Log.d("CONSTANTS", "Entrando em modo debug.");
+                
                 applyChanges();
         }
         
@@ -41,21 +45,21 @@ public class Constants {
                 INTERNAL_HOST = "http://192.168.0.181";
                 SERVER = "terramobile-server";
                 ISPRODUCTION = true;
+                
+                Log.d("CONSTANTS", "Entrando em modo Produção.");
+                
                 applyChanges();
         }
         
         public static void changeToHomologMode() {
                 /*** Semi-Production ***/
                 
-                if (!ISDEBUG) {
-                        EXTERNAL_HOST = "http://179.184.164.144";
-                        INTERNAL_HOST = "http://192.168.0.181";
-                        SERVER = "terramobile-homolog";
-                        ISPRODUCTION = false;
-                }
-                else {
-                        changeToDebugMode();
-                }
+                EXTERNAL_HOST = "http://179.184.164.144";
+                INTERNAL_HOST = "http://192.168.0.181";
+                SERVER = "terramobile-homolog";
+                ISPRODUCTION = false;
+                
+                Log.d("CONSTANTS", "Entrando em modo Homologação.");
                 
                 applyChanges();
         }
@@ -67,6 +71,8 @@ public class Constants {
                 SERVER = "terramobile-presentation";
                 ISPRODUCTION = false;
                 
+                Log.d("CONSTANTS", "Entrando em modo Apresentação.");
+                
                 applyChanges();
         }
         
@@ -77,6 +83,7 @@ public class Constants {
                 String productionString = context.getResources().getString(string.production);
                 String homologString = context.getResources().getString(string.homolog);
                 String presentationString = context.getResources().getString(string.presentation);
+                String debugString = context.getResources().getString(string.debug);
                 
                 if (spnLoginUrlString != null) {
                         if (spnLoginUrlString.equals(productionString)) {
@@ -87,6 +94,9 @@ public class Constants {
                         }
                         else if (spnLoginUrlString.equals(presentationString)) {
                                 Constants.changeToPresentationMode();
+                        }
+                        else if (spnLoginUrlString.equals(debugString)) {
+                                Constants.changeToDebugMode();
                         }
                 }
                 
