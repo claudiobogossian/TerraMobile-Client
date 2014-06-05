@@ -61,9 +61,7 @@ public class Form implements Serializable {
         @DatabaseField
         private String  pluvialGallery;
         
-        public Form() {
-                // TODO Auto-generated constructor stub
-        }
+        public Form() {}
         
         public Form(
                     Integer id,

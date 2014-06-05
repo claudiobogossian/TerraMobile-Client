@@ -26,9 +26,7 @@ public class User implements Serializable {
         @DatabaseField
         private String  hash;
         
-        public User() {
-                // TODO Auto-generated constructor stub
-        }
+        public User() {}
         
         public User(
                     Integer id,

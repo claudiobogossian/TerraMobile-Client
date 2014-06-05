@@ -19,6 +19,7 @@ import br.inova.mobile.database.DatabaseBackup;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.map.BaseMapDownload;
 import br.inova.mobile.photo.UploadPhotos;
+import br.inova.mobile.rest.SyncDataWithServer;
 import br.inova.mobile.user.SessionManager;
 import br.inpe.mobile.R;
 import br.inpe.mobile.R.string;
@@ -110,9 +111,7 @@ public class TaskActivity extends Activity {
         private void createButtonGenerateTestTasks() {
                 String lowerName = name.toLowerCase();
                 
-                if (lowerName.equals("testemobile") || lowerName.equals("bele")) {
-                        Constants.changeToHomologMode();
-                        
+                if (lowerName.equals("testemobile")) {
                         Button btn_generate_tasks = (Button) findViewById(R.id.btnTest);
                         btn_generate_tasks.setVisibility(View.VISIBLE);
                         btn_generate_tasks.setOnClickListener(new View.OnClickListener() {
@@ -210,7 +209,8 @@ public class TaskActivity extends Activity {
                                         }
                                         
                                         try {
-                                                self.syncronizeWithServer();
+                                                //self.syncronizeWithServer();
+                                                new SyncDataWithServer(self);
                                         }
                                         catch (Exception e) {
                                                 self.hideLoadingMask();
@@ -250,7 +250,7 @@ public class TaskActivity extends Activity {
          */
         public void getRemoteTasks() {
                 String userHash = session.getUserHash();
-                String url = Utility.getServerUrl() + Constants.TASKS_REST;
+                String url = Utility.getServerUrl() + Constants.TASKS_REST + SessionManager.getInstance().getUserHash();
                 DownloadTasks remote = new DownloadTasks(userHash, this);
                 remote.execute(new String[] { url });
         }

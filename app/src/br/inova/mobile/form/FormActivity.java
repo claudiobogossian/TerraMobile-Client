@@ -20,6 +20,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
@@ -42,10 +43,10 @@ import android.widget.Toast;
 import br.inova.mobile.Utility;
 import br.inova.mobile.address.AddressAdapter;
 import br.inova.mobile.exception.ExceptionHandler;
+import br.inova.mobile.location.LocationProvider;
 import br.inova.mobile.map.LandmarksManager;
 import br.inova.mobile.photo.BitmapRendererTask;
 import br.inova.mobile.photo.CameraActivity;
-import br.inova.mobile.photo.CreatePhotoAsync;
 import br.inova.mobile.photo.Photo;
 import br.inova.mobile.photo.PhotoDao;
 import br.inova.mobile.task.Task;
@@ -930,10 +931,38 @@ public class FormActivity extends Activity {
                 if (requestCode == PHOTO) {
                         if (resultCode == RESULT_OK) {
                                 String photoPath = data.getExtras().getString("RESULT");
-                                new CreatePhotoAsync(photoPath, this); //TODO: modificar
+                                createReceivedPhoto(photoPath);
                         }
                         else if (resultCode == RESULT_CANCELED) {}
                 }
+        }
+        
+        protected void createReceivedPhoto(String photoPath) {
+                Photo photo = new Photo();
+                
+                photo.setPath(photoPath);
+                photo.setForm(currentTask.getForm());
+                
+                LocationProvider locationProvider = LocationProvider.getInstance(self);
+                Location location = locationProvider.getLocation();
+                
+                if (location != null) {
+                        lat.setText("" + location.getLatitude());
+                        lon.setText("" + location.getLongitude());
+                }
+                else {
+                        if (!locationProvider.isGpsEnabled()) {
+                                Utility.showToast("Seu GPS está desabilitado, ligue-o para capturar sua posição.", Toast.LENGTH_LONG, self);
+                        }
+                        
+                        lat.setText("0.0");
+                        lon.setText("0.0");
+                }
+                
+                photos.add(photo);
+                showPictures(photos);
+                
+                hideLoadMask();
         }
         
         // Quando não é detectado nenhuma desconformidade ou vago, então não é obrigatório o preenchimento das informações.
@@ -1101,7 +1130,7 @@ public class FormActivity extends Activity {
                 LinearLayout linearLayout = (LinearLayout) findViewById(R.id.layout_pictures);
                 linearLayout.removeAllViews();
                 
-                List<Photo> clonedPictures = new ArrayList<Photo>(pictures);// TODO: test
+                List<Photo> clonedPictures = new ArrayList<Photo>(pictures);
                 
                 for (Photo picture : clonedPictures) {
                         try {

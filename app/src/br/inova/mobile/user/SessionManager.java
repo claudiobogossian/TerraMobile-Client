@@ -27,11 +27,11 @@ public class SessionManager {
         // All Shared Preferences Keys
         private static final String      IS_LOGIN     = "IsLoggedIn";
         
-        // User name (make variable public to access from outside)
         public static final String       KEY_NAME     = "name";
         
-        // Hash address (make variable public to access from outside)
         public static final String       KEY_HASH     = "hash";
+        
+        public static final String       SESSION_TYPE = "sessionType";
         
         private static SessionManager    self         = null;
         
@@ -60,7 +60,10 @@ public class SessionManager {
         /**
          * Create login session
          * */
-        public void createLoginSession(String name, String hash) {
+        public void createLoginSession(
+                                       String name,
+                                       String hash,
+                                       String sessionType) {
                 // Storing login value as TRUE
                 editor.putBoolean(IS_LOGIN, true);
                 
@@ -69,6 +72,8 @@ public class SessionManager {
                 
                 // Storing hash in pref
                 editor.putString(KEY_HASH, hash);
+                
+                editor.putString(SESSION_TYPE, sessionType);
                 
                 // commit changes
                 editor.commit();
@@ -122,11 +127,19 @@ public class SessionManager {
         public String getUserHash() {
                 String hash = pref.getString(KEY_HASH, null);
                 
-                /*
-                 * if(hash == null) { logoutUser(); }
-                 */
+                if (hash == null) {
+                        logoutUser();
+                }
                 
                 return hash;
+        }
+        
+        /**
+         * Get user hash
+         * */
+        public String getSessionType() {
+                String sessionType = pref.getString(SESSION_TYPE, null);
+                return sessionType;
         }
         
         /**

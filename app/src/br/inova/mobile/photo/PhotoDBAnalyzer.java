@@ -36,7 +36,7 @@ public class PhotoDBAnalyzer extends AsyncTask<String, String, String> {
                 return "Finished";
         }
         
-        public static void verifyIntegrityOfPictures() {
+        public synchronized static void verifyIntegrityOfPictures() {
                 Log.d(LOG_TAG, "#### ANALISANDO AS FOTOS ####");
                 removePhotoIfFormIsNull();
                 removeFilesFromExternalMemoryIfNotInDatabase();
@@ -76,7 +76,7 @@ public class PhotoDBAnalyzer extends AsyncTask<String, String, String> {
          * Checks in the database if the pictures still have their source form.
          * 
          * */
-        public static void removePhotoIfFormIsNull() {
+        private static void removePhotoIfFormIsNull() {
                 CloseableIterator<Photo> iterator = getIteratorToAnalyzePhotos();
                 
                 try {

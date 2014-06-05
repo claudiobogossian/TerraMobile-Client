@@ -1,9 +1,12 @@
 package br.inova.mobile.task;
 
-import java.util.Arrays;
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.os.AsyncTask;
+import android.os.Environment;
+import br.inova.mobile.Utility;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.form.Form;
 import br.inova.mobile.map.LandmarksManager;
@@ -156,12 +159,23 @@ public class TasksGenerator extends AsyncTask<String, String, String> {
                         replicatedPhoto.setForm(iterateForm);
                         replicatedPhoto.setPath(basePhoto.getPath());
                         
-                        Photo replicatedPhoto2 = new Photo();
-                        replicatedPhoto2.setBase64(basePhoto.getBase64());
-                        replicatedPhoto2.setForm(iterateForm);
-                        replicatedPhoto2.setPath(basePhoto.getPath());
+                        String photosPath = "/inova/" + "/dados" + "/fotos/";
+                        File mediaStorageDir = new File(Utility.getExternalSdCardPath() + photosPath);
                         
-                        PhotoDao.savePhotos(Arrays.asList(replicatedPhoto, replicatedPhoto2));
+                        if (!mediaStorageDir.exists()) {
+                                if (!mediaStorageDir.mkdirs()) {
+                                        mediaStorageDir = new File(Environment.getExternalStorageDirectory() + photosPath);
+                                        mediaStorageDir.mkdirs();
+                                }
+                        }
+                        
+                        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date()) + System.currentTimeMillis() % 1000;
+                        String outputFileName = File.separator + "IMG_" + timeStamp + ".jpg";
+                        
+                        Utility.copyFile(replicatedPhoto.getPath(), mediaStorageDir.getPath(), outputFileName);
+                        replicatedPhoto.setPath(mediaStorageDir + outputFileName);
+                        
+                        PhotoDao.savePhoto(replicatedPhoto);
                         TaskDao.updateTask(iterateTask);
                 }
                 catch (Exception exception) {
@@ -169,5 +183,4 @@ public class TasksGenerator extends AsyncTask<String, String, String> {
                 }
                 
         }
-        
 }

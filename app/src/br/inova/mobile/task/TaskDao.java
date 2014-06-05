@@ -1,6 +1,7 @@
 package br.inova.mobile.task;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.util.Log;
@@ -14,6 +15,7 @@ import br.inova.mobile.user.User;
 
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
 
@@ -520,5 +522,34 @@ public class TaskDao {
                                 
                         }
                 }
+        }
+        
+        public static List<Integer> getListOfTasksIds() {
+                List<Integer> photosIds = new ArrayList<Integer>();
+                
+                QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+                QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+                
+                try {
+                        String userHash = session.getUserHash();
+                        userQueryBuilder.where().eq("hash", userHash);
+                        taskQueryBuilder.join(userQueryBuilder);
+                        
+                        taskQueryBuilder.where().eq("done", true);
+                        taskQueryBuilder.selectColumns("_id");
+                        
+                        String query = taskQueryBuilder.prepareStatementString();
+                        GenericRawResults<String[]> rawResults = taskDao.queryRaw(query);
+                        List<String[]> results = rawResults.getResults();
+                        
+                        for (String[] strings : results) {
+                                photosIds.add(Integer.valueOf(strings[0]));
+                        }
+                }
+                catch (Exception e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+                
+                return photosIds;
         }
 }
