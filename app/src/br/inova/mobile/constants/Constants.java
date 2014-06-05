@@ -3,6 +3,7 @@ package br.inova.mobile.constants;
 import android.content.Context;
 import android.util.Log;
 import br.inova.mobile.Utility;
+import br.inova.mobile.user.SessionManager;
 import br.inpe.mobile.R.string;
 
 public class Constants {
@@ -18,8 +19,8 @@ public class Constants {
         public static String  INTERNAL_HOST_URL  = INTERNAL_HOST + ":" + PORT + "/" + SERVER + "/";
         
         public static String  USER_REST          = "rest/users";
-        public static String  TASKS_REST         = "rest/tasks?user={user_hash}";
-        public static String  PHOTOS_REST        = "rest/photos?user={user_hash}";
+        public static String  TASKS_REST         = "rest/tasks?user=";
+        public static String  PHOTOS_REST        = "rest/photos?user=";
         public static String  ZIP_REST           = "rest/tiles/zip";
         public static String  LEVEL_QUERY_STRING = "?level=";
         
@@ -103,12 +104,14 @@ public class Constants {
         }
         
         public static String getTasksUrl() {
-                String url = Utility.getServerUrl() + TASKS_REST;
+                String userHash = SessionManager.getInstance().getUserHash();
+                String url = Utility.getServerUrl() + TASKS_REST + userHash;
                 return url;
         }
         
         public static String getPhotosUrl() {
-                String url = Utility.getServerUrl() + PHOTOS_REST;
+                String userHash = SessionManager.getInstance().getUserHash();
+                String url = Utility.getServerUrl() + PHOTOS_REST + userHash;
                 return url;
         }
         
