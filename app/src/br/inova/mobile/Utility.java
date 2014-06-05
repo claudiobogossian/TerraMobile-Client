@@ -495,6 +495,60 @@ public class Utility {
         
         /**
          * 
+         * Move a file from a path to another.
+         * 
+         * @param inputPath
+         *                the input file path.
+         * @param outputPath
+         *                the destination folder.
+         * @param fileName
+         *                the name of the file,
+         * 
+         * */
+        public static void copyFile(
+                                    String inputPath,
+                                    String outputPath,
+                                    String fileName) {
+                InputStream in = null;
+                OutputStream out = null;
+                
+                Boolean inputFileExists = new File(inputPath).exists();
+                
+                if (inputFileExists) {
+                        try {
+                                //create output directory if it doesn't exist
+                                File dir = new File(outputPath);
+                                
+                                if (!dir.exists()) {
+                                        dir.mkdirs();
+                                }
+                                
+                                in = new FileInputStream(inputPath);
+                                out = new FileOutputStream(outputPath + fileName);
+                                
+                                byte[] buffer = new byte[1024];
+                                int read;
+                                
+                                while ((read = in.read(buffer)) != -1) {
+                                        out.write(buffer, 0, read);
+                                }
+                                
+                                in.close();
+                                in = null;
+                                
+                                // write the output file
+                                out.flush();
+                                out.close();
+                                out = null;
+                        }
+                        catch (Exception e) {
+                                ExceptionHandler.saveLogFile(e);
+                        }
+                }
+        }
+        
+        /**
+         * 
          * Ping to the server and verify if the service's (url) running.
          * 
          * @return the soma's server url
