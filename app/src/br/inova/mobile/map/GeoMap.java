@@ -206,7 +206,7 @@ public class GeoMap extends Activity {
                 anotherTileProvider.setTileSource(anotherTileSource);
                 final TilesOverlay secondTilesOverlay = new TilesOverlay(anotherTileProvider, this.getBaseContext());
                 secondTilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
-        
+                
                 anotherTileProvider.setTileRequestCompleteHandler(new SimpleInvalidationHandler(mapView));
                 mapView.getOverlays().add(secondTilesOverlay);
         }

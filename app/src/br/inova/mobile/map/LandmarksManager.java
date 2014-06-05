@@ -106,15 +106,8 @@ public class LandmarksManager {
          *                the task that will be updated.
          * */
         public static void setTask(final Task task) {
+                updatePoiMarkers(task);
                 
-                Runnable runnable = new Runnable() {
-                        @Override
-                        public void run() {
-                                updatePoiMarkers(task);
-                        }
-                };
-                
-                new Thread(runnable).start();
         }
         
         /**
