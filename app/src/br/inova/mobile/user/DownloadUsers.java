@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 import br.inova.mobile.Utility;
 import br.inova.mobile.exception.ExceptionHandler;
+import br.inova.mobile.rest.RestTemplateFactory;
 
 /**
  * Async class implementation to get users from server.
@@ -32,7 +33,7 @@ public class DownloadUsers extends AsyncTask<String, String, String> {
                 
                 for (String url : urls) {
                         try {
-                                ResponseEntity<User[]> response = loginActivity.restTemplate.getForEntity(url, User[].class);
+                                ResponseEntity<User[]> response = new RestTemplateFactory().getForEntity(url, User[].class);
                                 User[] users = response.getBody();
                                 
                                 ArrayList<User> list = new ArrayList<User>(Arrays.asList(users));
