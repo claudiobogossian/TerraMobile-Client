@@ -76,7 +76,7 @@ public class UploadTasks extends AsyncTask<String, String, String> {
                         }
                 }
                 
-                TaskDao.removePhotosByIds(tasksToRemove);
+                TaskDao.removeTasksByIds(tasksToRemove);
                 
                 return message;
         }
