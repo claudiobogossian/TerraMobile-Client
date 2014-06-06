@@ -29,7 +29,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 import br.inova.mobile.Utility;
-import br.inova.mobile.city.CitySearchToolbar;
 import br.inova.mobile.exception.ExceptionHandler;
 import br.inova.mobile.form.FormActivity;
 import br.inova.mobile.location.LocationProvider;
@@ -92,7 +91,7 @@ public class GeoMap extends Activity {
                 self.createInflatorForMenuButtons();
                 self.createButtonUpdateLocation();
                 
-                new CitySearchToolbar(this);
+                //new CitySearchToolbar(this);
         }
         
         private void createInflatorForMenuButtons() {
