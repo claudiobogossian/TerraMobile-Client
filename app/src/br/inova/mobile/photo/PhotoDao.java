@@ -361,18 +361,24 @@ public class PhotoDao {
                 return count;
         }
         
-        static synchronized void deleteWithDeleteBuilder(Integer photoId) throws SQLException {
+        public static synchronized boolean deleteWithDeleteBuilder(
+                                                                   Integer photoId) throws SQLException {
+                Boolean isRemoved = false;
+                
                 Dao<Photo, Integer> dao = db.getPhotoDao();
                 DeleteBuilder<Photo, Integer> deleteBuilder = dao.deleteBuilder();
                 deleteBuilder.where().eq("id", photoId);
                 Integer isDeleted = dao.delete(deleteBuilder.prepare());
                 
                 if (isDeleted == 1) {
+                        isRemoved = true;
                         Log.d(LOG_TAG, "Excluiu com sucesso! ID: " + photoId);
                 }
                 else {
                         Log.d(LOG_TAG, "Não excluiu!! ID: " + photoId);
                 }
+                
+                return isRemoved;
         }
         
         public synchronized static void removePhotosByIds(

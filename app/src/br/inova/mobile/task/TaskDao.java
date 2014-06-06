@@ -502,14 +502,21 @@ public class TaskDao {
                 return featureId;
         }
         
-        private static void deleteWithDeleteBuilder(Integer taskId) throws SQLException {
+        public static boolean deleteWithDeleteBuilder(Integer taskId) throws SQLException {
+                int intRemoved = 0;
+                boolean booleanIsRemoved = false;
+                
                 Dao<Task, Integer> dao = db.getTaskDao();
                 DeleteBuilder<Task, Integer> deleteBuilder = dao.deleteBuilder();
                 deleteBuilder.where().eq("_id", taskId);
-                dao.delete(deleteBuilder.prepare());
+                intRemoved = dao.delete(deleteBuilder.prepare());
+                
+                if (intRemoved == 1) booleanIsRemoved = true;
+                
+                return booleanIsRemoved;
         }
         
-        public static void removePhotosByIds(List<Integer> tasksToRemove) {
+        public static void removeTasksByIds(List<Integer> tasksToRemove) {
                 
                 for (Integer taskId : tasksToRemove) {
                         if (taskId != null) {
