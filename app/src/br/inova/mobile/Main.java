@@ -24,10 +24,6 @@ public class Main extends Activity {
                  * android errors
                  */
                 
-                if (Utility.isInDebug(this)) {
-                        Constants.changeToDebugMode();
-                }
-                
                 session = SessionManager.getInstance();
                 this.checkLogin();
         }
@@ -42,6 +38,7 @@ public class Main extends Activity {
                 Intent intent = null;
                 
                 if (isLoggedIn) {
+                        Constants.changeServerMode(this, session.getSessionType());
                         intent = new Intent(this, GeoMap.class);
                 }
                 else {
