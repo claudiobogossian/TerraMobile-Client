@@ -218,14 +218,12 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
         
         /*
          * @Override public synchronized SQLiteDatabase getWritableDatabase() {
-         * //TODO: REMOVER return
-         * SQLiteDatabase.openDatabase(Utility.getExternalSdCardPath() +
+         * return SQLiteDatabase.openDatabase(Utility.getExternalSdCardPath() +
          * "/inova/dados/backup/tasks.db", null, SQLiteDatabase.OPEN_READWRITE);
          * }
          * 
          * @Override public synchronized SQLiteDatabase getReadableDatabase() {
-         * //TODO: REMOVER return
-         * SQLiteDatabase.openDatabase(Utility.getExternalSdCardPath() +
+         * return SQLiteDatabase.openDatabase(Utility.getExternalSdCardPath() +
          * "/inova/dados/backup/tasks.db", null, SQLiteDatabase.OPEN_READONLY);
          * }
          */
