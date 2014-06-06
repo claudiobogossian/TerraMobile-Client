@@ -30,14 +30,15 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
         
         private TaskActivity       taskActivity;
         
-        private String             taskServerUrl  = Constants.getTasksUrl();
-        private String             photoServerUrl = Constants.getPhotosUrl();
+        private String             taskServerUrl   = Constants.getTasksUrl();
+        private String             photoServerUrl  = Constants.getPhotosUrl();
         
-        int                        progress       = 0;
+        int                        progress        = 0;
         
         private SyncDataWithServer self;
         
-        private List<Long>         threads        = new ArrayList<Long>();
+        private List<Long>         threads         = new ArrayList<Long>();
+        private int                numberOfThreads = 50;
         
         private static long        timeStart;
         private static long        amountOfRegisters;
@@ -66,16 +67,23 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
         
         public void syncronizeDataWithServer() {
                 List<Integer> tasksIds = TaskDao.getListOfTasksIds();
-                List<List<Integer>> slicedTasks = spliceArrayIntoSubArrays(tasksIds, 50);
-                
                 amountOfRegisters = tasksIds.size();
                 
-                for (int i = 0; i < slicedTasks.size(); i++) {
-                        iterateAndSendTasks(slicedTasks.get(i));
-                }
-                
-                if (tasksIds.size() == 0) {
+                if (amountOfRegisters == 0) {
                         onFinishedWork(null);
+                }
+                else {
+                        Long countOfRegisters = TaskDao.getCountOfCompletedTasks();
+                        
+                        if (countOfRegisters != 0) {
+                                publishProgress("Sincronizando...", "0", "" + countOfRegisters); // set Max Length of progress                                                                                       // dialog
+                        }
+                        
+                        List<List<Integer>> slicedTasks = spliceArrayIntoSubArrays(tasksIds, numberOfThreads);
+                        
+                        for (int i = 0; i < slicedTasks.size(); i++) {
+                                iterateAndSendTasks(slicedTasks.get(i));
+                        }
                 }
         }
         
@@ -297,7 +305,7 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
                 int partitionSize = inputList.size() / slices;
                 
                 if (partitionSize == 0) {
-                        partitionSize = inputList.size();
+                        partitionSize = 1;
                 }
                 
                 for (int i = 0; i < inputList.size(); i += partitionSize) {
@@ -310,12 +318,7 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
         @Override
         protected void onPreExecute() {
                 super.onPreExecute();
-                
-                Long countOfRegisters = TaskDao.getCountOfCompletedTasks();
-                
-                if (countOfRegisters != 0) {
-                        publishProgress("Sincronizando...", "0", "" + countOfRegisters); // set Max Length of progress                                                                                       // dialog
-                }
+                publishProgress("Analisando registros, aguarde..."); // set Max Length of progress                                                                                       // dialog
         }
         
         @Override
