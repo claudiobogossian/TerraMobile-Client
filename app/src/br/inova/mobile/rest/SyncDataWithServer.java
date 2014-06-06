@@ -1,6 +1,7 @@
 package br.inova.mobile.rest;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -38,6 +39,12 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
         
         private List<Long>         threads        = new ArrayList<Long>();
         
+        private static long        timeStart;
+        private static long        amountOfRegisters;
+        
+        private static String      datetimeBegin;
+        private static String      datetimeEnd;
+        
         public SyncDataWithServer(TaskActivity taskActivity) {
                 this.userHash = SessionManager.getInstance().getUserHash();
                 this.taskActivity = taskActivity;
@@ -49,13 +56,19 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
         @Override
         protected String doInBackground(String... params) {
                 PhotoDBAnalyzer.verifyIntegrityOfPictures();
+                
+                timeStart = System.currentTimeMillis();
+                datetimeBegin = new SimpleDateFormat("HH:mm:ss").format(new Date());
+                
                 syncronizeDataWithServer();
                 return null;
         }
         
         public void syncronizeDataWithServer() {
                 List<Integer> tasksIds = TaskDao.getListOfTasksIds();
-                List<List<Integer>> slicedTasks = spliceArrayIntoSubArrays(tasksIds, 10);
+                List<List<Integer>> slicedTasks = spliceArrayIntoSubArrays(tasksIds, 50);
+                
+                amountOfRegisters = tasksIds.size();
                 
                 for (int i = 0; i < slicedTasks.size(); i++) {
                         iterateAndSendTasks(slicedTasks.get(i));
@@ -80,14 +93,9 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
                                         Form form = task.getForm();
                                         List<Photo> photos = PhotoDao.getPhotosByForm(form);
                                         
-                                        Date date = new Date();
-                                        
-                                        Log.d("THREAD", date.getMinutes() + ":" + date.getSeconds() + "Enviando pela THREAD: " + this.getName() + this.getId());
-                                        Log.d("DADOS", "Task: " + task.getId());
+                                        Log.d("THREAD", "Task: " + task.getId() + "Enviando pela THREAD: " + this.getName() + this.getId());
                                         
                                         sendData(task, photos);
-                                        
-                                        increaseProgress();
                                 }
                                 
                                 finishThread(this);
@@ -130,9 +138,11 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
                 }
                 
                 /** Only send the task if the photo was saved on remote server **/
-                if (isSaved) {
+                if (isSaved || photos.isEmpty()) {
                         sendTask(task);
                 }
+                
+                increaseProgress();
         }
         
         /**
@@ -265,17 +275,8 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
         }
         
         public synchronized void increaseProgress() {
-                // Get a handler that can be used to post to the main thread
-                Handler mainHandler = new Handler(taskActivity.getMainLooper());
-                
-                Runnable mainThreadHandler = new Runnable() {
-                        @Override
-                        public void run() {
-                                progress++;
-                                publishProgress("Sincronizando...", "" + progress);
-                        }
-                };
-                mainHandler.post(mainThreadHandler);
+                progress++;
+                publishProgress("Sincronizando...", "" + progress);
         }
         
         /**
@@ -323,6 +324,18 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
         }
         
         protected void onFinishedWork(final String message) {
+                
+                long timeEnd = System.currentTimeMillis();
+                long timeDelta = timeEnd - timeStart;
+                double elapsedSeconds = timeDelta / 1000.0;
+                
+                datetimeEnd = new SimpleDateFormat("HH:mm:ss").format(new Date());
+                
+                Log.e("", "###########################################");
+                Log.d("TEMPO: ", "Início: " + datetimeBegin + "  Fim: " + datetimeEnd);
+                Log.d("TEMPO DA SINCRONIZAÇÃO: ", "AMOUNT: " + amountOfRegisters + "  TEMPO DA SYNC: " + elapsedSeconds);
+                Log.e("", "###########################################");
+                
                 // Get a handler that can be used to post to the main thread
                 Handler mainHandler = new Handler(taskActivity.getMainLooper());
                 
@@ -337,7 +350,6 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
                                 
                                 taskActivity.getRemoteTasks();
                                 self = null;
-                                
                         }
                 };
                 mainHandler.post(mainThreadHandler);
