@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Environment;
+import android.util.Log;
 import br.inova.mobile.Main;
 import br.inova.mobile.Utility;
 
@@ -90,6 +91,8 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
          * 
          * */
         public static void saveLogFile(String text) {
+                Log.e("SAVING LOG: ", text);
+                
                 String logsPath = "/inova/" + "/dados" + "/log/";
                 File path = new File(Utility.getExternalSdCardPath() + logsPath);
                 
