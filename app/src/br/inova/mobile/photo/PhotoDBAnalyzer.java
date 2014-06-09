@@ -20,26 +20,50 @@ public class PhotoDBAnalyzer extends AsyncTask<String, String, String> {
         private static final String    LOG_TAG = "PhotoDBAnalyzer";
         private static DatabaseAdapter db      = DatabaseHelper.getDatabase();
         
-        public PhotoDBAnalyzer() {
-                this.execute();
+        /**
+         * Returns an the count of all the pictures from database.
+         * 
+         * @return the count of the database photo registers
+         * @author PauloLuan
+         * */
+        public static long getCountPhotos() {
+                CloseableIterator<Photo> iterator = null;
+                long count = 0;
+                
+                try {
+                        Dao<Photo, Integer> photoDao = db.getDao(Photo.class);
+                        QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
+                        count = photoQueryBuilder.countOf();
+                }
+                catch (SQLException e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+                
+                Log.d(LOG_TAG, "COUNT das fotos no BD: " + count);
+                
+                return count;
         }
         
         /**
-         * Verify all pictures and delete from filesystem if it not exists on
-         * Database.
+         * Returns an iterator of all the pictures from database.
          * 
-         * @author Paulo Luan
+         * @return {@link CloseableIterator} the iterator of the database
+         *         registers.
+         * @author PauloLuan
          * */
-        @Override
-        protected String doInBackground(String... params) {
-                verifyIntegrityOfPictures();
-                return "Finished";
-        }
-        
-        public synchronized static void verifyIntegrityOfPictures() {
-                Log.d(LOG_TAG, "#### ANALISANDO AS FOTOS ####");
-                removePhotoIfFormIsNull();
-                removeFilesFromExternalMemoryIfNotInDatabase();
+        public static CloseableIterator<Photo> getIteratorToAnalyzePhotos() {
+                CloseableIterator<Photo> iterator = null;
+                
+                try {
+                        Dao<Photo, Integer> photoDao = db.getDao(Photo.class);
+                        QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
+                        iterator = photoDao.iterator(photoQueryBuilder.prepare());
+                }
+                catch (SQLException e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+                
+                return iterator;
         }
         
         /**
@@ -104,50 +128,26 @@ public class PhotoDBAnalyzer extends AsyncTask<String, String, String> {
                 }
         }
         
-        /**
-         * Returns an iterator of all the pictures from database.
-         * 
-         * @return {@link CloseableIterator} the iterator of the database
-         *         registers.
-         * @author PauloLuan
-         * */
-        public static CloseableIterator<Photo> getIteratorToAnalyzePhotos() {
-                CloseableIterator<Photo> iterator = null;
-                
-                try {
-                        Dao<Photo, Integer> photoDao = db.getDao(Photo.class);
-                        QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
-                        iterator = photoDao.iterator(photoQueryBuilder.prepare());
-                }
-                catch (SQLException e) {
-                        ExceptionHandler.saveLogFile(e);
-                }
-                
-                return iterator;
+        public synchronized static void verifyIntegrityOfPictures() {
+                Log.d(LOG_TAG, "#### ANALISANDO AS FOTOS ####");
+                removePhotoIfFormIsNull();
+                removeFilesFromExternalMemoryIfNotInDatabase();
+        }
+        
+        public PhotoDBAnalyzer() {
+                this.execute();
         }
         
         /**
-         * Returns an the count of all the pictures from database.
+         * Verify all pictures and delete from filesystem if it not exists on
+         * Database.
          * 
-         * @return the count of the database photo registers
-         * @author PauloLuan
+         * @author Paulo Luan
          * */
-        public static long getCountPhotos() {
-                CloseableIterator<Photo> iterator = null;
-                long count = 0;
-                
-                try {
-                        Dao<Photo, Integer> photoDao = db.getDao(Photo.class);
-                        QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
-                        count = photoQueryBuilder.countOf();
-                }
-                catch (SQLException e) {
-                        ExceptionHandler.saveLogFile(e);
-                }
-                
-                Log.d(LOG_TAG, "COUNT das fotos no BD: " + count);
-                
-                return count;
+        @Override
+        protected String doInBackground(String... params) {
+                verifyIntegrityOfPictures();
+                return "Finished";
         }
         
 }

@@ -115,6 +115,59 @@ public class HttpClient {
          * 
          * 
          ***/
+        private static boolean jsonStringToBoolean(String json) {
+                ObjectMapper mapper = new ObjectMapper();
+                Boolean isSaved = false;
+                
+                if (json != null) {
+                        
+                        try {
+                                isSaved = mapper.readValue(json, Boolean.class);
+                        }
+                        catch (JsonParseException e) {
+                                e.printStackTrace();
+                        }
+                        catch (JsonMappingException e) {
+                                e.printStackTrace();
+                        }
+                        catch (IOException e) {
+                                e.printStackTrace();
+                        }
+                }
+                
+                return isSaved;
+        }
+        
+        /**
+         * 
+         * 
+         ***/
+        private static Task[] jsonStringToTaskObject(String json) {
+                ObjectMapper mapper = new ObjectMapper();
+                Task[] response = null;
+                
+                if (json != null) {
+                        try {
+                                response = mapper.readValue(json, Task[].class);
+                        }
+                        catch (JsonParseException e) {
+                                e.printStackTrace();
+                        }
+                        catch (JsonMappingException e) {
+                                e.printStackTrace();
+                        }
+                        catch (IOException e) {
+                                e.printStackTrace();
+                        }
+                }
+                
+                return response;
+        }
+        
+        /**
+         * 
+         * 
+         ***/
         private synchronized static String parseResponseToJSON(
                                                                HttpResponse response) throws IOException {
                 String jsonResponse = null;
@@ -164,59 +217,6 @@ public class HttpClient {
                 }
                 
                 return responseString;
-        }
-        
-        /**
-         * 
-         * 
-         ***/
-        private static Task[] jsonStringToTaskObject(String json) {
-                ObjectMapper mapper = new ObjectMapper();
-                Task[] response = null;
-                
-                if (json != null) {
-                        try {
-                                response = mapper.readValue(json, Task[].class);
-                        }
-                        catch (JsonParseException e) {
-                                e.printStackTrace();
-                        }
-                        catch (JsonMappingException e) {
-                                e.printStackTrace();
-                        }
-                        catch (IOException e) {
-                                e.printStackTrace();
-                        }
-                }
-                
-                return response;
-        }
-        
-        /**
-         * 
-         * 
-         ***/
-        private static boolean jsonStringToBoolean(String json) {
-                ObjectMapper mapper = new ObjectMapper();
-                Boolean isSaved = false;
-                
-                if (json != null) {
-                        
-                        try {
-                                isSaved = mapper.readValue(json, Boolean.class);
-                        }
-                        catch (JsonParseException e) {
-                                e.printStackTrace();
-                        }
-                        catch (JsonMappingException e) {
-                                e.printStackTrace();
-                        }
-                        catch (IOException e) {
-                                e.printStackTrace();
-                        }
-                }
-                
-                return isSaved;
         }
         
 }

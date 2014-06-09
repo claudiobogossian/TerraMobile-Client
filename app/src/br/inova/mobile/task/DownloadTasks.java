@@ -64,16 +64,6 @@ public class DownloadTasks extends AsyncTask<String, String, String> {
         }
         
         @Override
-        protected void onPreExecute() {
-                taskActivity.showLoadingMask("Carregando, aguarde...");
-        }
-        
-        @Override
-        protected void onProgressUpdate(String... progress) {
-                taskActivity.onProgressUpdate(progress);
-        }
-        
-        @Override
         protected void onPostExecute(String message) {
                 LandmarksManager.createPoiMarkers();
                 
@@ -83,6 +73,16 @@ public class DownloadTasks extends AsyncTask<String, String, String> {
                 if (message != null) {
                         Utility.showToast("Ocorreu um erro ao baixar as atividades.", Toast.LENGTH_LONG, taskActivity);
                 }
+        }
+        
+        @Override
+        protected void onPreExecute() {
+                taskActivity.showLoadingMask("Carregando, aguarde...");
+        }
+        
+        @Override
+        protected void onProgressUpdate(String... progress) {
+                taskActivity.onProgressUpdate(progress);
         }
         
 }

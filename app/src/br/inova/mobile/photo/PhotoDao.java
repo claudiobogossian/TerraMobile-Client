@@ -35,81 +35,113 @@ public class PhotoDao {
         private static Dao<Photo, Integer> photoDao = db.getPhotoDao();
         
         /**
-         * Returns an iterator of all the pictures of the current users.
          * 
-         * @return {@link CloseableIterator} the iterator of the database
-         *         registers.
-         * @author PauloLuan
-         * */
-        public synchronized CloseableIterator<Photo> getIteratorForNotSyncPhotos() {
-                
-                // when you are done, prepare your query and build an iterator
-                CloseableIterator<Photo> iterator = null;
+         * Delete photo from local database.
+         * 
+         * @author Paulo Luan
+         * @return Boolean result
+         */
+        public synchronized static boolean deletePhoto(Photo photo) {
+                boolean result = false;
                 
                 try {
-                        QueryBuilder<Photo, Integer> photoQueryBuilder = getQueryBuilderForUser();
-                        photoQueryBuilder.iterator();
+                        File file = new File(photo.getPath());
                         
-                        iterator = photoDao.iterator(photoQueryBuilder.prepare());
+                        if (file.exists()) {
+                                file.delete();
+                        }
+                        
+                        if (photo.getId() != null) {
+                                deleteWithDeleteBuilder(photo.getId());
+                        }
+                        
+                        result = true;
                 }
                 catch (SQLException e) {
+                        Log.e(LOG_TAG, e.getMessage());
                         ExceptionHandler.saveLogFile(e);
                 }
                 
-                return iterator;
+                return result;
         }
         
-        private synchronized static QueryBuilder<Photo, Integer> getQueryBuilderForUser() throws SQLException {
-                Dao<Task, Integer> taskDao = db.getDao(Task.class);
-                Dao<Form, Integer> formDao = db.getDao(Form.class);
-                Dao<User, Integer> userDao = db.getDao(User.class);
-                Dao<Photo, Integer> photoDao = db.getDao(Photo.class);
+        /**
+         * 
+         * Delete photos locally.
+         * 
+         * @author Paulo Luan
+         * @return Boolean result
+         */
+        public synchronized static Boolean deletePhotos(List<Photo> photos) {
+                Boolean result = false;
+                
+                try {
+                        for (Photo photo : photos) {
+                                File file = new File(photo.getPath());
+                                file.delete();
+                                deleteWithDeleteBuilder(photo.getId());
+                                result = true;
+                        }
+                }
+                catch (SQLException e) {
+                        Log.e(LOG_TAG, e.getMessage());
+                        ExceptionHandler.saveLogFile(e);
+                }
+                
+                return result;
+        }
+        
+        public static synchronized boolean deleteWithDeleteBuilder(
+                                                                   Integer photoId) throws SQLException {
+                Boolean isRemoved = false;
+                
+                Dao<Photo, Integer> dao = db.getPhotoDao();
+                DeleteBuilder<Photo, Integer> deleteBuilder = dao.deleteBuilder();
+                deleteBuilder.where().eq("id", photoId);
+                Integer isDeleted = dao.delete(deleteBuilder.prepare());
+                
+                if (isDeleted == 1) {
+                        isRemoved = true;
+                        Log.d(LOG_TAG, "Excluiu com sucesso! ID: " + photoId);
+                }
+                else {
+                        Log.d(LOG_TAG, "Não excluiu!! ID: " + photoId);
+                }
+                
+                return isRemoved;
+        }
+        
+        /**
+         * Get Count of completed photos.
+         * 
+         * @author Paulo Luan
+         */
+        public synchronized static Long getCountOfCompletedPhotos() {
+                long count = 0;
                 
                 QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
                 QueryBuilder<Form, Integer> formQueryBuilder = formDao.queryBuilder();
                 QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
                 QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
                 
-                String userHash = SessionManager.getInstance().getUserHash();
-                userQueryBuilder.where().eq("hash", userHash);
-                
-                taskQueryBuilder.join(userQueryBuilder);
-                formQueryBuilder.join(taskQueryBuilder);
-                
-                photoQueryBuilder.join(formQueryBuilder);
-                
-                return photoQueryBuilder;
-        }
-        
-        /**
-         * 
-         * Get a List of photos related to a form.
-         * 
-         * @param Form
-         *                The Form object that we use to create the query.
-         * 
-         * @return List<Photo> Collection of pictures that the user was
-         *         captured.
-         * 
-         * @author Paulo Luan
-         */
-        public synchronized static List<Photo> getPhotosByForm(Form form) {
-                List<Photo> photos = null;
-                
-                QueryBuilder<Form, Integer> formQueryBuilder = formDao.queryBuilder();
-                QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
-                
                 try {
-                        formQueryBuilder.where().eq("id", form.getId());
+                        String userHash = SessionManager.getInstance().getUserHash();
+                        userQueryBuilder.where().eq("hash", userHash);
+                        
+                        taskQueryBuilder.join(userQueryBuilder);
+                        formQueryBuilder.join(taskQueryBuilder);
+                        
                         photoQueryBuilder.join(formQueryBuilder);
                         
-                        photos = photoQueryBuilder.query();
+                        count = photoQueryBuilder.countOf();
+                        
+                        Log.d(LOG_TAG, "COUNT de todas as fotos: " + count);
                 }
                 catch (SQLException e) {
                         ExceptionHandler.saveLogFile(e);
                 }
                 
-                return photos;
+                return count;
         }
         
         /**
@@ -150,6 +182,37 @@ public class PhotoDao {
         
         /**
          * 
+         * Get a List of photos related to a form.
+         * 
+         * @param Form
+         *                The Form object that we use to create the query.
+         * 
+         * @return List<Photo> Collection of pictures that the user was
+         *         captured.
+         * 
+         * @author Paulo Luan
+         */
+        public synchronized static List<Photo> getPhotosByForm(Form form) {
+                List<Photo> photos = null;
+                
+                QueryBuilder<Form, Integer> formQueryBuilder = formDao.queryBuilder();
+                QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
+                
+                try {
+                        formQueryBuilder.where().eq("id", form.getId());
+                        photoQueryBuilder.join(formQueryBuilder);
+                        
+                        photos = photoQueryBuilder.query();
+                }
+                catch (SQLException e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+                
+                return photos;
+        }
+        
+        /**
+         * 
          * Get a Photo by ID.
          * 
          * @param id
@@ -174,6 +237,28 @@ public class PhotoDao {
                 }
                 
                 return photo;
+        }
+        
+        private synchronized static QueryBuilder<Photo, Integer> getQueryBuilderForUser() throws SQLException {
+                Dao<Task, Integer> taskDao = db.getDao(Task.class);
+                Dao<Form, Integer> formDao = db.getDao(Form.class);
+                Dao<User, Integer> userDao = db.getDao(User.class);
+                Dao<Photo, Integer> photoDao = db.getDao(Photo.class);
+                
+                QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+                QueryBuilder<Form, Integer> formQueryBuilder = formDao.queryBuilder();
+                QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
+                QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+                
+                String userHash = SessionManager.getInstance().getUserHash();
+                userQueryBuilder.where().eq("hash", userHash);
+                
+                taskQueryBuilder.join(userQueryBuilder);
+                formQueryBuilder.join(taskQueryBuilder);
+                
+                photoQueryBuilder.join(formQueryBuilder);
+                
+                return photoQueryBuilder;
         }
         
         /**
@@ -207,92 +292,20 @@ public class PhotoDao {
                 return exists;
         }
         
-        /**
-         * 
-         * Delete photos locally.
-         * 
-         * @author Paulo Luan
-         * @return Boolean result
-         */
-        public synchronized static Boolean deletePhotos(List<Photo> photos) {
-                Boolean result = false;
+        public synchronized static void removePhotosByIds(
+                                                          List<Integer> photosIds) {
                 
-                try {
-                        for (Photo photo : photos) {
-                                File file = new File(photo.getPath());
-                                file.delete();
-                                deleteWithDeleteBuilder(photo.getId());
-                                result = true;
-                        }
-                }
-                catch (SQLException e) {
-                        Log.e(LOG_TAG, e.getMessage());
-                        ExceptionHandler.saveLogFile(e);
-                }
-                
-                return result;
-        }
-        
-        /**
-         * 
-         * Delete photo from local database.
-         * 
-         * @author Paulo Luan
-         * @return Boolean result
-         */
-        public synchronized static boolean deletePhoto(Photo photo) {
-                boolean result = false;
-                
-                try {
-                        File file = new File(photo.getPath());
-                        
-                        if (file.exists()) {
-                                file.delete();
-                        }
-                        
-                        if (photo.getId() != null) {
-                                deleteWithDeleteBuilder(photo.getId());
-                        }
-                        
-                        result = true;
-                }
-                catch (SQLException e) {
-                        Log.e(LOG_TAG, e.getMessage());
-                        ExceptionHandler.saveLogFile(e);
-                }
-                
-                return result;
-        }
-        
-        /**
-         * Save a list of photos into local database.
-         * 
-         * @author Paulo Luan
-         * @param List
-         *                <Photo> Photos that will be saved into database.
-         */
-        public synchronized static boolean savePhotos(List<Photo> photos) {
-                boolean isSaved = false;
-                
-                if (photos != null) {
-                        Dao<Photo, Integer> photoDao = db.getPhotoDao();
-                        
-                        try {
-                                for (Photo photo : photos) {
-                                        if (photo.getId() == null) {
-                                                photoDao.create(photo);
-                                                Log.d(LOG_TAG, "Foto Salva com sucesso! ID: " + photo.getId());
-                                        }
+                for (Integer photoId : photosIds) {
+                        if (photoId != null) {
+                                try {
+                                        deleteWithDeleteBuilder(photoId);
+                                }
+                                catch (SQLException exception) {
+                                        ExceptionHandler.saveLogFile(exception);
                                 }
                                 
-                                isSaved = true;
-                        }
-                        catch (SQLException e) {
-                                ExceptionHandler.saveLogFile(e);
                         }
                 }
-                
-                return isSaved;
         }
         
         /**
@@ -329,72 +342,59 @@ public class PhotoDao {
         }
         
         /**
-         * Get Count of completed photos.
+         * Save a list of photos into local database.
          * 
          * @author Paulo Luan
+         * @param List
+         *                <Photo> Photos that will be saved into database.
          */
-        public synchronized static Long getCountOfCompletedPhotos() {
-                long count = 0;
+        public synchronized static boolean savePhotos(List<Photo> photos) {
+                boolean isSaved = false;
                 
-                QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
-                QueryBuilder<Form, Integer> formQueryBuilder = formDao.queryBuilder();
-                QueryBuilder<Photo, Integer> photoQueryBuilder = photoDao.queryBuilder();
-                QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+                if (photos != null) {
+                        Dao<Photo, Integer> photoDao = db.getPhotoDao();
+                        
+                        try {
+                                for (Photo photo : photos) {
+                                        if (photo.getId() == null) {
+                                                photoDao.create(photo);
+                                                Log.d(LOG_TAG, "Foto Salva com sucesso! ID: " + photo.getId());
+                                        }
+                                }
+                                
+                                isSaved = true;
+                        }
+                        catch (SQLException e) {
+                                ExceptionHandler.saveLogFile(e);
+                        }
+                }
+                
+                return isSaved;
+        }
+        
+        /**
+         * Returns an iterator of all the pictures of the current users.
+         * 
+         * @return {@link CloseableIterator} the iterator of the database
+         *         registers.
+         * @author PauloLuan
+         * */
+        public synchronized CloseableIterator<Photo> getIteratorForNotSyncPhotos() {
+                
+                // when you are done, prepare your query and build an iterator
+                CloseableIterator<Photo> iterator = null;
                 
                 try {
-                        String userHash = SessionManager.getInstance().getUserHash();
-                        userQueryBuilder.where().eq("hash", userHash);
+                        QueryBuilder<Photo, Integer> photoQueryBuilder = getQueryBuilderForUser();
+                        photoQueryBuilder.iterator();
                         
-                        taskQueryBuilder.join(userQueryBuilder);
-                        formQueryBuilder.join(taskQueryBuilder);
-                        
-                        photoQueryBuilder.join(formQueryBuilder);
-                        
-                        count = photoQueryBuilder.countOf();
-                        
-                        Log.d(LOG_TAG, "COUNT de todas as fotos: " + count);
+                        iterator = photoDao.iterator(photoQueryBuilder.prepare());
                 }
                 catch (SQLException e) {
                         ExceptionHandler.saveLogFile(e);
                 }
                 
-                return count;
-        }
-        
-        public static synchronized boolean deleteWithDeleteBuilder(
-                                                                   Integer photoId) throws SQLException {
-                Boolean isRemoved = false;
-                
-                Dao<Photo, Integer> dao = db.getPhotoDao();
-                DeleteBuilder<Photo, Integer> deleteBuilder = dao.deleteBuilder();
-                deleteBuilder.where().eq("id", photoId);
-                Integer isDeleted = dao.delete(deleteBuilder.prepare());
-                
-                if (isDeleted == 1) {
-                        isRemoved = true;
-                        Log.d(LOG_TAG, "Excluiu com sucesso! ID: " + photoId);
-                }
-                else {
-                        Log.d(LOG_TAG, "Não excluiu!! ID: " + photoId);
-                }
-                
-                return isRemoved;
-        }
-        
-        public synchronized static void removePhotosByIds(
-                                                          List<Integer> photosIds) {
-                
-                for (Integer photoId : photosIds) {
-                        if (photoId != null) {
-                                try {
-                                        deleteWithDeleteBuilder(photoId);
-                                }
-                                catch (SQLException exception) {
-                                        ExceptionHandler.saveLogFile(exception);
-                                }
-                                
-                        }
-                }
+                return iterator;
         }
         
 }

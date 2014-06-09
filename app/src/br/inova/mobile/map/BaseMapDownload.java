@@ -45,6 +45,24 @@ public class BaseMapDownload extends AsyncTask<String, String, String> {
                 this.taskActivity = taskActivity;
         }
         
+        public boolean compareSizeOfRemoteFile(
+                                               String remoteUrl,
+                                               long localFileSize) throws IOException {
+                boolean isSameSize = false;
+                
+                URL url = new URL(remoteUrl);
+                URLConnection conexion = url.openConnection();
+                conexion.connect();
+                
+                long remoteFileSize = conexion.getContentLength();
+                
+                if (localFileSize == remoteFileSize) {
+                        isSameSize = true;
+                }
+                
+                return isSameSize;
+        }
+        
         @Override
         protected String doInBackground(String... urls) {
                 
@@ -86,24 +104,6 @@ public class BaseMapDownload extends AsyncTask<String, String, String> {
                         message = "Ocorreu um erro ao baixar o arquivo.";
                         ExceptionHandler.saveLogFile(e);
                 }
-        }
-        
-        public boolean compareSizeOfRemoteFile(
-                                               String remoteUrl,
-                                               long localFileSize) throws IOException {
-                boolean isSameSize = false;
-                
-                URL url = new URL(remoteUrl);
-                URLConnection conexion = url.openConnection();
-                conexion.connect();
-                
-                long remoteFileSize = conexion.getContentLength();
-                
-                if (localFileSize == remoteFileSize) {
-                        isSameSize = true;
-                }
-                
-                return isSameSize;
         }
         
         /**
@@ -169,6 +169,28 @@ public class BaseMapDownload extends AsyncTask<String, String, String> {
                 publishProgress("Iniciado download: " + mapLevel + ".zip ");
         }
         
+        @Override
+        protected void onPostExecute(String message) {
+                //taskActivity.hideLoadingMask();
+                
+                if (message != null) {
+                        Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
+                }
+        }
+        
+        @Override
+        protected void onPreExecute() {
+                super.onPreExecute();
+                //taskActivity.showLoadingMask("Carregando, aguarde...");
+        }
+        
+        @Override
+        protected void onProgressUpdate(String... progress) {
+                super.onProgressUpdate(progress);
+                Utility.showToast(progress[0], Toast.LENGTH_LONG, taskActivity);
+                //taskActivity.onProgressUpdate(progress);
+        }
+        
         /**
          * In order for the MapView to start loading a new tile archive file,
          * you need the MapTileFileArchiveProvider class to call its
@@ -231,27 +253,5 @@ public class BaseMapDownload extends AsyncTask<String, String, String> {
                 }
                 
                 zin.close();
-        }
-        
-        @Override
-        protected void onPreExecute() {
-                super.onPreExecute();
-                //taskActivity.showLoadingMask("Carregando, aguarde...");
-        }
-        
-        @Override
-        protected void onProgressUpdate(String... progress) {
-                super.onProgressUpdate(progress);
-                Utility.showToast(progress[0], Toast.LENGTH_LONG, taskActivity);
-                //taskActivity.onProgressUpdate(progress);
-        }
-        
-        @Override
-        protected void onPostExecute(String message) {
-                //taskActivity.hideLoadingMask();
-                
-                if (message != null) {
-                        Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
-                }
         }
 }

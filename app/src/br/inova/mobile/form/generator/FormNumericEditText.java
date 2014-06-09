@@ -33,12 +33,12 @@ public class FormNumericEditText extends FormWidget {
                 return _input.getText().toString();
         }
         
-        public void setValue(String value) {
-                _input.setText(value);
-        }
-        
         @Override
         public void setHint(String value) {
                 _input.setHint(value);
+        }
+        
+        public void setValue(String value) {
+                _input.setText(value);
         }
 }

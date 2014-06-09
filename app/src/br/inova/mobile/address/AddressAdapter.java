@@ -35,59 +35,6 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
         
         private static final String LOG_TAG = "#AddressAdapter";
         
-        private final Context       context;
-        
-        private final int           layout;
-        
-        public AddressAdapter(
-                              Context context,
-                              int layout,
-                              Cursor c,
-                              String[] from,
-                              int[] to) {
-                super(context, c, 0);
-                this.context = context;
-                this.layout = layout;
-        }
-        
-        @Override
-        public View newView(Context ctx, Cursor c, ViewGroup parent) {
-                final LayoutInflater inflater = LayoutInflater.from(context);
-                View v = inflater.inflate(layout, parent, false);
-                return v;
-        }
-        
-        @Override
-        public void bindView(View v, Context ctx, Cursor c) {
-                TextView txt_logradouro = (TextView) v.findViewById(R.id.item_log);
-                txt_logradouro.setText("\n" + c.getString(c.getColumnIndex("name")));
-                
-                TextView txt_number = (TextView) v.findViewById(R.id.item_number);
-                txt_number.setText("Número: " + c.getString(c.getColumnIndex("number")));
-                
-                TextView txt_lote = (TextView) v.findViewById(R.id.item_lote);
-                txt_lote.setText("Lote: " + Utility.correctNull(c.getString(c.getColumnIndex("featureId"))) + "\n");
-        }
-        
-        @SuppressLint("DefaultLocale")
-        @Override
-        public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
-                String filter = constraint.toString();
-                // String rawQuery = "SELECT * FROM address WHERE name = '"+ filter +
-                // "' OR number = '" + filter + "'";
-                
-                Cursor cursor = null;
-                
-                try {
-                        cursor = this.getAddressCursor("%" + filter + "%");
-                }
-                catch (SQLException e) {
-                        ExceptionHandler.saveLogFile(e);
-                }
-                
-                return cursor;
-        }
-        
         public static Cursor getAddressCursor(String propertieFilter) throws SQLException {
                 Dao<Task, Integer> taskDao = DatabaseHelper.getDatabase().getTaskDao();
                 Dao<User, Integer> userDao = DatabaseHelper.getDatabase().getUserDao();
@@ -129,6 +76,59 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
                         if (iterator != null) {
                                 // iterator.closeQuietly();
                         }
+                }
+                
+                return cursor;
+        }
+        
+        private final Context context;
+        
+        private final int     layout;
+        
+        public AddressAdapter(
+                              Context context,
+                              int layout,
+                              Cursor c,
+                              String[] from,
+                              int[] to) {
+                super(context, c, 0);
+                this.context = context;
+                this.layout = layout;
+        }
+        
+        @Override
+        public void bindView(View v, Context ctx, Cursor c) {
+                TextView txt_logradouro = (TextView) v.findViewById(R.id.item_log);
+                txt_logradouro.setText("\n" + c.getString(c.getColumnIndex("name")));
+                
+                TextView txt_number = (TextView) v.findViewById(R.id.item_number);
+                txt_number.setText("Número: " + c.getString(c.getColumnIndex("number")));
+                
+                TextView txt_lote = (TextView) v.findViewById(R.id.item_lote);
+                txt_lote.setText("Lote: " + Utility.correctNull(c.getString(c.getColumnIndex("featureId"))) + "\n");
+        }
+        
+        @Override
+        public View newView(Context ctx, Cursor c, ViewGroup parent) {
+                final LayoutInflater inflater = LayoutInflater.from(context);
+                View v = inflater.inflate(layout, parent, false);
+                return v;
+        }
+        
+        @SuppressLint("DefaultLocale")
+        @Override
+        public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
+                String filter = constraint.toString();
+                // String rawQuery = "SELECT * FROM address WHERE name = '"+ filter +
+                // "' OR number = '" + filter + "'";
+                
+                Cursor cursor = null;
+                
+                try {
+                        cursor = this.getAddressCursor("%" + filter + "%");
+                }
+                catch (SQLException e) {
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return cursor;

@@ -53,16 +53,6 @@ public class DownloadUsers extends AsyncTask<String, String, String> {
         }
         
         @Override
-        protected void onPreExecute() {
-                loginActivity.showLoadingMask("Realizando Login...");
-        }
-        
-        @Override
-        protected void onProgressUpdate(String... progress) {
-                loginActivity.onProgressUpdate(progress);
-        }
-        
-        @Override
         protected void onPostExecute(String message) {
                 loginActivity.hideLoadingMask();
                 
@@ -71,6 +61,16 @@ public class DownloadUsers extends AsyncTask<String, String, String> {
                 }
                 
                 loginActivity.login();
+        }
+        
+        @Override
+        protected void onPreExecute() {
+                loginActivity.showLoadingMask("Realizando Login...");
+        }
+        
+        @Override
+        protected void onProgressUpdate(String... progress) {
+                loginActivity.onProgressUpdate(progress);
         }
         
 }

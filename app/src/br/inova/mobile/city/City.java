@@ -38,22 +38,6 @@ public class City {
                 this.longitude = longitude;
         }
         
-        public Integer getId() {
-                return id;
-        }
-        
-        public void setId(Integer id) {
-                this.id = id;
-        }
-        
-        public String getName() {
-                return name;
-        }
-        
-        public void setName(String name) {
-                this.name = name;
-        }
-        
         /**
          * The representation of the name without accents
          * 
@@ -63,32 +47,48 @@ public class City {
                 return asciiName;
         }
         
-        public void setAsciiName(String asciiName) {
-                this.asciiName = asciiName;
-        }
-        
-        public String getState() {
-                return state;
-        }
-        
-        public void setState(String state) {
-                this.state = state;
+        public Integer getId() {
+                return id;
         }
         
         public Double getLatitude() {
                 return latitude;
         }
         
-        public void setLatitude(Double latitude) {
-                this.latitude = latitude;
-        }
-        
         public Double getLongitude() {
                 return longitude;
         }
         
+        public String getName() {
+                return name;
+        }
+        
+        public String getState() {
+                return state;
+        }
+        
+        public void setAsciiName(String asciiName) {
+                this.asciiName = asciiName;
+        }
+        
+        public void setId(Integer id) {
+                this.id = id;
+        }
+        
+        public void setLatitude(Double latitude) {
+                this.latitude = latitude;
+        }
+        
         public void setLongitude(Double longitude) {
                 this.longitude = longitude;
+        }
+        
+        public void setName(String name) {
+                this.name = name;
+        }
+        
+        public void setState(String state) {
+                this.state = state;
         }
         
         @Override

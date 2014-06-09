@@ -33,83 +33,13 @@ abstract class FormWidget {
                 _displayText = toTitleCase(_displayText);
         }
         
-        // -----------------------------------------------
-        //
-        // view
-        //
-        // -----------------------------------------------
         /**
-         * return LinearLayout containing this widget's view elements
-         */
-        public View getView() {
-                return _layout;
-        }
-        
-        /**
-         * toggles the visibility of this widget
+         * returns a title case version of this property
          * 
-         * @param value
+         * @return
          */
-        public void setVisibility(int value) {
-                _layout.setVisibility(value);
-        }
-        
-        // -----------------------------------------------
-        //
-        // set / get value
-        //
-        // -----------------------------------------------
-        
-        /**
-         * returns value of this widget as String
-         */
-        public String getValue() {
-                return "";
-        }
-        
-        /**
-         * sets value of this widget, method should be overridden in sub-class
-         * 
-         * @param value
-         */
-        public void setValue(String value) {
-                // -- override 
-        }
-        
-        // -----------------------------------------------
-        //
-        // modifiers
-        //
-        // -----------------------------------------------
-        
-        /**
-         * sets the hint for the widget, method should be overriden in sub-class
-         */
-        public void setHint(String value) {
-                // -- override
-        }
-        
-        /**
-         * sets an object that contains keys for special properties on an object
-         * 
-         * @param modifiers
-         */
-        public void setModifiers(JSONObject modifiers) {
-                // -- override
-        }
-        
-        // -----------------------------------------------
-        //
-        // set / get priority
-        //
-        // -----------------------------------------------
-        
-        /**
-         * sets the visual priority of this widget essentially this means it's
-         * physical location in the form
-         */
-        public void setPriority(int value) {
-                _priority = value;
+        public String getDisplayText() {
+                return _displayText;
         }
         
         /**
@@ -123,7 +53,7 @@ abstract class FormWidget {
         
         // -----------------------------------------------
         //
-        // property name mods
+        // set / get value
         //
         // -----------------------------------------------
         
@@ -132,70 +62,6 @@ abstract class FormWidget {
          */
         public String getPropertyName() {
                 return _property;
-        }
-        
-        /**
-         * returns a title case version of this property
-         * 
-         * @return
-         */
-        public String getDisplayText() {
-                return _displayText;
-        }
-        
-        /**
-         * takes a property name and modifies
-         * 
-         * @param s
-         * @return
-         */
-        public String toTitleCase(String s) {
-                char[] chars = s.trim().toLowerCase().toCharArray();
-                boolean found = false;
-                
-                for (int i = 0; i < chars.length; i++) {
-                        if (!found && Character.isLetter(chars[i])) {
-                                chars[i] = Character.toUpperCase(chars[i]);
-                                found = true;
-                        }
-                        else if (Character.isWhitespace(chars[i])) {
-                                found = false;
-                        }
-                }
-                
-                return String.valueOf(chars);
-        }
-        
-        // -----------------------------------------------
-        //
-        // toggles
-        //
-        // -----------------------------------------------
-        
-        /**
-         * sets the list of toggles for this widgets the structure of the data
-         * looks like this: HashMap<value of property for visibility,
-         * ArrayList<list of properties to toggle on>>
-         */
-        public void setToggles(HashMap<String, ArrayList<String>> toggles) {
-                _toggles = toggles;
-        }
-        
-        /**
-         * return list of widgets to toggle on
-         * 
-         * @param value
-         * @return
-         */
-        public ArrayList<String> getToggledOn() {
-                if (_toggles == null) return new ArrayList<String>();
-                
-                if (_toggles.get(getValue()) != null) {
-                        return _toggles.get(getValue());
-                }
-                else {
-                        return new ArrayList<String>();
-                }
         }
         
         /**
@@ -223,6 +89,84 @@ abstract class FormWidget {
                 return result;
         }
         
+        // -----------------------------------------------
+        //
+        // modifiers
+        //
+        // -----------------------------------------------
+        
+        /**
+         * return list of widgets to toggle on
+         * 
+         * @param value
+         * @return
+         */
+        public ArrayList<String> getToggledOn() {
+                if (_toggles == null) return new ArrayList<String>();
+                
+                if (_toggles.get(getValue()) != null) {
+                        return _toggles.get(getValue());
+                }
+                else {
+                        return new ArrayList<String>();
+                }
+        }
+        
+        /**
+         * returns value of this widget as String
+         */
+        public String getValue() {
+                return "";
+        }
+        
+        // -----------------------------------------------
+        //
+        // set / get priority
+        //
+        // -----------------------------------------------
+        
+        // -----------------------------------------------
+        //
+        // view
+        //
+        // -----------------------------------------------
+        /**
+         * return LinearLayout containing this widget's view elements
+         */
+        public View getView() {
+                return _layout;
+        }
+        
+        /**
+         * sets the hint for the widget, method should be overriden in sub-class
+         */
+        public void setHint(String value) {
+                // -- override
+        }
+        
+        // -----------------------------------------------
+        //
+        // property name mods
+        //
+        // -----------------------------------------------
+        
+        /**
+         * sets an object that contains keys for special properties on an object
+         * 
+         * @param modifiers
+         */
+        public void setModifiers(JSONObject modifiers) {
+                // -- override
+        }
+        
+        /**
+         * sets the visual priority of this widget essentially this means it's
+         * physical location in the form
+         */
+        public void setPriority(int value) {
+                _priority = value;
+        }
+        
         /**
          * sets a handler for value changes
          * 
@@ -231,5 +175,61 @@ abstract class FormWidget {
         public void setToggleHandler(
                                      FormActivity.FormWidgetToggleHandler handler) {
                 _handler = handler;
+        }
+        
+        // -----------------------------------------------
+        //
+        // toggles
+        //
+        // -----------------------------------------------
+        
+        /**
+         * sets the list of toggles for this widgets the structure of the data
+         * looks like this: HashMap<value of property for visibility,
+         * ArrayList<list of properties to toggle on>>
+         */
+        public void setToggles(HashMap<String, ArrayList<String>> toggles) {
+                _toggles = toggles;
+        }
+        
+        /**
+         * sets value of this widget, method should be overridden in sub-class
+         * 
+         * @param value
+         */
+        public void setValue(String value) {
+                // -- override 
+        }
+        
+        /**
+         * toggles the visibility of this widget
+         * 
+         * @param value
+         */
+        public void setVisibility(int value) {
+                _layout.setVisibility(value);
+        }
+        
+        /**
+         * takes a property name and modifies
+         * 
+         * @param s
+         * @return
+         */
+        public String toTitleCase(String s) {
+                char[] chars = s.trim().toLowerCase().toCharArray();
+                boolean found = false;
+                
+                for (int i = 0; i < chars.length; i++) {
+                        if (!found && Character.isLetter(chars[i])) {
+                                chars[i] = Character.toUpperCase(chars[i]);
+                                found = true;
+                        }
+                        else if (Character.isWhitespace(chars[i])) {
+                                found = false;
+                        }
+                }
+                
+                return String.valueOf(chars);
         }
 }

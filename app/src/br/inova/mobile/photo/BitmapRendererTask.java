@@ -13,13 +13,26 @@ import android.widget.ImageView;
 import br.inova.mobile.exception.ExceptionHandler;
 
 public class BitmapRendererTask extends AsyncTask<Integer, Void, Bitmap> {
+        private class AsyncDrawable extends BitmapDrawable {
+                private final WeakReference<BitmapRendererTask> bitmapWorkerTaskReference;
+                
+                public AsyncDrawable(BitmapRendererTask bitmapRendererTask) {
+                        bitmapWorkerTaskReference = new WeakReference<BitmapRendererTask>(bitmapRendererTask);
+                }
+                
+                public BitmapRendererTask getBitmapWorkerTask() {
+                        return bitmapWorkerTaskReference.get();
+                }
+        }
+        
         private final WeakReference<ImageView> imageViewReference;
+        
         private int                            data = 0;
-        
         private File                           imageFile;
-        private ImageView                      imageView;
         
+        private ImageView                      imageView;
         private int                            width;
+        
         private int                            height;
         
         public BitmapRendererTask(
@@ -38,65 +51,6 @@ public class BitmapRendererTask extends AsyncTask<Integer, Void, Bitmap> {
                 this.height = height;
                 
                 loadBitmap();
-        }
-        
-        private void loadBitmap() {
-                if (cancelPotentialWork(imageFile, imageView)) {
-                        final AsyncDrawable asyncDrawable = new AsyncDrawable(this);
-                        imageView.setImageDrawable(asyncDrawable);
-                        this.execute();
-                }
-        }
-        
-        // Decode image in background.
-        @Override
-        protected Bitmap doInBackground(Integer... params) {
-                Bitmap image = null;
-                
-                try {
-                        image = decodeSampledBitmapFromFile();
-                }
-                catch (OutOfMemoryError exception) {
-                        System.gc();
-                }
-                catch (Exception exception) {
-                        ExceptionHandler.saveLogFile(exception);
-                }
-                
-                return image;
-        }
-        
-        /**
-         * Decodes image and scales it to reduce memory consumption
-         * 
-         * @param File
-         *                the picture file
-         * 
-         * @author Paulo Luan
-         * */
-        private Bitmap decodeSampledBitmapFromFile() {
-                Bitmap bitmapImage = null;
-                
-                try {
-                        System.gc();
-                        
-                        // First decode with inJustDecodeBounds=true to check dimensions
-                        final BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inJustDecodeBounds = true;
-                        BitmapFactory.decodeStream(new FileInputStream(imageFile), null, options);
-                        
-                        // Calculate inSampleSize
-                        options.inSampleSize = calculateInSampleSize(options, width, height);
-                        
-                        // Decode bitmap with inSampleSize set
-                        options.inJustDecodeBounds = false;
-                        bitmapImage = BitmapFactory.decodeStream(new FileInputStream(imageFile), null, options);
-                }
-                catch (Exception e) {
-                        ExceptionHandler.saveLogFile(e);
-                }
-                
-                return bitmapImage;
         }
         
         /**
@@ -135,18 +89,6 @@ public class BitmapRendererTask extends AsyncTask<Integer, Void, Bitmap> {
                 return inSampleSize;
         }
         
-        private class AsyncDrawable extends BitmapDrawable {
-                private final WeakReference<BitmapRendererTask> bitmapWorkerTaskReference;
-                
-                public AsyncDrawable(BitmapRendererTask bitmapRendererTask) {
-                        bitmapWorkerTaskReference = new WeakReference<BitmapRendererTask>(bitmapRendererTask);
-                }
-                
-                public BitmapRendererTask getBitmapWorkerTask() {
-                        return bitmapWorkerTaskReference.get();
-                }
-        }
-        
         private boolean cancelPotentialWork(File imageFile, ImageView imageView) {
                 final BitmapRendererTask bitmapRendererTask = getBitmapWorkerTask(imageView);
                 
@@ -166,6 +108,57 @@ public class BitmapRendererTask extends AsyncTask<Integer, Void, Bitmap> {
                 return true;
         }
         
+        /**
+         * Decodes image and scales it to reduce memory consumption
+         * 
+         * @param File
+         *                the picture file
+         * 
+         * @author Paulo Luan
+         * */
+        private Bitmap decodeSampledBitmapFromFile() {
+                Bitmap bitmapImage = null;
+                
+                try {
+                        System.gc();
+                        
+                        // First decode with inJustDecodeBounds=true to check dimensions
+                        final BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inJustDecodeBounds = true;
+                        BitmapFactory.decodeStream(new FileInputStream(imageFile), null, options);
+                        
+                        // Calculate inSampleSize
+                        options.inSampleSize = calculateInSampleSize(options, width, height);
+                        
+                        // Decode bitmap with inSampleSize set
+                        options.inJustDecodeBounds = false;
+                        bitmapImage = BitmapFactory.decodeStream(new FileInputStream(imageFile), null, options);
+                }
+                catch (Exception e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+                
+                return bitmapImage;
+        }
+        
+        // Decode image in background.
+        @Override
+        protected Bitmap doInBackground(Integer... params) {
+                Bitmap image = null;
+                
+                try {
+                        image = decodeSampledBitmapFromFile();
+                }
+                catch (OutOfMemoryError exception) {
+                        System.gc();
+                }
+                catch (Exception exception) {
+                        ExceptionHandler.saveLogFile(exception);
+                }
+                
+                return image;
+        }
+        
         private BitmapRendererTask getBitmapWorkerTask(ImageView imageView) {
                 if (imageView != null) {
                         final Drawable drawable = imageView.getDrawable();
@@ -175,6 +168,14 @@ public class BitmapRendererTask extends AsyncTask<Integer, Void, Bitmap> {
                         }
                 }
                 return null;
+        }
+        
+        private void loadBitmap() {
+                if (cancelPotentialWork(imageFile, imageView)) {
+                        final AsyncDrawable asyncDrawable = new AsyncDrawable(this);
+                        imageView.setImageDrawable(asyncDrawable);
+                        this.execute();
+                }
         }
         
         @Override

@@ -8,16 +8,16 @@ import android.widget.Toast;
 
 public class ListTasks extends ListActivity {
         
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
-                initializeListView();
-        }
-        
         public void initializeListView() {
                 String[] values = new String[] { "Android", "iPhone", "WindowsMobile", "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2" };
                 ListTasksAdapter adapter = new ListTasksAdapter(this, values);
                 setListAdapter(adapter);
+        }
+        
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                initializeListView();
         }
         
         @Override

@@ -35,17 +35,6 @@ public class SessionManager {
         
         private static SessionManager    self         = null;
         
-        // Constructor
-        private SessionManager(Context context) {
-                this._context = context;
-                pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-                editor = pref.edit();
-        }
-        
-        public static SessionManager getInstance() {
-                return self;
-        }
-        
         /**
          * Application Memory class creates this Object.
          * */
@@ -55,6 +44,38 @@ public class SessionManager {
                 }
                 
                 return getInstance();
+        }
+        
+        public static SessionManager getInstance() {
+                return self;
+        }
+        
+        /**
+         * Clear session details
+         * */
+        public static void logoutUser() {
+                // Clearing all data from Shared Preferences
+                editor.clear();
+                editor.commit();
+                
+                // After logout redirect user to Login Activity
+                Intent i = new Intent(_context, Main.class);
+                
+                // Closing all the Activities
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                
+                // Add new Flag to start new Activity
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                
+                // Staring Login Activity
+                _context.startActivity(i);
+        }
+        
+        // Constructor
+        private SessionManager(Context context) {
+                this._context = context;
+                pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+                editor = pref.edit();
         }
         
         /**
@@ -80,22 +101,19 @@ public class SessionManager {
         }
         
         /**
-         * Save map into configurations.
-         * */
-        public void saveKeyAndValue(String key, String value) {
-                // Storing hash in pref
-                editor.putString(key, value);
-                
-                // commit changes
-                editor.commit();
-        }
-        
-        /**
          * Search key in saved preferences and return the value.
          * */
         public String getSavedValue(String key) {
                 String result = pref.getString(key, null);
                 return result;
+        }
+        
+        /**
+         * Get user hash
+         * */
+        public String getSessionType() {
+                String sessionType = pref.getString(SESSION_TYPE, null);
+                return sessionType;
         }
         
         /**
@@ -114,14 +132,6 @@ public class SessionManager {
         }
         
         /**
-         * Get user name
-         * */
-        public String getUserName() {
-                String name = pref.getString(KEY_NAME, null);
-                return name;
-        }
-        
-        /**
          * Get user hash
          * */
         public String getUserHash() {
@@ -135,32 +145,11 @@ public class SessionManager {
         }
         
         /**
-         * Get user hash
+         * Get user name
          * */
-        public String getSessionType() {
-                String sessionType = pref.getString(SESSION_TYPE, null);
-                return sessionType;
-        }
-        
-        /**
-         * Clear session details
-         * */
-        public static void logoutUser() {
-                // Clearing all data from Shared Preferences
-                editor.clear();
-                editor.commit();
-                
-                // After logout redirect user to Login Activity
-                Intent i = new Intent(_context, Main.class);
-                
-                // Closing all the Activities
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                
-                // Add new Flag to start new Activity
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                
-                // Staring Login Activity
-                _context.startActivity(i);
+        public String getUserName() {
+                String name = pref.getString(KEY_NAME, null);
+                return name;
         }
         
         /**
@@ -170,5 +159,16 @@ public class SessionManager {
         public boolean isLoggedIn() {
                 Boolean isLogged = pref.getBoolean(IS_LOGIN, false);
                 return isLogged;
+        }
+        
+        /**
+         * Save map into configurations.
+         * */
+        public void saveKeyAndValue(String key, String value) {
+                // Storing hash in pref
+                editor.putString(key, value);
+                
+                // commit changes
+                editor.commit();
         }
 }

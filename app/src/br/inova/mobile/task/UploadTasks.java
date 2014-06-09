@@ -82,6 +82,17 @@ public class UploadTasks extends AsyncTask<String, String, String> {
         }
         
         @Override
+        protected void onPostExecute(String message) {
+                taskActivity.hideLoadingMask();
+                
+                if (message != null) {
+                        Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
+                }
+                
+                taskActivity.getRemoteTasks();
+        }
+        
+        @Override
         protected void onPreExecute() {
                 super.onPreExecute();
                 
@@ -95,16 +106,5 @@ public class UploadTasks extends AsyncTask<String, String, String> {
         @Override
         protected void onProgressUpdate(String... progress) {
                 taskActivity.onProgressUpdate(progress);
-        }
-        
-        @Override
-        protected void onPostExecute(String message) {
-                taskActivity.hideLoadingMask();
-                
-                if (message != null) {
-                        Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
-                }
-                
-                taskActivity.getRemoteTasks();
         }
 }

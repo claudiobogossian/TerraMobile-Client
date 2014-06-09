@@ -31,57 +31,6 @@ public class CityAdapter extends CursorAdapter implements Filterable {
         
         private static final String LOG_TAG = "#CityAdapter";
         
-        private final Context       context;
-        
-        private final int           layout;
-        
-        public CityAdapter(
-                           Context context,
-                           int layout,
-                           Cursor c,
-                           String[] from,
-                           int[] to) {
-                super(context, c, 0);
-                this.context = context;
-                this.layout = layout;
-        }
-        
-        @Override
-        public View newView(Context ctx, Cursor c, ViewGroup parent) {
-                final LayoutInflater inflater = LayoutInflater.from(context);
-                View v = inflater.inflate(layout, parent, false);
-                return v;
-        }
-        
-        @Override
-        public void bindView(View v, Context ctx, Cursor c) {
-                TextView txtCityName = (TextView) v.findViewById(R.id.city_name);
-                txtCityName.setText("\nCidade:" + c.getString(c.getColumnIndex("name")));
-                
-                TextView txtState = (TextView) v.findViewById(R.id.city_state);
-                txtState.setText("Estado: " + c.getString(c.getColumnIndex("state")));
-        }
-        
-        @SuppressLint("DefaultLocale")
-        @Override
-        public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
-                Cursor cursor = null;
-                String filter = "";
-                
-                if (constraint != null) {
-                        filter = constraint.toString();
-                }
-                
-                try {
-                        cursor = this.getCityCursor("%" + filter + "%");
-                }
-                catch (SQLException e) {
-                        ExceptionHandler.saveLogFile(e);
-                }
-                
-                return cursor;
-        }
-        
         public static Cursor getCityCursor(String cityName) throws SQLException {
                 Dao<City, Integer> cityDao = DatabaseHelper.getDatabase().getCityDao();
                 QueryBuilder<City, Integer> cityQueryBuilder = cityDao.queryBuilder();
@@ -105,6 +54,57 @@ public class CityAdapter extends CursorAdapter implements Filterable {
                         if (iterator != null) {
                                 // iterator.closeQuietly();
                         }
+                }
+                
+                return cursor;
+        }
+        
+        private final Context context;
+        
+        private final int     layout;
+        
+        public CityAdapter(
+                           Context context,
+                           int layout,
+                           Cursor c,
+                           String[] from,
+                           int[] to) {
+                super(context, c, 0);
+                this.context = context;
+                this.layout = layout;
+        }
+        
+        @Override
+        public void bindView(View v, Context ctx, Cursor c) {
+                TextView txtCityName = (TextView) v.findViewById(R.id.city_name);
+                txtCityName.setText("\nCidade:" + c.getString(c.getColumnIndex("name")));
+                
+                TextView txtState = (TextView) v.findViewById(R.id.city_state);
+                txtState.setText("Estado: " + c.getString(c.getColumnIndex("state")));
+        }
+        
+        @Override
+        public View newView(Context ctx, Cursor c, ViewGroup parent) {
+                final LayoutInflater inflater = LayoutInflater.from(context);
+                View v = inflater.inflate(layout, parent, false);
+                return v;
+        }
+        
+        @SuppressLint("DefaultLocale")
+        @Override
+        public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
+                Cursor cursor = null;
+                String filter = "";
+                
+                if (constraint != null) {
+                        filter = constraint.toString();
+                }
+                
+                try {
+                        cursor = this.getCityCursor("%" + filter + "%");
+                }
+                catch (SQLException e) {
+                        ExceptionHandler.saveLogFile(e);
                 }
                 
                 return cursor;

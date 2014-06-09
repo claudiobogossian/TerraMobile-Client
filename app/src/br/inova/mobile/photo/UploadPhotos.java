@@ -35,21 +35,6 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                 this.taskActivity = taskActivity;
         }
         
-        @Override
-        protected String doInBackground(String... urls) {
-                PhotoDBAnalyzer.verifyIntegrityOfPictures();
-                
-                List<Integer> photosIds = PhotoDao.getListOfPhotosIds();
-                
-                for (String url : urls) {
-                        for (Integer photoId : photosIds) {
-                                analiseAndSendTask(url, photoId);
-                        }
-                }
-                
-                return message;
-        }
-        
         public void analiseAndSendTask(String url, Integer photoId) {
                 try {
                         Photo photo = PhotoDao.getPhotosById(photoId);
@@ -96,10 +81,30 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                 }
         }
         
-        public void uploadTasks() {
-                String url = Utility.getServerUrl() + Constants.TASKS_REST;
-                UploadTasks remote = new UploadTasks(userHash, taskActivity);
-                remote.execute(new String[] { url });
+        @Override
+        protected String doInBackground(String... urls) {
+                PhotoDBAnalyzer.verifyIntegrityOfPictures();
+                
+                List<Integer> photosIds = PhotoDao.getListOfPhotosIds();
+                
+                for (String url : urls) {
+                        for (Integer photoId : photosIds) {
+                                analiseAndSendTask(url, photoId);
+                        }
+                }
+                
+                return message;
+        }
+        
+        @Override
+        protected void onPostExecute(String message) {
+                taskActivity.hideLoadingMask();
+                
+                if (message != null) {
+                        Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
+                }
+                
+                this.uploadTasks();
         }
         
         @Override
@@ -118,15 +123,10 @@ public class UploadPhotos extends AsyncTask<String, String, String> {
                 taskActivity.onProgressUpdate(progress);
         }
         
-        @Override
-        protected void onPostExecute(String message) {
-                taskActivity.hideLoadingMask();
-                
-                if (message != null) {
-                        Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
-                }
-                
-                this.uploadTasks();
+        public void uploadTasks() {
+                String url = Utility.getServerUrl() + Constants.TASKS_REST;
+                UploadTasks remote = new UploadTasks(userHash, taskActivity);
+                remote.execute(new String[] { url });
         }
         
 }

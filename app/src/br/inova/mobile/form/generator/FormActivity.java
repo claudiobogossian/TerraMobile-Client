@@ -32,33 +32,84 @@ import android.widget.ScrollView;
  * @author Jeremy Brown
  */
 public abstract class FormActivity extends Activity {
-        public static String              SCHEMA_KEY_TYPE      = "type";
-        public static String              SCHEMA_KEY_BOOL      = "boolean";
-        public static String              SCHEMA_KEY_INT       = "integer";
-        public static String              SCHEMA_KEY_STRING    = "string";
-        public static String              SCHEMA_KEY_PRIORITY  = "priority";
-        public static String              SCHEMA_KEY_TOGGLES   = "toggles";
-        public static String              SCHEMA_KEY_DEFAULT   = "default";
-        public static String              SCHEMA_KEY_MODIFIERS = "modifiers";
-        public static String              SCHEMA_KEY_OPTIONS   = "options";
-        public static String              SCHEMA_KEY_META      = "meta";
-        public static String              SCHEMA_KEY_BUTTON    = "button";
-        public static String              SCHEMA_KEY_HINT      = "hint";
+        /**
+         * simple callbacks for widgets to use when their values have changed
+         */
+        class FormWidgetToggleHandler {
+                public void toggle(FormWidget widget) {
+                        updateToggles(widget);
+                }
+        }
         
-        public static final LayoutParams  defaultLayoutParams  = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+        /**
+         * helper class for sorting widgets based on priority
+         */
+        class PriorityComparison implements Comparator<FormWidget> {
+                public int compare(FormWidget item1, FormWidget item2) {
+                        return item1.getPriority() > item2.getPriority() ? 1 : -1;
+                }
+        }
+        
+        public static String             SCHEMA_KEY_TYPE      = "type";
+        public static String             SCHEMA_KEY_BOOL      = "boolean";
+        public static String             SCHEMA_KEY_INT       = "integer";
+        public static String             SCHEMA_KEY_STRING    = "string";
+        public static String             SCHEMA_KEY_PRIORITY  = "priority";
+        public static String             SCHEMA_KEY_TOGGLES   = "toggles";
+        public static String             SCHEMA_KEY_DEFAULT   = "default";
+        public static String             SCHEMA_KEY_MODIFIERS = "modifiers";
+        public static String             SCHEMA_KEY_OPTIONS   = "options";
+        public static String             SCHEMA_KEY_META      = "meta";
+        
+        public static String             SCHEMA_KEY_BUTTON    = "button";
+        
+        public static String             SCHEMA_KEY_HINT      = "hint";
+        public static final LayoutParams defaultLayoutParams  = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+        
+        public static String parseFileToString(Context context, String filename) {
+                try {
+                        InputStream stream = context.getAssets().open(filename);
+                        int size = stream.available();
+                        
+                        byte[] bytes = new byte[size];
+                        stream.read(bytes);
+                        stream.close();
+                        
+                        return new String(bytes);
+                        
+                }
+                catch (IOException e) {
+                        Log.i("MakeMachine", "IOException: " + e.getMessage());
+                }
+                return null;
+        }
         
         // -- data
         protected Map<String, FormWidget> _map;
         protected ArrayList<FormWidget>   _widgets;
         
+        // -----------------------------------------------
+        //
+        // parse data and build view
+        //
+        // -----------------------------------------------
+        
         // -- widgets
         protected LinearLayout            _container;
+        
+        // -----------------------------------------------
+        //
+        // populate and save
+        //
+        // -----------------------------------------------
+        
         protected LinearLayout            _layout;
+        
         protected ScrollView              _viewport;
         
         // -----------------------------------------------
         //
-        // parse data and build view
+        // toggles
         //
         // -----------------------------------------------
         
@@ -138,9 +189,74 @@ public abstract class FormActivity extends Activity {
                 setContentView(_container);
         }
         
+        protected String getDefault(JSONObject obj) {
+                try {
+                        return obj.getString(FormActivity.SCHEMA_KEY_DEFAULT);
+                }
+                catch (JSONException e) {
+                        return null;
+                }
+        }
+        
+        /**
+         * factory method for actually instantiating widgets
+         */
+        protected FormWidget getWidget(String name, JSONObject property) {
+                try {
+                        String type = property.getString(FormActivity.SCHEMA_KEY_TYPE);
+                        
+                        if (type.equals(FormActivity.SCHEMA_KEY_STRING)) { return new FormEditText(this, name); }
+                        
+                        if (type.equals(FormActivity.SCHEMA_KEY_BOOL)) { return new FormCheckBox(this, name); }
+                        
+                        if (type.equals(FormActivity.SCHEMA_KEY_BUTTON)) { return new FormButton(this, name); }
+                        
+                        if (type.equals(FormActivity.SCHEMA_KEY_INT)) {
+                                if (property.has(FormActivity.SCHEMA_KEY_OPTIONS)) {
+                                        JSONObject options = property.getJSONObject(FormActivity.SCHEMA_KEY_OPTIONS);
+                                        return new FormSpinner(this, name, options);
+                                }
+                                else {
+                                        return new FormNumericEditText(this, name);
+                                }
+                        }
+                }
+                catch (JSONException e) {
+                        return null;
+                }
+                return null;
+        }
+        
+        /**
+         * returns a boolean indicating that the supplied json object contains a
+         * property for toggles
+         */
+        protected boolean hasToggles(JSONObject obj) {
+                try {
+                        obj.getJSONObject(FormActivity.SCHEMA_KEY_TOGGLES);
+                        return true;
+                }
+                catch (JSONException e) {
+                        return false;
+                }
+        }
+        
+        /**
+         * initializes the visibility of widgets that are togglable
+         */
+        protected void initToggles() {
+                int i;
+                FormWidget widget;
+                
+                for (i = 0; i < _widgets.size(); i++) {
+                        widget = _widgets.get(i);
+                        updateToggles(widget);
+                }
+        }
+        
         // -----------------------------------------------
         //
-        // populate and save
+        // utils
         //
         // -----------------------------------------------
         
@@ -170,6 +286,37 @@ public abstract class FormActivity extends Activity {
                 }
                 catch (JSONException e) {
                         
+                }
+        }
+        
+        /**
+         * creates the map a map of values for visibility and references to the
+         * widgets the value affects
+         */
+        protected HashMap<String, ArrayList<String>> processToggles(
+                                                                    JSONObject property) {
+                try {
+                        ArrayList<String> toggled;
+                        HashMap<String, ArrayList<String>> toggleMap = new HashMap<String, ArrayList<String>>();
+                        
+                        JSONObject toggleList = property.getJSONObject(FormActivity.SCHEMA_KEY_TOGGLES);
+                        JSONArray toggleNames = toggleList.names();
+                        
+                        for (int j = 0; j < toggleNames.length(); j++) {
+                                String toggleName = toggleNames.getString(j);
+                                JSONArray toggleValues = toggleList.getJSONArray(toggleName);
+                                toggled = new ArrayList<String>();
+                                toggleMap.put(toggleName, toggled);
+                                for (int k = 0; k < toggleValues.length(); k++) {
+                                        toggled.add(toggleValues.getString(k));
+                                }
+                        }
+                        
+                        return toggleMap;
+                        
+                }
+                catch (JSONException e) {
+                        return null;
                 }
         }
         
@@ -212,70 +359,6 @@ public abstract class FormActivity extends Activity {
                 return null;
         }
         
-        // -----------------------------------------------
-        //
-        // toggles
-        //
-        // -----------------------------------------------
-        
-        /**
-         * creates the map a map of values for visibility and references to the
-         * widgets the value affects
-         */
-        protected HashMap<String, ArrayList<String>> processToggles(
-                                                                    JSONObject property) {
-                try {
-                        ArrayList<String> toggled;
-                        HashMap<String, ArrayList<String>> toggleMap = new HashMap<String, ArrayList<String>>();
-                        
-                        JSONObject toggleList = property.getJSONObject(FormActivity.SCHEMA_KEY_TOGGLES);
-                        JSONArray toggleNames = toggleList.names();
-                        
-                        for (int j = 0; j < toggleNames.length(); j++) {
-                                String toggleName = toggleNames.getString(j);
-                                JSONArray toggleValues = toggleList.getJSONArray(toggleName);
-                                toggled = new ArrayList<String>();
-                                toggleMap.put(toggleName, toggled);
-                                for (int k = 0; k < toggleValues.length(); k++) {
-                                        toggled.add(toggleValues.getString(k));
-                                }
-                        }
-                        
-                        return toggleMap;
-                        
-                }
-                catch (JSONException e) {
-                        return null;
-                }
-        }
-        
-        /**
-         * returns a boolean indicating that the supplied json object contains a
-         * property for toggles
-         */
-        protected boolean hasToggles(JSONObject obj) {
-                try {
-                        obj.getJSONObject(FormActivity.SCHEMA_KEY_TOGGLES);
-                        return true;
-                }
-                catch (JSONException e) {
-                        return false;
-                }
-        }
-        
-        /**
-         * initializes the visibility of widgets that are togglable
-         */
-        protected void initToggles() {
-                int i;
-                FormWidget widget;
-                
-                for (i = 0; i < _widgets.size(); i++) {
-                        widget = _widgets.get(i);
-                        updateToggles(widget);
-                }
-        }
-        
         /**
          * updates any widgets that need to be toggled on or off
          * 
@@ -306,85 +389,5 @@ public abstract class FormActivity extends Activity {
                                 toggle.setVisibility(View.GONE);
                         }
                 }
-        }
-        
-        /**
-         * simple callbacks for widgets to use when their values have changed
-         */
-        class FormWidgetToggleHandler {
-                public void toggle(FormWidget widget) {
-                        updateToggles(widget);
-                }
-        }
-        
-        // -----------------------------------------------
-        //
-        // utils
-        //
-        // -----------------------------------------------
-        
-        protected String getDefault(JSONObject obj) {
-                try {
-                        return obj.getString(FormActivity.SCHEMA_KEY_DEFAULT);
-                }
-                catch (JSONException e) {
-                        return null;
-                }
-        }
-        
-        /**
-         * helper class for sorting widgets based on priority
-         */
-        class PriorityComparison implements Comparator<FormWidget> {
-                public int compare(FormWidget item1, FormWidget item2) {
-                        return item1.getPriority() > item2.getPriority() ? 1 : -1;
-                }
-        }
-        
-        /**
-         * factory method for actually instantiating widgets
-         */
-        protected FormWidget getWidget(String name, JSONObject property) {
-                try {
-                        String type = property.getString(FormActivity.SCHEMA_KEY_TYPE);
-                        
-                        if (type.equals(FormActivity.SCHEMA_KEY_STRING)) { return new FormEditText(this, name); }
-                        
-                        if (type.equals(FormActivity.SCHEMA_KEY_BOOL)) { return new FormCheckBox(this, name); }
-                        
-                        if (type.equals(FormActivity.SCHEMA_KEY_BUTTON)) { return new FormButton(this, name); }
-                        
-                        if (type.equals(FormActivity.SCHEMA_KEY_INT)) {
-                                if (property.has(FormActivity.SCHEMA_KEY_OPTIONS)) {
-                                        JSONObject options = property.getJSONObject(FormActivity.SCHEMA_KEY_OPTIONS);
-                                        return new FormSpinner(this, name, options);
-                                }
-                                else {
-                                        return new FormNumericEditText(this, name);
-                                }
-                        }
-                }
-                catch (JSONException e) {
-                        return null;
-                }
-                return null;
-        }
-        
-        public static String parseFileToString(Context context, String filename) {
-                try {
-                        InputStream stream = context.getAssets().open(filename);
-                        int size = stream.available();
-                        
-                        byte[] bytes = new byte[size];
-                        stream.read(bytes);
-                        stream.close();
-                        
-                        return new String(bytes);
-                        
-                }
-                catch (IOException e) {
-                        Log.i("MakeMachine", "IOException: " + e.getMessage());
-                }
-                return null;
         }
 }

@@ -41,6 +41,64 @@ public class CitySearchToolbar extends AsyncTask<String, String, String> {
                 this.execute();
         }
         
+        private void clearCityAutoCompleteText() {
+                cityAutoCompleteTextView.setText("");
+        }
+        
+        public void createButtonForCloseToolbar() {
+                ImageButton btnCloseSearchToolbar = (ImageButton) geoMap.findViewById(R.id.btn_close_search_toolbar);
+                btnCloseSearchToolbar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                                self.hideSearchToolbar();
+                        }
+                });
+        }
+        
+        public void createButtonForOpenToolbar() {
+                ImageButton btnCloseSearchToolbar = (ImageButton) geoMap.findViewById(R.id.btn_open_search_city_toolbar);
+                btnCloseSearchToolbar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                                self.showSearchToolbar();
+                        }
+                });
+        }
+        
+        /**
+         * Creates the inflator Layout to show the cities search toolbar.
+         */
+        public void createInflatorForSearchToolbar() {
+                createButtonForOpenToolbar();
+                createButtonForCloseToolbar();
+                
+                self.createThreadToSearchCitiesAdapter();
+        }
+        
+        /**
+         * Database query can be a time consuming task, so its safe to call
+         * database query in another thread
+         * 
+         * @author Paulo Luan
+         */
+        public void createThreadToSearchCitiesAdapter() {
+                new Handler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                                Cursor cursor;
+                                
+                                try {
+                                        cursor = CityAdapter.getCityCursor(null);
+                                        setAutoCompleteAdapterPropertiers(cursor);
+                                }
+                                catch (SQLException e) {
+                                        Log.e(self.LOG_TAG, "ERRO AO CRIAR CURSOR!" + e.getMessage());
+                                        ExceptionHandler.saveLogFile(e);
+                                }
+                        }
+                });
+        }
+        
         @Override
         protected String doInBackground(String... params) {
                 this.generateCities();
@@ -104,38 +162,29 @@ public class CitySearchToolbar extends AsyncTask<String, String, String> {
                 Log.d("TEMPO DE OPERAÇÃO DAS CIDADES: ", diffMinutes + ":" + diffSeconds);
         }
         
-        /**
-         * Creates the inflator Layout to show the cities search toolbar.
-         */
-        public void createInflatorForSearchToolbar() {
-                createButtonForOpenToolbar();
-                createButtonForCloseToolbar();
-                
-                self.createThreadToSearchCitiesAdapter();
+        public void hideKeyboard() {
+                InputMethodManager mgr = (InputMethodManager) geoMap.getSystemService(Context.INPUT_METHOD_SERVICE);
+                mgr.hideSoftInputFromWindow(cityAutoCompleteTextView.getWindowToken(), 0);
         }
         
-        /**
-         * Database query can be a time consuming task, so its safe to call
-         * database query in another thread
-         * 
-         * @author Paulo Luan
-         */
-        public void createThreadToSearchCitiesAdapter() {
-                new Handler().post(new Runnable() {
-                        @Override
-                        public void run() {
-                                Cursor cursor;
-                                
-                                try {
-                                        cursor = CityAdapter.getCityCursor(null);
-                                        setAutoCompleteAdapterPropertiers(cursor);
-                                }
-                                catch (SQLException e) {
-                                        Log.e(self.LOG_TAG, "ERRO AO CRIAR CURSOR!" + e.getMessage());
-                                        ExceptionHandler.saveLogFile(e);
-                                }
-                        }
-                });
+        public void hideSearchToolbar() {
+                if (citiesToolbar != null) {
+                        citiesToolbar.setVisibility(View.GONE);
+                        clearCityAutoCompleteText();
+                        hideKeyboard();
+                }
+        }
+        
+        @Override
+        protected void onPostExecute(String result) {
+                this.createInflatorForSearchToolbar();
+                
+                geoMap.hideLoadingMask();
+        }
+        
+        @Override
+        protected void onProgressUpdate(String... values) {
+                geoMap.onProgressUpdate(values);
         }
         
         /**
@@ -170,37 +219,9 @@ public class CitySearchToolbar extends AsyncTask<String, String, String> {
                 });
         }
         
-        public void createButtonForOpenToolbar() {
-                ImageButton btnCloseSearchToolbar = (ImageButton) geoMap.findViewById(R.id.btn_open_search_city_toolbar);
-                btnCloseSearchToolbar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                                self.showSearchToolbar();
-                        }
-                });
-        }
-        
-        public void createButtonForCloseToolbar() {
-                ImageButton btnCloseSearchToolbar = (ImageButton) geoMap.findViewById(R.id.btn_close_search_toolbar);
-                btnCloseSearchToolbar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                                self.hideSearchToolbar();
-                        }
-                });
-        }
-        
         public void showSearchToolbar() {
                 if (citiesToolbar != null) {
                         citiesToolbar.setVisibility(View.VISIBLE);
-                }
-        }
-        
-        public void hideSearchToolbar() {
-                if (citiesToolbar != null) {
-                        citiesToolbar.setVisibility(View.GONE);
-                        clearCityAutoCompleteText();
-                        hideKeyboard();
                 }
         }
         
@@ -211,26 +232,5 @@ public class CitySearchToolbar extends AsyncTask<String, String, String> {
                 
                 controller.setZoom(12);
                 controller.setCenter(new GeoPoint(city.getLatitude(), city.getLongitude()));
-        }
-        
-        private void clearCityAutoCompleteText() {
-                cityAutoCompleteTextView.setText("");
-        }
-        
-        public void hideKeyboard() {
-                InputMethodManager mgr = (InputMethodManager) geoMap.getSystemService(Context.INPUT_METHOD_SERVICE);
-                mgr.hideSoftInputFromWindow(cityAutoCompleteTextView.getWindowToken(), 0);
-        }
-        
-        @Override
-        protected void onProgressUpdate(String... values) {
-                geoMap.onProgressUpdate(values);
-        }
-        
-        @Override
-        protected void onPostExecute(String result) {
-                this.createInflatorForSearchToolbar();
-                
-                geoMap.hideLoadingMask();
         }
 }

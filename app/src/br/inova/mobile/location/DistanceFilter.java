@@ -16,38 +16,6 @@ import br.inova.mobile.task.Task;
 public class DistanceFilter {
         
         /**
-         * get the nearest tasks from a point of the map.
-         * 
-         * @param center
-         *                the central point that the query will be maked.
-         * 
-         * @param distance
-         *                the distance of the center point. (the radius
-         * 
-         * @return A List with the nearest tasks of that region.
-         * */
-        public static List<Task> getNearestAddresses(
-                                                     PointF center,
-                                                     Double distance) {
-                final double mult = 1; // mult = 1.1; is more reliable
-                //final double radius = 1; //meters? 
-                
-                PointF abovePoint = calculateDerivedPosition(center, mult * distance, 0);
-                PointF rightPoint = calculateDerivedPosition(center, mult * distance, 90);
-                PointF belowPoint = calculateDerivedPosition(center, mult * distance, 180);
-                PointF leftPoint = calculateDerivedPosition(center, mult * distance, 270);
-                
-                List<Task> tasks = AddressDao.queryForAddresses(abovePoint, rightPoint, belowPoint, leftPoint);
-                
-                for (Task task : tasks) {
-                        Double distanceBetweenPoints = getDistanceBetweenTwoPoints(center, new PointF(task.getAddress().getCoordy().floatValue(), task.getAddress().getCoordx().floatValue()));
-                        Log.d("", "" + distanceBetweenPoints);
-                }
-                
-                return tasks;
-        }
-        
-        /**
          * Calculates the end-point from a given source at a given range
          * (meters) and bearing (degrees). This methods uses simple geometry
          * equations to calculate the end-point.
@@ -87,14 +55,6 @@ public class DistanceFilter {
                 
         }
         
-        private static boolean pointIsInCircle(
-                                               PointF pointForCheck,
-                                               PointF center,
-                                               double radius) {
-                if (getDistanceBetweenTwoPoints(pointForCheck, center) <= radius) return true;
-                else return false;
-        }
-        
         private static double getDistanceBetweenTwoPoints(PointF p1, PointF p2) {
                 double R = 6371000; // m
                 double dLat = Math.toRadians(p2.x - p1.x);
@@ -107,6 +67,46 @@ public class DistanceFilter {
                 double d = R * c;
                 
                 return d;
+        }
+        
+        /**
+         * get the nearest tasks from a point of the map.
+         * 
+         * @param center
+         *                the central point that the query will be maked.
+         * 
+         * @param distance
+         *                the distance of the center point. (the radius
+         * 
+         * @return A List with the nearest tasks of that region.
+         * */
+        public static List<Task> getNearestAddresses(
+                                                     PointF center,
+                                                     Double distance) {
+                final double mult = 1; // mult = 1.1; is more reliable
+                //final double radius = 1; //meters? 
+                
+                PointF abovePoint = calculateDerivedPosition(center, mult * distance, 0);
+                PointF rightPoint = calculateDerivedPosition(center, mult * distance, 90);
+                PointF belowPoint = calculateDerivedPosition(center, mult * distance, 180);
+                PointF leftPoint = calculateDerivedPosition(center, mult * distance, 270);
+                
+                List<Task> tasks = AddressDao.queryForAddresses(abovePoint, rightPoint, belowPoint, leftPoint);
+                
+                for (Task task : tasks) {
+                        Double distanceBetweenPoints = getDistanceBetweenTwoPoints(center, new PointF(task.getAddress().getCoordy().floatValue(), task.getAddress().getCoordx().floatValue()));
+                        Log.d("", "" + distanceBetweenPoints);
+                }
+                
+                return tasks;
+        }
+        
+        private static boolean pointIsInCircle(
+                                               PointF pointForCheck,
+                                               PointF center,
+                                               double radius) {
+                if (getDistanceBetweenTwoPoints(pointForCheck, center) <= radius) return true;
+                else return false;
         }
         
 }

@@ -15,27 +15,21 @@ public class CityDao {
         private static Dao<City, Integer> cityDao = db.getCityDao();
         
         /**
-         * Save a city into local database.
+         * Get a register by ID.
          * 
+         * @param id
+         *                the ID that will be searched on database.
          * @author Paulo Luan
-         * @param List
-         *                <City> the city that will be saved into database.
          */
-        public static boolean saveCity(City city) {
-                boolean isSaved = false;
-                
-                if (city != null) {
-                        
-                        try {
-                                cityDao.createIfNotExists(city);
-                                isSaved = true;
-                        }
-                        catch (SQLException e) {
-                                ExceptionHandler.saveLogFile(e);
-                        }
+        public static City getCityById(int id) {
+                City city = null;
+                try {
+                        city = cityDao.queryForId(id);
                 }
-                
-                return isSaved;
+                catch (SQLException e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+                return city;
         }
         
         /**
@@ -59,21 +53,27 @@ public class CityDao {
         }
         
         /**
-         * Get a register by ID.
+         * Save a city into local database.
          * 
-         * @param id
-         *                the ID that will be searched on database.
          * @author Paulo Luan
+         * @param List
+         *                <City> the city that will be saved into database.
          */
-        public static City getCityById(int id) {
-                City city = null;
-                try {
-                        city = cityDao.queryForId(id);
+        public static boolean saveCity(City city) {
+                boolean isSaved = false;
+                
+                if (city != null) {
+                        
+                        try {
+                                cityDao.createIfNotExists(city);
+                                isSaved = true;
+                        }
+                        catch (SQLException e) {
+                                ExceptionHandler.saveLogFile(e);
+                        }
                 }
-                catch (SQLException e) {
-                        ExceptionHandler.saveLogFile(e);
-                }
-                return city;
+                
+                return isSaved;
         }
         
 }

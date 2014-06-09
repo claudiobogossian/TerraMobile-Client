@@ -17,12 +17,35 @@ public class Task implements Serializable {
         
         private static final long serialVersionUID = 1L;
         
+        public static long getSerialversionuid() {
+                return serialVersionUID;
+        }
+        
+        @DatabaseField(
+                       canBeNull = false,
+                       foreign = true,
+                       foreignAutoRefresh = true,
+                       foreignAutoCreate = true,
+                       maxForeignAutoRefreshLevel = 3)
+        private Address address;
+        
+        @DatabaseField
+        private boolean done;   // sincronizado com o servidor?
+                                 
+        @DatabaseField(
+                       canBeNull = false,
+                       foreign = true,
+                       foreignAutoRefresh = true,
+                       foreignAutoCreate = true,
+                       maxForeignAutoRefreshLevel = 3)
+        private Form    form;
+        
         @DatabaseField(
                        columnName = "_id",
                        generatedId = true,
                        canBeNull = false,
                        allowGeneratedIdInsert = true)
-        private Integer           id;
+        private Integer id;
         
         @DatabaseField(
                        canBeNull = false,
@@ -30,27 +53,8 @@ public class Task implements Serializable {
                        foreignAutoRefresh = true,
                        foreignAutoCreate = true,
                        maxForeignAutoRefreshLevel = 3)
-        private Address           address;
+        private User    user;
         
-        @DatabaseField(
-                       canBeNull = false,
-                       foreign = true,
-                       foreignAutoRefresh = true,
-                       foreignAutoCreate = true,
-                       maxForeignAutoRefreshLevel = 3)
-        private User              user;
-        
-        @DatabaseField(
-                       canBeNull = false,
-                       foreign = true,
-                       foreignAutoRefresh = true,
-                       foreignAutoCreate = true,
-                       maxForeignAutoRefreshLevel = 3)
-        private Form              form;
-        
-        @DatabaseField
-        private boolean           done;                 // sincronizado com o servidor?
-                                                         
         public Task() {}
         
         public Task(
@@ -67,48 +71,44 @@ public class Task implements Serializable {
                 this.done = done;
         }
         
-        public Integer getId() {
-                return id;
-        }
-        
-        public void setId(Integer id) {
-                this.id = id;
-        }
-        
         public Address getAddress() {
                 return address;
-        }
-        
-        public void setAddress(Address address) {
-                this.address = address;
-        }
-        
-        public User getUser() {
-                return user;
-        }
-        
-        public void setUser(User user) {
-                this.user = user;
         }
         
         public Form getForm() {
                 return form;
         }
         
-        public void setForm(Form form) {
-                this.form = form;
+        public Integer getId() {
+                return id;
+        }
+        
+        public User getUser() {
+                return user;
         }
         
         public boolean isDone() {
                 return done;
         }
         
+        public void setAddress(Address address) {
+                this.address = address;
+        }
+        
         public void setDone(boolean done) {
                 this.done = done;
         }
         
-        public static long getSerialversionuid() {
-                return serialVersionUID;
+        public void setForm(Form form) {
+                this.form = form;
+        }
+        
+        public void setId(Integer id) {
+                this.id = id;
+        }
+        
+        public void setUser(User user) {
+                this.user = user;
         }
         
         @Override

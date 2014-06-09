@@ -18,29 +18,6 @@ import br.inova.mobile.task.TaskActivity;
  */
 public class DatabaseBackup extends AsyncTask<String, String, String> {
         
-        private TaskActivity taskActivity;
-        
-        public DatabaseBackup(TaskActivity taskActivity) {
-                this.taskActivity = taskActivity;
-                this.execute();
-        }
-        
-        @Override
-        protected String doInBackground(String... arg0) {
-                makeSqliteBackupToSdCard(taskActivity);
-                return null;
-        }
-        
-        @Override
-        protected void onPreExecute() {
-                taskActivity.showLoadingMask("Fazendo Backup do banco de dados.");
-        }
-        
-        @Override
-        protected void onPostExecute(String result) {
-                taskActivity.hideLoadingMask();
-        }
-        
         /**
          * 
          * Make a copy of the tasks database into the sdcard.
@@ -79,6 +56,29 @@ public class DatabaseBackup extends AsyncTask<String, String, String> {
                 catch (Exception exception) {
                         ExceptionHandler.saveLogFile(exception);
                 }
+        }
+        
+        private TaskActivity taskActivity;
+        
+        public DatabaseBackup(TaskActivity taskActivity) {
+                this.taskActivity = taskActivity;
+                this.execute();
+        }
+        
+        @Override
+        protected String doInBackground(String... arg0) {
+                makeSqliteBackupToSdCard(taskActivity);
+                return null;
+        }
+        
+        @Override
+        protected void onPostExecute(String result) {
+                taskActivity.hideLoadingMask();
+        }
+        
+        @Override
+        protected void onPreExecute() {
+                taskActivity.showLoadingMask("Fazendo Backup do banco de dados.");
         }
         
         /**

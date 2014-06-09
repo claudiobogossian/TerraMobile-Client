@@ -10,7 +10,25 @@ import android.widget.CompoundButton;
 
 public class FormCheckBox extends FormWidget {
         
+        class ChangeHandler implements CompoundButton.OnCheckedChangeListener {
+                protected FormWidget _widget;
+                
+                public ChangeHandler(FormWidget widget) {
+                        _widget = widget;
+                }
+                
+                public void onCheckedChanged(
+                                             CompoundButton buttonView,
+                                             boolean isChecked) {
+                        if (_handler != null) {
+                                _handler.toggle(_widget);
+                        }
+                }
+                
+        }
+        
         protected int      _priority;
+        
         protected CheckBox _checkbox;
         
         public FormCheckBox(Context context, String property) {
@@ -27,10 +45,6 @@ public class FormCheckBox extends FormWidget {
                 return String.valueOf(_checkbox.isChecked() ? "1" : "0");
         }
         
-        public void setValue(String value) {
-                _checkbox.setChecked(value.equals("1"));
-        }
-        
         @Override
         public void setToggleHandler(
                                      FormActivity.FormWidgetToggleHandler handler) {
@@ -38,20 +52,7 @@ public class FormCheckBox extends FormWidget {
                 _checkbox.setOnCheckedChangeListener(new ChangeHandler(this));
         }
         
-        class ChangeHandler implements CompoundButton.OnCheckedChangeListener {
-                protected FormWidget _widget;
-                
-                public ChangeHandler(FormWidget widget) {
-                        _widget = widget;
-                }
-                
-                public void onCheckedChanged(
-                                             CompoundButton buttonView,
-                                             boolean isChecked) {
-                        if (_handler != null) {
-                                _handler.toggle(_widget);
-                        }
-                }
-                
+        public void setValue(String value) {
+                _checkbox.setChecked(value.equals("1"));
         }
 }

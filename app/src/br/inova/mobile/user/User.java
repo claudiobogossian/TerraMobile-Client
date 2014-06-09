@@ -8,6 +8,9 @@ import org.json.JSONObject;
 import com.j256.ormlite.field.DatabaseField;
 
 public class User implements Serializable {
+        @DatabaseField
+        private String  hash;
+        
         @DatabaseField(
                        generatedId = true,
                        columnName = "id",
@@ -15,16 +18,13 @@ public class User implements Serializable {
         private Integer id;
         
         @DatabaseField
-        private String  name;
-        
-        @DatabaseField
         private String  login;
         
         @DatabaseField
-        private String  password;
+        private String  name;
         
         @DatabaseField
-        private String  hash;
+        private String  password;
         
         public User() {}
         
@@ -42,44 +42,44 @@ public class User implements Serializable {
                 this.hash = hash;
         }
         
+        public String getHash() {
+                return hash;
+        }
+        
         public Integer getId() {
                 return id;
-        }
-        
-        public void setId(Integer id) {
-                this.id = id;
-        }
-        
-        public String getName() {
-                return name;
-        }
-        
-        public void setName(String name) {
-                this.name = name;
         }
         
         public String getLogin() {
                 return login;
         }
         
-        public void setLogin(String login) {
-                this.login = login;
+        public String getName() {
+                return name;
         }
         
         public String getPassword() {
                 return password;
         }
         
-        public void setPassword(String password) {
-                this.password = password;
-        }
-        
-        public String getHash() {
-                return hash;
-        }
-        
         public void setHash(String hash) {
                 this.hash = hash;
+        }
+        
+        public void setId(Integer id) {
+                this.id = id;
+        }
+        
+        public void setLogin(String login) {
+                this.login = login;
+        }
+        
+        public void setName(String name) {
+                this.name = name;
+        }
+        
+        public void setPassword(String password) {
+                this.password = password;
         }
         
         @Override

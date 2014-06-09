@@ -27,6 +27,37 @@ public class Constants {
         public static Boolean ISPRODUCTION       = true;
         public static Boolean ISDEBUG            = false;
         
+        private static void applyChanges() {
+                EXTERNAL_HOST_URL = EXTERNAL_HOST + ":" + PORT + "/" + SERVER + "/";
+                INTERNAL_HOST_URL = INTERNAL_HOST + ":" + PORT + "/" + SERVER + "/";
+        }
+        
+        public static void changeServerMode(
+                                            Context context,
+                                            String spnLoginUrlString) {
+                
+                String productionString = context.getResources().getString(string.production);
+                String homologString = context.getResources().getString(string.homolog);
+                String presentationString = context.getResources().getString(string.presentation);
+                String debugString = context.getResources().getString(string.debug);
+                
+                if (spnLoginUrlString != null) {
+                        if (spnLoginUrlString.equals(productionString)) {
+                                Constants.changeToProductionMode();
+                        }
+                        else if (spnLoginUrlString.equals(homologString)) {
+                                Constants.changeToHomologMode();
+                        }
+                        else if (spnLoginUrlString.equals(presentationString)) {
+                                Constants.changeToPresentationMode();
+                        }
+                        else if (spnLoginUrlString.equals(debugString)) {
+                                Constants.changeToDebugMode();
+                        }
+                }
+                
+        }
+        
         public static void changeToDebugMode() {
                 /*** DEBUG ***/
                 EXTERNAL_HOST = "http://192.168.0.171";
@@ -36,18 +67,6 @@ public class Constants {
                 ISPRODUCTION = false;
                 
                 Log.d("CONSTANTS", "Entrando em modo debug.");
-                
-                applyChanges();
-        }
-        
-        public static void changeToProductionMode() {
-                /*** Production ***/
-                EXTERNAL_HOST = "http://179.184.164.144";
-                INTERNAL_HOST = "http://192.168.0.181";
-                SERVER = "terramobile-server";
-                ISPRODUCTION = true;
-                
-                Log.d("CONSTANTS", "Entrando em modo Produção.");
                 
                 applyChanges();
         }
@@ -77,36 +96,16 @@ public class Constants {
                 applyChanges();
         }
         
-        public static void changeServerMode(
-                                            Context context,
-                                            String spnLoginUrlString) {
+        public static void changeToProductionMode() {
+                /*** Production ***/
+                EXTERNAL_HOST = "http://179.184.164.144";
+                INTERNAL_HOST = "http://192.168.0.181";
+                SERVER = "terramobile-server";
+                ISPRODUCTION = true;
                 
-                String productionString = context.getResources().getString(string.production);
-                String homologString = context.getResources().getString(string.homolog);
-                String presentationString = context.getResources().getString(string.presentation);
-                String debugString = context.getResources().getString(string.debug);
+                Log.d("CONSTANTS", "Entrando em modo Produção.");
                 
-                if (spnLoginUrlString != null) {
-                        if (spnLoginUrlString.equals(productionString)) {
-                                Constants.changeToProductionMode();
-                        }
-                        else if (spnLoginUrlString.equals(homologString)) {
-                                Constants.changeToHomologMode();
-                        }
-                        else if (spnLoginUrlString.equals(presentationString)) {
-                                Constants.changeToPresentationMode();
-                        }
-                        else if (spnLoginUrlString.equals(debugString)) {
-                                Constants.changeToDebugMode();
-                        }
-                }
-                
-        }
-        
-        public static String getTasksUrl() {
-                String userHash = SessionManager.getInstance().getUserHash();
-                String url = Utility.getServerUrl() + TASKS_REST + userHash;
-                return url;
+                applyChanges();
         }
         
         public static String getPhotosUrl() {
@@ -115,8 +114,9 @@ public class Constants {
                 return url;
         }
         
-        private static void applyChanges() {
-                EXTERNAL_HOST_URL = EXTERNAL_HOST + ":" + PORT + "/" + SERVER + "/";
-                INTERNAL_HOST_URL = INTERNAL_HOST + ":" + PORT + "/" + SERVER + "/";
+        public static String getTasksUrl() {
+                String userHash = SessionManager.getInstance().getUserHash();
+                String url = Utility.getServerUrl() + TASKS_REST + userHash;
+                return url;
         }
 }

@@ -32,8 +32,39 @@ import com.j256.ormlite.dao.CloseableIterator;
 
 public class LandmarksManager {
         
+        /**
+         * This class is used to close the landmark pop up when the user clicks
+         * out of the popup
+         * */
+        public class MapOverlay extends org.osmdroid.views.overlay.Overlay {
+                
+                public MapOverlay(Context ctx) {
+                        super(ctx);
+                }
+                
+                @Override
+                protected void draw(Canvas c, MapView osmv, boolean shadow) {}
+                
+                @Override
+                public boolean onLongPress(MotionEvent e, MapView mapView) {
+                        Projection proj = mapView.getProjection();
+                        IGeoPoint geoPoint = proj.fromPixels(e.getX(), e.getY());
+                        
+                        LandmarksManager.filterByGeopoint(geoPoint);
+                        
+                        return false;
+                }
+                
+                @Override
+                public boolean onTouchEvent(MotionEvent e, MapView mapView) {
+                        if (e.getAction() == MotionEvent.ACTION_DOWN) if (poiInfoWindow.isOpen()) poiInfoWindow.close();
+                        return false;
+                }
+        }
+        
         /** The user location landmark . */
         private OverlayItem                                           myLocationOverlayItem;
+        
         ItemizedIconOverlay<OverlayItem>                              currentLocationOverlay;
         
         /** the window that appear the informations about the Task */
@@ -45,103 +76,6 @@ public class LandmarksManager {
         public static Context                                         context;
         
         private static MapView                                        mapView;
-        
-        public LandmarksManager(MapView mapView, Context context) {
-                this.mapView = mapView;
-                this.context = context;
-        }
-        
-        public void initializePoiMarkers() {
-                poiInfoWindow = new PointOfInterestInfoWindow(mapView);
-                final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
-                
-                poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(context, poiItems, mapView, poiInfoWindow);
-                createPoiMarkers();
-                
-                // POI markers:
-                mapView.getOverlays().add(poiMarkers);
-                mapView.invalidate();
-        }
-        
-        public PointOfInterestInfoWindow getPoiWindow() {
-                return poiInfoWindow;
-        }
-        
-        /**
-         * Set the object in the List of poiMarkers, updating the UI.
-         * 
-         * @param Task
-         *                the task that will be updated into the map.
-         * */
-        private static void updatePoiMarkers(Task feature) {
-                
-                for (int i = 0; i < poiMarkers.size(); i++) {
-                        ExtendedOverlayItem item = poiMarkers.getItem(i);
-                        
-                        Task relatedTask = (Task) item.getRelatedObject();
-                        boolean isIdEquals = relatedTask.getId().equals(feature.getId());
-                        
-                        if (isIdEquals) {
-                                Drawable marker = null;
-                                
-                                if (feature.isDone()) {
-                                        marker = context.getResources().getDrawable(R.drawable.ic_landmark_green);
-                                }
-                                else {
-                                        marker = context.getResources().getDrawable(R.drawable.ic_landmark_red);
-                                }
-                                
-                                item.setMarker(marker);
-                                item.setRelatedObject(feature);
-                        }
-                }
-                
-                mapView.invalidate();
-        }
-        
-        /**
-         * Sets an Task, updating the landmarks on the map.
-         * 
-         * @param Task
-         *                the task that will be updated.
-         * */
-        public static void setTask(final Task task) {
-                updatePoiMarkers(task);
-                
-        }
-        
-        /**
-         * Makes an Iterator of database and gets the registers from database,
-         * then, creates an Overlay Item List of all that registers.
-         * 
-         * @param Context
-         *                the context used by the function "createOverlayItem"
-         * */
-        public static void createPoiMarkers() {
-                CloseableIterator<Task> taskIterator = TaskDao.getIteratorForAllTasksForCurrentUser();
-                poiMarkers.removeAllItems();
-                
-                try {
-                        while (taskIterator.hasNext()) {
-                                Task feature = (Task) taskIterator.next();
-                                
-                                Double lat = feature.getAddress().getCoordy();
-                                Double lon = feature.getAddress().getCoordx();
-                                
-                                if (lat != null && lon != null) {
-                                        ExtendedOverlayItem poiMarker = createOverlayItem(feature);
-                                        poiMarkers.addItem(poiMarker);
-                                }
-                        }
-                }
-                catch (Exception e) {
-                        e.printStackTrace();
-                }
-                finally {
-                        mapView.invalidate();
-                        taskIterator.closeQuietly();
-                }
-        }
         
         /**
          * Creates an overlay item.
@@ -180,6 +114,112 @@ public class LandmarksManager {
                 return poiMarker;
         }
         
+        /**
+         * Makes an Iterator of database and gets the registers from database,
+         * then, creates an Overlay Item List of all that registers.
+         * 
+         * @param Context
+         *                the context used by the function "createOverlayItem"
+         * */
+        public static void createPoiMarkers() {
+                CloseableIterator<Task> taskIterator = TaskDao.getIteratorForAllTasksForCurrentUser();
+                poiMarkers.removeAllItems();
+                
+                try {
+                        while (taskIterator.hasNext()) {
+                                Task feature = (Task) taskIterator.next();
+                                
+                                Double lat = feature.getAddress().getCoordy();
+                                Double lon = feature.getAddress().getCoordx();
+                                
+                                if (lat != null && lon != null) {
+                                        ExtendedOverlayItem poiMarker = createOverlayItem(feature);
+                                        poiMarkers.addItem(poiMarker);
+                                }
+                        }
+                }
+                catch (Exception e) {
+                        e.printStackTrace();
+                }
+                finally {
+                        mapView.invalidate();
+                        taskIterator.closeQuietly();
+                }
+        }
+        
+        /**
+         * 
+         * Filter the landmarks by touching on the map.
+         * 
+         * @param Geopoint
+         *                the point that user has clicked.
+         * 
+         * */
+        public static void filterByGeopoint(IGeoPoint geoPoint) {
+                PointF center = new PointF((float) geoPoint.getLatitude(), (float) geoPoint.getLongitude());
+                
+                List<Task> tasks = DistanceFilter.getNearestAddresses(center, 10.0);
+                
+                //Utility.showToast("Filtro efetuado! " + geoPoint, Toast.LENGTH_SHORT, context);
+        }
+        
+        /**
+         * Sets an Task, updating the landmarks on the map.
+         * 
+         * @param Task
+         *                the task that will be updated.
+         * */
+        public static void setTask(final Task task) {
+                updatePoiMarkers(task);
+                
+        }
+        
+        /**
+         * Set the object in the List of poiMarkers, updating the UI.
+         * 
+         * @param Task
+         *                the task that will be updated into the map.
+         * */
+        private static void updatePoiMarkers(Task feature) {
+                
+                for (int i = 0; i < poiMarkers.size(); i++) {
+                        ExtendedOverlayItem item = poiMarkers.getItem(i);
+                        
+                        Task relatedTask = (Task) item.getRelatedObject();
+                        boolean isIdEquals = relatedTask.getId().equals(feature.getId());
+                        
+                        if (isIdEquals) {
+                                Drawable marker = null;
+                                
+                                if (feature.isDone()) {
+                                        marker = context.getResources().getDrawable(R.drawable.ic_landmark_green);
+                                }
+                                else {
+                                        marker = context.getResources().getDrawable(R.drawable.ic_landmark_red);
+                                }
+                                
+                                item.setMarker(marker);
+                                item.setRelatedObject(feature);
+                        }
+                }
+                
+                mapView.invalidate();
+        }
+        
+        public LandmarksManager(MapView mapView, Context context) {
+                this.mapView = mapView;
+                this.context = context;
+        }
+        
+        /**
+         * Creates an map overlay to handler the touch on the map and closes the
+         * popup of the landmark
+         * */
+        public void createMapOverlayHandler() {
+                MapOverlay movl = new MapOverlay(context);
+                mapView.getOverlays().add(movl);
+        }
+        
         public void createMyLocationItem() {
                 Location location = LocationProvider.getInstance(context).getLocation();
                 
@@ -207,15 +247,15 @@ public class LandmarksManager {
                         
                         ResourceProxy resourceProxy = new DefaultResourceProxyImpl(context.getApplicationContext());
                         currentLocationOverlay = new ItemizedIconOverlay<OverlayItem>(items, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-                                public boolean onItemSingleTapUp(
-                                                                 final int index,
-                                                                 final OverlayItem item) {
-                                        return true;
-                                }
-                                
                                 public boolean onItemLongPress(
                                                                final int index,
                                                                final OverlayItem item) {
+                                        return true;
+                                }
+                                
+                                public boolean onItemSingleTapUp(
+                                                                 final int index,
+                                                                 final OverlayItem item) {
                                         return true;
                                 }
                         }, resourceProxy);
@@ -241,15 +281,15 @@ public class LandmarksManager {
                 
                 ResourceProxy resourceProxy = new DefaultResourceProxyImpl(context.getApplicationContext());
                 currentLocationOverlay = new ItemizedIconOverlay<OverlayItem>(items, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-                        public boolean onItemSingleTapUp(
-                                                         final int index,
-                                                         final OverlayItem item) {
-                                return true;
-                        }
-                        
                         public boolean onItemLongPress(
                                                        final int index,
                                                        final OverlayItem item) {
+                                return true;
+                        }
+                        
+                        public boolean onItemSingleTapUp(
+                                                         final int index,
+                                                         final OverlayItem item) {
                                 return true;
                         }
                 }, resourceProxy);
@@ -259,59 +299,20 @@ public class LandmarksManager {
                 controller.setCenter(geoPoint);
         }
         
-        /**
-         * 
-         * Filter the landmarks by touching on the map.
-         * 
-         * @param Geopoint
-         *                the point that user has clicked.
-         * 
-         * */
-        public static void filterByGeopoint(IGeoPoint geoPoint) {
-                PointF center = new PointF((float) geoPoint.getLatitude(), (float) geoPoint.getLongitude());
-                
-                List<Task> tasks = DistanceFilter.getNearestAddresses(center, 10.0);
-                
-                //Utility.showToast("Filtro efetuado! " + geoPoint, Toast.LENGTH_SHORT, context);
+        public PointOfInterestInfoWindow getPoiWindow() {
+                return poiInfoWindow;
         }
         
-        /**
-         * Creates an map overlay to handler the touch on the map and closes the
-         * popup of the landmark
-         * */
-        public void createMapOverlayHandler() {
-                MapOverlay movl = new MapOverlay(context);
-                mapView.getOverlays().add(movl);
-        }
-        
-        /**
-         * This class is used to close the landmark pop up when the user clicks
-         * out of the popup
-         * */
-        public class MapOverlay extends org.osmdroid.views.overlay.Overlay {
+        public void initializePoiMarkers() {
+                poiInfoWindow = new PointOfInterestInfoWindow(mapView);
+                final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
                 
-                public MapOverlay(Context ctx) {
-                        super(ctx);
-                }
+                poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(context, poiItems, mapView, poiInfoWindow);
+                createPoiMarkers();
                 
-                @Override
-                protected void draw(Canvas c, MapView osmv, boolean shadow) {}
-                
-                @Override
-                public boolean onTouchEvent(MotionEvent e, MapView mapView) {
-                        if (e.getAction() == MotionEvent.ACTION_DOWN) if (poiInfoWindow.isOpen()) poiInfoWindow.close();
-                        return false;
-                }
-                
-                @Override
-                public boolean onLongPress(MotionEvent e, MapView mapView) {
-                        Projection proj = mapView.getProjection();
-                        IGeoPoint geoPoint = proj.fromPixels(e.getX(), e.getY());
-                        
-                        LandmarksManager.filterByGeopoint(geoPoint);
-                        
-                        return false;
-                }
+                // POI markers:
+                mapView.getOverlays().add(poiMarkers);
+                mapView.invalidate();
         }
         
 }

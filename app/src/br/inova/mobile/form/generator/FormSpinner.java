@@ -19,10 +19,32 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 public class FormSpinner extends FormWidget {
+        class SelectionHandler implements AdapterView.OnItemSelectedListener {
+                protected FormWidget _widget;
+                
+                public SelectionHandler(FormWidget widget) {
+                        _widget = widget;
+                }
+                
+                public void onItemSelected(
+                                           AdapterView<?> arg0,
+                                           View arg1,
+                                           int arg2,
+                                           long arg3) {
+                        if (_handler != null) {
+                                _handler.toggle(_widget);
+                        }
+                }
+                
+                public void onNothingSelected(AdapterView<?> arg0) {}
+                
+        }
+        
         protected JSONObject           _options;
         protected TextView             _label;
         protected Spinner              _spinner;
         protected Map<String, String>  _propmap;
+        
         protected ArrayAdapter<String> _adapter;
         
         public FormSpinner(Context context, String property, JSONObject options) {
@@ -70,6 +92,13 @@ public class FormSpinner extends FormWidget {
         }
         
         @Override
+        public void setToggleHandler(
+                                     FormActivity.FormWidgetToggleHandler handler) {
+                super.setToggleHandler(handler);
+                _spinner.setOnItemSelectedListener(new SelectionHandler(this));
+        }
+        
+        @Override
         public void setValue(String value) {
                 try {
                         String name;
@@ -86,33 +115,5 @@ public class FormSpinner extends FormWidget {
                 catch (JSONException e) {
                         Log.i("Lykaion", e.getMessage());
                 }
-        }
-        
-        @Override
-        public void setToggleHandler(
-                                     FormActivity.FormWidgetToggleHandler handler) {
-                super.setToggleHandler(handler);
-                _spinner.setOnItemSelectedListener(new SelectionHandler(this));
-        }
-        
-        class SelectionHandler implements AdapterView.OnItemSelectedListener {
-                protected FormWidget _widget;
-                
-                public SelectionHandler(FormWidget widget) {
-                        _widget = widget;
-                }
-                
-                public void onItemSelected(
-                                           AdapterView<?> arg0,
-                                           View arg1,
-                                           int arg2,
-                                           long arg3) {
-                        if (_handler != null) {
-                                _handler.toggle(_widget);
-                        }
-                }
-                
-                public void onNothingSelected(AdapterView<?> arg0) {}
-                
         }
 }

@@ -17,120 +17,6 @@ import com.j256.ormlite.dao.CloseableIterator;
 
 public class TasksGenerator extends AsyncTask<String, String, String> {
         
-        private TaskActivity taskActivity;
-        
-        public TasksGenerator(TaskActivity taskActivity) {
-                this.taskActivity = taskActivity;
-                this.execute();
-        }
-        
-        @Override
-        protected void onPreExecute() {
-                taskActivity.showLoadingMask("Criando registros de testes...");
-        }
-        
-        @Override
-        protected void onProgressUpdate(String... progress) {
-                taskActivity.onProgressUpdate(progress);
-        }
-        
-        @Override
-        protected void onPostExecute(String result) {
-                LandmarksManager.createPoiMarkers();
-                taskActivity.updateCountLabels();
-                taskActivity.hideLoadingMask();
-        }
-        
-        @Override
-        protected String doInBackground(String... arg0) {
-                CloseableIterator<Task> taskIterator = TaskDao.getIteratorForUnfinishedTasks();
-                
-                publishProgress("Criando Tarefas... ", "0", "" + TaskDao.getCountOfIncompletedTasks()); // set Max Length of progress                                                                                       // dialog
-                int progress = 0;
-                
-                try {
-                        Task baseTask = getBaseTask();
-                        Photo basePhoto = getBasePhoto();
-                        
-                        if (baseTask != null && basePhoto != null) {
-                                while (taskIterator.hasNext()) {
-                                        Task iterateTask = (Task) taskIterator.next();
-                                        createTask(iterateTask, baseTask, basePhoto);
-                                        
-                                        progress++;
-                                        publishProgress("Criando Tarefas... ", "" + progress);
-                                }
-                        }
-                }
-                catch (Exception exception) {
-                        ExceptionHandler.saveLogFile(exception);
-                }
-                finally {
-                        taskIterator.closeQuietly();
-                }
-                return null;
-        }
-        
-        private static void verifyRegisters() {
-                CloseableIterator<Task> iterator = TaskDao.getIteratorForAllTasksForCurrentUser();
-                
-                try {
-                        while (iterator.hasNext()) {
-                                Task task = (Task) iterator.next();
-                                
-                                if (!task.isDone()) {
-                                        task.isDone();
-                                }
-                        }
-                }
-                catch (Exception exception) {
-                        ExceptionHandler.saveLogFile(exception);
-                }
-                finally {
-                        iterator.closeQuietly();
-                }
-        }
-        
-        private static Task getBaseTask() {
-                CloseableIterator<Task> taskIterator = TaskDao.getIteratorForFinishedTasks();
-                Task baseTask = null;
-                
-                try {
-                        while (taskIterator.hasNext()) {
-                                baseTask = (Task) taskIterator.next();
-                                break;
-                        }
-                }
-                catch (Exception exception) {
-                        ExceptionHandler.saveLogFile(exception);
-                }
-                finally {
-                        taskIterator.closeQuietly();
-                }
-                
-                return baseTask;
-        }
-        
-        private static Photo getBasePhoto() {
-                CloseableIterator<Photo> photoIterator = new PhotoDao().getIteratorForNotSyncPhotos();
-                Photo basePhoto = null;
-                
-                try {
-                        while (photoIterator.hasNext()) {
-                                basePhoto = (Photo) photoIterator.next();
-                                break;
-                        }
-                }
-                catch (Exception exception) {
-                        ExceptionHandler.saveLogFile(exception);
-                }
-                finally {
-                        photoIterator.closeQuietly();
-                }
-                
-                return basePhoto;
-        }
-        
         private static void createTask(
                                        Task iterateTask,
                                        Task baseTask,
@@ -182,5 +68,119 @@ public class TasksGenerator extends AsyncTask<String, String, String> {
                         ExceptionHandler.saveLogFile(exception);
                 }
                 
+        }
+        
+        private static Photo getBasePhoto() {
+                CloseableIterator<Photo> photoIterator = new PhotoDao().getIteratorForNotSyncPhotos();
+                Photo basePhoto = null;
+                
+                try {
+                        while (photoIterator.hasNext()) {
+                                basePhoto = (Photo) photoIterator.next();
+                                break;
+                        }
+                }
+                catch (Exception exception) {
+                        ExceptionHandler.saveLogFile(exception);
+                }
+                finally {
+                        photoIterator.closeQuietly();
+                }
+                
+                return basePhoto;
+        }
+        
+        private static Task getBaseTask() {
+                CloseableIterator<Task> taskIterator = TaskDao.getIteratorForFinishedTasks();
+                Task baseTask = null;
+                
+                try {
+                        while (taskIterator.hasNext()) {
+                                baseTask = (Task) taskIterator.next();
+                                break;
+                        }
+                }
+                catch (Exception exception) {
+                        ExceptionHandler.saveLogFile(exception);
+                }
+                finally {
+                        taskIterator.closeQuietly();
+                }
+                
+                return baseTask;
+        }
+        
+        private static void verifyRegisters() {
+                CloseableIterator<Task> iterator = TaskDao.getIteratorForAllTasksForCurrentUser();
+                
+                try {
+                        while (iterator.hasNext()) {
+                                Task task = (Task) iterator.next();
+                                
+                                if (!task.isDone()) {
+                                        task.isDone();
+                                }
+                        }
+                }
+                catch (Exception exception) {
+                        ExceptionHandler.saveLogFile(exception);
+                }
+                finally {
+                        iterator.closeQuietly();
+                }
+        }
+        
+        private TaskActivity taskActivity;
+        
+        public TasksGenerator(TaskActivity taskActivity) {
+                this.taskActivity = taskActivity;
+                this.execute();
+        }
+        
+        @Override
+        protected String doInBackground(String... arg0) {
+                CloseableIterator<Task> taskIterator = TaskDao.getIteratorForUnfinishedTasks();
+                
+                publishProgress("Criando Tarefas... ", "0", "" + TaskDao.getCountOfIncompletedTasks()); // set Max Length of progress                                                                                       // dialog
+                int progress = 0;
+                
+                try {
+                        Task baseTask = getBaseTask();
+                        Photo basePhoto = getBasePhoto();
+                        
+                        if (baseTask != null && basePhoto != null) {
+                                while (taskIterator.hasNext()) {
+                                        Task iterateTask = (Task) taskIterator.next();
+                                        createTask(iterateTask, baseTask, basePhoto);
+                                        
+                                        progress++;
+                                        publishProgress("Criando Tarefas... ", "" + progress);
+                                }
+                        }
+                }
+                catch (Exception exception) {
+                        ExceptionHandler.saveLogFile(exception);
+                }
+                finally {
+                        taskIterator.closeQuietly();
+                }
+                return null;
+        }
+        
+        @Override
+        protected void onPostExecute(String result) {
+                LandmarksManager.createPoiMarkers();
+                taskActivity.updateCountLabels();
+                taskActivity.hideLoadingMask();
+        }
+        
+        @Override
+        protected void onPreExecute() {
+                taskActivity.showLoadingMask("Criando registros de testes...");
+        }
+        
+        @Override
+        protected void onProgressUpdate(String... progress) {
+                taskActivity.onProgressUpdate(progress);
         }
 }

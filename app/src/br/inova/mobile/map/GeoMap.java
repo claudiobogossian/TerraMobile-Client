@@ -68,30 +68,48 @@ public class GeoMap extends Activity {
         
         public static String          tileSourcePath;
         
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
-                Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
-                /**
-                 * Defines the default exception handler to log unexpected
-                 * android errors
-                 */
+        /**
+         * Creates the tile source of the application, that will be responsible
+         * for the map tile reading from the zips.
+         * */
+        private void createBaseTileSource() {
+                OnlineTileSourceBase mapQuestTileSource = TileSourceFactory.MAPQUESTOSM;
+                tileSourcePath = mapQuestTileSource.OSMDROID_PATH.getAbsolutePath() + "/";
                 
-                this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                setContentView(R.layout.activity_geomap);
+                final MapTileProviderBasic tileProvider = new MapTileProviderBasic(getApplicationContext());
+                final ITileSource tileSource = new XYTileSource("MapquestOSM", ResourceProxy.string.mapquest_osm, 6, 20, 256, ".png", new String[] { "http://tile.openstreetmap.org/" });
                 
-                inflater = LayoutInflater.from(getBaseContext());
+                tileProvider.setTileSource(tileSource);
+                final TilesOverlay tilesOverlay = new TilesOverlay(tileProvider, this.getBaseContext());
+                tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
+                mapView.getOverlays().add(tilesOverlay);
                 
-                self.createMapView();
-                self.createBaseTileSource();
-                //self.createTransitTileSource();
-                self.createLandmarks();
-                self.initializeLocation();
-                self.createInflatorForGpsButton();
-                self.createInflatorForMenuButtons();
-                self.createButtonUpdateLocation();
+                tileProvider.setTileRequestCompleteHandler(new SimpleInvalidationHandler(mapView));
                 
-                //new CitySearchToolbar(this);
+                mapView.setTileSource(tileSource);
+                mapView.setUseDataConnection(false); //  letting osmdroid know you would use it in offline mode, keeps the mapView from loading online tiles using network connection.
+        }
+        
+        /**
+         * Creates and handler the button that creates the user location update.
+         */
+        public void createButtonUpdateLocation() {
+                ImageButton imageButton = (ImageButton) findViewById(R.id.btn_update_location);
+                imageButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                                landmarksManager.createMyLocationItem();
+                        }
+                });
+        }
+        
+        /**
+         * Creates the inflator Layout to show the gps button.
+         */
+        public void createInflatorForGpsButton() {
+                View viewControl = inflater.inflate(R.layout.geomap_gps, null);
+                LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+                this.addContentView(viewControl, layoutParamsControl);
         }
         
         private void createInflatorForMenuButtons() {
@@ -124,43 +142,14 @@ public class GeoMap extends Activity {
                 });
         }
         
-        protected void logoff() {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GeoMap.this);
-                alertDialogBuilder.setTitle("Atenção");
-                alertDialogBuilder.setMessage(string.logoff_message).setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                                self.finishThisScreen();
-                        }
-                }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                        }
-                });
-                
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-        }
-        
         /**
-         * Creates the inflator Layout to show the gps button.
-         */
-        public void createInflatorForGpsButton() {
-                View viewControl = inflater.inflate(R.layout.geomap_gps, null);
-                LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-                this.addContentView(viewControl, layoutParamsControl);
-        }
-        
-        /**
-         * Creates and handler the button that creates the user location update.
-         */
-        public void createButtonUpdateLocation() {
-                ImageButton imageButton = (ImageButton) findViewById(R.id.btn_update_location);
-                imageButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                                landmarksManager.createMyLocationItem();
-                        }
-                });
+         * Creates an instance of LandMark Factory and call to the initializers
+         * of the landmarks.
+         * */
+        private void createLandmarks() {
+                landmarksManager = new LandmarksManager(mapView, this);
+                landmarksManager.createMapOverlayHandler();
+                landmarksManager.initializePoiMarkers();
         }
         
         /**
@@ -172,28 +161,6 @@ public class GeoMap extends Activity {
                 mapView.setMaxZoomLevel(20);
                 mapView.setBuiltInZoomControls(true);
                 mapView.setMultiTouchControls(true);
-        }
-        
-        /**
-         * Creates the tile source of the application, that will be responsible
-         * for the map tile reading from the zips.
-         * */
-        private void createBaseTileSource() {
-                OnlineTileSourceBase mapQuestTileSource = TileSourceFactory.MAPQUESTOSM;
-                tileSourcePath = mapQuestTileSource.OSMDROID_PATH.getAbsolutePath() + "/";
-                
-                final MapTileProviderBasic tileProvider = new MapTileProviderBasic(getApplicationContext());
-                final ITileSource tileSource = new XYTileSource("MapquestOSM", ResourceProxy.string.mapquest_osm, 6, 20, 256, ".png", new String[] { "http://tile.openstreetmap.org/" });
-                
-                tileProvider.setTileSource(tileSource);
-                final TilesOverlay tilesOverlay = new TilesOverlay(tileProvider, this.getBaseContext());
-                tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
-                mapView.getOverlays().add(tilesOverlay);
-                
-                tileProvider.setTileRequestCompleteHandler(new SimpleInvalidationHandler(mapView));
-                
-                mapView.setTileSource(tileSource);
-                mapView.setUseDataConnection(false); //  letting osmdroid know you would use it in offline mode, keeps the mapView from loading online tiles using network connection.
         }
         
         public void createTransitTileSource() {
@@ -210,14 +177,16 @@ public class GeoMap extends Activity {
                 mapView.getOverlays().add(secondTilesOverlay);
         }
         
-        /**
-         * Creates an instance of LandMark Factory and call to the initializers
-         * of the landmarks.
-         * */
-        private void createLandmarks() {
-                landmarksManager = new LandmarksManager(mapView, this);
-                landmarksManager.createMapOverlayHandler();
-                landmarksManager.initializePoiMarkers();
+        public void finishThisScreen() {
+                SessionManager.logoutUser();
+                setResult(RESULT_CANCELED, new Intent());
+                finish();
+        }
+        
+        public void hideLoadingMask() {
+                if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                        mProgressDialog.dismiss();
+                }
         }
         
         /**
@@ -241,37 +210,88 @@ public class GeoMap extends Activity {
                  */
         }
         
-        public void openGeoform() {
-                long count = TaskDao.getCountOfTasks();
+        protected void logoff() {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GeoMap.this);
+                alertDialogBuilder.setTitle("Atenção");
+                alertDialogBuilder.setMessage(string.logoff_message).setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                                self.finishThisScreen();
+                        }
+                }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                        }
+                });
                 
-                if (count == 0) {
-                        Utility.showToast("Você não tem nenhum registro salvo, sincronize seu aplicativo.", Toast.LENGTH_LONG, GeoMap.this);
-                }
-                else {
-                        Intent i = new Intent(self, FormActivity.class);
-                        startActivityForResult(i, GEOFORM);
-                }
-        }
-        
-        public void openTaskScreen() {
-                Intent taskIntent = new Intent(self, TaskActivity.class);
-                startActivityForResult(taskIntent, TASK);
-        }
-        
-        public void finishThisScreen() {
-                SessionManager.logoutUser();
-                setResult(RESULT_CANCELED, new Intent());
-                finish();
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
         }
         
         @Override
-        protected void onResume() {
-                super.onResume();
+        public void onActivityResult(
+                                     int requestCode,
+                                     int resultCode,
+                                     Intent data) {
+                
+                if (resultCode == 999) {
+                        finish();
+                }
+                
+                if (requestCode == GEOFORM) {
+                        if (resultCode == RESULT_OK) {
+                                String result = data.getExtras().getString("RESULT");
+                                Utility.showToast(result, Toast.LENGTH_LONG, GeoMap.this);
+                        }
+                        else if (resultCode == RESULT_CANCELED) {}
+                }
+                if (requestCode == TASK) {
+                        //self.refreshMapView();
+                }
         }
         
         @Override
-        protected void onPause() {
-                super.onPause();
+        public void onBackPressed() {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GeoMap.this);
+                alertDialogBuilder.setTitle("Atenção");
+                alertDialogBuilder.setMessage("Deseja realmente sair?").setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                finish();
+                        }
+                }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                        }
+                });
+                
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+        }
+        
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+                /**
+                 * Defines the default exception handler to log unexpected
+                 * android errors
+                 */
+                
+                this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                setContentView(R.layout.activity_geomap);
+                
+                inflater = LayoutInflater.from(getBaseContext());
+                
+                self.createMapView();
+                self.createBaseTileSource();
+                //self.createTransitTileSource();
+                self.createLandmarks();
+                self.initializeLocation();
+                self.createInflatorForGpsButton();
+                self.createInflatorForMenuButtons();
+                self.createButtonUpdateLocation();
+                
+                //new CitySearchToolbar(this);
         }
         
         /*
@@ -307,47 +327,8 @@ public class GeoMap extends Activity {
         }
         
         @Override
-        public void onActivityResult(
-                                     int requestCode,
-                                     int resultCode,
-                                     Intent data) {
-                
-                if (resultCode == 999) {
-                        finish();
-                }
-                
-                if (requestCode == GEOFORM) {
-                        if (resultCode == RESULT_OK) {
-                                String result = data.getExtras().getString("RESULT");
-                                Utility.showToast(result, Toast.LENGTH_LONG, GeoMap.this);
-                        }
-                        else if (resultCode == RESULT_CANCELED) {}
-                }
-                if (requestCode == TASK) {
-                        //self.refreshMapView();
-                }
-        }
-        
-        public void showLoadingMask(String message) {
-                mProgressDialog = new ProgressDialog(self);
-                mProgressDialog.setMessage(message);
-                mProgressDialog.setCancelable(false);
-                mProgressDialog.show();
-        }
-        
-        public void hideLoadingMask() {
-                if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                        mProgressDialog.dismiss();
-                }
-        }
-        
-        public void setLoadMaskMessage(String message) {
-                if (mProgressDialog == null || !mProgressDialog.isShowing()) {
-                        this.showLoadingMask(message);
-                }
-                else {
-                        mProgressDialog.setMessage(message);
-                }
+        protected void onPause() {
+                super.onPause();
         }
         
         public void onProgressUpdate(String... progress) {
@@ -371,22 +352,41 @@ public class GeoMap extends Activity {
         }
         
         @Override
-        public void onBackPressed() {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GeoMap.this);
-                alertDialogBuilder.setTitle("Atenção");
-                alertDialogBuilder.setMessage("Deseja realmente sair?").setCancelable(false).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                                finish();
-                        }
-                }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                        }
-                });
+        protected void onResume() {
+                super.onResume();
+        }
+        
+        public void openGeoform() {
+                long count = TaskDao.getCountOfTasks();
                 
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                if (count == 0) {
+                        Utility.showToast("Você não tem nenhum registro salvo, sincronize seu aplicativo.", Toast.LENGTH_LONG, GeoMap.this);
+                }
+                else {
+                        Intent i = new Intent(self, FormActivity.class);
+                        startActivityForResult(i, GEOFORM);
+                }
+        }
+        
+        public void openTaskScreen() {
+                Intent taskIntent = new Intent(self, TaskActivity.class);
+                startActivityForResult(taskIntent, TASK);
+        }
+        
+        public void setLoadMaskMessage(String message) {
+                if (mProgressDialog == null || !mProgressDialog.isShowing()) {
+                        this.showLoadingMask(message);
+                }
+                else {
+                        mProgressDialog.setMessage(message);
+                }
+        }
+        
+        public void showLoadingMask(String message) {
+                mProgressDialog = new ProgressDialog(self);
+                mProgressDialog.setMessage(message);
+                mProgressDialog.setCancelable(false);
+                mProgressDialog.show();
         }
         
 }

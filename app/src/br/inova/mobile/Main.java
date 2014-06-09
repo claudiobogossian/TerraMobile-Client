@@ -15,19 +15,6 @@ public class Main extends Activity {
         // Session Manager Class
         SessionManager session;
         
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
-                Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
-                /**
-                 * Defines the default exception handler to log unexpected
-                 * android errors
-                 */
-                
-                session = SessionManager.getInstance();
-                this.checkLogin();
-        }
-        
         /**
          * Check login method wil check user login status If false it will
          * redirect user to login page Else won't do anything
@@ -55,6 +42,19 @@ public class Main extends Activity {
                 // Staring Login Activity
                 this.startActivity(intent);
                 finish();
+        }
+        
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+                /**
+                 * Defines the default exception handler to log unexpected
+                 * android errors
+                 */
+                
+                session = SessionManager.getInstance();
+                this.checkLogin();
         }
         
         @Override

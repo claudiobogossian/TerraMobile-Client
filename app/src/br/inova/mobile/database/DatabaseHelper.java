@@ -12,12 +12,12 @@ public class DatabaseHelper {
                 return databaseHelper;
         }
         
-        public static void setHelper(Context context) {
-                databaseHelper = OpenHelperManager.getHelper(context, DatabaseAdapter.class);
-        }
-        
         public static void releaseHelper() {
                 OpenHelperManager.releaseHelper();
                 databaseHelper = null;
+        }
+        
+        public static void setHelper(Context context) {
+                databaseHelper = OpenHelperManager.getHelper(context, DatabaseAdapter.class);
         }
 }

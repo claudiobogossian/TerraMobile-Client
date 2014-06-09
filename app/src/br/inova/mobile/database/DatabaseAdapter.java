@@ -26,18 +26,28 @@ import com.j256.ormlite.table.TableUtils;
  */
 public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
         
+        /**
+         * Clear all user registers, by droping and recreating the city table.
+         * 
+         * @author Paulo Luan
+         * */
+        public static void resetCityTable() throws SQLException {
+                TableUtils.dropTable(cs, City.class, true);
+                TableUtils.createTable(cs, City.class);
+        }
+        
         private final String            LOG_TAG          = "#" + getClass().getSimpleName();
         
         private static final String     DATABASE_NAME    = "tasks.db";
         
         private static final int        DATABASE_VERSION = 1;
-        
         // the DAO object we use to access the Task table
         private Dao<Task, Integer>      taskDao          = null;
         private Dao<Form, Integer>      formDao          = null;
         private Dao<Photo, Integer>     photoDao         = null;
         private Dao<User, Integer>      userDao          = null;
         private Dao<Address, Integer>   addressDao       = null;
+        
         private Dao<City, Integer>      cityDao          = null;
         
         private static ConnectionSource cs;
@@ -54,6 +64,92 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
                 catch (SQLException e) {
                         ExceptionHandler.saveLogFile(e);
                 }
+        }
+        
+        /**
+         * Close the database connections and clear any cached DAOs.
+         */
+        @Override
+        public void close() {
+                super.close();
+                taskDao = null;
+                formDao = null;
+                photoDao = null;
+                userDao = null;
+                addressDao = null;
+                cityDao = null;
+        }
+        
+        public void createCityTable() throws SQLException {
+                try {
+                        TableUtils.createTableIfNotExists(connectionSource, City.class);
+                }
+                catch (Exception e) {
+                        e.printStackTrace();
+                }
+        }
+        
+        /**
+         * 
+         * 
+         * @author Paulo Luan
+         */
+        public void createDaos() throws SQLException {
+                taskDao = getDao(Task.class);
+                formDao = getDao(Form.class);
+                photoDao = getDao(Photo.class);
+                userDao = getDao(User.class);
+                addressDao = getDao(Address.class);
+                cityDao = getDao(City.class);
+        }
+        
+        public void createTables() throws SQLException {
+                TableUtils.createTable(connectionSource, Address.class);
+                TableUtils.createTable(connectionSource, User.class);
+                TableUtils.createTable(connectionSource, Photo.class);
+                TableUtils.createTable(connectionSource, Form.class);
+                TableUtils.createTable(connectionSource, Task.class);
+                TableUtils.createTable(connectionSource, City.class);
+        }
+        
+        public void dropTables() throws SQLException {
+                TableUtils.dropTable(connectionSource, Address.class, true);
+                TableUtils.dropTable(connectionSource, User.class, true);
+                TableUtils.dropTable(connectionSource, Photo.class, true);
+                TableUtils.dropTable(connectionSource, Form.class, true);
+                TableUtils.dropTable(connectionSource, Task.class, true);
+                TableUtils.dropTable(connectionSource, City.class, true);
+        }
+        
+        public Dao<Address, Integer> getAddressDao() {
+                return addressDao;
+        }
+        
+        public Dao<City, Integer> getCityDao() {
+                return cityDao;
+        }
+        
+        public <D extends Dao<T, ?>, T> D getDao(Class<T> clazz) throws SQLException {
+                Dao<T, ?> dao = (Dao<T, ?>) DaoManager.createDao(connectionSource, clazz);
+                @SuppressWarnings("unchecked")
+                D castDao = (D) dao;
+                return castDao;
+        }
+        
+        public Dao<Form, Integer> getFormDao() {
+                return formDao;
+        }
+        
+        public Dao<Photo, Integer> getPhotoDao() {
+                return photoDao;
+        }
+        
+        public Dao<Task, Integer> getTaskDao() {
+                return taskDao;
+        }
+        
+        public Dao<User, Integer> getUserDao() {
+                return userDao;
         }
         
         /**
@@ -101,57 +197,6 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
         }
         
         /**
-         * 
-         * 
-         * @author Paulo Luan
-         */
-        public void createDaos() throws SQLException {
-                taskDao = getDao(Task.class);
-                formDao = getDao(Form.class);
-                photoDao = getDao(Photo.class);
-                userDao = getDao(User.class);
-                addressDao = getDao(Address.class);
-                cityDao = getDao(City.class);
-        }
-        
-        public void createTables() throws SQLException {
-                TableUtils.createTable(connectionSource, Address.class);
-                TableUtils.createTable(connectionSource, User.class);
-                TableUtils.createTable(connectionSource, Photo.class);
-                TableUtils.createTable(connectionSource, Form.class);
-                TableUtils.createTable(connectionSource, Task.class);
-                TableUtils.createTable(connectionSource, City.class);
-        }
-        
-        public void dropTables() throws SQLException {
-                TableUtils.dropTable(connectionSource, Address.class, true);
-                TableUtils.dropTable(connectionSource, User.class, true);
-                TableUtils.dropTable(connectionSource, Photo.class, true);
-                TableUtils.dropTable(connectionSource, Form.class, true);
-                TableUtils.dropTable(connectionSource, Task.class, true);
-                TableUtils.dropTable(connectionSource, City.class, true);
-        }
-        
-        public void createCityTable() throws SQLException {
-                try {
-                        TableUtils.createTableIfNotExists(connectionSource, City.class);
-                }
-                catch (Exception e) {
-                        e.printStackTrace();
-                }
-        }
-        
-        /**
-         * Clear all user registers, by droping and recreating the city table.
-         * 
-         * @author Paulo Luan
-         * */
-        public static void resetCityTable() throws SQLException {
-                TableUtils.dropTable(cs, City.class, true);
-                TableUtils.createTable(cs, City.class);
-        }
-        
-        /**
          * Clear all user registers, by droping and recreating the user table.
          * 
          * @author Paulo Luan
@@ -161,59 +206,24 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
                 TableUtils.createTable(connectionSource, User.class);
         }
         
-        public <D extends Dao<T, ?>, T> D getDao(Class<T> clazz) throws SQLException {
-                Dao<T, ?> dao = (Dao<T, ?>) DaoManager.createDao(connectionSource, clazz);
-                @SuppressWarnings("unchecked")
-                D castDao = (D) dao;
-                return castDao;
+        public void setAddressDao(Dao<Address, Integer> addressDao) {
+                this.addressDao = addressDao;
         }
         
-        public Dao<Task, Integer> getTaskDao() {
-                return taskDao;
-        }
-        
-        public void setTaskDao(Dao<Task, Integer> taskDao) {
-                this.taskDao = taskDao;
-        }
-        
-        public Dao<Form, Integer> getFormDao() {
-                return formDao;
+        public void setCityDao(Dao<City, Integer> cityDao) {
+                this.cityDao = cityDao;
         }
         
         public void setFormDao(Dao<Form, Integer> formDao) {
                 this.formDao = formDao;
         }
         
-        public Dao<Photo, Integer> getPhotoDao() {
-                return photoDao;
-        }
-        
         public void setPhotoDao(Dao<Photo, Integer> photoDao) {
                 this.photoDao = photoDao;
         }
         
-        public Dao<User, Integer> getUserDao() {
-                return userDao;
-        }
-        
-        public void setUserDao(Dao<User, Integer> userDao) {
-                this.userDao = userDao;
-        }
-        
-        public Dao<Address, Integer> getAddressDao() {
-                return addressDao;
-        }
-        
-        public void setAddressDao(Dao<Address, Integer> addressDao) {
-                this.addressDao = addressDao;
-        }
-        
-        public Dao<City, Integer> getCityDao() {
-                return cityDao;
-        }
-        
-        public void setCityDao(Dao<City, Integer> cityDao) {
-                this.cityDao = cityDao;
+        public void setTaskDao(Dao<Task, Integer> taskDao) {
+                this.taskDao = taskDao;
         }
         
         /*
@@ -228,18 +238,8 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
          * }
          */
         
-        /**
-         * Close the database connections and clear any cached DAOs.
-         */
-        @Override
-        public void close() {
-                super.close();
-                taskDao = null;
-                formDao = null;
-                photoDao = null;
-                userDao = null;
-                addressDao = null;
-                cityDao = null;
+        public void setUserDao(Dao<User, Integer> userDao) {
+                this.userDao = userDao;
         }
         
 }

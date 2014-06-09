@@ -8,6 +8,21 @@ import org.json.JSONObject;
 import com.j256.ormlite.field.DatabaseField;
 
 public class Address implements Serializable {
+        @DatabaseField
+        private String  city;
+        
+        @DatabaseField
+        private Double  coordx;      // Longitude
+                                      
+        @DatabaseField
+        private Double  coordy;      // Latitude
+                                      
+        @DatabaseField
+        private String  extra;       // complemento
+                                      
+        @DatabaseField
+        private String  featureId;   // O idenfificador da feição (SSQQQNNNN),
+                                      
         @DatabaseField(
                        generatedId = true,
                        columnName = "_id",
@@ -18,31 +33,16 @@ public class Address implements Serializable {
         private String  name;        // Logradouro
                                       
         @DatabaseField
+        private String  neighborhood;
+        
+        @DatabaseField
         private String  number;      // Base de dados pode ter String no número
-                                      
-        @DatabaseField
-        private String  extra;       // complemento
-                                      
-        @DatabaseField
-        private Double  coordx;      // Longitude
-                                      
-        @DatabaseField
-        private Double  coordy;      // Latitude
                                       
         @DatabaseField
         private String  postalCode;
         
         @DatabaseField
-        private String  city;
-        
-        @DatabaseField
         private String  state;
-        
-        @DatabaseField
-        private String  featureId;   // O idenfificador da feição (SSQQQNNNN),
-                                      
-        @DatabaseField
-        private String  neighborhood;
         
         public Address() {}
         
@@ -72,36 +72,8 @@ public class Address implements Serializable {
                 this.neighborhood = neighborhood;
         }
         
-        public Integer getId() {
-                return id;
-        }
-        
-        public void setId(Integer id) {
-                this.id = id;
-        }
-        
-        public String getName() {
-                return name;
-        }
-        
-        public void setName(String name) {
-                this.name = name;
-        }
-        
-        public String getNumber() {
-                return number;
-        }
-        
-        public void setNumber(String number) {
-                this.number = number;
-        }
-        
-        public String getExtra() {
-                return extra;
-        }
-        
-        public void setExtra(String extra) {
-                this.extra = extra;
+        public String getCity() {
+                return city;
         }
         
         /**
@@ -111,10 +83,6 @@ public class Address implements Serializable {
                 return coordx;
         }
         
-        public void setCoordx(Double coordx) {
-                this.coordx = coordx;
-        }
-        
         /**
          * @return the Latitude.
          */
@@ -122,48 +90,80 @@ public class Address implements Serializable {
                 return coordy;
         }
         
-        public void setCoordy(Double coordy) {
-                this.coordy = coordy;
-        }
-        
-        public String getPostalCode() {
-                return postalCode;
-        }
-        
-        public void setPostalCode(String postalCode) {
-                this.postalCode = postalCode;
-        }
-        
-        public String getCity() {
-                return city;
-        }
-        
-        public void setCity(String city) {
-                this.city = city;
-        }
-        
-        public String getState() {
-                return state;
-        }
-        
-        public void setState(String state) {
-                this.state = state;
+        public String getExtra() {
+                return extra;
         }
         
         public String getFeatureId() {
                 return featureId;
         }
         
-        public void setFeatureId(String featureId) {
-                this.featureId = featureId;
+        public Integer getId() {
+                return id;
+        }
+        
+        public String getName() {
+                return name;
         }
         
         public String getNeighborhood() {
                 return neighborhood;
         }
         
+        public String getNumber() {
+                return number;
+        }
+        
+        public String getPostalCode() {
+                return postalCode;
+        }
+        
+        public String getState() {
+                return state;
+        }
+        
+        public void setCity(String city) {
+                this.city = city;
+        }
+        
+        public void setCoordx(Double coordx) {
+                this.coordx = coordx;
+        }
+        
+        public void setCoordy(Double coordy) {
+                this.coordy = coordy;
+        }
+        
+        public void setExtra(String extra) {
+                this.extra = extra;
+        }
+        
+        public void setFeatureId(String featureId) {
+                this.featureId = featureId;
+        }
+        
+        public void setId(Integer id) {
+                this.id = id;
+        }
+        
+        public void setName(String name) {
+                this.name = name;
+        }
+        
         public void setNeighborhood(String neighborhood) {
                 this.neighborhood = neighborhood;
+        }
+        
+        public void setNumber(String number) {
+                this.number = number;
+        }
+        
+        public void setPostalCode(String postalCode) {
+                this.postalCode = postalCode;
+        }
+        
+        public void setState(String state) {
+                this.state = state;
         }
         
         @Override

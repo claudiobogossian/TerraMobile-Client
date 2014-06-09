@@ -47,46 +47,6 @@ public class LoginActivity extends Activity {
         
         private ProgressDialog mProgressDialog;
         
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
-                Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
-                /**
-                 * Defines the default exception handler to log unexpected
-                 * android errors
-                 */
-                
-                session = SessionManager.getInstance();
-                
-                this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                setContentView(R.layout.activity_login);
-                
-                // linking the widgets to the layout
-                bt_begin = (Button) findViewById(R.id.main_bt_begin);
-                bt_exit = (Button) findViewById(R.id.main_bt_exit);
-                
-                bt_begin.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                                self.getRemoteUsers();
-                        }
-                });
-                
-                bt_exit.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                                self.finish();
-                                Process.killProcess(Process.myPid());
-                                System.exit(10);
-                        }
-                });
-                
-                createRemoteUrlSpinner();
-                
-                this.restTemplate = new RestTemplate();
-                this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-        }
-        
         public void createRemoteUrlSpinner() {
                 spnLoginUrl = (Spinner) findViewById(R.id.login_sppiner);
                 
@@ -106,6 +66,59 @@ public class LoginActivity extends Activity {
                                 return;
                         }
                 });
+        }
+        
+        /**
+         * Creates the object that send the rest calls to server.
+         * 
+         * @author Paulo Luan
+         * 
+         */
+        public void getRemoteUsers() {
+                if (Utility.isNetworkAvailable(this)) {
+                        String url = Utility.getServerUrl() + Constants.USER_REST;
+                        DownloadUsers remote = new DownloadUsers(this);
+                        remote.execute(new String[] { url });
+                }
+                else {
+                        self.login();
+                        Log.i(this.LOG_TAG, "Sem conexão com a internet.");
+                }
+        }
+        
+        public void hideLoadingMask() {
+                if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                        mProgressDialog.dismiss();
+                }
+        }
+        
+        /**
+         * Verify in the database if exists any users with that hash
+         * 
+         * @author Paulo Luan
+         * @param hash
+         *                The Hash of user, this hash is the hash of (name +
+         *                (hash(password)))
+         * 
+         */
+        public boolean isValidHash(String hash) {
+                boolean userExists = false;
+                // verify hash at local database.
+                DatabaseAdapter db = DatabaseHelper.getDatabase();
+                Dao<User, Integer> dao = db.getUserDao();
+                
+                try {
+                        User user = dao.queryBuilder().where().eq("hash", hash).queryForFirst();
+                        
+                        if (user != null) {
+                                userExists = true;
+                        }
+                }
+                catch (SQLException e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+                
+                return userExists;
         }
         
         /**
@@ -153,51 +166,48 @@ public class LoginActivity extends Activity {
                 }
         }
         
-        /**
-         * Verify in the database if exists any users with that hash
-         * 
-         * @author Paulo Luan
-         * @param hash
-         *                The Hash of user, this hash is the hash of (name +
-         *                (hash(password)))
-         * 
-         */
-        public boolean isValidHash(String hash) {
-                boolean userExists = false;
-                // verify hash at local database.
-                DatabaseAdapter db = DatabaseHelper.getDatabase();
-                Dao<User, Integer> dao = db.getUserDao();
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+                /**
+                 * Defines the default exception handler to log unexpected
+                 * android errors
+                 */
                 
-                try {
-                        User user = dao.queryBuilder().where().eq("hash", hash).queryForFirst();
-                        
-                        if (user != null) {
-                                userExists = true;
+                session = SessionManager.getInstance();
+                
+                this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                setContentView(R.layout.activity_login);
+                
+                // linking the widgets to the layout
+                bt_begin = (Button) findViewById(R.id.main_bt_begin);
+                bt_exit = (Button) findViewById(R.id.main_bt_exit);
+                
+                bt_begin.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                                self.getRemoteUsers();
                         }
-                }
-                catch (SQLException e) {
-                        ExceptionHandler.saveLogFile(e);
-                }
+                });
                 
-                return userExists;
+                bt_exit.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                                self.finish();
+                                Process.killProcess(Process.myPid());
+                                System.exit(10);
+                        }
+                });
+                
+                createRemoteUrlSpinner();
+                
+                this.restTemplate = new RestTemplate();
+                this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         }
         
-        /**
-         * Creates the object that send the rest calls to server.
-         * 
-         * @author Paulo Luan
-         * 
-         */
-        public void getRemoteUsers() {
-                if (Utility.isNetworkAvailable(this)) {
-                        String url = Utility.getServerUrl() + Constants.USER_REST;
-                        DownloadUsers remote = new DownloadUsers(this);
-                        remote.execute(new String[] { url });
-                }
-                else {
-                        self.login();
-                        Log.i(this.LOG_TAG, "Sem conexão com a internet.");
-                }
+        public void onProgressUpdate(String... progress) {
+                mProgressDialog.setMessage(progress[0]);
         }
         
         /**
@@ -230,15 +240,5 @@ public class LoginActivity extends Activity {
                 mProgressDialog.setMessage(message);
                 mProgressDialog.setCancelable(false);
                 mProgressDialog.show();
-        }
-        
-        public void hideLoadingMask() {
-                if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                        mProgressDialog.dismiss();
-                }
-        }
-        
-        public void onProgressUpdate(String... progress) {
-                mProgressDialog.setMessage(progress[0]);
         }
 }

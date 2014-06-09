@@ -26,24 +26,52 @@ import br.inova.mobile.task.TaskDao;
 import br.inova.mobile.user.SessionManager;
 
 public class SyncDataWithServer extends AsyncTask<String, String, String> {
+        /**
+         * 
+         * Splice one array into N new arrays.
+         * 
+         * @param inputList
+         *                the original list the wants to part.
+         * @param slices
+         *                the number of slices that the array will be parted.
+         * @return partitions The ArrayList with sub arrays.
+         */
+        public static List<List<Integer>> spliceArrayIntoSubArrays(
+                                                                   List<Integer> inputList,
+                                                                   int slices) {
+                List<List<Integer>> partitions = new LinkedList<List<Integer>>();
+                
+                int partitionSize = inputList.size() / slices;
+                
+                if (partitionSize == 0) {
+                        partitionSize = 1;
+                }
+                
+                for (int i = 0; i < inputList.size(); i += partitionSize) {
+                        partitions.add(inputList.subList(i, i + Math.min(partitionSize, inputList.size() - i)));
+                }
+                
+                return partitions;
+        }
+        
         private String             userHash;
         
         private TaskActivity       taskActivity;
-        
         private String             taskServerUrl   = Constants.getTasksUrl();
+        
         private String             photoServerUrl  = Constants.getPhotosUrl();
         
         int                        progress        = 0;
         
         private SyncDataWithServer self;
-        
         private List<Long>         threads         = new ArrayList<Long>();
+        
         private int                numberOfThreads = 50;
-        
         private static long        timeStart;
-        private static long        amountOfRegisters;
         
+        private static long        amountOfRegisters;
         private static String      datetimeBegin;
+        
         private static String      datetimeEnd;
         
         public SyncDataWithServer(TaskActivity taskActivity) {
@@ -65,26 +93,27 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
                 return null;
         }
         
-        public void syncronizeDataWithServer() {
-                List<Integer> tasksIds = TaskDao.getListOfTasksIds();
-                amountOfRegisters = tasksIds.size();
+        public void finishThread(Thread thread) {
                 
-                if (amountOfRegisters == 0) {
-                        onFinishedWork(null);
-                }
-                else {
-                        Long countOfRegisters = TaskDao.getCountOfCompletedTasks();
+                if (thread != null) {
+                        Long threadId = thread.getId();
+                        int index = threads.indexOf(threadId);
                         
-                        if (countOfRegisters != 0) {
-                                publishProgress("Sincronizando...", "0", "" + countOfRegisters); // set Max Length of progress                                                                                       // dialog
+                        if (index != -1) {
+                                threads.remove(index);
                         }
                         
-                        List<List<Integer>> slicedTasks = spliceArrayIntoSubArrays(tasksIds, numberOfThreads);
+                        thread = null; // remove the thread object from memory.
                         
-                        for (int i = 0; i < slicedTasks.size(); i++) {
-                                iterateAndSendTasks(slicedTasks.get(i));
+                        if (threads.isEmpty()) {
+                                onFinishedWork(null);
                         }
                 }
+        }
+        
+        public synchronized void increaseProgress() {
+                progress++;
+                publishProgress("Sincronizando...", "" + progress);
         }
         
         /**
@@ -115,26 +144,59 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
                 thread.start();
         }
         
-        public void finishThread(Thread thread) {
+        protected void onFinishedWork(final String message) {
                 
-                if (thread != null) {
-                        Long threadId = thread.getId();
-                        int index = threads.indexOf(threadId);
-                        
-                        if (index != -1) {
-                                threads.remove(index);
+                long timeEnd = System.currentTimeMillis();
+                long timeDelta = timeEnd - timeStart;
+                double elapsedSeconds = timeDelta / 1000.0;
+                
+                datetimeEnd = new SimpleDateFormat("HH:mm:ss").format(new Date());
+                
+                Log.e("", "###########################################");
+                Log.d("TEMPO: ", "Início: " + datetimeBegin + "  Fim: " + datetimeEnd);
+                Log.d("TEMPO DA SINCRONIZAÇÃO: ", "AMOUNT: " + amountOfRegisters + "  TEMPO DA SYNC: " + elapsedSeconds);
+                Log.e("", "###########################################");
+                
+                // Get a handler that can be used to post to the main thread
+                Handler mainHandler = new Handler(taskActivity.getMainLooper());
+                
+                Runnable mainThreadHandler = new Runnable() {
+                        @Override
+                        public void run() {
+                                taskActivity.hideLoadingMask();
+                                
+                                if (message != null) {
+                                        Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
+                                }
+                                
+                                taskActivity.getRemoteTasks();
+                                self = null;
                         }
-                        
-                        thread = null; // remove the thread object from memory.
-                        
-                        if (threads.isEmpty()) {
-                                onFinishedWork(null);
-                        }
-                }
+                };
+                mainHandler.post(mainThreadHandler);
+        }
+        
+        @Override
+        protected void onPreExecute() {
+                super.onPreExecute();
+                publishProgress("Analisando registros, aguarde..."); // set Max Length of progress                                                                                       // dialog
+        }
+        
+        @Override
+        protected void onProgressUpdate(String... progress) {
+                taskActivity.onProgressUpdate(progress);
         }
         
         public void registerThread(Thread thread) {
                 threads.add(thread.getId());
+        }
+        
+        public synchronized void removePhoto(Photo photo) {
+                PhotoDao.deletePhoto(photo);
+        }
+        
+        public synchronized void removeTask(Task task) {
+                TaskDao.deleteTask(task);
         }
         
         public void sendData(Task task, List<Photo> photos) {
@@ -151,52 +213,6 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
                 }
                 
                 increaseProgress();
-        }
-        
-        /**
-         * Send a task to server and remove it from local database on success.
-         * 
-         * @param task
-         *                the task that will be sync with the server
-         * @return isSaved boolean that represents wether the photo was saved or
-         *         not.
-         */
-        private boolean sendTask(Task task) {
-                boolean isSaved = false;
-                
-                try {
-                        /*
-                         * ObjectMapper mapper = new ObjectMapper(); String
-                         * photosJson = mapper.writeValueAsString(new Task[] {
-                         * task });
-                         * 
-                         * isSaved = HttpClient.doPost(photoServerUrl,
-                         * photosJson);
-                         * 
-                         * if (isSaved) { TaskDao.deleteTask(task); isSaved =
-                         * true; }
-                         */
-                        
-                        Task[] responseTasks = new RestTemplateFactory().postForObject(taskServerUrl, new Task[] { task }, Task[].class, userHash);
-                        
-                        List<Task> receivedTasks = new ArrayList<Task>(Arrays.asList(responseTasks));
-                        Task responseTask = receivedTasks.get(0);
-                        
-                        if (responseTask != null) {
-                                Log.i("SyncDataWithServer", "Task enviada com sucesso. " + task.getId());
-                                removeTask(task);
-                                isSaved = true;
-                        }
-                        
-                        if (!isSaved) {
-                                Log.i("SyncDataWithServer", "Erro ao enviar a Foto. " + task.getId());
-                        }
-                }
-                catch (Exception e) {
-                        ExceptionHandler.saveLogFile(e);
-                }
-                
-                return isSaved;
         }
         
         /**
@@ -274,88 +290,72 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
                 return isSaved;
         }
         
-        public synchronized void removeTask(Task task) {
-                TaskDao.deleteTask(task);
-        }
-        
-        public synchronized void removePhoto(Photo photo) {
-                PhotoDao.deletePhoto(photo);
-        }
-        
-        public synchronized void increaseProgress() {
-                progress++;
-                publishProgress("Sincronizando...", "" + progress);
-        }
-        
         /**
+         * Send a task to server and remove it from local database on success.
          * 
-         * Splice one array into N new arrays.
-         * 
-         * @param inputList
-         *                the original list the wants to part.
-         * @param slices
-         *                the number of slices that the array will be parted.
-         * @return partitions The ArrayList with sub arrays.
+         * @param task
+         *                the task that will be sync with the server
+         * @return isSaved boolean that represents wether the photo was saved or
+         *         not.
          */
-        public static List<List<Integer>> spliceArrayIntoSubArrays(
-                                                                   List<Integer> inputList,
-                                                                   int slices) {
-                List<List<Integer>> partitions = new LinkedList<List<Integer>>();
+        private boolean sendTask(Task task) {
+                boolean isSaved = false;
                 
-                int partitionSize = inputList.size() / slices;
-                
-                if (partitionSize == 0) {
-                        partitionSize = 1;
-                }
-                
-                for (int i = 0; i < inputList.size(); i += partitionSize) {
-                        partitions.add(inputList.subList(i, i + Math.min(partitionSize, inputList.size() - i)));
-                }
-                
-                return partitions;
-        }
-        
-        @Override
-        protected void onPreExecute() {
-                super.onPreExecute();
-                publishProgress("Analisando registros, aguarde..."); // set Max Length of progress                                                                                       // dialog
-        }
-        
-        @Override
-        protected void onProgressUpdate(String... progress) {
-                taskActivity.onProgressUpdate(progress);
-        }
-        
-        protected void onFinishedWork(final String message) {
-                
-                long timeEnd = System.currentTimeMillis();
-                long timeDelta = timeEnd - timeStart;
-                double elapsedSeconds = timeDelta / 1000.0;
-                
-                datetimeEnd = new SimpleDateFormat("HH:mm:ss").format(new Date());
-                
-                Log.e("", "###########################################");
-                Log.d("TEMPO: ", "Início: " + datetimeBegin + "  Fim: " + datetimeEnd);
-                Log.d("TEMPO DA SINCRONIZAÇÃO: ", "AMOUNT: " + amountOfRegisters + "  TEMPO DA SYNC: " + elapsedSeconds);
-                Log.e("", "###########################################");
-                
-                // Get a handler that can be used to post to the main thread
-                Handler mainHandler = new Handler(taskActivity.getMainLooper());
-                
-                Runnable mainThreadHandler = new Runnable() {
-                        @Override
-                        public void run() {
-                                taskActivity.hideLoadingMask();
-                                
-                                if (message != null) {
-                                        Utility.showToast(message, Toast.LENGTH_LONG, taskActivity);
-                                }
-                                
-                                taskActivity.getRemoteTasks();
-                                self = null;
+                try {
+                        /*
+                         * ObjectMapper mapper = new ObjectMapper(); String
+                         * photosJson = mapper.writeValueAsString(new Task[] {
+                         * task });
+                         * 
+                         * isSaved = HttpClient.doPost(photoServerUrl,
+                         * photosJson);
+                         * 
+                         * if (isSaved) { TaskDao.deleteTask(task); isSaved =
+                         * true; }
+                         */
+                        
+                        Task[] responseTasks = new RestTemplateFactory().postForObject(taskServerUrl, new Task[] { task }, Task[].class, userHash);
+                        
+                        List<Task> receivedTasks = new ArrayList<Task>(Arrays.asList(responseTasks));
+                        Task responseTask = receivedTasks.get(0);
+                        
+                        if (responseTask != null) {
+                                Log.i("SyncDataWithServer", "Task enviada com sucesso. " + task.getId());
+                                removeTask(task);
+                                isSaved = true;
                         }
-                };
-                mainHandler.post(mainThreadHandler);
+                        
+                        if (!isSaved) {
+                                Log.i("SyncDataWithServer", "Erro ao enviar a Foto. " + task.getId());
+                        }
+                }
+                catch (Exception e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+                
+                return isSaved;
+        }
+        
+        public void syncronizeDataWithServer() {
+                List<Integer> tasksIds = TaskDao.getListOfTasksIds();
+                amountOfRegisters = tasksIds.size();
+                
+                if (amountOfRegisters == 0) {
+                        onFinishedWork(null);
+                }
+                else {
+                        Long countOfRegisters = TaskDao.getCountOfCompletedTasks();
+                        
+                        if (countOfRegisters != 0) {
+                                publishProgress("Sincronizando...", "0", "" + countOfRegisters); // set Max Length of progress                                                                                       // dialog
+                        }
+                        
+                        List<List<Integer>> slicedTasks = spliceArrayIntoSubArrays(tasksIds, numberOfThreads);
+                        
+                        for (int i = 0; i < slicedTasks.size(); i++) {
+                                iterateAndSendTasks(slicedTasks.get(i));
+                        }
+                }
         }
         
 }

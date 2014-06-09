@@ -18,6 +18,68 @@ import br.inova.mobile.Main;
 import br.inova.mobile.Utility;
 
 public class ExceptionHandler extends Throwable implements java.lang.Thread.UncaughtExceptionHandler {
+        /**
+         * Receives an exception and transform it into a plain text with the
+         * cause.
+         * 
+         * @param Exception
+         *                : the exception with the error.
+         * @author Paulo Luan
+         * 
+         * */
+        public static void saveLogFile(Exception exception) {
+                StringWriter errors = new StringWriter();
+                exception.printStackTrace(new PrintWriter(errors));
+                String text = errors.toString();
+                saveLogFile(text);
+        }
+        
+        /**
+         * Creates a log file with the current date and time.
+         * 
+         * @param text
+         *                - the text that will be saved on the log file.
+         * @author Paulo Luan
+         * 
+         * */
+        public static void saveLogFile(String text) {
+                Log.e("SAVING LOG: ", text);
+                
+                String logsPath = "/inova/" + "/dados" + "/log/";
+                File path = new File(Utility.getExternalSdCardPath() + logsPath);
+                
+                if (!path.exists()) {
+                        if (!path.mkdirs()) {
+                                path = new File(Environment.getExternalStorageDirectory() + logsPath);
+                                path.mkdirs();
+                        }
+                }
+                
+                SimpleDateFormat simpleDate = new SimpleDateFormat("dd_MM_yyyy HH_mm_ss");
+                String stringDate = simpleDate.format(new Date());
+                String fileName = "log_" + stringDate + ".txt";
+                
+                File logFile = new File(path, fileName);
+                
+                if (!logFile.exists()) {
+                        try {
+                                logFile.createNewFile();
+                        }
+                        catch (IOException e) {
+                                e.printStackTrace();
+                        }
+                }
+                try {
+                        BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
+                        buf.append(text);
+                        buf.newLine();
+                        buf.close();
+                }
+                catch (IOException e) {
+                        e.printStackTrace();
+                }
+        }
+        
         private final Activity myContext;
         
         private final String   LINE_SEPARATOR = "\n";
@@ -80,68 +142,6 @@ public class ExceptionHandler extends Throwable implements java.lang.Thread.Unca
                 
                 android.os.Process.killProcess(android.os.Process.myPid());
                 System.exit(10);
-        }
-        
-        /**
-         * Creates a log file with the current date and time.
-         * 
-         * @param text
-         *                - the text that will be saved on the log file.
-         * @author Paulo Luan
-         * 
-         * */
-        public static void saveLogFile(String text) {
-                Log.e("SAVING LOG: ", text);
-                
-                String logsPath = "/inova/" + "/dados" + "/log/";
-                File path = new File(Utility.getExternalSdCardPath() + logsPath);
-                
-                if (!path.exists()) {
-                        if (!path.mkdirs()) {
-                                path = new File(Environment.getExternalStorageDirectory() + logsPath);
-                                path.mkdirs();
-                        }
-                }
-                
-                SimpleDateFormat simpleDate = new SimpleDateFormat("dd_MM_yyyy HH_mm_ss");
-                String stringDate = simpleDate.format(new Date());
-                String fileName = "log_" + stringDate + ".txt";
-                
-                File logFile = new File(path, fileName);
-                
-                if (!logFile.exists()) {
-                        try {
-                                logFile.createNewFile();
-                        }
-                        catch (IOException e) {
-                                e.printStackTrace();
-                        }
-                }
-                try {
-                        BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
-                        buf.append(text);
-                        buf.newLine();
-                        buf.close();
-                }
-                catch (IOException e) {
-                        e.printStackTrace();
-                }
-        }
-        
-        /**
-         * Receives an exception and transform it into a plain text with the
-         * cause.
-         * 
-         * @param Exception
-         *                : the exception with the error.
-         * @author Paulo Luan
-         * 
-         * */
-        public static void saveLogFile(Exception exception) {
-                StringWriter errors = new StringWriter();
-                exception.printStackTrace(new PrintWriter(errors));
-                String text = errors.toString();
-                saveLogFile(text);
         }
         
 }
