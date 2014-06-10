@@ -785,9 +785,10 @@ public class FormActivity extends Activity {
                         if (photo.getId() == null) { // remove file if it not persisted on database (exists only on filesystem).
                                 File file = new File(photo.getPath());
                                 file.delete();
-                                photos.remove(photo);
                         }
                 }
+                
+                photos = null;
         }
         
         protected void saveTaskIntoLocalDatabase() {
