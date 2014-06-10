@@ -1,7 +1,6 @@
 package br.inova.mobile.map;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
@@ -11,7 +10,7 @@ import org.osmdroid.bonuspack.overlays.ItemizedOverlayWithBubble;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.MapView.Projection;
+import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 
@@ -48,7 +47,11 @@ public class LandmarksManager {
                 @Override
                 public boolean onLongPress(MotionEvent e, MapView mapView) {
                         Projection proj = mapView.getProjection();
-                        IGeoPoint geoPoint = proj.fromPixels(e.getX(), e.getY());
+                        
+                        int x = (int) e.getX();
+                        int y = (int) e.getY();
+                        
+                        IGeoPoint geoPoint = proj.fromPixels(x, y);
                         
                         LandmarksManager.filterByGeopoint(geoPoint);
                         
@@ -57,7 +60,11 @@ public class LandmarksManager {
                 
                 @Override
                 public boolean onTouchEvent(MotionEvent e, MapView mapView) {
-                        if (e.getAction() == MotionEvent.ACTION_DOWN) if (poiInfoWindow.isOpen()) poiInfoWindow.close();
+                        if (e.getAction() == MotionEvent.ACTION_DOWN) {
+                                if (poiInfoWindow.isOpen()) {
+                                        poiInfoWindow.close();
+                                }
+                        }
                         return false;
                 }
         }
@@ -127,7 +134,7 @@ public class LandmarksManager {
                 
                 try {
                         while (taskIterator.hasNext()) {
-                                Task feature = (Task) taskIterator.next();
+                                Task feature = taskIterator.next();
                                 
                                 Double lat = feature.getAddress().getCoordy();
                                 Double lon = feature.getAddress().getCoordx();
@@ -158,7 +165,7 @@ public class LandmarksManager {
         public static void filterByGeopoint(IGeoPoint geoPoint) {
                 PointF center = new PointF((float) geoPoint.getLatitude(), (float) geoPoint.getLongitude());
                 
-                List<Task> tasks = DistanceFilter.getNearestAddresses(center, 10.0);
+                DistanceFilter.getNearestAddresses(center, 10.0);
                 
                 //Utility.showToast("Filtro efetuado! " + geoPoint, Toast.LENGTH_SHORT, context);
         }
