@@ -1,17 +1,12 @@
 package br.inova.mobile.map;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 import android.app.DownloadManager;
 import android.app.DownloadManager.Query;
@@ -201,57 +196,15 @@ public class BaseMapDownload extends AsyncTask<String, String, String> {
          * 
          * */
         public void sendActionMountedEvent() {
-                Uri uri = Uri.parse("file://" + this.tileSourcePath);
-                taskActivity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, uri));
-        }
-        
-        /**
-         * Unzip files.
-         * 
-         * @param zipfile
-         *                The path of the zip file
-         * @param location
-         *                The new Location (path) that you want to unzip the
-         *                file
-         * @throws IOException
-         */
-        private void unzip(String zipFile, String outputFolder) throws IOException {
-                int progress = 0;
+                int currentapiVersion = android.os.Build.VERSION.SDK_INT;
                 
-                ZipFile zip = new ZipFile(zipFile);
-                publishProgress("Descompactando mapa de base...", "0", "" + zip.size());
-                
-                FileInputStream fin = new FileInputStream(zipFile);
-                ZipInputStream zin = new ZipInputStream(fin);
-                ZipEntry ze = null;
-                
-                while ((ze = zin.getNextEntry()) != null) {
-                        if (ze.isDirectory()) {
-                                Utility.dirChecker(outputFolder + ze.getName());
-                        }
-                        else {
-                                progress++;
-                                publishProgress("Descompactando mapa de base...", "" + progress);
-                                
-                                FileOutputStream fout = null;
-                                try {
-                                        fout = new FileOutputStream(outputFolder + ze.getName());
-                                        for (int c = zin.read(); c != -1; c = zin.read()) {
-                                                fout.write(c);
-                                        }
-                                }
-                                catch (Exception e) {
-                                        ExceptionHandler.saveLogFile(e);
-                                }
-                                finally {
-                                        zin.closeEntry();
-                                        if (fout != null) {
-                                                fout.close();
-                                        }
-                                }
-                        }
+                if (currentapiVersion < android.os.Build.VERSION_CODES.KITKAT) {
+                        Uri uri = Uri.parse("file://" + this.tileSourcePath);
+                        taskActivity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, uri));
                 }
-                
-                zin.close();
+                else {
+                        // TODO: won't work.
+                        GeoMap.mapView.invalidate();
+                }
         }
 }

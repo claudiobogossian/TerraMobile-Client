@@ -41,7 +41,7 @@ import br.inpe.mobile.R.string;
 public class GeoMap extends Activity {
         
         /** the canvas of the Map. */
-        private MapView               mapView;
+        public static MapView         mapView;
         
         /** the controller of the map. */
         public MapController          controller;
