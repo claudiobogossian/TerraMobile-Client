@@ -183,7 +183,7 @@ public class Utility {
          */
         public static int countCharacterString(String str, String cha, int idx) {
                 int idxfound = str.indexOf(cha, idx);
-                if (idxfound != -1) return 1 + countCharacterString(str, cha, idxfound + 1);
+                if (idxfound != -1) { return 1 + countCharacterString(str, cha, idxfound + 1); }
                 return 0;
         }
         
@@ -305,8 +305,10 @@ public class Utility {
          * @return
          */
         public static String formatCep(String cepvalue) {
-                if (cepvalue == null || cepvalue.compareTo("") == 0) return cepvalue;
-                else if (cepvalue.length() == 8) return cepvalue.substring(0, 5) + "-" + cepvalue.substring(5, 8);
+                if (cepvalue == null || cepvalue.compareTo("") == 0) {
+                        return cepvalue;
+                }
+                else if (cepvalue.length() == 8) { return cepvalue.substring(0, 5) + "-" + cepvalue.substring(5, 8); }
                 return cepvalue;
         }
         
@@ -409,13 +411,13 @@ public class Utility {
                  */
                 
                 while (tasks.hasNext()) {
-                        Task task = (Task) tasks.next();
+                        Task task = tasks.next();
                         
                         double latitude1 = task.getAddress().getCoordy();
                         double longitute1 = task.getAddress().getCoordx();
                         
                         if (tasks.hasNext()) {
-                                Task task2 = (Task) tasks.next();
+                                Task task2 = tasks.next();
                                 
                                 double latitude2 = task2.getAddress().getCoordy();
                                 double longitute2 = task2.getAddress().getCoordx();
@@ -427,9 +429,6 @@ public class Utility {
                 }
         }
         
-        /**
-         * Gets the External SDCard Path.
-         */
         public static String getExternalSdCardPath() {
                 String path = null;
                 
@@ -441,6 +440,16 @@ public class Utility {
                         
                         if (file.isDirectory() && file.canWrite()) {
                                 path = file.getAbsolutePath();
+                                
+                                String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
+                                File testWritable = new File(path, "test_" + timeStamp);
+                                
+                                if (testWritable.mkdirs()) {
+                                        testWritable.delete();
+                                }
+                                else {
+                                        path = null;
+                                }
                         }
                 }
                 
@@ -507,9 +516,10 @@ public class Utility {
         public static boolean isBetterLocation(
                                                Location location,
                                                Location currentBestLocation) {
-                if (currentBestLocation == null)
-                // A new location is always better than no location
-                return true;
+                if (currentBestLocation == null) {
+                        // A new location is always better than no location
+                        return true;
+                }
                 
                 // Check whether the new location fix is newer or older
                 long timeDelta = location.getTime() - currentBestLocation.getTime();
@@ -520,10 +530,10 @@ public class Utility {
                 // If it's been more than two minutes since the current location, use
                 // the new location
                 // because the user has likely moved
-                if (isSignificantlyNewer) return true;
-                // If the new location is more than two minutes older, it must be
-                // worse
-                else if (isSignificantlyOlder) return false;
+                if (isSignificantlyNewer) {
+                        return true;
+                }
+                else if (isSignificantlyOlder) { return false; }
                 
                 // Check whether the new location fix is more or less accurate
                 int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
@@ -536,9 +546,13 @@ public class Utility {
                 
                 // Determine location quality using a combination of timeliness and
                 // accuracy
-                if (isMoreAccurate) return true;
-                else if (isNewer && !isLessAccurate) return true;
-                else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) return true;
+                if (isMoreAccurate) {
+                        return true;
+                }
+                else if (isNewer && !isLessAccurate) {
+                        return true;
+                }
+                else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) { return true; }
                 return false;
         }
         
@@ -575,7 +589,7 @@ public class Utility {
          *                second provider comparison
          */
         private static boolean isSameProvider(String provider1, String provider2) {
-                if (provider1 == null) return provider2 == null;
+                if (provider1 == null) { return provider2 == null; }
                 return provider1.equals(provider2);
         }
         
@@ -587,7 +601,7 @@ public class Utility {
         public static boolean isSdcardAvaliable() {
                 String state = Environment.getExternalStorageState();
                 
-                if (Environment.MEDIA_MOUNTED.equals(state)) return true;
+                if (Environment.MEDIA_MOUNTED.equals(state)) { return true; }
                 return false;
         }
         
@@ -693,7 +707,9 @@ public class Utility {
                 for (int i = 0; i < bytes.length; i++) {
                         int parteAlta = ((bytes[i] >> 4) & 0xf) << 4;
                         int parteBaixa = bytes[i] & 0xf;
-                        if (parteAlta == 0) s.append('0');
+                        if (parteAlta == 0) {
+                                s.append('0');
+                        }
                         s.append(Integer.toHexString(parteAlta | parteBaixa));
                 }
                 return s.toString();
