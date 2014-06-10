@@ -17,6 +17,7 @@ import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.Parameters;
+import android.hardware.Camera.Size;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -267,7 +268,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                 
                 if (btnTakePicture.isEnabled()) {
                         btnTakePicture.setEnabled(false);
-                        mCamera.takePicture(null, null, jpegCallback);
+                        mCamera.takePicture(null, null, jpegCallback);                        
                 }
         }
         
@@ -308,6 +309,8 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                                             };
         
         private void confirmPicture() {
+                mCamera.stopPreview();
+
                 takePictureLayout.setVisibility(View.INVISIBLE);
                 confirmPictureLayout.setVisibility(View.VISIBLE);
         }
@@ -370,6 +373,18 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                 // auto-focus
                 
                 List<Camera.Size> mList = cameraParameters.getSupportedPictureSizes();
+                
+                for (Size size : mList) {
+                        if(size.width < 2048) {
+                                cameraParameters.setPictureSize(size.width, size.height); 
+                                break;
+                        }
+                }
+                
+                /*
+                
+                 TODO: analisar antes de colocar em produção!!
+                 
                 Camera.Size maxPictureSize = mList.get(0);
                 
                 if (maxPictureSize.width <= 2048 && maxPictureSize.height <= 1536) {
@@ -378,7 +393,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                 else {
                         //cameraParameters.setPictureSize(2048, 1536);
                         cameraParameters.setPictureSize(1984, 1488); //mais próximo de 3 megapixels...
-                }
+                }*/
                 
                 cameraParameters.setPictureFormat(ImageFormat.JPEG);
                 cameraParameters.set("jpeg-quality", 50);
@@ -401,7 +416,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                                 mCamera.startPreview();
                                 
                                 setZoomListener();
-                                
+
                         }
                         else {
                                 setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro na obtenção da câmera!"));
