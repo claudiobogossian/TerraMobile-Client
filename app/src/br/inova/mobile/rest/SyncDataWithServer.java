@@ -66,7 +66,7 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
         private SyncDataWithServer self;
         private List<Long>         threads         = new ArrayList<Long>();
         
-        private int                numberOfThreads = 50;
+        private int                numberOfThreads = 2;
         private static long        timeStart;
         
         private static long        amountOfRegisters;
