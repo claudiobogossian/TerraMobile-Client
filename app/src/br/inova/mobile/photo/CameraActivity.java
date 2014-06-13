@@ -37,6 +37,8 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.ZoomControls;
 import br.inova.mobile.Utility;
 import br.inova.mobile.exception.ExceptionHandler;
+import br.inova.mobile.form.FormActivity;
+import br.inova.mobile.task.Task;
 import br.inova.mobile.user.SessionManager;
 import br.inpe.mobile.R;
 
@@ -268,7 +270,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                 
                 if (btnTakePicture.isEnabled()) {
                         btnTakePicture.setEnabled(false);
-                        mCamera.takePicture(null, null, jpegCallback);                        
+                        mCamera.takePicture(null, null, jpegCallback);
                 }
         }
         
@@ -310,7 +312,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
         
         private void confirmPicture() {
                 mCamera.stopPreview();
-
+                
                 takePictureLayout.setVisibility(View.INVISIBLE);
                 confirmPictureLayout.setVisibility(View.VISIBLE);
         }
@@ -355,7 +357,19 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                 File mediaFile;
                 
                 if (type == MEDIA_TYPE_IMAGE) {
-                        mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
+                        mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + File.separator + ".jpg");
+                        
+                        Task currentTask = FormActivity.currentTask;
+                        
+                        if (currentTask != null) {
+                                String featureId = currentTask.getAddress().getFeatureId();
+                                
+                                String fileName = mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + "_" + featureId + ".jpg";
+                                
+                                if (featureId != null) {
+                                        mediaFile = new File(fileName);
+                                }
+                        }
                 }
                 else if (type == MEDIA_TYPE_VIDEO) {
                         mediaFile = new File(mediaStorageDir.getPath() + File.separator + "VID_" + timeStamp + ".mp4");
@@ -375,25 +389,25 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                 List<Camera.Size> mList = cameraParameters.getSupportedPictureSizes();
                 
                 for (Size size : mList) {
-                        if(size.width < 2048) {
-                                cameraParameters.setPictureSize(size.width, size.height); 
+                        if (size.width < 2048) {
+                                cameraParameters.setPictureSize(size.width, size.height);
                                 break;
                         }
                 }
                 
                 /*
-                
-                 TODO: analisar antes de colocar em produção!!
-                 
-                Camera.Size maxPictureSize = mList.get(0);
-                
-                if (maxPictureSize.width <= 2048 && maxPictureSize.height <= 1536) {
-                        cameraParameters.setPictureSize(maxPictureSize.width, maxPictureSize.height);
-                }
-                else {
-                        //cameraParameters.setPictureSize(2048, 1536);
-                        cameraParameters.setPictureSize(1984, 1488); //mais próximo de 3 megapixels...
-                }*/
+                 * 
+                 * TODO: analisar antes de colocar em produção!!
+                 * 
+                 * Camera.Size maxPictureSize = mList.get(0);
+                 * 
+                 * if (maxPictureSize.width <= 2048 && maxPictureSize.height <=
+                 * 1536) { cameraParameters.setPictureSize(maxPictureSize.width,
+                 * maxPictureSize.height); } else {
+                 * //cameraParameters.setPictureSize(2048, 1536);
+                 * cameraParameters.setPictureSize(1984, 1488); //mais próximo
+                 * de 3 megapixels... }
+                 */
                 
                 cameraParameters.setPictureFormat(ImageFormat.JPEG);
                 cameraParameters.set("jpeg-quality", 50);
@@ -416,7 +430,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                                 mCamera.startPreview();
                                 
                                 setZoomListener();
-
+                                
                         }
                         else {
                                 setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro na obtenção da câmera!"));
