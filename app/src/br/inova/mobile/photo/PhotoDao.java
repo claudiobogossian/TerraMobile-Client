@@ -315,7 +315,7 @@ public class PhotoDao {
          * @param List
          *                <Photo> Photos that will be saved into database.
          */
-        public synchronized static boolean savePhoto(Photo photo) {
+        public synchronized static boolean saveOrUpdatePhoto(Photo photo) {
                 boolean isSaved = false;
                 
                 if (photo != null) {

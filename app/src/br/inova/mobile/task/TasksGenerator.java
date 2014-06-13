@@ -61,7 +61,7 @@ public class TasksGenerator extends AsyncTask<String, String, String> {
                         Utility.copyFile(replicatedPhoto.getPath(), mediaStorageDir.getPath(), outputFileName);
                         replicatedPhoto.setPath(mediaStorageDir + outputFileName);
                         
-                        PhotoDao.savePhoto(replicatedPhoto);
+                        PhotoDao.saveOrUpdatePhoto(replicatedPhoto);
                         TaskDao.updateTask(iterateTask);
                 }
                 catch (Exception exception) {
