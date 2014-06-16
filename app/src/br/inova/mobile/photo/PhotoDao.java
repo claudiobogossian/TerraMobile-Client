@@ -102,10 +102,10 @@ public class PhotoDao {
                 
                 if (isDeleted == 1) {
                         isRemoved = true;
-                        Log.d(LOG_TAG, "Excluiu com sucesso! ID: " + photoId);
+                        Log.i(LOG_TAG, "Excluiu com sucesso! ID: " + photoId);
                 }
                 else {
-                        Log.d(LOG_TAG, "Não excluiu!! ID: " + photoId);
+                        Log.i(LOG_TAG, "Não excluiu!! ID: " + photoId);
                 }
                 
                 return isRemoved;
@@ -135,7 +135,7 @@ public class PhotoDao {
                         
                         count = photoQueryBuilder.countOf();
                         
-                        Log.d(LOG_TAG, "COUNT de todas as fotos: " + count);
+                        Log.i(LOG_TAG, "COUNT de todas as fotos: " + count);
                 }
                 catch (SQLException e) {
                         ExceptionHandler.saveLogFile(e);
@@ -324,11 +324,11 @@ public class PhotoDao {
                         try {
                                 if (photo.getId() == null) {
                                         photoDao.create(photo);
-                                        Log.d(LOG_TAG, "Foto Salva com sucesso! ID: " + photo.getId());
+                                        Log.i(LOG_TAG, "Foto Salva com sucesso! ID: " + photo.getId());
                                 }
                                 else {
                                         photoDao.update(photo);
-                                        Log.d(LOG_TAG, "Foto Atualizada com sucesso! ID: " + photo.getId());
+                                        Log.i(LOG_TAG, "Foto Atualizada com sucesso! ID: " + photo.getId());
                                 }
                                 
                                 isSaved = true;
@@ -358,7 +358,7 @@ public class PhotoDao {
                                 for (Photo photo : photos) {
                                         if (photo.getId() == null) {
                                                 photoDao.create(photo);
-                                                Log.d(LOG_TAG, "Foto Salva com sucesso! ID: " + photo.getId());
+                                                Log.i(LOG_TAG, "Foto Salva com sucesso! ID: " + photo.getId());
                                         }
                                 }
                                 

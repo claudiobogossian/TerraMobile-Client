@@ -95,7 +95,7 @@ public class DistanceFilter {
                 
                 for (Task task : tasks) {
                         Double distanceBetweenPoints = getDistanceBetweenTwoPoints(center, new PointF(task.getAddress().getCoordy().floatValue(), task.getAddress().getCoordx().floatValue()));
-                        Log.d("", "" + distanceBetweenPoints);
+                        Log.i("", "" + distanceBetweenPoints);
                 }
                 
                 return tasks;

@@ -184,7 +184,7 @@ public class DatabaseAdapter extends OrmLiteSqliteOpenHelper {
                               int oldVersion,
                               int newVersion) {
                 try {
-                        Log.d(DatabaseHelper.class.getName(), "onUpgrade");
+                        Log.i(DatabaseHelper.class.getName(), "onUpgrade");
                         
                         //this.dropTables();
                         // after we drop the old databases, we create the new ones

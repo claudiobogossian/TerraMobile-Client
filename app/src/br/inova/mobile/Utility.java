@@ -389,23 +389,23 @@ public class Utility {
                 CloseableIterator<Task> tasks = TaskDao.getIteratorForAllTasksForCurrentUser();
                 
                 /*
-                 * Log.d("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 94.75 ?",
+                 * Log.i("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 94.75 ?",
                  * "Distance: " + calculateDistance(-23.234169, -45.847321,
                  * -23.56438, -46.632843));
-                 * Log.d("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 12.65 ?",
+                 * Log.i("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 12.65 ?",
                  * "Distance: " + calculateDistance(-23.234169, -45.847321,
                  * -23.302098, -45.938644));
                  * 
-                 * Log.d("LAT LONG: ", "LAT1 : " + -23.234169 + "LAT2 : " +
+                 * Log.i("LAT LONG: ", "LAT1 : " + -23.234169 + "LAT2 : " +
                  * -45.847321 + "LON1 : " + -23.56438 + "LON2 : " + -46.632843);
-                 * Log.d("COMPARISON: ", "Distance: " +
+                 * Log.i("COMPARISON: ", "Distance: " +
                  * calculateDistance(-23.234169, -45.847321, -23.302098,
                  * -45.938644));
                  * 
-                 * Log.d("\n\nLAT LONG: ", "LAT1 : " + latitude1 + "LAT2 : " +
+                 * Log.i("\n\nLAT LONG: ", "LAT1 : " + latitude1 + "LAT2 : " +
                  * latitude2 + "LON1 : " + longitute1 + "LON2 : " + longitute2);
-                 * Log.d("ORIGINAL: ", "" + calculateDistance(latitude1,
-                 * longitute1, latitude2, longitute2)); Log.d("BIRA: ", "" +
+                 * Log.i("ORIGINAL: ", "" + calculateDistance(latitude1,
+                 * longitute1, latitude2, longitute2)); Log.i("BIRA: ", "" +
                  * calculateDistanceBira(latitude1, longitute1, latitude2,
                  * longitute2));
                  */
@@ -422,9 +422,9 @@ public class Utility {
                                 double latitude2 = task2.getAddress().getCoordy();
                                 double longitute2 = task2.getAddress().getCoordx();
                                 
-                                Log.d("\n\nLAT LONG: ", "LAT1 : " + latitude1 + "LAT2 : " + latitude2 + "LON1 : " + longitute1 + "LON2 : " + longitute2);
-                                Log.d("ORIGINAL: ", "" + calculateDistance(latitude1, longitute1, latitude2, longitute2));
-                                Log.d("BIRA: ", "" + calculateDistanceBira(latitude1, longitute1, latitude2, longitute2));
+                                Log.i("\n\nLAT LONG: ", "LAT1 : " + latitude1 + "LAT2 : " + latitude2 + "LON1 : " + longitute1 + "LON2 : " + longitute2);
+                                Log.i("ORIGINAL: ", "" + calculateDistance(latitude1, longitute1, latitude2, longitute2));
+                                Log.i("BIRA: ", "" + calculateDistanceBira(latitude1, longitute1, latitude2, longitute2));
                         }
                 }
         }

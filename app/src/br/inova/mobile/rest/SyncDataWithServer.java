@@ -131,7 +131,7 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
                                         Form form = task.getForm();
                                         List<Photo> photos = PhotoDao.getPhotosByForm(form);
                                         
-                                        Log.d("THREAD", "Task: " + task.getId() + "Enviando pela THREAD: " + this.getName() + this.getId());
+                                        Log.i("THREAD", "Task: " + task.getId() + "Enviando pela THREAD: " + this.getName() + this.getId());
                                         
                                         sendData(task, photos);
                                 }
@@ -154,8 +154,8 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
                 datetimeEnd = new SimpleDateFormat("HH:mm:ss").format(new Date());
                 
                 Log.e("", "###########################################");
-                Log.d("TEMPO: ", "Início: " + datetimeBegin + "  Fim: " + datetimeEnd);
-                Log.d("TEMPO DA SINCRONIZAÇÃO: ", "AMOUNT: " + amountOfRegisters + "  TEMPO DA SYNC: " + elapsedSeconds);
+                Log.i("TEMPO: ", "Início: " + datetimeBegin + "  Fim: " + datetimeEnd);
+                Log.i("TEMPO DA SINCRONIZAÇÃO: ", "AMOUNT: " + amountOfRegisters + "  TEMPO DA SYNC: " + elapsedSeconds);
                 Log.e("", "###########################################");
                 
                 // Get a handler that can be used to post to the main thread

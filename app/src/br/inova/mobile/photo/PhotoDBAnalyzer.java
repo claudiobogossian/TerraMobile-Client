@@ -39,7 +39,7 @@ public class PhotoDBAnalyzer extends AsyncTask<String, String, String> {
                         ExceptionHandler.saveLogFile(e);
                 }
                 
-                Log.d(LOG_TAG, "COUNT das fotos no BD: " + count);
+                Log.i(LOG_TAG, "COUNT das fotos no BD: " + count);
                 
                 return count;
         }
@@ -88,7 +88,7 @@ public class PhotoDBAnalyzer extends AsyncTask<String, String, String> {
                                 Boolean pictureExists = PhotoDao.isPictureOnDatabase(path);
                                 
                                 if (!pictureExists) {
-                                        Log.d(LOG_TAG, "Removendo Arquivo da foto: " + path);
+                                        Log.i(LOG_TAG, "Removendo Arquivo da foto: " + path);
                                         pictures[i].delete();
                                 }
                         }
@@ -109,12 +109,12 @@ public class PhotoDBAnalyzer extends AsyncTask<String, String, String> {
                                         Photo photo = (Photo) iterator.next();
                                         
                                         if (photo.getForm() == null) {
-                                                Log.d(LOG_TAG, "Excluindo a foto: " + photo.getId() + "Restando: " + getCountPhotos());
+                                                Log.i(LOG_TAG, "Excluindo a foto: " + photo.getId() + "Restando: " + getCountPhotos());
                                                 PhotoDao.deleteWithDeleteBuilder(photo.getId());
                                         }
                                 }
                                 catch (IllegalStateException exception) {
-                                        Log.d(LOG_TAG, "Erro, IllegalStateException");
+                                        Log.i(LOG_TAG, "Erro, IllegalStateException");
                                 }
                         }
                 }
@@ -129,7 +129,7 @@ public class PhotoDBAnalyzer extends AsyncTask<String, String, String> {
         }
         
         public synchronized static void verifyIntegrityOfPictures() {
-                Log.d(LOG_TAG, "#### ANALISANDO AS FOTOS ####");
+                Log.i(LOG_TAG, "#### ANALISANDO AS FOTOS ####");
                 removePhotoIfFormIsNull();
                 removeFilesFromExternalMemoryIfNotInDatabase();
         }

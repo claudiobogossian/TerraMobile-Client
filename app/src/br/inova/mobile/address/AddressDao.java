@@ -52,7 +52,7 @@ public class AddressDao {
                         //@formatter:on
                         
                         String query = addressQueryBuilder.prepareStatementString();
-                        Log.d("QUERY FOR NEAREST POINTS ", query);
+                        Log.i("QUERY FOR NEAREST POINTS ", query);
                         
                         taskQueryBuilder.join(addressQueryBuilder);
                         tasks = taskQueryBuilder.query();

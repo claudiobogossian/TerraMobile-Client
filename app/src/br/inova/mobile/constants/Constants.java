@@ -66,7 +66,7 @@ public class Constants {
                 ISDEBUG = true;
                 ISPRODUCTION = false;
                 
-                Log.d("CONSTANTS", "Entrando em modo debug.");
+                Log.i("CONSTANTS", "Entrando em modo debug.");
                 
                 applyChanges();
         }
@@ -79,7 +79,7 @@ public class Constants {
                 SERVER = "terramobile-homolog";
                 ISPRODUCTION = false;
                 
-                Log.d("CONSTANTS", "Entrando em modo Homologação.");
+                Log.i("CONSTANTS", "Entrando em modo Homologação.");
                 
                 applyChanges();
         }
@@ -91,7 +91,7 @@ public class Constants {
                 SERVER = "terramobile-presentation";
                 ISPRODUCTION = false;
                 
-                Log.d("CONSTANTS", "Entrando em modo Apresentação.");
+                Log.i("CONSTANTS", "Entrando em modo Apresentação.");
                 
                 applyChanges();
         }
@@ -103,7 +103,7 @@ public class Constants {
                 SERVER = "terramobile-server";
                 ISPRODUCTION = true;
                 
-                Log.d("CONSTANTS", "Entrando em modo Produção.");
+                Log.i("CONSTANTS", "Entrando em modo Produção.");
                 
                 applyChanges();
         }

@@ -283,8 +283,8 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                                                             pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
                                                             
                                                             if (pictureFile == null) {
-                                                                    //Log.d(TAG, "Error creating media file, check storage permissions: " + e.getMessage());
-                                                                    Log.d(TAG, "Error creating media file, check storage permissions: ");
+                                                                    //Log.i(TAG, "Error creating media file, check storage permissions: " + e.getMessage());
+                                                                    Log.i(TAG, "Error creating media file, check storage permissions: ");
                                                                     return;
                                                             }
                                                             
@@ -297,12 +297,12 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                                                                     confirmPicture();
                                                             }
                                                             catch (FileNotFoundException e) {
-                                                                    Log.d(TAG, "File not found: " + e.getMessage());
+                                                                    Log.i(TAG, "File not found: " + e.getMessage());
                                                                     setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro na obtenção da foto!"));
                                                                     finish();
                                                             }
                                                             catch (IOException e) {
-                                                                    Log.d(TAG, "Error accessing file: " + e.getMessage());
+                                                                    Log.i(TAG, "Error accessing file: " + e.getMessage());
                                                                     setResult(RESULT_CANCELED, new Intent().putExtra("RESULT", "Erro na obtenção da foto!"));
                                                                     finish();
                                                             }

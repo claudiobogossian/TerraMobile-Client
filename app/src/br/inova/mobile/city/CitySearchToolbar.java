@@ -143,7 +143,7 @@ public class CitySearchToolbar extends AsyncTask<String, String, String> {
                                         City cityObject = new City(null, name, asciiName, state, latitude, longitude);
                                         CityDao.saveCity(cityObject);
                                         
-                                        Log.d("SAVED CITY", cityObject.getName());
+                                        Log.i("SAVED CITY", cityObject.getName());
                                         
                                         progress++;
                                         publishProgress("Contruíndo banco de dados da aplicação...", "" + progress);
@@ -159,7 +159,7 @@ public class CitySearchToolbar extends AsyncTask<String, String, String> {
                 long diffMinutes = diff / (60 * 1000) % 60;
                 long diffSeconds = diff / 1000 % 60;
                 
-                Log.d("TEMPO DE OPERAÇÃO DAS CIDADES: ", diffMinutes + ":" + diffSeconds);
+                Log.i("TEMPO DE OPERAÇÃO DAS CIDADES: ", diffMinutes + ":" + diffSeconds);
         }
         
         public void hideKeyboard() {
