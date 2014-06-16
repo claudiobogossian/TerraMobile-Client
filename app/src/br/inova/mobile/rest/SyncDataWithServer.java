@@ -26,6 +26,46 @@ import br.inova.mobile.task.TaskDao;
 import br.inova.mobile.user.SessionManager;
 
 public class SyncDataWithServer extends AsyncTask<String, String, String> {
+        
+        private String             userHash;
+        
+        private TaskActivity       taskActivity;
+        private String             taskServerUrl   = Constants.getTasksUrl();
+        
+        private String             photoServerUrl  = Constants.getPhotosUrl();
+        
+        int                        progress        = 0;
+        
+        private SyncDataWithServer self;
+        private List<Long>         threads         = new ArrayList<Long>();
+        
+        private int                numberOfThreads = 5;
+        private static long        timeStart;
+        
+        private static long        amountOfRegisters;
+        private static String      datetimeBegin;
+        
+        private static String      datetimeEnd;
+        
+        public SyncDataWithServer(TaskActivity taskActivity) {
+                this.userHash = SessionManager.getInstance().getUserHash();
+                this.taskActivity = taskActivity;
+                
+                self = this;
+                this.execute();
+        }
+        
+        @Override
+        protected String doInBackground(String... params) {
+                PhotoDBAnalyzer.verifyIntegrityOfPictures();
+                
+                timeStart = System.currentTimeMillis();
+                datetimeBegin = new SimpleDateFormat("HH:mm:ss").format(new Date());
+                
+                syncronizeDataWithServer();
+                return null;
+        }
+        
         /**
          * 
          * Splice one array into N new arrays.
@@ -52,45 +92,6 @@ public class SyncDataWithServer extends AsyncTask<String, String, String> {
                 }
                 
                 return partitions;
-        }
-        
-        private String             userHash;
-        
-        private TaskActivity       taskActivity;
-        private String             taskServerUrl   = Constants.getTasksUrl();
-        
-        private String             photoServerUrl  = Constants.getPhotosUrl();
-        
-        int                        progress        = 0;
-        
-        private SyncDataWithServer self;
-        private List<Long>         threads         = new ArrayList<Long>();
-        
-        private int                numberOfThreads = 2;
-        private static long        timeStart;
-        
-        private static long        amountOfRegisters;
-        private static String      datetimeBegin;
-        
-        private static String      datetimeEnd;
-        
-        public SyncDataWithServer(TaskActivity taskActivity) {
-                this.userHash = SessionManager.getInstance().getUserHash();
-                this.taskActivity = taskActivity;
-                
-                self = this;
-                this.execute();
-        }
-        
-        @Override
-        protected String doInBackground(String... params) {
-                PhotoDBAnalyzer.verifyIntegrityOfPictures();
-                
-                timeStart = System.currentTimeMillis();
-                datetimeBegin = new SimpleDateFormat("HH:mm:ss").format(new Date());
-                
-                syncronizeDataWithServer();
-                return null;
         }
         
         public void finishThread(Thread thread) {
