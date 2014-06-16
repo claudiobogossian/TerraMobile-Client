@@ -11,15 +11,18 @@ import android.util.Log;
 public class RestTemplateFactory extends RestTemplate {
         
         public RestTemplateFactory() {
+                
+                Integer timeout = 600 * 1000;
+                
                 if (getRequestFactory() instanceof SimpleClientHttpRequestFactory) {
-                        Log.d("HTTP", "HttpUrlConnection is used");
-                        ((SimpleClientHttpRequestFactory) getRequestFactory()).setConnectTimeout(25 * 1000);
-                        ((SimpleClientHttpRequestFactory) getRequestFactory()).setReadTimeout(60 * 1000);
+                        Log.i("HTTP", "HttpUrlConnection is used, TIMEOUT: " + timeout);
+                        ((SimpleClientHttpRequestFactory) getRequestFactory()).setConnectTimeout(timeout);
+                        ((SimpleClientHttpRequestFactory) getRequestFactory()).setReadTimeout(timeout);
                 }
                 else if (getRequestFactory() instanceof HttpComponentsClientHttpRequestFactory) {
-                        Log.d("HTTP", "HttpClient is used");
-                        ((HttpComponentsClientHttpRequestFactory) getRequestFactory()).setConnectTimeout(25 * 1000);
-                        ((HttpComponentsClientHttpRequestFactory) getRequestFactory()).setReadTimeout(60 * 1000);
+                        Log.i("HTTP", "HttpClient is used, TIMEOUT: " + timeout);
+                        ((HttpComponentsClientHttpRequestFactory) getRequestFactory()).setConnectTimeout(timeout);
+                        ((HttpComponentsClientHttpRequestFactory) getRequestFactory()).setReadTimeout(timeout);
                 }
                 
                 // Add converters, Note I use the Jackson Converter, I removed the http form converter because it is not needed when posting String, used for multipart forms.
