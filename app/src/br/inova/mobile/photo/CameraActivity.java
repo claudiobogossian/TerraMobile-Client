@@ -357,8 +357,6 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                 File mediaFile;
                 
                 if (type == MEDIA_TYPE_IMAGE) {
-                        mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + File.separator + ".jpg");
-                        
                         Task currentTask = FormActivity.currentTask;
                         
                         if (currentTask != null) {
