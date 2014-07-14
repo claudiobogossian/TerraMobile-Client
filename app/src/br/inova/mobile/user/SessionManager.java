@@ -19,21 +19,23 @@ public class SessionManager {
         private static Context           _context;
         
         // Shared pref mode
-        int                              PRIVATE_MODE = 0;
+        int                              PRIVATE_MODE     = 0;
         
         // Sharedpref file name
-        private static final String      PREF_NAME    = "AndroidHivePref";
+        private static final String      PREF_NAME        = "AndroidHivePref";
         
         // All Shared Preferences Keys
-        private static final String      IS_LOGIN     = "IsLoggedIn";
+        private static final String      IS_LOGIN         = "IsLoggedIn";
         
-        public static final String       KEY_NAME     = "name";
+        public static final String       KEY_NAME         = "name";
         
-        public static final String       KEY_HASH     = "hash";
+        public static final String       KEY_HASH         = "hash";
         
-        public static final String       SESSION_TYPE = "sessionType";
+        public static final String       KEY_LAST_ADDRESS = "last_visited_address";
         
-        private static SessionManager    self         = null;
+        public static final String       SESSION_TYPE     = "sessionType";
+        
+        private static SessionManager    self             = null;
         
         /**
          * Application Memory class creates this Object.
@@ -114,6 +116,18 @@ public class SessionManager {
         public String getSessionType() {
                 String sessionType = pref.getString(SESSION_TYPE, null);
                 return sessionType;
+        }
+        
+        public void saveLastAddressId(String lastAddressId) {
+                saveKeyAndValue(KEY_LAST_ADDRESS, lastAddressId);
+        }
+        
+        /**
+         * Get user hash
+         * */
+        public String getLastAddressId() {
+                String lastAddress = pref.getString(KEY_LAST_ADDRESS, null);
+                return lastAddress;
         }
         
         /**
