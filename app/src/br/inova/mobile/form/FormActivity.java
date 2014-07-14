@@ -51,6 +51,7 @@ import br.inova.mobile.photo.Photo;
 import br.inova.mobile.photo.PhotoDao;
 import br.inova.mobile.task.Task;
 import br.inova.mobile.task.TaskDao;
+import br.inova.mobile.user.SessionManager;
 import br.inpe.mobile.R;
 import br.inpe.mobile.R.string;
 
@@ -93,6 +94,46 @@ public class FormActivity extends Activity {
         private Resources            resources;
         
         private List<ImageView>      imagesToDestroy = new ArrayList<ImageView>();
+        
+        /**
+         * 
+         * 
+         * @author Paulo Luan
+         * */
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+                /**
+                 * Defines the default exception handler to log unexpected
+                 * android errors
+                 */
+                
+                resources = getResources();
+                
+                requestWindowFeature(Window.FEATURE_NO_TITLE);
+                setContentView(R.layout.activity_form);
+                
+                self.mapFieldsToObjects();
+                
+                photos = new ArrayList<Photo>();
+                currentTask = (Task) getIntent().getSerializableExtra("task");
+                
+                initializeLastTask();
+                
+                if (currentTask != null) {
+                        this.setFieldsWithTaskProperties(currentTask);
+                        self.checkInfrastructureFill();
+                }
+                else {
+                        buttonPhoto.setEnabled(false);
+                        buttonOk.setEnabled(false);
+                }
+                
+                self.createThreadToCursorAdapter();
+                self.setButtonsListeners();
+                self.setSpinnerListeners();
+        }
         
         /**
          * Checks if the data filled in the infrastructure form is null.
@@ -711,44 +752,6 @@ public class FormActivity extends Activity {
                 alertDialog.show();
         }
         
-        /**
-         * 
-         * 
-         * @author Paulo Luan
-         * */
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
-                Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
-                /**
-                 * Defines the default exception handler to log unexpected
-                 * android errors
-                 */
-                
-                resources = getResources();
-                
-                requestWindowFeature(Window.FEATURE_NO_TITLE);
-                setContentView(R.layout.activity_form);
-                
-                self.mapFieldsToObjects();
-                
-                photos = new ArrayList<Photo>();
-                currentTask = (Task) getIntent().getSerializableExtra("task");
-                
-                if (currentTask != null) {
-                        this.setFieldsWithTaskProperties(currentTask);
-                        self.checkInfrastructureFill();
-                }
-                else {
-                        buttonPhoto.setEnabled(false);
-                        buttonOk.setEnabled(false);
-                }
-                
-                self.createThreadToCursorAdapter();
-                self.setButtonsListeners();
-                self.setSpinnerListeners();
-        }
-        
         @Override
         protected void onDestroy() {
                 for (ImageView image : imagesToDestroy) {
@@ -817,6 +820,7 @@ public class FormActivity extends Activity {
                 
                 if (isSaved) {
                         FormActivity.lastTask = currentTask;
+                        this.saveLastTask();
                         LandmarksManager.setTask(currentTask);
                         data.putExtra("RESULT", "Registro salvo!");
                 }
@@ -1280,4 +1284,37 @@ public class FormActivity extends Activity {
                         alertDialog.show();
                 }
         }
+        
+        /**
+         * Initialize the informations about the last visited task.
+         */
+        private void initializeLastTask() {
+                try {
+                        String taskId = SessionManager.getInstance().getLastTaskId();
+                        
+                        if (taskId != null) {
+                                Integer id = Integer.parseInt(taskId);
+                                lastTask = TaskDao.getTaskById(id);
+                                Log.i(LOG_TAG, "LastTask: " + lastTask.getId());
+                        }
+                }
+                catch (Exception e) {
+                        Log.e(LOG_TAG, "error with cast at (initializeLastTask) " + e.getMessage());
+                }
+        }
+        
+        /**
+         * Persists the last task id, to get the last visited taskId.
+         * */
+        public void saveLastTask() {
+                try {
+                        if (lastTask != null) {
+                                SessionManager.getInstance().saveLastTaskId(lastTask.getId().toString());
+                        }
+                }
+                catch (Exception e) {
+                        Log.e(LOG_TAG, "error at saving the last task informations (saveLastTask)" + e.getMessage());
+                }
+        }
+        
 }
