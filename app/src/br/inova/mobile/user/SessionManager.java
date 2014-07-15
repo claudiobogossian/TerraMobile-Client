@@ -59,9 +59,7 @@ public class SessionManager {
          * Clear session details
          * */
         public static void logoutUser() {
-                // Clearing all data from Shared Preferences
-                editor.clear();
-                editor.commit();
+                clearLoginInformations();
                 
                 // After logout redirect user to Login Activity
                 Intent i = new Intent(_context, Main.class);
@@ -74,6 +72,18 @@ public class SessionManager {
                 
                 // Staring Login Activity
                 _context.startActivity(i);
+        }
+        
+        /**
+         * Clear all login data from Shared Preferences
+         */
+        private static void clearLoginInformations() {
+                editor.remove(IS_LOGIN);
+                editor.remove(KEY_NAME);
+                editor.remove(KEY_HASH);
+                editor.remove(SESSION_TYPE);
+                
+                editor.commit();
         }
         
         // Constructor

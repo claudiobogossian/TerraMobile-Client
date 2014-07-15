@@ -1296,7 +1296,7 @@ public class FormActivity extends Activity {
                         if (taskId != null) {
                                 Integer id = Integer.parseInt(taskId);
                                 lastTask = TaskDao.getTaskByIdForCurrentUser(id);
-                                Log.i(LOG_TAG, "LastTask: " + lastTask.getId());
+                                Log.e(LOG_TAG, "LastTask: " + id);
                         }
                 }
                 catch (Exception e) {
