@@ -1290,11 +1290,12 @@ public class FormActivity extends Activity {
          */
         private void initializeLastTask() {
                 try {
+                        
                         String taskId = SessionManager.getInstance().getLastTaskId();
                         
                         if (taskId != null) {
                                 Integer id = Integer.parseInt(taskId);
-                                lastTask = TaskDao.getTaskById(id);
+                                lastTask = TaskDao.getTaskByIdForCurrentUser(id);
                                 Log.i(LOG_TAG, "LastTask: " + lastTask.getId());
                         }
                 }

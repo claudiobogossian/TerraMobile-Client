@@ -191,7 +191,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                 Camera.Parameters p = mCamera.getParameters();
                 final int maxZoom = p.getMaxZoom();
                 
-                String zoomString = session.getSavedValue("zoom");
+                String zoomString = session.getValue("zoom");
                 
                 if (zoomString != null) {
                         zoom = Integer.parseInt(zoomString);

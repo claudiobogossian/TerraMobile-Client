@@ -430,6 +430,33 @@ public class TaskDao {
                 return task;
         }
         
+        /**
+         * Retrieves the record only when it belongs to the current user.
+         * 
+         * @param id
+         * @return
+         */
+        public static Task getTaskByIdForCurrentUser(int id) {
+                Task task = null;
+                
+                QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+                QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+                
+                try {
+                        String userHash = session.getUserHash();
+                        userQueryBuilder.where().eq("hash", userHash);
+                        taskQueryBuilder.join(userQueryBuilder);
+                        
+                        taskQueryBuilder.where().eq("_id", id);
+                        
+                        task = taskQueryBuilder.queryForFirst();
+                }
+                catch (SQLException e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+                return task;
+        }
+        
         public static void removeTasksByIds(List<Integer> tasksToRemove) {
                 
                 for (Integer taskId : tasksToRemove) {

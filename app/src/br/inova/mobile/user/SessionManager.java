@@ -1,11 +1,14 @@
 package br.inova.mobile.user;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.util.Log;
 import br.inova.mobile.Main;
 
 public class SessionManager {
@@ -34,6 +37,8 @@ public class SessionManager {
         public static final String       KEY_LAST_TASK = "last_task";
         
         public static final String       SESSION_TYPE  = "sessionType";
+        
+        private static final String      LOG_TAG       = "SESSION_MANAGER";
         
         private static SessionManager    self          = null;
         
@@ -76,8 +81,19 @@ public class SessionManager {
         // Constructor
         private SessionManager(Context context) {
                 this._context = context;
-                pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+                pref = _context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
                 editor = pref.edit();
+                
+                testPrintAllProperties();
+        }
+        
+        public void testPrintAllProperties() {
+                Map<String, ?> values = pref.getAll();
+                Set<String> keys = values.keySet();
+                
+                for (String key : keys) {
+                        Log.e(LOG_TAG, "key: " + key + " Value: " + values.get(key));
+                }
         }
         
         /**
@@ -87,34 +103,19 @@ public class SessionManager {
                                        String name,
                                        String hash,
                                        String sessionType) {
-                // Storing login value as TRUE
                 editor.putBoolean(IS_LOGIN, true);
-                
-                // Storing name in pref
                 editor.putString(KEY_NAME, name);
-                
-                // Storing hash in pref
                 editor.putString(KEY_HASH, hash);
-                
                 editor.putString(SESSION_TYPE, sessionType);
                 
-                // commit changes
                 editor.commit();
-        }
-        
-        /**
-         * Search key in saved preferences and return the value.
-         * */
-        public String getSavedValue(String key) {
-                String result = pref.getString(key, null);
-                return result;
         }
         
         /**
          * Get user hash
          * */
         public String getSessionType() {
-                String sessionType = pref.getString(SESSION_TYPE, null);
+                String sessionType = getValue(SESSION_TYPE);
                 return sessionType;
         }
         
@@ -126,7 +127,7 @@ public class SessionManager {
          * Get user hash
          * */
         public String getLastTaskId() {
-                String lastAddress = pref.getString(KEY_LAST_TASK, null);
+                String lastAddress = getValue(KEY_LAST_TASK);
                 return lastAddress;
         }
         
@@ -136,10 +137,10 @@ public class SessionManager {
         public HashMap<String, String> getUserDetails() {
                 HashMap<String, String> user = new HashMap<String, String>();
                 // user name
-                user.put(KEY_NAME, pref.getString(KEY_NAME, null));
+                user.put(KEY_NAME, getValue(KEY_NAME));
                 
                 // user hash id
-                user.put(KEY_HASH, pref.getString(KEY_HASH, null));
+                user.put(KEY_HASH, getValue(KEY_HASH));
                 
                 // return user
                 return user;
@@ -149,7 +150,7 @@ public class SessionManager {
          * Get user hash
          * */
         public String getUserHash() {
-                String hash = pref.getString(KEY_HASH, null);
+                String hash = getValue(KEY_HASH);
                 
                 if (hash == null) {
                         logoutUser();
@@ -162,7 +163,7 @@ public class SessionManager {
          * Get user name
          * */
         public String getUserName() {
-                String name = pref.getString(KEY_NAME, null);
+                String name = getValue(KEY_NAME);
                 return name;
         }
         
@@ -176,13 +177,34 @@ public class SessionManager {
         }
         
         /**
+         * Search key in saved preferences and return the value.
+         * */
+        public String getValue(String key) {
+                pref = _context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+                String value = pref.getString(key, null);
+                
+                Log.i(LOG_TAG, "Key: " + key + " Value: " + value);
+                
+                return value;
+        }
+        
+        /**
          * Save map into configurations.
          * */
         public void saveKeyAndValue(String key, String value) {
-                // Storing hash in pref
+                pref = _context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+                editor = pref.edit();
+                
                 editor.putString(key, value);
                 
-                // commit changes
-                editor.commit();
+                boolean isSaved = editor.commit();
+                
+                if (isSaved) {
+                        Log.e("SAVED!!", "KEY: " + key + " Value : " + value);
+                }
+                else {
+                        Log.e("ERROR!!", "KEY: " + key + " Value : " + value);
+                }
+                
         }
 }
