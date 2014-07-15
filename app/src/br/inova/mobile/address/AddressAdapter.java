@@ -35,55 +35,9 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
         
         private static final String LOG_TAG = "#AddressAdapter";
         
-        public static Cursor getAddressCursor(String propertieFilter) throws SQLException {
-                Dao<Task, Integer> taskDao = DatabaseHelper.getDatabase().getTaskDao();
-                Dao<User, Integer> userDao = DatabaseHelper.getDatabase().getUserDao();
-                Dao<Address, Integer> addressDao = DatabaseHelper.getDatabase().getAddressDao();
-                
-                QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
-                QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
-                QueryBuilder<Address, Integer> addressQueryBuilder = addressDao.queryBuilder();
-                
-                String userHash = SessionManager.getInstance().getUserHash();
-                userQueryBuilder.where().eq("hash", userHash);
-                
-                // taskQueryBuilder.where().eq("done", Boolean.FALSE);
-                taskQueryBuilder.join(userQueryBuilder);
-                
-                if (propertieFilter != null) {
-                        addressQueryBuilder.where().like("name", propertieFilter).or().like("number", propertieFilter).or().like("featureId", propertieFilter).or().like("postalCode", propertieFilter);
-                        
-                        addressQueryBuilder.join(taskQueryBuilder);
-                }
-                else {
-                        addressQueryBuilder.query();
-                }
-                
-                CloseableIterator<Address> iterator = null;
-                Cursor cursor = null;
-                
-                try {
-                        // when you are done, prepare your query and build an iterator
-                        iterator = addressDao.iterator(addressQueryBuilder.prepare());
-                        // get the raw results which can be cast under Android
-                        AndroidDatabaseResults results = (AndroidDatabaseResults) iterator.getRawResults();
-                        cursor = results.getRawCursor();
-                }
-                catch (SQLException e) {
-                        ExceptionHandler.saveLogFile(e);
-                }
-                finally {
-                        if (iterator != null) {
-                                // iterator.closeQuietly();
-                        }
-                }
-                
-                return cursor;
-        }
+        private final Context       context;
         
-        private final Context context;
-        
-        private final int     layout;
+        private final int           layout;
         
         public AddressAdapter(
                               Context context,
@@ -129,6 +83,52 @@ public class AddressAdapter extends CursorAdapter implements Filterable {
                 }
                 catch (SQLException e) {
                         ExceptionHandler.saveLogFile(e);
+                }
+                
+                return cursor;
+        }
+        
+        public static Cursor getAddressCursor(String propertieFilter) throws SQLException {
+                Dao<Task, Integer> taskDao = DatabaseHelper.getDatabase().getTaskDao();
+                Dao<User, Integer> userDao = DatabaseHelper.getDatabase().getUserDao();
+                Dao<Address, Integer> addressDao = DatabaseHelper.getDatabase().getAddressDao();
+                
+                QueryBuilder<Task, Integer> taskQueryBuilder = taskDao.queryBuilder();
+                QueryBuilder<User, Integer> userQueryBuilder = userDao.queryBuilder();
+                QueryBuilder<Address, Integer> addressQueryBuilder = addressDao.queryBuilder();
+                
+                String userHash = SessionManager.getInstance().getUserHash();
+                userQueryBuilder.where().eq("hash", userHash);
+                
+                // taskQueryBuilder.where().eq("done", Boolean.FALSE);
+                taskQueryBuilder.join(userQueryBuilder);
+                
+                if (propertieFilter != null) {
+                        addressQueryBuilder.where().like("name", propertieFilter).or().like("number", propertieFilter).or().like("featureId", propertieFilter).or().like("postalCode", propertieFilter);
+                        
+                        addressQueryBuilder.join(taskQueryBuilder);
+                }
+                else {
+                        addressQueryBuilder.query();
+                }
+                
+                CloseableIterator<Address> iterator = null;
+                Cursor cursor = null;
+                
+                try {
+                        // when you are done, prepare your query and build an iterator
+                        iterator = addressDao.iterator(addressQueryBuilder.prepare());
+                        // get the raw results which can be cast under Android
+                        AndroidDatabaseResults results = (AndroidDatabaseResults) iterator.getRawResults();
+                        cursor = results.getRawCursor();
+                }
+                catch (SQLException e) {
+                        ExceptionHandler.saveLogFile(e);
+                }
+                finally {
+                        if (iterator != null) {
+                                // iterator.closeQuietly();
+                        }
                 }
                 
                 return cursor;
