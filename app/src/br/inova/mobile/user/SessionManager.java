@@ -1,8 +1,6 @@
 package br.inova.mobile.user;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 import android.content.Context;
 import android.content.Intent;
@@ -83,17 +81,6 @@ public class SessionManager {
                 this._context = context;
                 pref = _context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
                 editor = pref.edit();
-                
-                testPrintAllProperties();
-        }
-        
-        public void testPrintAllProperties() {
-                Map<String, ?> values = pref.getAll();
-                Set<String> keys = values.keySet();
-                
-                for (String key : keys) {
-                        Log.e(LOG_TAG, "key: " + key + " Value: " + values.get(key));
-                }
         }
         
         /**
