@@ -354,7 +354,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                 
                 // Create a media file name
                 String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
-                File mediaFile;
+                File mediaFile = null;
                 
                 if (type == MEDIA_TYPE_IMAGE) {
                         Task currentTask = FormActivity.currentTask;
