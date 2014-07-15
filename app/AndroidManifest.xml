@@ -60,14 +60,6 @@
             android:name="br.inova.mobile.user.LoginActivity"
             android:screenOrientation="portrait" >
         </activity>
-
-        <!-- TODO: Remover -->
-        <activity
-            android:name="br.inova.mobile.form.generator.FormGeneratorExample"
-            android:screenOrientation="portrait" >
-        </activity>
-        <!-- TODO: Remover -->
-
         <activity
             android:name="br.inova.mobile.Main"
             android:label="@string/title_activity_main"
